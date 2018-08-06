@@ -18,11 +18,7 @@ namespace LunaClient.Systems.VesselPositionSys
             value.HackingGravity = msgData.HackingGravity;
 
             Array.Copy(msgData.SrfRelRotation, value.SrfRelRotation, 4);
-            Array.Copy(msgData.Velocity, value.Velocity, 3);
             Array.Copy(msgData.LatLonAlt, value.LatLonAlt, 3);
-            Array.Copy(msgData.FloatingOriginLatLonAlt, value.FloatingOriginLatLonAlt, 3);
-            Array.Copy(msgData.FloatingOriginNonKrakensbaneLatLonAlt, value.FloatingOriginNonKrakensbaneLatLonAlt, 3);
-            Array.Copy(msgData.TransformPos, value.TransformPosVector, 3);
             Array.Copy(msgData.NormalVector, value.NormalVector, 3);
             Array.Copy(msgData.Orbit, value.Orbit, 8);
         }

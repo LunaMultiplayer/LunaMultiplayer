@@ -44,11 +44,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
         public double[] LatLonAlt { get; set; } = new double[3];
-        public double[] FloatingOriginLatLonAlt { get; set; } = new double[3];
-        public double[] FloatingOriginNonKrakensbaneLatLonAlt { get; set; } = new double[3];
-        public float[] TransformPosVector { get; set; } = new float[3];
         public double[] NormalVector { get; set; } = new double[3];
-        public double[] Velocity { get; set; } = new double[3];
         public double[] Orbit { get; set; } = new double[8];
         public float[] SrfRelRotation { get; set; } = new float[4];
         public float HeightFromTerrain { get; set; }
@@ -62,8 +58,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
-        public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
-        public Vector3 TransformPos => new Vector3((float)TransformPosVector[0], (float)TransformPosVector[1], (float)TransformPosVector[2]);
         public Orbit KspOrbit { get; set; }
 
         public Vector3d LatLonAltPos { get; set; }
@@ -117,11 +111,7 @@ namespace LunaClient.Systems.VesselPositionSys
             HackingGravity = msgData.HackingGravity;
 
             Array.Copy(msgData.SrfRelRotation, SrfRelRotation, 4);
-            Array.Copy(msgData.Velocity, Velocity, 3);
             Array.Copy(msgData.LatLonAlt, LatLonAlt, 3);
-            Array.Copy(msgData.FloatingOriginLatLonAlt, FloatingOriginLatLonAlt, 3);
-            Array.Copy(msgData.FloatingOriginNonKrakensbaneLatLonAlt, FloatingOriginNonKrakensbaneLatLonAlt, 3);
-            Array.Copy(msgData.TransformPos, TransformPosVector, 3);
             Array.Copy(msgData.NormalVector, NormalVector, 3);
             Array.Copy(msgData.Orbit, Orbit, 8);
         }
@@ -138,11 +128,7 @@ namespace LunaClient.Systems.VesselPositionSys
             HackingGravity = update.HackingGravity;
 
             Array.Copy(update.SrfRelRotation, SrfRelRotation, 4);
-            Array.Copy(update.Velocity, Velocity, 3);
             Array.Copy(update.LatLonAlt, LatLonAlt, 3);
-            Array.Copy(update.FloatingOriginLatLonAlt, FloatingOriginLatLonAlt, 3);
-            Array.Copy(update.FloatingOriginNonKrakensbaneLatLonAlt, FloatingOriginNonKrakensbaneLatLonAlt, 3);
-            Array.Copy(update.TransformPosVector, TransformPosVector, 3);
             Array.Copy(update.NormalVector, NormalVector, 3);
             Array.Copy(update.Orbit, Orbit, 8);
         }
@@ -194,19 +180,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 ObtPosStart = KspOrbit.getPositionAtUT(KspOrbit.epoch);
                 Target.ObtPosStart = KspOrbit.getPositionAtUT(Target.KspOrbit.epoch);
-
-                //if (!Vessel?.packed ?? false)
-                //{
-                //    var floatingOriginNonKrakensbanePos = (Vector3)Body.GetWorldSurfacePosition(
-                //        FloatingOriginNonKrakensbaneLatLonAlt[0],
-                //        FloatingOriginNonKrakensbaneLatLonAlt[1], FloatingOriginNonKrakensbaneLatLonAlt[2]);
-
-                //    var currentPos = Vessel.vesselTransform.position;
-                //    var expectedPos = floatingOriginNonKrakensbanePos + TransformPos;
-
-                //    PositionVectorDiff = expectedPos - currentPos;
-                //    Vessel.Translate(PositionVectorDiff);
-                //}
             }
 
             if (Target == null) return;
@@ -229,7 +202,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (WasFrozen && !Frozen)
                 {
                     WasFrozen = false;
-
                     Vessel.orbitDriver.updateFromParameters();
                 }
 
@@ -365,11 +337,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 SubspaceId = Target.SubspaceId;
 
                 Array.Copy(Target.SrfRelRotation, SrfRelRotation, 4);
-                Array.Copy(Target.Velocity, Velocity, 3);
-                Array.Copy(Target.TransformPosVector, TransformPosVector, 3);
                 Array.Copy(Target.LatLonAlt, LatLonAlt, 3);
-                Array.Copy(Target.FloatingOriginLatLonAlt, FloatingOriginLatLonAlt, 3);
-                Array.Copy(Target.FloatingOriginNonKrakensbaneLatLonAlt, FloatingOriginNonKrakensbaneLatLonAlt, 3);
                 Array.Copy(Target.NormalVector, NormalVector, 3);
                 Array.Copy(Target.Orbit, Orbit, 8);
 
@@ -389,11 +357,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 SrfRelRotation[2] = Vessel.srfRelRotation.z;
                 SrfRelRotation[3] = Vessel.srfRelRotation.w;
 
-                Vector3d srfVel = Quaternion.Inverse(Body.bodyTransform.rotation) * Vessel.srf_velocity;
-                Velocity[0] = srfVel.x;
-                Velocity[1] = srfVel.y;
-                Velocity[2] = srfVel.z;
-
                 LatLonAlt[0] = Vessel.latitude;
                 LatLonAlt[1] = Vessel.longitude;
                 LatLonAlt[2] = Vessel.altitude;
@@ -401,10 +364,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 NormalVector[0] = Vessel.terrainNormal.x;
                 NormalVector[1] = Vessel.terrainNormal.y;
                 NormalVector[2] = Vessel.terrainNormal.z;
-
-                TransformPosVector[0] = Vessel.vesselTransform.position.x;
-                TransformPosVector[1] = Vessel.vesselTransform.position.y;
-                TransformPosVector[2] = Vessel.vesselTransform.position.z;
 
                 Orbit[0] = Vessel.orbit.inclination;
                 Orbit[1] = Vessel.orbit.eccentricity;
