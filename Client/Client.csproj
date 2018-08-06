@@ -73,6 +73,7 @@
     <Compile Include="Events\ExperimentEvent.cs" />
     <Compile Include="Events\ExternalSeatEvent.cs" />
     <Compile Include="Events\ImmortalEvent.cs" />
+    <Compile Include="Events\LabelEvent.cs" />
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
     <Compile Include="Events\NetworkEvent.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Harmony\FlightGlobals_SetShipOrbitRendezvous.cs" />
+    <Compile Include="Harmony\VesselLabels_ProcessLabel.cs" />
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
@@ -150,6 +152,8 @@
     <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
     <Compile Include="Systems\FloatingOrigin\FloatingOriginEvents.cs" />
     <Compile Include="Systems\FloatingOrigin\FloatingOriginSystem.cs" />
+    <Compile Include="Systems\Label\LabelEvents.cs" />
+    <Compile Include="Systems\Label\LabelSystem.cs" />
     <Compile Include="Systems\SettingsSys\SettingsBackup.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />

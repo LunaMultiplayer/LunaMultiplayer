@@ -1,6 +1,5 @@
 ﻿using Harmony;
 using LunaClient.Events;
-
 // ReSharper disable All
 
 namespace LunaClient.Harmony
