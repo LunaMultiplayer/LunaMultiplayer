@@ -62,6 +62,14 @@ namespace LunaClient.ModuleStore
 
                         if (persistentFields.Any())
                         {
+                            if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModule, out var definition))
+                            {                            
+                                //Ignore the whole part module if all the persistent fields are ignored
+                                var ignoredFields = definition.Fields.Where(f => f.Ignore).Select(f => f.FieldName);
+                                if (!persistentFields.Select(f => f.Name).Except(ignoredFields).Any())
+                                    continue;
+                            }
+
                             foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
                             .Where(m=> !m.IsGenericMethod))
                             {
