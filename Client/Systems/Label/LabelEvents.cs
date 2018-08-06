@@ -1,4 +1,5 @@
-﻿using KSP.UI.Screens.Mapview;
+﻿using KSP.UI.Screens;
+using KSP.UI.Screens.Mapview;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 
@@ -26,6 +27,17 @@ namespace LunaClient.Systems.Label
             if (!string.IsNullOrEmpty(owner))
             {
                 label.Header = $"{owner}\n{label.Header}";
+            }
+        }
+
+        public void OnMapWidgetTextProcessed(TrackingStationWidget widget)
+        {
+            if (widget.vessel == null) return;
+
+            var owner = LockSystem.LockQuery.GetControlLockOwner(widget.vessel.id);
+            if (!string.IsNullOrEmpty(owner))
+            {
+                widget.textName.text = $"({owner}) {widget.textName.text}";
             }
         }
     }

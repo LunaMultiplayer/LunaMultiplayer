@@ -18,11 +18,14 @@ namespace LunaClient.Systems.Label
         {
             LabelEvent.onLabelProcessed.Add(LabelEvents.OnLabelProcessed);
             LabelEvent.onMapLabelProcessed.Add(LabelEvents.OnMapLabelProcessed);
+            LabelEvent.onMapWidgetTextProcessed.Add(LabelEvents.OnMapWidgetTextProcessed);
         }
 
         protected override void OnDisabled()
         {
             LabelEvent.onLabelProcessed.Remove(LabelEvents.OnLabelProcessed);
+            LabelEvent.onMapLabelProcessed.Remove(LabelEvents.OnMapLabelProcessed);
+            LabelEvent.onMapWidgetTextProcessed.Remove(LabelEvents.OnMapWidgetTextProcessed);
         }
 
         #endregion

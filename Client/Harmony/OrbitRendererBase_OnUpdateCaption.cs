@@ -7,7 +7,7 @@ using LunaCommon.Enums;
 namespace LunaClient.Harmony
 {
     /// <summary>
-    /// This harmony patch is intended to trigger an event when drawing a label
+    /// This harmony patch is intended to trigger an event when drawing a label from the map view
     /// </summary>
     [HarmonyPatch(typeof(OrbitRendererBase))]
     [HarmonyPatch("objectNode_OnUpdateCaption")]

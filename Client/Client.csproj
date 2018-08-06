@@ -118,6 +118,7 @@
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Harmony\FlightGlobals_SetShipOrbitRendezvous.cs" />
     <Compile Include="Harmony\OrbitRendererBase_OnUpdateCaption.cs" />
+    <Compile Include="Harmony\TrackingStationWidget_Update.cs" />
     <Compile Include="Harmony\VesselLabels_ProcessLabel.cs" />
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
