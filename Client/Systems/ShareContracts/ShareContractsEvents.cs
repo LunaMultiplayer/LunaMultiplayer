@@ -68,9 +68,14 @@ namespace LunaClient.Systems.ShareContracts
 
         public void ContractOffered(Contract contract)
         {
-            LunaLog.Log($"Contract offered: {contract.ContractGuid} - {contract.Title}");
+            if (!LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
+            {
+                //We don't have the contract lock so remove the contract that spawned
+                contract.Kill();
+                return;
+            }
 
-            if (!LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName)) return;
+            LunaLog.Log($"Contract offered: {contract.ContractGuid} - {contract.Title}");
 
             //This should be only called on the client with the contract lock, because he has the generationCount != 0.
             System.MessageSender.SendContractMessage(contract);
