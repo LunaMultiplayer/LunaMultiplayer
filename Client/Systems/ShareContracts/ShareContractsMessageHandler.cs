@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.ShareCareer;
 using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
@@ -10,7 +11,6 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using LunaClient.Systems.ShareCareer;
 
 namespace LunaClient.Systems.ShareContracts
 {
@@ -171,7 +171,7 @@ namespace LunaClient.Systems.ShareContracts
                 }
             }
 
-            LunaLog.Log($"ContractsUpdate received - contract state changed on: {incomingContract.ContractGuid} - {incomingContract.Title}");
+            LunaLog.Log($"Contract update received - contract state changed on: {incomingContract.ContractGuid} - {incomingContract.Title}");
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace LunaClient.Systems.ShareContracts
                 }
             }
 
-            LunaLog.Log($"New contract added: {incomingContract.ContractGuid} - {incomingContract.Title}");
+            LunaLog.Log($"New contract received: {incomingContract.ContractGuid} - {incomingContract.Title}");
         }
     }
 }
