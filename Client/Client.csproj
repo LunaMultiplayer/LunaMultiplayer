@@ -117,6 +117,7 @@
     <Compile Include="Harmony\Strategy_Activate.cs" />
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
+    <Compile Include="Harmony\FlightGlobals_SetShipOrbitRendezvous.cs" />
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
@@ -241,8 +242,10 @@
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageSender.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncSystem.cs" />
+    <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VesselProtoUpdater.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionEvents.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionUpdateQueue.cs" />
+    <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VeselPositioner.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
