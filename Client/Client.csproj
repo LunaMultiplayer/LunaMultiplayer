@@ -621,6 +621,7 @@
     <Content Include="ModuleStore\XML\ModuleWheelMotor.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelSteering.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelSuspension.xml" />
+    <Content Include="ModuleStore\XML\MechJebCore.xml" />
     <Content Include="ModuleStore\XML\TweakScale.xml" />
     <Content Include="Resources\LMPButton.png" />
   </ItemGroup>
