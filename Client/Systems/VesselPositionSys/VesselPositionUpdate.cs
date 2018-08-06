@@ -44,6 +44,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
         public double[] LatLonAlt { get; set; } = new double[3];
+        public double[] VelocityVector { get; set; } = new double[3];
         public double[] NormalVector { get; set; } = new double[3];
         public double[] Orbit { get; set; } = new double[8];
         public float[] SrfRelRotation { get; set; } = new float[4];
@@ -56,6 +57,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Vessel position information fields
 
+        public Vector3d Velocity => new Vector3d(VelocityVector[0], VelocityVector[1], VelocityVector[2]);
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Orbit KspOrbit { get; set; }
@@ -108,6 +110,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             Array.Copy(msgData.SrfRelRotation, SrfRelRotation, 4);
             Array.Copy(msgData.LatLonAlt, LatLonAlt, 3);
+            Array.Copy(msgData.VelocityVector, VelocityVector, 3);
             Array.Copy(msgData.NormalVector, NormalVector, 3);
             Array.Copy(msgData.Orbit, Orbit, 8);
         }
@@ -125,6 +128,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             Array.Copy(update.SrfRelRotation, SrfRelRotation, 4);
             Array.Copy(update.LatLonAlt, LatLonAlt, 3);
+            Array.Copy(update.VelocityVector, VelocityVector, 3);
             Array.Copy(update.NormalVector, NormalVector, 3);
             Array.Copy(update.Orbit, Orbit, 8);
         }
@@ -309,6 +313,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 Array.Copy(Target.SrfRelRotation, SrfRelRotation, 4);
                 Array.Copy(Target.LatLonAlt, LatLonAlt, 3);
+                Array.Copy(Target.VelocityVector, VelocityVector, 3);
                 Array.Copy(Target.NormalVector, NormalVector, 3);
                 Array.Copy(Target.Orbit, Orbit, 8);
 
@@ -331,6 +336,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 LatLonAlt[0] = Vessel.latitude;
                 LatLonAlt[1] = Vessel.longitude;
                 LatLonAlt[2] = Vessel.altitude;
+
+                var velVector = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.srf_velocity;
+                VelocityVector[0] = velVector.x;
+                VelocityVector[1] = velVector.y;
+                VelocityVector[2] = velVector.z;
 
                 NormalVector[0] = Vessel.terrainNormal.x;
                 NormalVector[1] = Vessel.terrainNormal.y;

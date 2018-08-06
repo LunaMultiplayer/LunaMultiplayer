@@ -61,7 +61,7 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             vessel.srfRelRotation = currentSurfaceRelRotation;
             vessel.SetRotation((Quaternion)lerpedBody.rotation * currentSurfaceRelRotation, true);
-
+            
             vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
             vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
 
@@ -79,8 +79,10 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
                 if (vessel.situation <= Vessel.Situations.PRELAUNCH)
                 {
-                    foreach (var part in vessel.Parts)
-                        part.ResumeVelocity();
+                    var currentVelocity = Vector3d.Lerp(update.Velocity, target.Velocity, percentage);
+
+                    vessel.SetWorldVelocity(currentVelocity);
+                    vessel.velocityD = currentVelocity;
                 }
             }
             else

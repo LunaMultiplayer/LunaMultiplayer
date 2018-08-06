@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.Systems.FloatingOrigin;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -9,6 +8,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
 {
@@ -74,6 +74,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 SetSrfRelRotation(vessel, msgData);
                 SetLatLonAlt(vessel, msgData);
+                SetVelocityVector(vessel, msgData);
                 SetNormalVector(vessel, msgData);
                 SetOrbit(vessel, msgData);
 
@@ -105,6 +106,14 @@ namespace LunaClient.Systems.VesselPositionSys
             msgData.Orbit[5] = vessel.orbit.meanAnomalyAtEpoch;
             msgData.Orbit[6] = vessel.orbit.epoch;
             msgData.Orbit[7] = vessel.orbit.referenceBody.flightGlobalsIndex;
+        }
+
+        private static void SetVelocityVector(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            var velVector = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
+            msgData.VelocityVector[0] = velVector.x;
+            msgData.VelocityVector[1] = velVector.y;
+            msgData.VelocityVector[2] = velVector.z;
         }
 
         private static void SetNormalVector(Vessel vessel, VesselPositionMsgData msgData)

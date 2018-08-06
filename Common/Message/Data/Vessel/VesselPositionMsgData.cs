@@ -17,6 +17,7 @@ namespace LunaCommon.Message.Data.Vessel
         public bool Splashed;
         public bool HackingGravity;
         public double[] LatLonAlt = new double[3];
+        public double[] VelocityVector = new double[3];
         public double[] NormalVector = new double[3];
         public float[] SrfRelRotation = new float[4];
         public double[] Orbit = new double[8];
@@ -36,6 +37,9 @@ namespace LunaCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(LatLonAlt[i]);
+
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(VelocityVector[i]);
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(NormalVector[i]);
@@ -62,6 +66,9 @@ namespace LunaCommon.Message.Data.Vessel
                 LatLonAlt[i] = lidgrenMsg.ReadDouble();
 
             for (var i = 0; i < 3; i++)
+                VelocityVector[i] = lidgrenMsg.ReadDouble();
+
+            for (var i = 0; i < 3; i++)
                 NormalVector[i] = lidgrenMsg.ReadDouble();
 
             for (var i = 0; i < 4; i++)
@@ -73,7 +80,7 @@ namespace LunaCommon.Message.Data.Vessel
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(float) + sizeof(bool) * 3 + sizeof(double) * 3 * 2 + 
+            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(float) + sizeof(bool) * 3 + sizeof(double) * 3 * 3 + 
                 sizeof(float) * 4 * 1 + sizeof(double) * 8;
         }
     }

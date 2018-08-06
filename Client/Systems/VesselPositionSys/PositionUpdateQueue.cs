@@ -19,6 +19,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             Array.Copy(msgData.SrfRelRotation, value.SrfRelRotation, 4);
             Array.Copy(msgData.LatLonAlt, value.LatLonAlt, 3);
+            Array.Copy(msgData.VelocityVector, value.VelocityVector, 3);
             Array.Copy(msgData.NormalVector, value.NormalVector, 3);
             Array.Copy(msgData.Orbit, value.Orbit, 8);
         }
