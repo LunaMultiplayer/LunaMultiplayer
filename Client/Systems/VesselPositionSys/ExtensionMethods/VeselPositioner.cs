@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaCommon;
+﻿using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
@@ -71,16 +70,15 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
             Vector3d position;
-            if (vessel.situation <= Vessel.Situations.PRELAUNCH)
-            {
-                position = lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude);
-
-                foreach (var part in vessel.Parts)
-                    part.ResumeVelocity();
-            }
-            else if (vessel.situation == Vessel.Situations.FLYING)
+            if (vessel.situation <= Vessel.Situations.FLYING)
             {
                 position = Vector3d.Lerp(update.LatLonAltPos, target.LatLonAltPos, percentage);
+
+                if (vessel.situation <= Vessel.Situations.PRELAUNCH)
+                {
+                    foreach (var part in vessel.Parts)
+                        part.ResumeVelocity();
+                }
             }
             else
             {
