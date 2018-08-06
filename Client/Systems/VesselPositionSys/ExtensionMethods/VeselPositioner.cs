@@ -1,4 +1,5 @@
-﻿using LunaCommon;
+﻿using LunaClient.Systems.SettingsSys;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
@@ -10,12 +11,6 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             if (vessel == null || update == null || target == null) return;
 
             var lerpedBody = percentage < 0.5 ? update.Body : target.Body;
-
-            if (vessel.isEVA && vessel.loaded)
-            {
-                ApplyPositionsToEva(vessel, update, target, lerpedBody, percentage);
-                return;
-            }
 
             ApplyOrbitInterpolation(vessel, update, target, lerpedBody, percentage);
 
@@ -39,26 +34,6 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             {
                 ApplyInterpolationsToLoadedVessel(vessel, update, target, lerpedBody, percentage);
             }
-        }
-
-        private static void ApplyPositionsToEva(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
-        {
-            vessel.latitude = LunaMath.Lerp(update.LatLonAlt[0], target.LatLonAlt[0], percentage);
-            vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
-            vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
-
-            vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
-            vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
-
-            var currentSurfaceRelRotation = Quaternion.Slerp(update.SurfaceRelRotation, target.SurfaceRelRotation, percentage);
-            vessel.SetRotation((Quaternion)lerpedBody.rotation * currentSurfaceRelRotation, true);
-            vessel.srfRelRotation = currentSurfaceRelRotation;
-
-            ApplyOrbitInterpolation(vessel, update, target, lerpedBody, percentage);
-
-            //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
-            if (vessel.LandedOrSplashed || vessel.situation <= Vessel.Situations.FLYING)
-                vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
         }
 
         private static void ApplyOrbitInterpolation(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
@@ -87,21 +62,33 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             vessel.srfRelRotation = currentSurfaceRelRotation;
             vessel.SetRotation((Quaternion)lerpedBody.rotation * currentSurfaceRelRotation, true);
-            
-            if (vessel.situation <= Vessel.Situations.FLYING)
-            {
-                vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
-                vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
 
-                var curPos = Vector3d.Lerp(update.LatLonAltPos, target.LatLonAltPos, percentage);
-                vessel.SetPosition(curPos);
+            vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
+            vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
+
+            vessel.latitude = LunaMath.Lerp(update.LatLonAlt[0], target.LatLonAlt[0], percentage);
+            vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
+            vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
+
+            Vector3d position;
+            if (vessel.situation <= Vessel.Situations.PRELAUNCH)
+            {
+                position = lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude);
+
+                foreach (var part in vessel.Parts)
+                    part.ResumeVelocity();
+            }
+            else if (vessel.situation == Vessel.Situations.FLYING)
+            {
+                position = Vector3d.Lerp(update.LatLonAltPos, target.LatLonAltPos, percentage);
             }
             else
             {
                 //Do not use vessel.orbit.epoch as otherwise the vessel drifts away when unpacked
-                var posVec = vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
-                vessel.SetPosition(posVec);
+                position = vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
             }
+
+            vessel.SetPosition(position);
         }
     }
 }
