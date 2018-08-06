@@ -11,13 +11,13 @@
             <FieldName>tractionControlScale</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
-	 <!--Auto-Torque. Not needed.-->
+        <!--Auto-Torque. Not needed.-->
         <FieldDefinition>
             <FieldName>autoTorque</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
-	 <!--Motor Inverted. Not needed.-->
-	 <FieldDefinition>
+        <!--Motor Inverted. Not needed.-->
+        <FieldDefinition>
             <FieldName>motorInverted</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>

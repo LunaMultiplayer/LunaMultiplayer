@@ -5,15 +5,15 @@
             <FieldName>DetonationDistance</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
-		<FieldDefinition>
+        <FieldDefinition>
             <FieldName>dropTime</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
-		<FieldDefinition>
+        <FieldDefinition>
             <FieldName>BallisticOverShootFactor</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
-		<FieldDefinition>
+        <FieldDefinition>
             <FieldName>assignedGPSCoords</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>

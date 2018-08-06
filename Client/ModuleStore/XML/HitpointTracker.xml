@@ -4,6 +4,6 @@
         <FieldDefinition>
             <FieldName>Hitpoints</FieldName>
             <Ignore>true</Ignore>
-        </FieldDefinition>		
+        </FieldDefinition>
     </Fields>
 </ModuleDefinition>
