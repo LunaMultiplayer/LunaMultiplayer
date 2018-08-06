@@ -84,11 +84,7 @@ namespace LunaClient.Systems.VesselPositionSys
             get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
-
-        public bool WasFrozen { get; set; }
-        public bool Frozen => InterpolationFinished && SettingsSystem.CurrentSettings.PositionInterpolation &&
-                              VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.IsEmpty;
-
+        
         public Vector3 PositionVectorDiff = Vector3.zero;
 
         #endregion
@@ -183,34 +179,9 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
-            if (Vessel != null && SettingsSystem.CurrentSettings.PositionInterpolation && Vessel.loaded && !Vessel.packed)
-            {
-                //When using interpolation and the vessel is close to us (unpacked) we freeze the vessel position if we don't have more updates
-                //This is the case when a client have a lag spike, it's better to freeze the position than going ballistic. 
-                //To freeze it we use the rigidbodies as that's how unity handles it
-
-                //If the vessel is PACKED then the OrbitDriver_UpdateOrbit harmony patch will freeze the vessel by not calling that method
-                if (Frozen)
-                {
-                    WasFrozen = true;
-
-                    Vessel.orbitDriver.updateFromParameters();
-                    Vessel.FreezePosition();
-                    return;
-                }
-
-                if (WasFrozen && !Frozen)
-                {
-                    WasFrozen = false;
-                    Vessel.orbitDriver.updateFromParameters();
-                }
-
-                Vessel.UnfreezePosition();
-            }
-
             try
             {
-                Vessel?.SetVesselPosition(this, Target, LerpPercentage);
+                Vessel.SetVesselPosition(this, Target, LerpPercentage);
             }
             catch (Exception e)
             {

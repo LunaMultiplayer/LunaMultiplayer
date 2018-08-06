@@ -7,7 +7,7 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
     {
         public static void SetVesselPosition(this Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, float percentage)
         {
-            if (vessel == null) return;
+            if (vessel == null || update == null || target == null) return;
 
             var lerpedBody = percentage < 0.5 ? update.Body : target.Body;
 
