@@ -17,6 +17,7 @@ namespace LunaClient.Systems.Label
         protected override void OnEnabled()
         {
             LabelEvent.onLabelProcessed.Add(LabelEvents.OnLabelProcessed);
+            LabelEvent.onMapLabelProcessed.Add(LabelEvents.OnMapLabelProcessed);
         }
 
         protected override void OnDisabled()

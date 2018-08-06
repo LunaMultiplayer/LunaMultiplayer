@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens.Mapview;
+using LunaClient.Base;
 using LunaClient.Systems.Lock;
 
 namespace LunaClient.Systems.Label
@@ -14,6 +15,17 @@ namespace LunaClient.Systems.Label
 
                 if (!string.IsNullOrEmpty(owner))
                     label.text.text = $"{owner}\n{label.text.text}";
+            }
+        }
+
+        public void OnMapLabelProcessed(Vessel vessel, MapNode.CaptionData label)
+        {
+            if (vessel == null) return;
+
+            var owner = LockSystem.LockQuery.GetControlLockOwner(vessel.id);
+            if (!string.IsNullOrEmpty(owner))
+            {
+                label.Header = $"{owner}\n{label.Header}";
             }
         }
     }
