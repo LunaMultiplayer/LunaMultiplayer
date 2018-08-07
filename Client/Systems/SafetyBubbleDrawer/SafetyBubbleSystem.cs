@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace LunaClient.Systems.SafetyBubbleDrawer
 {
     /// <summary>
-    /// This class controls what happens when we are in KSC screen
+    /// This class controls the code regarding safety bubble
     /// </summary>
     public class SafetyBubbleSystem : System<SafetyBubbleSystem>
     {
@@ -152,6 +152,5 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
         }
 
         #endregion
-
     }
 }
