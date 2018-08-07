@@ -1,11 +1,10 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Localization;
-using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.SafetyBubbleDrawer;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
@@ -142,7 +141,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             foreach (var vessel in FlightGlobals.Vessels.ToArray())
             {
-                if (vessel != null && SafetyBubble.IsInSafetyBubble(vessel) && FlightGlobals.ActiveVessel?.id != vessel.id)
+                if (vessel != null && SafetyBubbleSystem.Singleton.IsInSafetyBubble(vessel) && FlightGlobals.ActiveVessel?.id != vessel.id)
                 {
                     LunaLog.Log($"[LMP]: Killing vessel {vessel.id} because it's inside safety bubble");
 

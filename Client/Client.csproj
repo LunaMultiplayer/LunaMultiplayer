@@ -156,6 +156,9 @@
     <Compile Include="Systems\FloatingOrigin\FloatingOriginSystem.cs" />
     <Compile Include="Systems\Label\LabelEvents.cs" />
     <Compile Include="Systems\Label\LabelSystem.cs" />
+    <Compile Include="Systems\SafetyBubbleDrawer\SpawnPointLocation.cs" />
+    <Compile Include="Systems\SafetyBubbleDrawer\SafetyBubbleEvents.cs" />
+    <Compile Include="Systems\SafetyBubbleDrawer\SafetyBubbleSystem.cs" />
     <Compile Include="Systems\SettingsSys\SettingsBackup.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />
@@ -276,7 +279,6 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
-    <Compile Include="VesselUtilities\SafetyBubble.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />

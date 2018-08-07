@@ -5,6 +5,7 @@ using LunaClient.VesselUtilities;
 using LunaCommon;
 using System.Collections.Concurrent;
 using System.Text;
+using LunaClient.Systems.SafetyBubbleDrawer;
 
 namespace LunaClient.Systems.Status
 {
@@ -108,7 +109,7 @@ namespace LunaClient.Systems.Status
 
         private static string GetCurrentShipStatus()
         {
-            if (SafetyBubble.IsInSafetyBubble(FlightGlobals.ActiveVessel))
+            if (SafetyBubbleSystem.Singleton.IsInSafetyBubble(FlightGlobals.ActiveVessel))
                 return StatusTexts.InsideSafetyBubble;
 
             StrBuilder.Length = 0;

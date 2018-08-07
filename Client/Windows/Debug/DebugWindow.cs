@@ -1,11 +1,11 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems.FloatingOrigin;
+using LunaClient.Systems.SafetyBubbleDrawer;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
@@ -116,7 +116,7 @@ namespace LunaClient.Windows.Debug
                         ourVessel.mainBody.GetLatLonAltOrbital(ourVessel.orbit.pos, out lat, out lon, out alt);
                         StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
 
-                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
+                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
 
                         _positionText = StringBuilder.ToString();
                         StringBuilder.Length = 0;

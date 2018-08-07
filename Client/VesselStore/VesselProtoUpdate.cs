@@ -1,4 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SafetyBubbleDrawer;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
@@ -32,7 +32,7 @@ namespace LunaClient.VesselStore
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;
         public bool ShouldBeLoaded => !HasInvalidParts;
-        public bool IsInSafetyBubble => SafetyBubble.IsInSafetyBubble(ProtoVessel);
+        public bool IsInSafetyBubble => SafetyBubbleSystem.Singleton.IsInSafetyBubble(ProtoVessel);
 
         private readonly ConcurrentDictionary<uint, ProtoPartSnapshot> _vesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
         public ConcurrentDictionary<uint, ProtoPartSnapshot> VesselParts
