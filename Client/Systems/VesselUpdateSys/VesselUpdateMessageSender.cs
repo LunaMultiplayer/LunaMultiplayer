@@ -29,7 +29,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             msgData.Situation = vessel.situation.ToString();
             msgData.Landed = vessel.Landed;
-            msgData.LandedAt = vessel.landedAtLast;
+            msgData.LandedAt = vessel.landedAt;
             msgData.DisplayLandedAt = vessel.displaylandedAt;
             msgData.Splashed = vessel.Splashed;
             msgData.MissionTime = vessel.missionTime;
@@ -78,7 +78,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.protoVessel.vesselType = vessel.vesselType;
             vessel.protoVessel.situation = vessel.situation;
             vessel.protoVessel.landed = vessel.Landed;
-            vessel.protoVessel.landedAt = vessel.landedAtLast;
+            vessel.protoVessel.landedAt = vessel.landedAt;
             vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
             vessel.protoVessel.splashed = vessel.Splashed;
             vessel.protoVessel.missionTime = vessel.missionTime;
