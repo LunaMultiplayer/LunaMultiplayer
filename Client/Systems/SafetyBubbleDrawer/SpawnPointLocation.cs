@@ -1,4 +1,6 @@
-﻿namespace LunaClient.Systems.SafetyBubbleDrawer
+﻿using UnityEngine;
+
+namespace LunaClient.Systems.SafetyBubbleDrawer
 {
     public class SpawnPointLocation
     {
@@ -7,11 +9,13 @@
         private readonly double _altitude;
         private readonly CelestialBody _body;
 
+        public Transform Transform;
         public Vector3d Position => _body.GetWorldSurfacePosition(_latitude, _longitude, _altitude);
 
         public SpawnPointLocation(PSystemSetup.SpaceCenterFacility.SpawnPoint spawnPoint,
             CelestialBody celestialBody)
         {
+            Transform = spawnPoint.GetSpawnPointTransform();
             _latitude = spawnPoint.latitude;
             _longitude = spawnPoint.longitude;
             _altitude = spawnPoint.altitude;
@@ -20,6 +24,7 @@
 
         public SpawnPointLocation(LaunchSite.SpawnPoint spawnPoint, CelestialBody celestialBody)
         {
+            Transform = spawnPoint.GetSpawnPointTransform();
             _latitude = spawnPoint.latitude;
             _longitude = spawnPoint.longitude;
             _altitude = spawnPoint.altitude;
