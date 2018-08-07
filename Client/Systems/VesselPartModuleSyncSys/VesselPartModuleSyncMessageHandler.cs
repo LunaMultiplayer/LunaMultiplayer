@@ -7,7 +7,6 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
 {

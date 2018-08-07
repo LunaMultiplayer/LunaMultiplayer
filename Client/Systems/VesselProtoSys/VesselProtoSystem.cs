@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Systems.Mod;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;

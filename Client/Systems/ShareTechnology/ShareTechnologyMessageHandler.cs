@@ -1,12 +1,11 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens;
+using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Utilities;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
 using System.Linq;
-using KSP.UI.Screens;
 
 namespace LunaClient.Systems.ShareTechnology
 {

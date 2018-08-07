@@ -6,7 +6,6 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace LunaClient.Systems.ShareScienceSubject
 {
