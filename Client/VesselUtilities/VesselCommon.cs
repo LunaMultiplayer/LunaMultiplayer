@@ -294,27 +294,7 @@ namespace LunaClient.VesselUtilities
                 .Select(vi => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v.id == vi.VesselId))
                 .Where(v => v != null && v.id != Guid.Empty);
         }
-
-        /// <summary>
-        /// Returns if given vessel is controlled and in a past subspace
-        /// </summary>
-        public static bool VesselIsControlledAndInPastSubspace(Guid vesselId)
-        {
-            var owner = "";
-            if (LockSystem.LockQuery.ControlLockExists(vesselId))
-            {
-                owner = LockSystem.LockQuery.GetControlLockOwner(vesselId);
-            }
-            else if (LockSystem.LockQuery.UpdateLockExists(vesselId))
-            {
-                owner = LockSystem.LockQuery.GetUpdateLockOwner(vesselId);
-            }
-
-            return !string.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);
-        }
-
-
-
+        
         /// <summary>
         /// Checks if the given config node from a protovessel has NaN orbits
         /// </summary>

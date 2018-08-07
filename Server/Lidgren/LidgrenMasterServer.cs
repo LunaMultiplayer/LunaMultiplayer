@@ -53,7 +53,6 @@ namespace Server.Lidgren
                 msgData.Id = LidgrenServer.Server.UniqueIdentifier;
                 msgData.Password = !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
                 msgData.Cheats = GeneralSettings.SettingsStore.Cheats;
-                msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
                 msgData.Description = GeneralSettings.SettingsStore.Description;
                 msgData.Website = GeneralSettings.SettingsStore.Website;
                 msgData.WebsiteText = GeneralSettings.SettingsStore.WebsiteText;

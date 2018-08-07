@@ -28,7 +28,6 @@ namespace LMP.MasterServer.Structure
             Info.Cheats = msg.Cheats;
             Info.Password = msg.Password;
             Info.ServerVersion = msg.ServerVersion;
-            Info.ShowVesselsInThePast = msg.ShowVesselsInThePast;
             Info.Description = msg.Description;
             Info.Website = msg.Website;
             Info.WebsiteText = msg.WebsiteText;
@@ -77,7 +76,6 @@ namespace LMP.MasterServer.Structure
                 Cheats = msg.Cheats,
                 Password = msg.Password,
                 ServerVersion = msg.ServerVersion,
-                ShowVesselsInThePast = msg.ShowVesselsInThePast,
                 Description = msg.Description,
                 Website = msg.Website,
                 WebsiteText = msg.WebsiteText,

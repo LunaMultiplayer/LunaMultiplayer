@@ -30,7 +30,6 @@ namespace LunaCommon.Message.Data.MasterServer
         public bool DropControlOnVesselSwitching;
         public bool DropControlOnExitFlight;
         public bool DropControlOnExit;
-        public bool ShowVesselsInThePast;
 
         public override string ClassName { get; } = nameof(MsRegisterServerMsgData);
 
@@ -63,7 +62,6 @@ namespace LunaCommon.Message.Data.MasterServer
             lidgrenMsg.Write(DropControlOnVesselSwitching);
             lidgrenMsg.Write(DropControlOnExitFlight);
             lidgrenMsg.Write(DropControlOnExit);
-            lidgrenMsg.Write(ShowVesselsInThePast);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -93,7 +91,6 @@ namespace LunaCommon.Message.Data.MasterServer
             DropControlOnVesselSwitching = lidgrenMsg.ReadBoolean();
             DropControlOnExitFlight = lidgrenMsg.ReadBoolean();
             DropControlOnExit = lidgrenMsg.ReadBoolean();
-            ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
         }
 
         internal override int InternalGetMessageSize()
@@ -101,7 +98,7 @@ namespace LunaCommon.Message.Data.MasterServer
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
             return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
                 sizeof(byte) + sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + Website.GetByteCount() + 
-                   WebsiteText.GetByteCount() + sizeof(bool) * 4;
+                   WebsiteText.GetByteCount() + sizeof(bool) * 3;
         }
     }
 }

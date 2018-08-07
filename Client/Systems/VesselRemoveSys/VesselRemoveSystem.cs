@@ -57,7 +57,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             RevertEvent.onRevertedToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
             RevertEvent.onReturnedToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
 
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
             SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
         }
@@ -184,25 +183,6 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                 //Always add to the killed list even if it exists that vessel or not.
                 RemovedVessels.TryAdd(vesselRemoveEntry.VesselId, LunaNetworkTime.UtcNow);
-            }
-        }
-
-        /// <summary>
-        /// Get the vessels that are in a past subspace and kill them
-        /// </summary>
-        private void KillPastSubspaceVessels()
-        {
-            if (SettingsSystem.ServerSettings.ShowVesselsInThePast) return;
-
-            if (Enabled)
-            {
-                var vesselsToUnloadIds = VesselsProtoStore.AllPlayerVessels
-                    .Where(v => v.Value.VesselExist && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key));
-
-                foreach (var vesselId in vesselsToUnloadIds)
-                {
-                    AddToKillList(vesselId.Key, "Vessel was in past subspace");
-                }
             }
         }
 

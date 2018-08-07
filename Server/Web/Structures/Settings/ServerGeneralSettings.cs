@@ -15,7 +15,6 @@ namespace Server.Web.Structures.Settings
         public int MaxUsernameLength => GeneralSettings.SettingsStore.MaxUsernameLength;
         public float AutoDekessler => GeneralSettings.SettingsStore.AutoDekessler;
         public float AutoNuke => GeneralSettings.SettingsStore.AutoDekessler;
-        public bool ShowVesselsInThePast => GeneralSettings.SettingsStore.ShowVesselsInThePast;
         public bool Cheats => GeneralSettings.SettingsStore.Cheats;
         public bool AllowSackKerbals => GeneralSettings.SettingsStore.AllowSackKerbals;
         public string ConsoleIdentifier => GeneralSettings.SettingsStore.ConsoleIdentifier;

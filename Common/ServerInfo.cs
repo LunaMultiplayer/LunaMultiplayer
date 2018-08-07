@@ -26,6 +26,5 @@
         public bool DropControlOnVesselSwitching { get; set; }
         public bool DropControlOnExitFlight { get; set; }
         public bool DropControlOnExit { get; set; }
-        public bool ShowVesselsInThePast { get; set; }
     }
 }

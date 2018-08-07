@@ -40,9 +40,6 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Specify in minutes how often /nukeksc automatically runs. 0 = Disabled")]
         public float AutoNuke { get; set; } = 0.0f;
 
-        [XmlComment(Value = "Specify if the vessels that are being CONTROLLED and in a past subspace will be shown for players in future subspaces")]
-        public bool ShowVesselsInThePast { get; set; } = true;
-
         [XmlComment(Value = "Enable use of Cheats in-game.")]
         public bool Cheats { get; set; } = true;
 

@@ -34,7 +34,6 @@ namespace Server.Message
             msgData.InterpolationOffsetMs = InterpolationSettings.SettingsStore.InterpolationOffsetMs;
             msgData.ForceInterpolation = InterpolationSettings.SettingsStore.ForceInterpolation;
             msgData.InterpolationValue = InterpolationSettings.SettingsStore.InterpolationValue;
-            msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = WarpSettings.SettingsStore.WarpMaster;
             msgData.MinScreenshotIntervalMs = ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs;
             msgData.MaxScreenshotWidth = ScreenshotSettings.SettingsStore.MaxScreenshotWidth;

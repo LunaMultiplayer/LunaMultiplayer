@@ -65,7 +65,6 @@ namespace LunaCommon.Message.Data.Settings
         public float KerbalGToleranceMult;
         public bool AllowNegativeCurrency;
         public string WarpMaster;
-        public bool ShowVesselsInThePast;
         public int MinScreenshotIntervalMs;
         public int MaxScreenshotWidth;
         public int MaxScreenshotHeight;
@@ -131,7 +130,6 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(KerbalGToleranceMult);
             lidgrenMsg.Write(AllowNegativeCurrency);
             lidgrenMsg.Write(WarpMaster);
-            lidgrenMsg.Write(ShowVesselsInThePast);
             lidgrenMsg.Write(MinScreenshotIntervalMs);
             lidgrenMsg.Write(MaxScreenshotWidth);
             lidgrenMsg.Write(MaxScreenshotHeight);
@@ -196,7 +194,6 @@ namespace LunaCommon.Message.Data.Settings
             KerbalGToleranceMult = lidgrenMsg.ReadFloat();
             AllowNegativeCurrency = lidgrenMsg.ReadBoolean();
             WarpMaster = lidgrenMsg.ReadString();
-            ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
             MinScreenshotIntervalMs = lidgrenMsg.ReadInt32();
             MaxScreenshotWidth = lidgrenMsg.ReadInt32();
             MaxScreenshotHeight = lidgrenMsg.ReadInt32();
@@ -206,7 +203,7 @@ namespace LunaCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) +
-                sizeof(bool) * 25 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 24 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }
