@@ -5,7 +5,6 @@
   <ConnectIcon>连接</ConnectIcon>
   <DisconnectIcon>取消连接</DisconnectIcon>
   <SyncIcon>跳转至此</SyncIcon>
-  <CloseIcon>关闭</CloseIcon>
   <RefreshIcon>刷新</RefreshIcon>
   <UploadIcon>上传</UploadIcon>
   <DeleteIcon>删除</DeleteIcon>

@@ -82,7 +82,7 @@ namespace LunaClient.Windows.Status
                     GUILayout.Label(StatusTexts.GetTimeLabel(SubspaceDisplay[i]));
                     GUILayout.FlexibleSpace();
                     if (NotWarpingAndIsFutureSubspace(SubspaceDisplay[i].SubspaceId) && GUILayout.Button(SyncIcon, ButtonStyle))
-                        WarpSystem.CurrentSubspace = SubspaceDisplay[i].SubspaceId;
+                       WarpSystem.Singleton.SyncToSubspace(SubspaceDisplay[i].SubspaceId);
                 }
                 GUILayout.EndHorizontal();
 

@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <CraftLibraryWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <Crafts>Pojazdy</Crafts>
-    <Upload>udostepnij</Upload>
-    <Folders>Biblioteka pojazdow</Folders>
+  <Crafts>Pojazdy</Crafts>
+  <Folders>Biblioteka pojazdow</Folders>
+  <Upload>udostepnij</Upload>
 </CraftLibraryWindowText>

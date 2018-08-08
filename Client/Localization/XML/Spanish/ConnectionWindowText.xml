@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <PlayerName>Nombre jugador:</PlayerName>
-    <Name>Nombre:</Name>
-    <Address>Direccion IP:</Address>
-    <Port>Puerto:</Port>
-    <Password>Password:</Password>
-    <CustomServers>Servidores propios:</CustomServers>
+  <PlayerName>Nombre jugador:</PlayerName>
+  <Name>Nombre:</Name>
+  <Address>Direccion IP:</Address>
+  <Port>Puerto:</Port>
+  <Password>Password:</Password>
+  <CustomServers>Servidores propios:</CustomServers>
 </ConnectionWindowText>

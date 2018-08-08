@@ -3,7 +3,7 @@
   <Title>Administracja</Title>
   <Password>Server admin password:</Password>
   <ConfirmDialogTitle>Confirmation</ConfirmDialogTitle>
-  <BanText>Czy naprawde chcesz zbanowaæ gracza?</BanText>
-  <KickText>Czy naprawde chcesz wyrzuciæ tego gracza?</KickText>
+  <BanText>Czy naprawde chcesz zbanowaï¿½ gracza?</BanText>
+  <KickText>Czy naprawde chcesz wyrzuciï¿½ tego gracza?</KickText>
   <Reason>Reason:</Reason>
 </AdminWindowText>

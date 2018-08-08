@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <InstallDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <Title>Incorrcte installatie gedecteerd</Title>
-    <IncorrectInstall>LunaMultiPlayer is niet correct geïnstalleerd.</IncorrectInstall>
-    <CurrentLoc>Huidige locatie:</CurrentLoc>
-    <CorrectLoc>Correcte locatie:</CorrectLoc>
+  <Title>Incorrcte installatie gedecteerd</Title>
+  <IncorrectInstall>LunaMultiPlayer is niet correct geïnstalleerd.</IncorrectInstall>
+  <CurrentLoc>Huidige locatie:</CurrentLoc>
+  <CorrectLoc>Correcte locatie:</CorrectLoc>
 </InstallDialogText>

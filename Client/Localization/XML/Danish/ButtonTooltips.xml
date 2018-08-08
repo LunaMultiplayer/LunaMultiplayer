@@ -5,7 +5,6 @@
   <ConnectIcon>Tilslut</ConnectIcon>
   <DisconnectIcon>Koble fra</DisconnectIcon>
   <SyncIcon>Warp til</SyncIcon>
-  <CloseIcon>Luk</CloseIcon>
   <RefreshIcon>Genopfrisk</RefreshIcon>
   <UploadIcon>Upload</UploadIcon>
   <DeleteIcon>Slet</DeleteIcon>

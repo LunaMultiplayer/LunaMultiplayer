@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <Text>
+  <Text>
 Luna Multiplayer (LMP) partage les informations personnelles suivantes avec le serveur maître et tout serveur auquel vous vous connectez :
 a) Votre pseudonyme.
 b) Votre "token" de joueur (une chaîne de caractères générée aléatoirement pour vous authentifer).
@@ -11,7 +11,7 @@ Pour utiliser LMP, vous devez autoriser l'utilisation de ces informations.
 
 Pour plus d'informations - voir les règles s'appliquant aux add-ons KSP
     </Text>
-    <Title>LunaMultiPlayer - Clauses d'utilisation</Title>
-    <Accept>Accepter</Accept>
-    <Decline>Refuser</Decline>
+  <Title>LunaMultiPlayer - Clauses d'utilisation</Title>
+  <Accept>Accepter</Accept>
+  <Decline>Refuser</Decline>
 </DisclaimerDialogText>

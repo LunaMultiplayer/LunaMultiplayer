@@ -21,5 +21,6 @@
         public string SackingKerbalsNotAllowed { get; set; } = "This server does not allow firing kerbals";
         public string CannotLoadGames { get; set; } = "LMP does not allow loading savegames";
         public string KerbalNotYours { get; set; } = "Another player is using this kerbal";
+        public string UnsafeToSync { get; set; } = "Cannot sync while in unstable orbit as you might crash! You can turn off this check in settings";
     }
 }

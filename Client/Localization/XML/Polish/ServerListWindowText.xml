@@ -1,18 +1,18 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <Title>Lista serwerow</Title>
-    <NoServers>Brak serwerow!</NoServers>
-    <Ping>Ping</Ping>
-    <Players>Gracze</Players>
-    <MaxPlayers>Max graczy</MaxPlayers>
-    <Mode>Tryb</Mode>
-    <WarpMode>Warp mode</WarpMode>
-    <Terrain>Teren</Terrain>
-    <Cheats>Cheaty</Cheats>
-    <Name>Nazwa</Name>
-    <Description>Description</Description>
-    <Website>URL</Website>
-    <ServerDetailTitle>Laczenie z serwerem</ServerDetailTitle>
-    <Password>Haslo</Password>
-    <Connect>Polacz</Connect>
+  <Title>Lista serwerow</Title>
+  <NoServers>Brak serwerow!</NoServers>
+  <Ping>Ping</Ping>
+  <Players>Gracze</Players>
+  <MaxPlayers>Max graczy</MaxPlayers>
+  <Mode>Tryb</Mode>
+  <WarpMode>Warp mode</WarpMode>
+  <Terrain>Teren</Terrain>
+  <Cheats>Cheaty</Cheats>
+  <Name>Nazwa</Name>
+  <Description>Description</Description>
+  <Website>URL</Website>
+  <ServerDetailTitle>Laczenie z serwerem</ServerDetailTitle>
+  <Password>Haslo</Password>
+  <Connect>Polacz</Connect>
 </ServerListWindowText>

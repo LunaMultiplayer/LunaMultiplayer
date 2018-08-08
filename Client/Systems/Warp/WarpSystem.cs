@@ -1,9 +1,11 @@
-﻿using LunaClient.Base;
+﻿using FinePrint.Utilities;
+using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
@@ -132,6 +134,21 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Public methods
+
+        /// <summary>
+        /// Perform sync validations and sync to given subspace
+        /// </summary>
+        public void SyncToSubspace(int subspaceId)
+        {
+            if (!SafeToSync() && subspaceId > 0)
+            {
+                DisplayMessage(LocalizationContainer.ScreenText.UnsafeToSync, 5f);
+            }
+            else
+            {
+                CurrentSubspace = subspaceId;
+            }
+        }
 
         /// <summary>
         /// Perform warp validations
@@ -269,6 +286,25 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Checks if it's safe to sync to another subspace
+        /// </summary>
+        private static bool SafeToSync()
+        {
+            if (SettingsSystem.CurrentSettings.IgnoreSyncChecks) return true;
+
+            if (HighLogic.LoadedScene != GameScenes.FLIGHT || FlightGlobals.ActiveVessel == null) return true;
+            if (VesselCommon.IsSpectating) return true;
+            if (FlightGlobals.ActiveVessel.situation <= Vessel.Situations.FLYING) return true;
+
+            if (FlightGlobals.ActiveVessel.orbit.eccentricity < 1)
+            {
+                return CelestialUtilities.GetMinimumOrbitalDistance(FlightGlobals.ActiveVessel.mainBody, 1f) < FlightGlobals.ActiveVessel.orbit.PeR;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Task that requests a new subspace to the server.

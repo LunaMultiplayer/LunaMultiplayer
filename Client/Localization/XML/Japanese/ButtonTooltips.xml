@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-16"?>
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SettingsIcon>ƒZƒbƒeƒBƒ“ƒO</SettingsIcon>
-  <ServerIcon>ƒT[ƒo[</ServerIcon>
-  <ConnectIcon>Ú‘±</ConnectIcon>
-  <DisconnectIcon>Ø’f</DisconnectIcon>
-  <SyncIcon>“¯Šú</SyncIcon>
-  <CloseIcon>•Â‚¶‚é</CloseIcon>
-  <RefreshIcon>ƒŠƒtƒŒƒbƒVƒ…</RefreshIcon>
-  <UploadIcon>ƒAƒbƒvƒ[ƒh</UploadIcon>
-  <DeleteIcon>íœ</DeleteIcon>
-  <PlusIcon>’Ç‰Á</PlusIcon>
-  <SaveIcon>ƒZ[ƒu</SaveIcon>
-  <KeyIcon>ƒpƒXƒ[ƒh</KeyIcon>
-  <ChatIcon>ƒ`ƒƒƒbƒg</ChatIcon>
-  <CameraIcon>ƒXƒNƒŠ[ƒ“ƒVƒ‡ƒbƒg</CameraIcon>
-  <RocketIcon>‹@‘Ì</RocketIcon>
-  <AdminIcon>ŠÇ—ŽÒ</AdminIcon>
-  <KickIcon>ƒLƒbƒN</KickIcon>
+  <SettingsIcon>ï¿½Zï¿½bï¿½eï¿½Bï¿½ï¿½ï¿½O</SettingsIcon>
+  <ServerIcon>ï¿½Tï¿½[ï¿½oï¿½[</ServerIcon>
+  <ConnectIcon>ï¿½Ú‘ï¿½</ConnectIcon>
+  <DisconnectIcon>ï¿½Ø’f</DisconnectIcon>
+  <SyncIcon>ï¿½ï¿½ï¿½ï¿½</SyncIcon>
+  <RefreshIcon>ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½</RefreshIcon>
+  <UploadIcon>ï¿½Aï¿½bï¿½vï¿½ï¿½ï¿½[ï¿½h</UploadIcon>
+  <DeleteIcon>ï¿½íœ</DeleteIcon>
+  <PlusIcon>ï¿½Ç‰ï¿½</PlusIcon>
+  <SaveIcon>ï¿½Zï¿½[ï¿½u</SaveIcon>
+  <KeyIcon>ï¿½pï¿½Xï¿½ï¿½ï¿½[ï¿½h</KeyIcon>
+  <ChatIcon>ï¿½`ï¿½ï¿½ï¿½bï¿½g</ChatIcon>
+  <CameraIcon>ï¿½Xï¿½Nï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½bï¿½g</CameraIcon>
+  <RocketIcon>ï¿½@ï¿½ï¿½</RocketIcon>
+  <AdminIcon>ï¿½Ç—ï¿½ï¿½ï¿½</AdminIcon>
+  <KickIcon>ï¿½Lï¿½bï¿½N</KickIcon>
   <BanIcon>BAN</BanIcon>
-  <DekesslerIcon>ƒfƒuƒŠÁ‹Ž</DekesslerIcon>
-  <NukeIcon>KSC‚ð´‘|‚·‚é</NukeIcon>
+  <DekesslerIcon>ï¿½fï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</DekesslerIcon>
+  <NukeIcon>KSCï¿½ð´‘|ï¿½ï¿½ï¿½ï¿½</NukeIcon>
   <RestartServerIcon>Restart server</RestartServerIcon>
 </ButtonTooltips>

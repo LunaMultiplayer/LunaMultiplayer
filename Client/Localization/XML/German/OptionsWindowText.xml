@@ -1,22 +1,24 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <Title>Options</Title>
-    <Language>Sprache:</Language>
-    <Color>Spielerfarbe:</Color>
-    <Red>R:</Red>
-    <Green>G:</Green>
-    <Blue>B:</Blue>
-    <Random>Zufällig</Random>
-    <Set>Festlegen</Set>
-    <InterpolationSettings>Interpolation Einstellungen</InterpolationSettings>
-    <EnableInterpolation>Aktiviere Interpolation</EnableInterpolation>
-    <InterpolationOffset>Interpolations-Versatz:</InterpolationOffset>
-    <GenerateLmpModControl>Generiere die Server LMPModControl.xml-Datei</GenerateLmpModControl>
-    <GenerateUniverse>Generiere das Universum von einem gespeicherten Spielstand</GenerateUniverse>
-    <NetworkSettings>Netzwerk Einstellungen</NetworkSettings>
-    <CannotChangeWhileConnected>Werte können bei bestehender Verbindung nicht geändert werden</CannotChangeWhileConnected>
-    <ResetNetwork>Netzwerk zurücksetzen</ResetNetwork>
-    <Mtu>MTU (Standard: 1408):</Mtu>
-    <AutoExpandMtu>Automatisches Erweitern der MTU</AutoExpandMtu>
-    <ConnectionTimeout>Verbindungsabbruch, Timeout (Standard: 15):</ConnectionTimeout>
+  <Title>Options</Title>
+  <Language>Sprache:</Language>
+  <Color>Spielerfarbe:</Color>
+  <Red>R:</Red>
+  <Green>G:</Green>
+  <Blue>B:</Blue>
+  <Random>Zufällig</Random>
+  <Set>Festlegen</Set>
+  <InterpolationSettings>Interpolation Einstellungen</InterpolationSettings>
+  <EnableInterpolation>Aktiviere Interpolation</EnableInterpolation>
+  <InterpolationOffset>Interpolations-Versatz:</InterpolationOffset>
+  <GenerateLmpModControl>Generiere die Server LMPModControl.xml-Datei</GenerateLmpModControl>
+  <GenerateUniverse>Generiere das Universum von einem gespeicherten Spielstand</GenerateUniverse>
+  <NetworkSettings>Netzwerk Einstellungen</NetworkSettings>
+  <CannotChangeWhileConnected>Werte können bei bestehender Verbindung nicht geändert werden</CannotChangeWhileConnected>
+  <ResetNetwork>Netzwerk zurücksetzen</ResetNetwork>
+  <Mtu>MTU (Standard: 1408):</Mtu>
+  <AutoExpandMtu>Automatisches Erweitern der MTU</AutoExpandMtu>
+  <ConnectionTimeout>Verbindungsabbruch, Timeout (Standard: 15):</ConnectionTimeout>
+  <GeneralSettings>General settings</GeneralSettings>
+  <IgnoreSyncChecks>Ignore sync checks</IgnoreSyncChecks>
 </OptionsWindowText>

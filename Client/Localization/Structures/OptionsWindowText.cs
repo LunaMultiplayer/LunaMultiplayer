@@ -23,5 +23,7 @@ namespace LunaClient.Localization.Structures
         public string Mtu { get; set; } = $"MTU (Default: {NetPeerConfiguration.kDefaultMTU}):";
         public string AutoExpandMtu { get; set; } = "Auto expand MTU";
         public string ConnectionTimeout { get; set; } = "Connection timeout (Default: 15):";
+        public string GeneralSettings { get; set; } = "General settings";
+        public string IgnoreSyncChecks { get; set; } = "Ignore sync checks";
     }
 }

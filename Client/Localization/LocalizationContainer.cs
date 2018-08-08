@@ -90,6 +90,43 @@ namespace LunaClient.Localization
             LoadWindowTexts(language, ref CompatibleDialogText);
         }
 
+        /// <summary>
+        /// Regenerates all the translation xml files. 
+        /// Usefull when you add a new string to a new text class as you don't need to edit all the xml files in every language
+        /// </summary>
+        public static void RegenerateTranslations()
+        {
+            var currentLanguage = CurrentLanguage.Clone() as string;
+
+            foreach (var language in Languages)
+            {
+                LoadLanguage(language);
+
+                LunaXmlSerializer.WriteToXmlFile(AdminWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(AdminWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(BannedPartsWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(BannedPartsWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ChatWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ChatWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ConnectionWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ConnectionWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(CraftLibraryWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(CraftLibraryWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ModWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ModWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(OptionsWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(OptionsWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ServerListWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ServerListWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(StatusWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(StatusWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(DisclaimerDialogText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(DisclaimerDialogText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(InstallDialogText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(InstallDialogText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ScreenshotWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ScreenshotWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ScreenText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ScreenText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ButtonTooltips, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ButtonTooltips)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(UpdateWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(UpdateWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(CompatibleDialogText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(CompatibleDialogText)}.xml"));
+            }
+
+            LoadLanguage(currentLanguage);
+        }
+
+        #endregion
+
+        #region Private
+        
         private static void LoadWindowTexts<T>(string language, ref T classToReplace) where T : class, new()
         {
             try

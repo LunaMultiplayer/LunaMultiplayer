@@ -1,22 +1,23 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <CraftUploaded>Корабль загружен!</CraftUploaded>
-    <CraftSaved>Корабль сохранен!</CraftSaved>
-    <ModFileGenerated>LMPModControl.xml создан в директории с KSP</ModFileGenerated>
-    <Disconected>Вы были отключенны!</Disconected>
-    <Spectating>Этот корабль управляется игроком</Spectating>
-    <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
-    <CannotRecover>Невозможно вернуть корабль, он не ваш.</CannotRecover>
-    <CannotTerminate>Невозможно уничтожить корабль, он не ваш.</CannotTerminate>
-    <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>
-    <WarpDisabled>Невозможно ускорить время, функция не доступна</WarpDisabled>
-    <WaitingSubspace>Невозможно ускорить время, ожидание subspace id от сервера</WaitingSubspace>
-    <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
-    <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
-    <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
-    <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
-    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
-    <SackingKerbalsNotAllowed>This server does not allow firing kerbals</SackingKerbalsNotAllowed>
-    <CannotLoadGames>LMP does not allow loading savegames</CannotLoadGames>
-    <KerbalNotYours>Another player is using this kerbal</KerbalNotYours>
+  <CraftUploaded>Корабль загружен!</CraftUploaded>
+  <CraftSaved>Корабль сохранен!</CraftSaved>
+  <ModFileGenerated>LMPModControl.xml создан в директории с KSP</ModFileGenerated>
+  <Disconected>Вы были отключенны!</Disconected>
+  <Spectating>Этот корабль управляется игроком</Spectating>
+  <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
+  <CannotRecover>Невозможно вернуть корабль, он не ваш.</CannotRecover>
+  <CannotTerminate>Невозможно уничтожить корабль, он не ваш.</CannotTerminate>
+  <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>
+  <WarpDisabled>Невозможно ускорить время, функция не доступна</WarpDisabled>
+  <WaitingSubspace>Невозможно ускорить время, ожидание subspace id от сервера</WaitingSubspace>
+  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
+  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
+  <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
+  <SackingKerbalsNotAllowed>This server does not allow firing kerbals</SackingKerbalsNotAllowed>
+  <CannotLoadGames>LMP does not allow loading savegames</CannotLoadGames>
+  <KerbalNotYours>Another player is using this kerbal</KerbalNotYours>
+  <UnsafeToSync>Cannot sync while in unstable orbit as you might crash! You can turn off this check in settings</UnsafeToSync>
 </ScreenText>

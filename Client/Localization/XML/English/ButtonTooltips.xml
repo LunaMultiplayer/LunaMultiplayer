@@ -5,7 +5,6 @@
   <ConnectIcon>Connect</ConnectIcon>
   <DisconnectIcon>Disconnect</DisconnectIcon>
   <SyncIcon>Warp to</SyncIcon>
-  <CloseIcon>Close</CloseIcon>
   <RefreshIcon>Refresh</RefreshIcon>
   <UploadIcon>Upload</UploadIcon>
   <DeleteIcon>Delete</DeleteIcon>

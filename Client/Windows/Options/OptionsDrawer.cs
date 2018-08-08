@@ -68,6 +68,7 @@ namespace LunaClient.Windows.Options
             _displayUniverseConverterDialog = GUILayout.Toggle(_displayUniverseConverterDialog, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
 
+            DrawGeneralSettings();
             DrawInterpolationSettings();
             DrawNetworkSettings();
 #if DEBUG
@@ -77,10 +78,24 @@ namespace LunaClient.Windows.Options
             GUILayout.EndVertical();
         }
 
+        private void DrawGeneralSettings()
+        {
+            _showGeneralSettings = GUILayout.Toggle(_showGeneralSettings, LocalizationContainer.OptionsWindowText.GeneralSettings, ButtonStyle);
+            if (_showGeneralSettings)
+            {
+                var settingSyncCheck = GUILayout.Toggle(SettingsSystem.CurrentSettings.IgnoreSyncChecks, LocalizationContainer.OptionsWindowText.IgnoreSyncChecks, "toggle");
+                if (settingSyncCheck != SettingsSystem.CurrentSettings.IgnoreSyncChecks)
+                {
+                    SettingsSystem.CurrentSettings.IgnoreSyncChecks = settingSyncCheck;
+                    SettingsSystem.SaveSettings();
+                }
+            }
+        }
+
         private void DrawInterpolationSettings()
         {
-            _showInterpolationFields = GUILayout.Toggle(_showInterpolationFields, LocalizationContainer.OptionsWindowText.InterpolationSettings, ButtonStyle);
-            if (_showInterpolationFields)
+            _showInterpolationSettings = GUILayout.Toggle(_showInterpolationSettings, LocalizationContainer.OptionsWindowText.InterpolationSettings, ButtonStyle);
+            if (_showInterpolationSettings)
             {
                 GUI.enabled = MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceInterpolation;
                 var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionInterpolation, LocalizationContainer.OptionsWindowText.EnableInterpolation, "toggle");
@@ -104,8 +119,8 @@ namespace LunaClient.Windows.Options
 
         private void DrawNetworkSettings()
         {
-            _showAdvancedNetworkFields = GUILayout.Toggle(_showAdvancedNetworkFields, LocalizationContainer.OptionsWindowText.NetworkSettings, ButtonStyle);
-            if (_showAdvancedNetworkFields)
+            _showAdvancedNetworkSettings = GUILayout.Toggle(_showAdvancedNetworkSettings, LocalizationContainer.OptionsWindowText.NetworkSettings, ButtonStyle);
+            if (_showAdvancedNetworkSettings)
             {
                 if (MainSystem.NetworkState > ClientState.Disconnected)
                 {
@@ -175,11 +190,13 @@ namespace LunaClient.Windows.Options
 
             if (GUILayout.Button("Check Common.dll stock parts"))
                 ModSystem.Singleton.CheckCommonStockParts();
+            if (GUILayout.Button("Regenerate translation files"))
+                LocalizationContainer.RegenerateTranslations();
 
             GUILayout.Space(10);
 
-            _showBadNetworkSimulationFields = GUILayout.Toggle(_showBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
-            if (_showBadNetworkSimulationFields)
+            _showBadNetworkSimulationSettings = GUILayout.Toggle(_showBadNetworkSimulationSettings, "Bad network simulation", ButtonStyle);
+            if (_showBadNetworkSimulationSettings)
             {
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
@@ -208,8 +225,8 @@ namespace LunaClient.Windows.Options
                     NetworkMain.Config.SimulatedMinimumLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3), 4);
             }
 
-            _showClockOffsetFields = GUILayout.Toggle(_showClockOffsetFields, "Clock offset simulation", ButtonStyle);
-            if (_showClockOffsetFields)
+            _showClockOffsetSettings = GUILayout.Toggle(_showClockOffsetSettings, "Clock offset simulation", ButtonStyle);
+            if (_showClockOffsetSettings)
             {
                 GUILayout.Label($"Computer clock offset: {LunaComputerTime.SimulatedMinutesTimeOffset:F1} min");
                 LunaComputerTime.SimulatedMinutesTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaComputerTime.SimulatedMinutesTimeOffset, 0, -15, 15), 3);

@@ -5,7 +5,6 @@
   <ConnectIcon>Подключиться</ConnectIcon>
   <DisconnectIcon>Отключиться</DisconnectIcon>
   <SyncIcon>Warp to</SyncIcon>
-  <CloseIcon>Закрыть</CloseIcon>
   <RefreshIcon>Обновить</RefreshIcon>
   <UploadIcon>Загрузить</UploadIcon>
   <DeleteIcon>Удалить</DeleteIcon>

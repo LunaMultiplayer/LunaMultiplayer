@@ -1,8 +1,9 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <PlayerName>Spiller navn:</PlayerName>
-    <Name>Navn:</Name>
-    <Address>Adresse:</Address>
-    <Port>Port:</Port>
-    <CustomServers>Brugerdefinerede serverer:</CustomServers>
+  <PlayerName>Spiller navn:</PlayerName>
+  <Name>Navn:</Name>
+  <Address>Adresse:</Address>
+  <Port>Port:</Port>
+  <Password>Password:</Password>
+  <CustomServers>Brugerdefinerede serverer:</CustomServers>
 </ConnectionWindowText>
