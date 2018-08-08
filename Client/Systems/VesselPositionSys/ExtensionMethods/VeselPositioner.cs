@@ -97,6 +97,11 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             else
             {
                 vessel.orbitDriver.updateFromParameters();
+                
+                //Always run this at the end!!
+                //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+                foreach (var part in vessel.Parts)
+                    part.ResumeVelocity();
             }
         }
     }
