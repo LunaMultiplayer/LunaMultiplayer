@@ -61,7 +61,7 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
             if (inSafetyBubble && !_wasInsideSafetyBubble)
             {
                 _wasInsideSafetyBubble = true;
-                SafetyBubbleEvent.onEnteringSafetyBubble.Fire(GetSafetyBubbleCenter(FlightGlobals.ActiveVessel));
+                SafetyBubbleEvent.onEnteringSafetyBubble.Fire(GetSafetySpawnPoint(FlightGlobals.ActiveVessel));
             }
             else if (!inSafetyBubble && _wasInsideSafetyBubble)
             {
@@ -147,9 +147,9 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
             if (!SpawnPoints.ContainsKey(body.name))
                 return false;
 
-            foreach (var point in SpawnPoints[body.name])
+            foreach (var spawnPoint in SpawnPoints[body.name])
             {
-                if (Vector3d.Distance(position, point.Position) < SettingsSystem.ServerSettings.SafetyBubbleDistance)
+                if (Vector2d.Distance(new Vector2d(position.x, position.y), new Vector2d(spawnPoint.Position.x, spawnPoint.Position.y)) < SettingsSystem.ServerSettings.SafetyBubbleDistance)
                 {
                     return true;
                 }
@@ -162,17 +162,17 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
 
         #region Private methods
 
-        public Vector3d GetSafetyBubbleCenter(Vessel vessel)
+        public SpawnPointLocation GetSafetySpawnPoint(Vessel vessel)
         {
             foreach (var point in SpawnPoints[vessel.mainBody.name])
             {
                 if (Vector3d.Distance(vessel.vesselTransform.position, point.Position) < SettingsSystem.ServerSettings.SafetyBubbleDistance)
                 {
-                    return point.Position;
+                    return point;
                 }
             }
 
-            return Vector3d.zero;
+            return null;
         }
 
         private void FillUpPositions()

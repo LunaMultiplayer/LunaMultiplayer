@@ -25,13 +25,14 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
             if (System.SafetyBubbleObject != null) Object.Destroy(System.SafetyBubbleObject);
         }
 
-        public void EnteredSafetyBubble(Vector3d safetyBubbleCenter)
+        public void EnteredSafetyBubble(SpawnPointLocation spawnPoint)
         {
             if (System.SafetyBubbleObject != null) Object.Destroy(System.SafetyBubbleObject);
+            if (spawnPoint == null) return;
 
             System.SafetyBubbleObject = new GameObject();
-            System.SafetyBubbleObject.transform.position = safetyBubbleCenter;
-            System.SafetyBubbleObject.transform.rotation = FlightGlobals.currentMainBody.rotation;
+            System.SafetyBubbleObject.transform.position = new Vector3((float)spawnPoint.Position.x, (float)spawnPoint.Position.y, (float)spawnPoint.Position.z + 1.5f);
+            System.SafetyBubbleObject.transform.rotation = Quaternion.LookRotation(spawnPoint.Body.GetSurfaceNVector(spawnPoint.Latitude, spawnPoint.Longitude));
 
             var lineRenderer = System.SafetyBubbleObject.AddComponent<LineRenderer>();
             lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
@@ -42,7 +43,7 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
             lineRenderer.positionCount = (int)((2.0f * Mathf.PI) / 0.01f + 1);
             lineRenderer.useWorldSpace = false;
 
-            DrawCircleAround(safetyBubbleCenter, lineRenderer);
+            DrawCircleAround(spawnPoint.Position, lineRenderer);
         }
     }
 }

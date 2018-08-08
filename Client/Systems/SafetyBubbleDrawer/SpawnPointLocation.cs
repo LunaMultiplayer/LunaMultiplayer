@@ -4,31 +4,30 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
 {
     public class SpawnPointLocation
     {
-        private readonly double _latitude;
-        private readonly double _longitude;
-        private readonly double _altitude;
-        private readonly CelestialBody _body;
-
+        public readonly double Latitude;
+        public readonly double Longitude;
+        public readonly double Altitude;
         public Transform Transform;
-        public Vector3d Position => _body.GetWorldSurfacePosition(_latitude, _longitude, _altitude);
+        public readonly CelestialBody Body;
 
-        public SpawnPointLocation(PSystemSetup.SpaceCenterFacility.SpawnPoint spawnPoint,
-            CelestialBody celestialBody)
+        public Vector3d Position => Body.GetWorldSurfacePosition(Latitude, Longitude, Altitude);
+
+        public SpawnPointLocation(PSystemSetup.SpaceCenterFacility.SpawnPoint spawnPoint, CelestialBody celestialBody)
         {
             Transform = spawnPoint.GetSpawnPointTransform();
-            _latitude = spawnPoint.latitude;
-            _longitude = spawnPoint.longitude;
-            _altitude = spawnPoint.altitude;
-            _body = celestialBody;
+            Latitude = spawnPoint.latitude;
+            Longitude = spawnPoint.longitude;
+            Altitude = spawnPoint.altitude;
+            Body = celestialBody;
         }
 
         public SpawnPointLocation(LaunchSite.SpawnPoint spawnPoint, CelestialBody celestialBody)
         {
             Transform = spawnPoint.GetSpawnPointTransform();
-            _latitude = spawnPoint.latitude;
-            _longitude = spawnPoint.longitude;
-            _altitude = spawnPoint.altitude;
-            _body = celestialBody;
+            Latitude = spawnPoint.latitude;
+            Longitude = spawnPoint.longitude;
+            Altitude = spawnPoint.altitude;
+            Body = celestialBody;
         }
     }
 }
