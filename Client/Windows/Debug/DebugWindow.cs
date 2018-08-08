@@ -165,6 +165,7 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"Arg Periapsis: {ourVessel.orbit.argumentOfPeriapsis}");
                         StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbit.meanAnomalyAtEpoch}");
                         StringBuilder.AppendLine($"Epoch: {ourVessel.orbit.epoch}");
+                        StringBuilder.AppendLine($"Obt Speed : {ourVessel.orbit.GetRelativeVel()}, |v|: {ourVessel.orbit.GetRelativeVel().magnitude}");
 
                         _orbitText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
@@ -192,6 +193,7 @@ namespace LunaClient.Windows.Debug
                                 StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbit.argumentOfPeriapsis}");
                                 StringBuilder.AppendLine($"Mean anomaly: {vessel.orbit.meanAnomalyAtEpoch}");
                                 StringBuilder.AppendLine($"Epoch: {vessel.orbit.epoch}");
+                                StringBuilder.AppendLine($"Obt Speed : {vessel.orbit.GetRelativeVel()}, |v|: {vessel.orbit.GetRelativeVel().magnitude}");
                                 StringBuilder.AppendLine();
                             }
 
