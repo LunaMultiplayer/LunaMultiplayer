@@ -10,7 +10,6 @@
     <CannotTerminate>无法删除载具, 因为这个载具属于他人</CannotTerminate>
     <SpectatingRemoved>您正在观看的船只被删除</SpectatingRemoved>
     <WarpDisabled>时间加速在本服务器被禁用，无法进行时间加速</WarpDisabled>
-    <NotWarpMaster>您不是时间加速主控，无法进行时间加速</NotWarpMaster>
     <WaitingSubspace>正在等待来自服务器的子空间ID，无法进行时间加速</WaitingSubspace>
     <ScreenshotInterval>屏幕截图上传之间的间隔为 $1 秒。此时无法上传屏幕截图</ScreenshotInterval>
     <CraftLibraryInterval>载具库请求间隔为 $1 秒。此时无法处理此请求</CraftLibraryInterval>

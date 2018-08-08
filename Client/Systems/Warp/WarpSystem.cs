@@ -95,14 +95,6 @@ namespace LunaClient.Systems.Warp
                 SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, CheckWarpStopped));
                 SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckStuckAtWarp));
             }
-
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
-                !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
-                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
-            {
-                SetupRoutine(new RoutineDefinition(200, RoutineExecution.Update, UpdateScreenMessage));
-                SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, FollowWarpMaster));
-            }
         }
 
         #endregion
@@ -137,35 +129,6 @@ namespace LunaClient.Systems.Warp
             }
         }
 
-        /// <summary>
-        /// Follows the warp master if the warp mode is set to MASTER and warp master is in another subspace
-        /// </summary>
-        private void FollowWarpMaster()
-        {
-            if (Enabled)
-            {
-                if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
-                    ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
-                {
-                    //Follow the warp master into warp if needed
-                    CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
-                }
-            }
-        }
-
-        /// <summary>
-        /// Updates the screen message if warp mode is set to Master
-        /// </summary>
-        private void UpdateScreenMessage()
-        {
-            if (Enabled)
-            {
-                DisplayMessage(SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName
-                        ? $"{SettingsSystem.ServerSettings.WarpMaster} has warp control"
-                        : "You have warp control", 1f);
-            }
-        }
-
         #endregion
 
         #region Public methods
@@ -175,13 +138,9 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public bool WarpValidation()
         {
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.None || SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
-                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.None)
             {
-                DisplayMessage(SettingsSystem.ServerSettings.WarpMode == WarpMode.None ?
-                    LocalizationContainer.ScreenText.WarpDisabled :
-                    LocalizationContainer.ScreenText.NotWarpMaster, 5f);
-
+                DisplayMessage(LocalizationContainer.ScreenText.WarpDisabled, 5f);
                 return false;
             }
             

@@ -10,7 +10,6 @@
     <CannotTerminate>Невозможно уничтожить корабль, он не ваш.</CannotTerminate>
     <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>
     <WarpDisabled>Невозможно ускорить время, функция не доступна</WarpDisabled>
-    <NotWarpMaster>Невозможно ускорить время, у вас недостаточно привилегий!</NotWarpMaster>
     <WaitingSubspace>Невозможно ускорить время, ожидание subspace id от сервера</WaitingSubspace>
     <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
     <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>

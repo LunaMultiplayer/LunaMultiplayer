@@ -10,7 +10,6 @@
     <CannotTerminate>No puedes eliminar la nave puesto que no es tuya.</CannotTerminate>
     <SpectatingRemoved>La nave que estabas observando ha sido eliminada</SpectatingRemoved>
     <WarpDisabled>No puedes adelantar el tiempo. Esta opción esta desabilitada en el servidor</WarpDisabled>
-    <NotWarpMaster>No puedes adelantar el tiempo. ¡No eres el jugador designado!</NotWarpMaster>
     <WaitingSubspace>No puedes adelantar el tiempo. Esperando un id de subspacio del servidor</WaitingSubspace>
     <ScreenshotInterval>Intervalo entre fotos fijado a $1 segundos. No se puede subir la foto en este momento</ScreenshotInterval>
     <CraftLibraryInterval>Intervalo entre peticiones fijado a $1 segundos. No se puede procesar la peticion en este momento</CraftLibraryInterval>

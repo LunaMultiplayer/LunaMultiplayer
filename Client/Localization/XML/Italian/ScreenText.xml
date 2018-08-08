@@ -10,7 +10,6 @@
     <CannotTerminate>Non è possibile terminare il veicolo perchè non è il tuo.</CannotTerminate>
     <SpectatingRemoved>Il veicolo che stavi osservando è stato rimosso</SpectatingRemoved>
     <WarpDisabled>Non è possibile accelerare temporalmente perchè è disattivato in questo server</WarpDisabled>
-    <NotWarpMaster>Non è possibile accelerare temporalmente, non sei il Warp Master!</NotWarpMaster>
     <WaitingSubspace>Non è possibile accelerare temporalmente, in attesa del Subspace Id dal server</WaitingSubspace>
     <ScreenshotInterval>L'intervallo tra gli screenshot è di $1 secondi. Impossibile caricare lo screenshot in questo momento.</ScreenshotInterval>
     <CraftLibraryInterval>L'intervallo tra le richieste della libreria dei veicoli è di $1 secondi. Impossibile elaborare la richiesta in questo momento.</CraftLibraryInterval>

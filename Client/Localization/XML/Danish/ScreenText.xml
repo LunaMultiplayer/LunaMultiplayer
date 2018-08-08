@@ -10,7 +10,6 @@
     <CannotTerminate>Kan ikke opsige fartøjet, fartøjet er ikke dit.</CannotTerminate>
     <SpectatingRemoved>Det fartøj, du var tilskuere på, blev fjernet</SpectatingRemoved>
     <WarpDisabled>Kan ikke warp, warping er deaktiveret på denne server</WarpDisabled>
-    <NotWarpMaster>Kan ikke Warp, du er ikke warplæreren!</NotWarpMaster>
     <WaitingSubspace>Kan ikke warp, venter på subspace id fra servereren</WaitingSubspace>
     <ScreenshotInterval>Interval mellem skærmbilleder er $ 1 sekunder. Kan ikke uploade skærmbilledet i øjeblikket</ScreenshotInterval>
     <CraftLibraryInterval>Intervallet mellem fartøjes bibliotek anmodninger er $1 sekunder. Kan ikke behandle anmodningen i øjeblikket</CraftLibraryInterval>

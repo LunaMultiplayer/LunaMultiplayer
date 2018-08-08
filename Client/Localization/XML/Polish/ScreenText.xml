@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <CraftUploaded>Pojazd zostal udostêpniony!</CraftUploaded>
+    <CraftUploaded>Pojazd zostal udostÃªpniony!</CraftUploaded>
     <CraftSaved>Pojazd zostal zapisany!</CraftSaved>
     <ModFileGenerated>LMPModControl.xml Plik wygenerowany w folderze KSP</ModFileGenerated>
     <Disconected>Zostales rozlaczony z serwerem</Disconected>
     <Spectating>Ten statek jest kontrolowany przez</Spectating>
-    <SafetyBubble>Zapamiêtaj!! Gdy znajdziesz siê w bañce bezpieczeñstwa, nie zostaniesz zauwazony przez innych graczy!!</SafetyBubble>
+    <SafetyBubble>ZapamiÃªtaj!! Gdy znajdziesz siÃª w baÃ±ce bezpieczeÃ±stwa, nie zostaniesz zauwazony przez innych graczy!!</SafetyBubble>
     <CannotRecover>Nie mozna odzysakc twojego Pojazdu, poniewaz nalezy on do innego gracza.</CannotRecover>
-    <CannotTerminate>Nie mozna zniszczyæ tego pojazdu, poniewaz nalezy on do innego gracza</CannotTerminate>
+    <CannotTerminate>Nie mozna zniszczyÃ¦ tego pojazdu, poniewaz nalezy on do innego gracza</CannotTerminate>
     <SpectatingRemoved>Pojazd, ktory obserwujesz, zostal usuniety</SpectatingRemoved>
     <WarpDisabled>Teleporty zostaly wylaczone na tym serwerze.</WarpDisabled>
-    <NotWarpMaster>Nie mozesz wykonac warpa</NotWarpMaster>
     <WaitingSubspace>Nie mozna uzyc warpa</WaitingSubspace>
     <ScreenshotInterval>przerwy pomiedzy zrzutami ekranu wynosza 1 $. Nie mozna przeslac zrzutu ekranu w tej chwili</ScreenshotInterval>
     <CraftLibraryInterval>przerwa pomiedzy biblioteka pojazdow wynosi $1 sekund. Nie mozna przetworzyc zadania w tej chwili</CraftLibraryInterval>
