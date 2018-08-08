@@ -75,7 +75,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (SphCrafts.Any())
             {
                 GUILayout.Label("SPH", BoldRedLabelStyle);
-                for (var i = 0; i < SphCrafts.Count; i += 4)
+                for (var i = 0; i < SphCrafts.Count; i++)
                 {
                     DrawCraftEntry(SphCrafts[i]);
                 }
@@ -84,7 +84,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (VabCrafts.Any())
             {
                 GUILayout.Label("VAB", BoldRedLabelStyle);
-                for (var i = 0; i < VabCrafts.Count; i += 4)
+                for (var i = 0; i < VabCrafts.Count; i++)
                 {
                     DrawCraftEntry(VabCrafts[i]);
                 }
@@ -93,7 +93,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (SubAssemblyCrafts.Any())
             {
                 GUILayout.Label("Subassembly", BoldRedLabelStyle);
-                for (var i = 0; i < SubAssemblyCrafts.Count; i += 4)
+                for (var i = 0; i < SubAssemblyCrafts.Count; i++)
                 {
                     DrawCraftEntry(SubAssemblyCrafts[i]);
                 }
@@ -147,7 +147,7 @@ namespace LunaClient.Windows.CraftLibrary
 
             GUILayout.BeginVertical(BoxStyle);
             _uploadScrollPos = GUILayout.BeginScrollView(_uploadScrollPos, ScrollStyle);
-            for (var i = 0; i < System.OwnCrafts.Count; i += 4)
+            for (var i = 0; i < System.OwnCrafts.Count; i++)
             {
                 DrawUploadCraftEntry(System.OwnCrafts[i]);
             }
@@ -161,7 +161,7 @@ namespace LunaClient.Windows.CraftLibrary
         private void DrawUploadCraftEntry(CraftEntry craftEntry)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label(craftEntry.CraftName);
+            GUILayout.Label($"{craftEntry.CraftName} ({craftEntry.CraftType})");
             if (GUILayout.Button(UploadIcon, ButtonStyle, GUILayout.Width(35)))
             {
                 System.SendCraft(craftEntry);
