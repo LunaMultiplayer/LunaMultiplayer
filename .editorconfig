@@ -5,14 +5,13 @@ root = true
 
 # Don't use tabs for indentation.
 [*]
-insert_final_newline = true
+insert_final_newline = false
 end_of_line = crlf
 indent_style = space
 
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
-insert_final_newline = true
 charset = utf-8-bom
 
 # XML files
