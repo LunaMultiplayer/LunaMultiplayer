@@ -1,6 +1,9 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace LunaClient.Systems.SafetyBubbleDrawer
 {
@@ -11,9 +14,13 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
     {
         #region Fields and properties
 
+        public GameObject SafetyBubbleObject;
+
         public Dictionary<string, List<SpawnPointLocation>> SpawnPoints { get; } = new Dictionary<string, List<SpawnPointLocation>>();
 
         public SafetyBubbleEvents SafetyBubbleEvents { get; } = new SafetyBubbleEvents();
+
+        private static bool _wasInsideSafetyBubble = false;
 
         #endregion
 
@@ -23,16 +30,44 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
 
         protected override void OnEnabled()
         {
+            _wasInsideSafetyBubble = false;
             FillUpPositions();
-            //GameEvents.onGameSceneLoadRequested.Add(SafetyBubbleEvents.SwitchScene);
-            //GameEvents.onFlightReady.Add(SafetyBubbleEvents.FlightReady);
+            SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, FireSafetyBubbleEvents));
+            SafetyBubbleEvent.onEnteringSafetyBubble.Add(SafetyBubbleEvents.EnteredSafetyBubble);
+            SafetyBubbleEvent.onLeavingSafetyBubble.Add(SafetyBubbleEvents.LeftSafetyBubble);
         }
 
         protected override void OnDisabled()
         {
+            _wasInsideSafetyBubble = false;
             SpawnPoints.Clear();
-            //GameEvents.onGameSceneLoadRequested.Remove(SafetyBubbleEvents.SwitchScene);
-            //GameEvents.onFlightReady.Remove(SafetyBubbleEvents.FlightReady);
+            SafetyBubbleEvent.onEnteringSafetyBubble.Remove(SafetyBubbleEvents.EnteredSafetyBubble);
+            SafetyBubbleEvent.onLeavingSafetyBubble.Remove(SafetyBubbleEvents.LeftSafetyBubble);
+        }
+
+        #endregion
+
+        #region Update routines
+
+        private void FireSafetyBubbleEvents()
+        {
+            if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null)
+            {
+                _wasInsideSafetyBubble = false;
+                return;
+            }
+
+            var inSafetyBubble = IsInSafetyBubble(FlightGlobals.ActiveVessel, false);
+            if (inSafetyBubble && !_wasInsideSafetyBubble)
+            {
+                _wasInsideSafetyBubble = true;
+                SafetyBubbleEvent.onEnteringSafetyBubble.Fire(GetSafetyBubbleCenter(FlightGlobals.ActiveVessel));
+            }
+            else if (!inSafetyBubble && _wasInsideSafetyBubble)
+            {
+                _wasInsideSafetyBubble = false;
+                SafetyBubbleEvent.onLeavingSafetyBubble.Fire();
+            }
         }
 
         #endregion
@@ -55,8 +90,7 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
 
             if (useLatLonAltFromProto)
                 //Use the protovessel values as the normal vessel values can be affected by the position system and the situation of the vessel
-                return IsInSafetyBubble(vessel.protoVessel.latitude, vessel.protoVessel.longitude,
-                    vessel.protoVessel.altitude, vessel.mainBody);
+                return IsInSafetyBubble(vessel.protoVessel.latitude, vessel.protoVessel.longitude, vessel.protoVessel.altitude, vessel.mainBody);
 
             return IsInSafetyBubble(vessel.latitude, vessel.longitude, vessel.altitude, vessel.mainBody);
         }
@@ -116,7 +150,9 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
             foreach (var point in SpawnPoints[body.name])
             {
                 if (Vector3d.Distance(position, point.Position) < SettingsSystem.ServerSettings.SafetyBubbleDistance)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -125,6 +161,19 @@ namespace LunaClient.Systems.SafetyBubbleDrawer
         #endregion
 
         #region Private methods
+
+        public Vector3d GetSafetyBubbleCenter(Vessel vessel)
+        {
+            foreach (var point in SpawnPoints[vessel.mainBody.name])
+            {
+                if (Vector3d.Distance(vessel.vesselTransform.position, point.Position) < SettingsSystem.ServerSettings.SafetyBubbleDistance)
+                {
+                    return point.Position;
+                }
+            }
+
+            return Vector3d.zero;
+        }
 
         private void FillUpPositions()
         {
