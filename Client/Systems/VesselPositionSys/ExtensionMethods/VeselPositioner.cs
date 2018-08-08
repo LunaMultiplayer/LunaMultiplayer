@@ -37,21 +37,30 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
         private static void ApplyOrbitInterpolation(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
         {
-            var startTime = update.KspOrbit.epoch;
-            var targetTime = target.KspOrbit.epoch;
+            var startTime = Planetarium.GetUniversalTime();
+            var targetTime = Planetarium.GetUniversalTime();
+
+            //Uncomment this if you want to show the other vessels as in their PAST positions
+            //This is the old way of how LMP handled the vessels positions when YOUR vessel is in the future
+            //Now the vessel positions are advanced and "projected"
+            //startTime = update.KspOrbit.epoch;
+            //targetTime = target.KspOrbit.epoch;
 
             var currentPos = update.KspOrbit.getRelativePositionAtUT(startTime);
             var targetPos = target.KspOrbit.getRelativePositionAtUT(targetTime);
 
-            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(startTime) + update.KspOrbit.referenceBody.GetFrameVelAtUT(startTime) - update.Body.GetFrameVelAtUT(startTime);
-            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(targetTime) + target.KspOrbit.referenceBody.GetFrameVelAtUT(targetTime) - target.Body.GetFrameVelAtUT(targetTime);
+            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(startTime);
+            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(targetTime);
 
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, percentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, percentage);
 
-            var lerpTime = LunaMath.Lerp(startTime, targetTime, percentage);
+            var updateTime = Planetarium.GetUniversalTime();
 
-            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, lerpTime);
+            //Uncomment this if you want to show the other vessels as in their PAST positions
+            //updateTime = LunaMath.Lerp(startTime, targetTime, percentage);
+
+            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, updateTime);
         }
 
         private static void ApplyInterpolationsToLoadedVessel(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
@@ -61,7 +70,7 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             vessel.srfRelRotation = currentSurfaceRelRotation;
             vessel.SetRotation((Quaternion)lerpedBody.rotation * currentSurfaceRelRotation, true);
-            
+
             vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
             vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
 
@@ -69,12 +78,10 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
-            Vector3d position;
-
             if (vessel.situation <= Vessel.Situations.FLYING)
             {
                 //If spectating, directly get the vector from the lerped lat,lon,alt. This method is more reliable but is not as fluid as using a lerped vector
-                position = FlightGlobals.ActiveVessel?.id == vessel.id ? lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) : 
+                var position = FlightGlobals.ActiveVessel?.id == vessel.id ? lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) :
                     Vector3d.Lerp(update.LatLonAltPos, target.LatLonAltPos, percentage);
 
                 if (vessel.situation <= Vessel.Situations.PRELAUNCH)
@@ -84,14 +91,13 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
                     vessel.SetWorldVelocity(currentVelocity);
                     vessel.velocityD = currentVelocity;
                 }
+
+                vessel.SetPosition(position);
             }
             else
             {
-                //Do not use vessel.orbit.epoch as otherwise the vessel drifts away when unpacked
-                position = vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
+                vessel.orbitDriver.updateFromParameters();
             }
-
-            vessel.SetPosition(position);
         }
     }
 }
