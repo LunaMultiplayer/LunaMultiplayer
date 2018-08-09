@@ -44,7 +44,7 @@ namespace LunaClient.Systems.KerbalSys
             if (previousStatus != newStatus)
             {
                 //This is the case when we are removing a vessel from another player. This status change event will be called
-                if (!LockSystem.LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
+                if (LockSystem.LockQuery.KerbalLockExists(kerbal.name) && !LockSystem.LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
                     return;
