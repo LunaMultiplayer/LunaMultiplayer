@@ -615,6 +615,7 @@
     <Content Include="ModuleStore\XML\ModuleCoreHeat.xml" />
     <Content Include="ModuleStore\XML\ModuleDeployablePart.xml" />
     <Content Include="ModuleStore\XML\ModuleDeployableSolarPanel.xml" />
+    <Content Include="ModuleStore\XML\ModuleParachute.xml" />
     <Content Include="ModuleStore\XML\ModuleEngines.xml" />
     <Content Include="ModuleStore\XML\ModuleEvaChute.xml" />
     <Content Include="ModuleStore\XML\ModuleReactionWheel.xml" />
