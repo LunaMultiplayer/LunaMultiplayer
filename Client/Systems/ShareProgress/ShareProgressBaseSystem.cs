@@ -1,5 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.SettingsSys;
+using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -15,9 +17,15 @@ namespace LunaClient.Systems.ShareProgress
         private Queue<Action> _actionQueue;
         public int ActionQueueCount => _actionQueue?.Count ?? 0;
 
+        protected abstract GameMode RelevantGameModes { get; }
+
+        protected bool CurrentGameModeIsRelevant => (SettingsSystem.ServerSettings.GameMode & RelevantGameModes) != 0;
+
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
+            if (!CurrentGameModeIsRelevant) return;
 
             IgnoreEvents = false;
             _actionQueue = new Queue<Action>();

@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareProgress;
+﻿using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareAchievements
@@ -13,14 +12,15 @@ namespace LunaClient.Systems.ShareAchievements
         //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
         protected override bool ShareSystemReady => true;
 
+        //We don't need to synchronize achievements in science mode because they have no effect and are not shown to the user.
+        //They will only appear in the debug console.
+        protected override GameMode RelevantGameModes => GameMode.Career;
+
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-            //We don't need to synchronize achievements in science mode because they have no effect and are not shown to the user.
-            //They will only appear in the debug console.
-
             base.OnEnabled();
 
+            if (!CurrentGameModeIsRelevant) return;
             GameEvents.OnProgressReached.Add(ShareAchievementsEvents.AchievementReached);
             GameEvents.OnProgressComplete.Add(ShareAchievementsEvents.AchievementCompleted);
             GameEvents.OnProgressAchieved.Add(ShareAchievementsEvents.AchievementAchieved);
@@ -28,10 +28,9 @@ namespace LunaClient.Systems.ShareAchievements
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnDisabled();
 
+            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.OnProgressReached.Remove(ShareAchievementsEvents.AchievementReached);
             GameEvents.OnProgressComplete.Remove(ShareAchievementsEvents.AchievementCompleted);
             GameEvents.OnProgressAchieved.Remove(ShareAchievementsEvents.AchievementAchieved);

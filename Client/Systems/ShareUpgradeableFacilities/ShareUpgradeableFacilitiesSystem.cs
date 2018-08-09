@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareProgress;
+﻿using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 using UniLinq;
 using Upgradeables;
@@ -14,19 +13,21 @@ namespace LunaClient.Systems.ShareUpgradeableFacilities
 
         protected override bool ShareSystemReady => UnityEngine.Object.FindObjectsOfType<UpgradeableFacility>().Any();
 
+        protected override GameMode RelevantGameModes => GameMode.Career;
+
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnEnabled();
+
+            if (!CurrentGameModeIsRelevant) return;
             GameEvents.OnKSCFacilityUpgrading.Add(ShareUpgradeableFacilitiesEvents.FacilityUpgraded);
         }
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnDisabled();
+
+            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.OnKSCFacilityUpgrading.Remove(ShareUpgradeableFacilitiesEvents.FacilityUpgraded);
         }
     }

@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareProgress;
+﻿using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.SharePurchaseParts
@@ -12,19 +11,23 @@ namespace LunaClient.Systems.SharePurchaseParts
 
         protected override bool ShareSystemReady => ResearchAndDevelopment.Instance != null && Funding.Instance != null;
 
+        protected override GameMode RelevantGameModes => GameMode.Career;
+
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) return;
-
             base.OnEnabled();
+
+            if (!CurrentGameModeIsRelevant) return;
+            if (HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) return;
+
             GameEvents.OnPartPurchased.Add(SharePurchasePartsEvents.PartPurchased);
         }
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) return;
-
             base.OnDisabled();
+
+            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.OnPartPurchased.Remove(SharePurchasePartsEvents.PartPurchased);
         }
     }

@@ -1,5 +1,4 @@
 ﻿using LunaClient.Events;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 using Strategies;
@@ -14,25 +13,27 @@ namespace LunaClient.Systems.ShareStrategy
         private ShareStrategyEvents ShareStrategiesEvents { get; } = new ShareStrategyEvents();
 
         //BailoutGrand - Exchange funds for reputation; researchIPsellout - Exchange funds for science;
-        public readonly string[] OneTimeStrategies = new string[] { "BailoutGrant", "researchIPsellout" };
+        public readonly string[] OneTimeStrategies = { "BailoutGrant", "researchIPsellout" };
 
         protected override bool ShareSystemReady => StrategySystem.Instance != null && StrategySystem.Instance.Strategies.Count != 0 && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
                                                     Reputation.Instance != null && Time.timeSinceLevelLoad > 1f;
 
+        protected override GameMode RelevantGameModes => GameMode.Career;
+
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnEnabled();
+
+            if (!CurrentGameModeIsRelevant) return;
             StrategyEvent.onStrategyActivated.Add(ShareStrategiesEvents.StrategyActivated);
             StrategyEvent.onStrategyDeactivated.Add(ShareStrategiesEvents.StrategyDeactivated);
         }
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnDisabled();
+
+            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             StrategyEvent.onStrategyActivated.Remove(ShareStrategiesEvents.StrategyActivated);
             StrategyEvent.onStrategyDeactivated.Remove(ShareStrategiesEvents.StrategyDeactivated);
         }

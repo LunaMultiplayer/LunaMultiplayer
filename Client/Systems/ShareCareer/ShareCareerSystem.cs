@@ -37,13 +37,6 @@ namespace LunaClient.Systems.ShareCareer
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RunQueue));
         }
 
-        protected override void OnDisabled()
-        {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
-            base.OnDisabled();
-        }
-
         /// <summary>
         /// Queue an action that is dependent on the ActionDependency and will run
         /// if the ActionDependencyReady method returns true. For example a action like:

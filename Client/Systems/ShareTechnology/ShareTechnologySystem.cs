@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareProgress;
+﻿using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareTechnology
@@ -12,19 +11,21 @@ namespace LunaClient.Systems.ShareTechnology
 
         protected override bool ShareSystemReady => ResearchAndDevelopment.Instance != null;
 
+        protected override GameMode RelevantGameModes => GameMode.Career | GameMode.Science;
+
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
-
             base.OnEnabled();
+
+            if (!CurrentGameModeIsRelevant) return;
             GameEvents.OnTechnologyResearched.Add(ShareTechnologyEvents.TechnologyResearched);
         }
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
-
             base.OnDisabled();
+
+            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.OnTechnologyResearched.Remove(ShareTechnologyEvents.TechnologyResearched);
         }
     }

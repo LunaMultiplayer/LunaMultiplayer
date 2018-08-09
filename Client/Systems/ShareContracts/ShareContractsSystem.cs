@@ -18,12 +18,14 @@ namespace LunaClient.Systems.ShareContracts
         //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
         protected override bool ShareSystemReady => true;
 
+        protected override GameMode RelevantGameModes => GameMode.Career;
+
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnEnabled();
-            
+
+            if (!CurrentGameModeIsRelevant) return;
+
             _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
             ContractSystem.generateContractIterations = 0;
 
@@ -46,10 +48,9 @@ namespace LunaClient.Systems.ShareContracts
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnDisabled();
 
+            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.Contract.onAccepted.Remove(ShareContractsEvents.ContractAccepted);
             GameEvents.Contract.onCancelled.Remove(ShareContractsEvents.ContractCancelled);
             GameEvents.Contract.onCompleted.Remove(ShareContractsEvents.ContractCompleted);

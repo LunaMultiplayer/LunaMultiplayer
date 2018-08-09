@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareProgress;
+﻿using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareReputation
@@ -15,19 +14,21 @@ namespace LunaClient.Systems.ShareReputation
         //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
         protected override bool ShareSystemReady => true;
 
+        protected override GameMode RelevantGameModes => GameMode.Career;
+
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnEnabled();
+
+            if (!CurrentGameModeIsRelevant) return;
             GameEvents.OnReputationChanged.Add(ShareReputationEvents.ReputationChanged);
         }
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
             base.OnDisabled();
+
+            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.OnReputationChanged.Remove(ShareReputationEvents.ReputationChanged);
             _lastReputation = 0;
         }
