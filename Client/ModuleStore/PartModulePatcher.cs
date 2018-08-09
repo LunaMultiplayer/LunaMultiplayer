@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using Harmony.ILCopying;
 using LunaClient.Base;
 using LunaClient.Events;
 using System;
@@ -23,7 +24,7 @@ namespace LunaClient.ModuleStore
         private static readonly MethodInfo TranspilerMethod = typeof(PartModulePatcher).GetMethod(nameof(Transpiler));
         private static readonly MethodInfo RestoreMethod = typeof(PartModulePatcher).GetMethod(nameof(Restore));
 
-        private static string _currentPartModule;
+        private static string _currentPartModuleName;
         private static readonly List<CodeInstruction> InstructionsBackup = new List<CodeInstruction>();
 
         /// <summary>
@@ -55,14 +56,14 @@ namespace LunaClient.ModuleStore
                 {
                     try
                     {
-                        _currentPartModule = partModule.Name;
+                        _currentPartModuleName = partModule.Name;
 
                         var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
                             .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
 
                         if (persistentFields.Any())
                         {
-                            if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModule, out var definition))
+                            if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModuleName, out var definition))
                             {                            
                                 //Ignore the whole part module if all the persistent fields are ignored
                                 var ignoredFields = definition.Fields.Where(f => f.Ignore).Select(f => f.FieldName);
@@ -71,7 +72,7 @@ namespace LunaClient.ModuleStore
                             }
 
                             foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                            .Where(m=> !m.IsGenericMethod))
+                            .Where(m=> !m.IsGenericMethod && MethodSetsPersistentField(m)))
                             {
                                 try
                                 {
@@ -147,13 +148,37 @@ namespace LunaClient.ModuleStore
 
         private static bool FieldIsIgnored(FieldInfo fieldInfo)
         {
-            if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModule, out var definition))
+            if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModuleName, out var definition))
             {
                 var fieldDef = definition.Fields.FirstOrDefault(f => f.FieldName == fieldInfo.Name);
                 if (fieldDef != null)
                 {
                     if (fieldDef.Ignore)
                         return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the given method has a IL instruction that SETS a persistent field
+        /// </summary>
+        private static bool MethodSetsPersistentField(MethodBase partModuleMethod)
+        {
+            var method = DynamicTools.CreateDynamicMethod(partModuleMethod, "read");
+            var instructions = MethodBodyReader.GetInstructions(method.GetILGenerator(), partModuleMethod);
+
+            //OpCodes.Stfld is the opcode for SETTING the value of a field
+            foreach (var instruction in instructions.Where(i=> i.opcode == OpCodes.Stfld))
+            {
+                if (!(instruction.operand is FieldInfo operand)) continue;
+                if (FieldIsIgnored(operand)) continue;
+
+                var attributes = operand.GetCustomAttributes(typeof(KSPField), false).Cast<KSPField>().ToArray();
+                if (attributes.Any() && attributes.First().isPersistant)
+                {
+                    return true;
                 }
             }
 
