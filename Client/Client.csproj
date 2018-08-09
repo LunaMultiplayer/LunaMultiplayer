@@ -157,9 +157,9 @@
     <Compile Include="Systems\FloatingOrigin\FloatingOriginSystem.cs" />
     <Compile Include="Systems\Label\LabelEvents.cs" />
     <Compile Include="Systems\Label\LabelSystem.cs" />
-    <Compile Include="Systems\SafetyBubbleDrawer\SpawnPointLocation.cs" />
-    <Compile Include="Systems\SafetyBubbleDrawer\SafetyBubbleEvents.cs" />
-    <Compile Include="Systems\SafetyBubbleDrawer\SafetyBubbleSystem.cs" />
+    <Compile Include="Systems\SafetyBubble\SpawnPointLocation.cs" />
+    <Compile Include="Systems\SafetyBubble\SafetyBubbleEvents.cs" />
+    <Compile Include="Systems\SafetyBubble\SafetyBubbleSystem.cs" />
     <Compile Include="Systems\SettingsSys\SettingsBackup.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />

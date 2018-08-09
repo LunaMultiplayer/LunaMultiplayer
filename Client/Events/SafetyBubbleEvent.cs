@@ -1,5 +1,5 @@
 ﻿using LunaClient.Events.Base;
-using LunaClient.Systems.SafetyBubbleDrawer;
+using LunaClient.Systems.SafetyBubble;
 
 // ReSharper disable All
 #pragma warning disable IDE1006

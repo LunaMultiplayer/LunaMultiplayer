@@ -2,7 +2,7 @@
 using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.SafetyBubbleDrawer;
+using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
 using System;

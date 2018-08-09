@@ -1,4 +1,4 @@
-﻿using LunaClient.Systems.SafetyBubbleDrawer;
+﻿using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;

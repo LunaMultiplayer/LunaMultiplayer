@@ -1,7 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems.FloatingOrigin;
-using LunaClient.Systems.SafetyBubbleDrawer;
+using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;

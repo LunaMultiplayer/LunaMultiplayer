@@ -5,7 +5,7 @@ using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LunaClient.Systems.SafetyBubbleDrawer
+namespace LunaClient.Systems.SafetyBubble
 {
     /// <summary>
     /// This class controls the code regarding safety bubble

@@ -1,11 +1,11 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using System.Collections.Concurrent;
 using System.Text;
-using LunaClient.Systems.SafetyBubbleDrawer;
 
 namespace LunaClient.Systems.Status
 {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LunaClient.Systems.SafetyBubbleDrawer
+namespace LunaClient.Systems.SafetyBubble
 {
     public class SpawnPointLocation
     {
