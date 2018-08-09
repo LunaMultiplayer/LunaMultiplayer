@@ -1,7 +1,5 @@
 ﻿using LunaClient.Base;
-using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,8 +33,6 @@ namespace LunaClient.Systems.SafetyBubble
         {
             _wasInsideSafetyBubble = false;
             FillUpPositions();
-            SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, FireSafetyBubbleEvents));
-            SafetyBubbleEvent.onLeavingSafetyBubble.Add(SafetyBubbleEvents.LeftSafetyBubble);
             GameEvents.onFlightReady.Add(SafetyBubbleEvents.FlightReady);
         }
 
@@ -44,32 +40,7 @@ namespace LunaClient.Systems.SafetyBubble
         {
             _wasInsideSafetyBubble = false;
             SpawnPoints.Clear();
-            SafetyBubbleEvent.onLeavingSafetyBubble.Remove(SafetyBubbleEvents.LeftSafetyBubble);
-        }
-
-        #endregion
-
-        #region Update routines
-
-        private void FireSafetyBubbleEvents()
-        {
-            if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null)
-            {
-                _wasInsideSafetyBubble = false;
-                return;
-            }
-
-            var inSafetyBubble = IsInSafetyBubble(FlightGlobals.ActiveVessel, false);
-            if (inSafetyBubble && !_wasInsideSafetyBubble)
-            {
-                _wasInsideSafetyBubble = true;
-                SafetyBubbleEvent.onEnteringSafetyBubble.Fire(GetSafetySpawnPoint(FlightGlobals.ActiveVessel));
-            }
-            else if (!inSafetyBubble && _wasInsideSafetyBubble)
-            {
-                _wasInsideSafetyBubble = false;
-                SafetyBubbleEvent.onLeavingSafetyBubble.Fire();
-            }
+            GameEvents.onFlightReady.Remove(SafetyBubbleEvents.FlightReady);
         }
 
         #endregion
@@ -114,16 +85,16 @@ namespace LunaClient.Systems.SafetyBubble
         /// <summary>
         /// Removes the visual representation of the safety bubble
         /// </summary>
-        public void DestroySafetyBubble()
+        public void DestroySafetyBubble(float waitSeconds)
         {
-            if (SafetyBubbleObject != null) Object.Destroy(SafetyBubbleObject);
-            if (SafetyBubbleObjectX != null) Object.Destroy(SafetyBubbleObjectX);
-            if (SafetyBubbleObjectY != null) Object.Destroy(SafetyBubbleObjectY);
+            if (SafetyBubbleObject != null) Object.Destroy(SafetyBubbleObject, waitSeconds);
+            if (SafetyBubbleObjectX != null) Object.Destroy(SafetyBubbleObjectX, waitSeconds);
+            if (SafetyBubbleObjectY != null) Object.Destroy(SafetyBubbleObjectY, waitSeconds);
         }
 
         public void DrawSafetyBubble()
         {
-            DestroySafetyBubble();
+            DestroySafetyBubble(0);
 
             var spawnPoint = GetSafetySpawnPoint(FlightGlobals.ActiveVessel);
             if (spawnPoint == null) return;
@@ -143,6 +114,8 @@ namespace LunaClient.Systems.SafetyBubble
             DrawCircleAround(spawnPoint.Position, CreateLineRenderer(SafetyBubbleObject));
             DrawCircleAround(spawnPoint.Position, CreateLineRenderer(SafetyBubbleObjectX));
             DrawCircleAround(spawnPoint.Position, CreateLineRenderer(SafetyBubbleObjectY));
+
+            DestroySafetyBubble(10);
         }
 
         #endregion

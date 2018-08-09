@@ -5,11 +5,6 @@ namespace LunaClient.Systems.SafetyBubble
 {
     public class SafetyBubbleEvents : SubSystem<SafetyBubbleSystem>
     {
-        public void LeftSafetyBubble()
-        {
-            System.DestroySafetyBubble();
-        }
-        
         public void FlightReady()
         {
             if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null) return;
