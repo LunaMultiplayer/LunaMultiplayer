@@ -21,8 +21,6 @@ namespace LunaClient.Systems.SafetyBubble
 
         public SafetyBubbleEvents SafetyBubbleEvents { get; } = new SafetyBubbleEvents();
 
-        private static bool _wasInsideSafetyBubble = false;
-
         #endregion
 
         #region Base overrides
@@ -31,14 +29,12 @@ namespace LunaClient.Systems.SafetyBubble
 
         protected override void OnEnabled()
         {
-            _wasInsideSafetyBubble = false;
             FillUpPositions();
             GameEvents.onFlightReady.Add(SafetyBubbleEvents.FlightReady);
         }
 
         protected override void OnDisabled()
         {
-            _wasInsideSafetyBubble = false;
             SpawnPoints.Clear();
             GameEvents.onFlightReady.Remove(SafetyBubbleEvents.FlightReady);
         }
