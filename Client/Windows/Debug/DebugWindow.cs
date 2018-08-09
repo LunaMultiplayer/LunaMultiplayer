@@ -116,7 +116,7 @@ namespace LunaClient.Windows.Debug
                         ourVessel.mainBody.GetLatLonAltOrbital(ourVessel.orbit.pos, out lat, out lon, out alt);
                         StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
 
-                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
+                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(ourVessel, false)}");
 
                         _positionText = StringBuilder.ToString();
                         StringBuilder.Length = 0;

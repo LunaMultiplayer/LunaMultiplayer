@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace LunaClient.Systems.SafetyBubble
 {
+    /// <inheritdoc />
     /// <summary>
     /// This class controls the code regarding safety bubble
     /// </summary>
@@ -15,6 +16,8 @@ namespace LunaClient.Systems.SafetyBubble
         #region Fields and properties
 
         public GameObject SafetyBubbleObject;
+        public GameObject SafetyBubbleObjectX;
+        public GameObject SafetyBubbleObjectY;
 
         public Dictionary<string, List<SpawnPointLocation>> SpawnPoints { get; } = new Dictionary<string, List<SpawnPointLocation>>();
 
@@ -33,15 +36,14 @@ namespace LunaClient.Systems.SafetyBubble
             _wasInsideSafetyBubble = false;
             FillUpPositions();
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, FireSafetyBubbleEvents));
-            SafetyBubbleEvent.onEnteringSafetyBubble.Add(SafetyBubbleEvents.EnteredSafetyBubble);
             SafetyBubbleEvent.onLeavingSafetyBubble.Add(SafetyBubbleEvents.LeftSafetyBubble);
+            GameEvents.onFlightReady.Add(SafetyBubbleEvents.FlightReady);
         }
 
         protected override void OnDisabled()
         {
             _wasInsideSafetyBubble = false;
             SpawnPoints.Clear();
-            SafetyBubbleEvent.onEnteringSafetyBubble.Remove(SafetyBubbleEvents.EnteredSafetyBubble);
             SafetyBubbleEvent.onLeavingSafetyBubble.Remove(SafetyBubbleEvents.LeftSafetyBubble);
         }
 
@@ -104,65 +106,77 @@ namespace LunaClient.Systems.SafetyBubble
                 return true;
 
             if (protoVessel.orbitSnapShot != null)
-                return IsInSafetyBubble(protoVessel.latitude, protoVessel.longitude, protoVessel.altitude,
-                    protoVessel.orbitSnapShot.ReferenceBodyIndex);
+                return IsInSafetyBubble(protoVessel.latitude, protoVessel.longitude, protoVessel.altitude, protoVessel.orbitSnapShot.ReferenceBodyIndex);
 
             return false;
         }
 
         /// <summary>
-        /// Returns whether the given position is in a starting safety bubble or not.
+        /// Removes the visual representation of the safety bubble
         /// </summary>
-        public bool IsInSafetyBubble(double lat, double lon, double alt, int bodyIndex)
+        public void DestroySafetyBubble()
         {
-            if (bodyIndex < FlightGlobals.Bodies.Count)
-            {
-                var body = FlightGlobals.Bodies[bodyIndex];
-                if (body == null)
-                    return false;
-
-                return IsInSafetyBubble(FlightGlobals.Bodies[bodyIndex].GetWorldSurfacePosition(lat, lon, alt), body);
-            }
-
-            LunaLog.LogError($"Body index {bodyIndex} is out of range!");
-            return false;
+            if (SafetyBubbleObject != null) Object.Destroy(SafetyBubbleObject);
+            if (SafetyBubbleObjectX != null) Object.Destroy(SafetyBubbleObjectX);
+            if (SafetyBubbleObjectY != null) Object.Destroy(SafetyBubbleObjectY);
         }
 
-        /// <summary>
-        /// Returns whether the given position is in a starting safety bubble or not.
-        /// </summary>
-        public bool IsInSafetyBubble(double lat, double lon, double alt, CelestialBody body)
+        public void DrawSafetyBubble()
         {
-            if (body == null)
-                return false;
+            DestroySafetyBubble();
 
-            return IsInSafetyBubble(body.GetWorldSurfacePosition(lat, lon, alt), body);
-        }
+            var spawnPoint = GetSafetySpawnPoint(FlightGlobals.ActiveVessel);
+            if (spawnPoint == null) return;
 
-        /// <summary>
-        /// Returns whether the given position is in a starting safety bubble or not.
-        /// </summary>
-        public bool IsInSafetyBubble(Vector3d position, CelestialBody body)
-        {
-            if (!SpawnPoints.ContainsKey(body.name))
-                return false;
+            SafetyBubbleObject = new GameObject();
+            SafetyBubbleObject.transform.position = spawnPoint.Position;
+            SafetyBubbleObject.transform.rotation = Quaternion.LookRotation(spawnPoint.Body.GetSurfaceNVector(spawnPoint.Latitude, spawnPoint.Longitude));
 
-            foreach (var spawnPoint in SpawnPoints[body.name])
-            {
-                if (Vector2d.Distance(new Vector2d(position.x, position.y), new Vector2d(spawnPoint.Position.x, spawnPoint.Position.y)) < SettingsSystem.ServerSettings.SafetyBubbleDistance)
-                {
-                    return true;
-                }
-            }
+            SafetyBubbleObjectX = new GameObject();
+            SafetyBubbleObjectX.transform.position = spawnPoint.Position;
+            SafetyBubbleObjectX.transform.rotation = SafetyBubbleObject.transform.rotation * Quaternion.Euler(0, 90, 0);
 
-            return false;
+            SafetyBubbleObjectY = new GameObject();
+            SafetyBubbleObjectY.transform.position = spawnPoint.Position;
+            SafetyBubbleObjectY.transform.rotation = SafetyBubbleObject.transform.rotation * Quaternion.Euler(90, 90, 0);
+
+            DrawCircleAround(spawnPoint.Position, CreateLineRenderer(SafetyBubbleObject));
+            DrawCircleAround(spawnPoint.Position, CreateLineRenderer(SafetyBubbleObjectX));
+            DrawCircleAround(spawnPoint.Position, CreateLineRenderer(SafetyBubbleObjectY));
         }
 
         #endregion
 
         #region Private methods
 
-        public SpawnPointLocation GetSafetySpawnPoint(Vessel vessel)
+        private static void DrawCircleAround(Vector3d center, LineRenderer lineRenderer)
+        {
+            var theta = 0f;
+            for (var i = 0; i < lineRenderer.positionCount; i++)
+            {
+                theta += 2.0f * Mathf.PI * 0.01f;
+                var x = SettingsSystem.ServerSettings.SafetyBubbleDistance * Mathf.Cos(theta);
+                var y = SettingsSystem.ServerSettings.SafetyBubbleDistance * Mathf.Sin(theta);
+                x += (float)center.x;
+                y += (float)center.y;
+                lineRenderer.SetPosition(i, new Vector3(x, y, 0));
+            }
+        }
+
+        private static LineRenderer CreateLineRenderer(GameObject gameObj)
+        {
+            var lineRenderer = gameObj.AddComponent<LineRenderer>();
+            lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+            lineRenderer.startWidth = 0.3f;
+            lineRenderer.endWidth = 0.3f;
+            lineRenderer.startColor = Color.red;
+            lineRenderer.endColor = Color.red;
+            lineRenderer.positionCount = (int)(2.0f * Mathf.PI / 0.01f + 1);
+            lineRenderer.useWorldSpace = false;
+            return lineRenderer;
+        }
+
+        private SpawnPointLocation GetSafetySpawnPoint(Vessel vessel)
         {
             foreach (var point in SpawnPoints[vessel.mainBody.name])
             {
@@ -198,6 +212,46 @@ namespace LunaClient.Systems.SafetyBubble
                     SpawnPoints[launchsite.Body.name].Add(new SpawnPointLocation(spawnPoint, launchsite.Body));
                 }
             }
+        }
+
+        private bool IsInSafetyBubble(double lat, double lon, double alt, int bodyIndex)
+        {
+            if (bodyIndex < FlightGlobals.Bodies.Count)
+            {
+                var body = FlightGlobals.Bodies[bodyIndex];
+                if (body == null)
+                    return false;
+
+                return IsInSafetyBubble(FlightGlobals.Bodies[bodyIndex].GetWorldSurfacePosition(lat, lon, alt), body);
+            }
+
+            LunaLog.LogError($"Body index {bodyIndex} is out of range!");
+            return false;
+        }
+
+        private bool IsInSafetyBubble(double lat, double lon, double alt, CelestialBody body)
+        {
+            if (body == null)
+                return false;
+
+            return IsInSafetyBubble(body.GetWorldSurfacePosition(lat, lon, alt), body);
+        }
+
+        private bool IsInSafetyBubble(Vector3d position, CelestialBody body)
+        {
+            if (!SpawnPoints.ContainsKey(body.name))
+                return false;
+
+            foreach (var spawnPoint in SpawnPoints[body.name])
+            {
+                var distance = Vector3d.Distance(position, spawnPoint.Position);
+                if (distance < SettingsSystem.ServerSettings.SafetyBubbleDistance)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion
