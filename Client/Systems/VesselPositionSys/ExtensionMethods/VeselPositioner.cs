@@ -65,6 +65,9 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
         private static void ApplyInterpolationsToLoadedVessel(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
         {
+            //Do not call vessel.orbitDriver.updateFromParameters()!!
+            //It will set the vessel at the CURRENT position and ignore that the orbit is from the PAST!
+
             var currentSurfaceRelRotation = Quaternion.Slerp(update.SurfaceRelRotation, target.SurfaceRelRotation, percentage);
 
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
@@ -96,7 +99,7 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             }
             else
             {
-                vessel.orbitDriver.updateFromParameters();
+                
                 
                 //Always run this at the end!!
                 //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
