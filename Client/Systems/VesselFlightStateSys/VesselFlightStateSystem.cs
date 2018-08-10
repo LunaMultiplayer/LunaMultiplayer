@@ -252,13 +252,20 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (protoVessel == null) return;
 
-            protoVessel.ctrlState.SetValue("pitch", pitch);
-            protoVessel.ctrlState.SetValue("yaw", yaw);
-            protoVessel.ctrlState.SetValue("roll", roll);
-            protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
-            protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
-            protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
-            protoVessel.ctrlState.SetValue("mainThrottle", throttle);
+            try
+            {
+                protoVessel.ctrlState.SetValue("pitch", pitch);
+                protoVessel.ctrlState.SetValue("yaw", yaw);
+                protoVessel.ctrlState.SetValue("roll", roll);
+                protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
+                protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
+                protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
+                protoVessel.ctrlState.SetValue("mainThrottle", throttle);
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"Error while updating protovessel with flight state info. {e}");
+            }
         }
 
         public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, VesselFlightStateMsgData msgData)
