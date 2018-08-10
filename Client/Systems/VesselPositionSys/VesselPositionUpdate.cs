@@ -179,7 +179,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Target.LatLonAltPos = Target.Body.GetWorldSurfacePosition(Target.LatLonAlt[0], Target.LatLonAlt[1], Target.LatLonAlt[2]);
 
                 ObtPosStart = KspOrbit.getPositionAtUT(KspOrbit.epoch);
-                Target.ObtPosStart = KspOrbit.getPositionAtUT(Target.KspOrbit.epoch);
+                Target.ObtPosStart = Target.KspOrbit.getPositionAtUT(Target.KspOrbit.epoch);
             }
 
             if (Target == null) return;
