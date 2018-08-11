@@ -1,5 +1,4 @@
-﻿using LunaClient.Extensions;
-using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselPositionSys.ExtensionMethods;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -60,11 +59,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public Vector3d Velocity => new Vector3d(VelocityVector[0], VelocityVector[1], VelocityVector[2]);
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
-        public Orbit KspOrbit { get; set; }
-
-        public Vector3d LatLonAltPos { get; set; }
-
-        public Vector3d ObtPosStart { get; set; }
 
         #endregion
 
@@ -164,22 +158,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 AdjustExtraInterpolationTimes();
 
-                //As we are using a position from the PAST, we must compensate the planet rotation in the received LAN parameter
-                //rel: https://forum.kerbalspaceprogram.com/index.php?/topic/176149-replaying-orbit-positions-from-the-past/
-                var startRotationFixFactor = Vessel?.situation <= Vessel.Situations.FLYING ? TimeDifference * 360 / Body.SiderealDayLength() : 0;
-                var endRotationFixFactor = Vessel?.situation <= Vessel.Situations.FLYING ? (TimeDifference + ExtraInterpolationTime) * 360 / Body.SiderealDayLength() : 0;
-
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + startRotationFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + endRotationFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
-
                 Vessel?.protoVessel?.UpdatePositionValues(Target);
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
-
-                LatLonAltPos = Body.GetWorldSurfacePosition(LatLonAlt[0], LatLonAlt[1], LatLonAlt[2]);
-                Target.LatLonAltPos = Target.Body.GetWorldSurfacePosition(Target.LatLonAlt[0], Target.LatLonAlt[1], Target.LatLonAlt[2]);
-
-                ObtPosStart = KspOrbit.getPositionAtUT(KspOrbit.epoch);
-                Target.ObtPosStart = Target.KspOrbit.getPositionAtUT(Target.KspOrbit.epoch);
             }
 
             if (Target == null) return;

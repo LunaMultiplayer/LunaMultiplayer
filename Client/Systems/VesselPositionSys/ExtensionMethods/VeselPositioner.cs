@@ -1,10 +1,14 @@
-﻿using LunaCommon;
+﻿using LunaClient.Extensions;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 {
     public static class VeselPositioner
     {
+        private static Orbit _startOrbit;
+        private static Orbit _endOrbit;
+
         public static void SetVesselPosition(this Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, float percentage)
         {
             if (vessel == null || update == null || target == null) return;
@@ -46,11 +50,22 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             //startTime = update.KspOrbit.epoch;
             //targetTime = target.KspOrbit.epoch;
 
-            var currentPos = update.KspOrbit.getRelativePositionAtUT(startTime);
-            var targetPos = target.KspOrbit.getRelativePositionAtUT(targetTime);
+            //As we are using a position from the PAST, we must compensate the planet rotation in the received LAN parameter
+            //rel: https://forum.kerbalspaceprogram.com/index.php?/topic/176149-replaying-orbit-positions-from-the-past/
+            var startRotationFixFactor = vessel.situation <= Vessel.Situations.FLYING ? update.TimeDifference * 360 / update.Body.SiderealDayLength() : 0;
+            var endRotationFixFactor = vessel.situation <= Vessel.Situations.FLYING ? (target.TimeDifference + update.ExtraInterpolationTime) * 360 / target.Body.SiderealDayLength() : 0;
 
-            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(startTime);
-            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(targetTime);
+            _startOrbit = new Orbit(update.Orbit[0], update.Orbit[1], update.Orbit[2], update.Orbit[3] + startRotationFixFactor,
+                update.Orbit[4], update.Orbit[5], update.Orbit[6], update.Body);
+
+            _endOrbit = new Orbit(target.Orbit[0], target.Orbit[1], target.Orbit[2], target.Orbit[3] + endRotationFixFactor,
+                target.Orbit[4], target.Orbit[5], target.Orbit[6], target.Body);
+
+            var currentPos = _startOrbit.getRelativePositionAtUT(startTime);
+            var targetPos = _endOrbit.getRelativePositionAtUT(targetTime);
+
+            var currentVel = _startOrbit.getOrbitalVelocityAtUT(startTime);
+            var targetVel = _endOrbit.getOrbitalVelocityAtUT(targetTime);
 
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, percentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, percentage);
@@ -81,31 +96,24 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
+            //var startLatLonAltPos = update.Body.GetWorldSurfacePosition(update.LatLonAlt[0], update.LatLonAlt[1], update.LatLonAlt[2]);
+            //var targetLatLonAltPos = target.Body.GetWorldSurfacePosition(target.LatLonAlt[0], target.LatLonAlt[1], target.LatLonAlt[2]);
+
+            //var startOrbitPos = startOrbit.getPositionAtUT(startOrbit.epoch);
+            //var endOrbitPos = endOrbit.getPositionAtUT(endOrbit.epoch);
+            
             if (vessel.situation <= Vessel.Situations.FLYING)
             {
                 //If spectating, directly get the vector from the lerped lat,lon,alt. This method is more reliable but is not as fluid as using a lerped vector
-                var position = FlightGlobals.ActiveVessel?.id == vessel.id ? lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) :
-                    Vector3d.Lerp(update.LatLonAltPos, target.LatLonAltPos, percentage);
-
-                if (vessel.situation <= Vessel.Situations.PRELAUNCH)
-                {
-                    var currentVelocity = Vector3d.Lerp(update.Velocity, target.Velocity, percentage);
-
-                    vessel.SetWorldVelocity(currentVelocity);
-                    vessel.velocityD = currentVelocity;
-                }
+                var position = lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude);
 
                 vessel.SetPosition(position);
             }
-            else
-            {
-                
-                
-                //Always run this at the end!!
-                //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                foreach (var part in vessel.Parts)
-                    part.ResumeVelocity();
-            }
+
+            //Always run this at the end!!
+            //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+            foreach (var part in vessel.Parts)
+                part.ResumeVelocity();
         }
     }
 }
