@@ -80,8 +80,8 @@ namespace LunaClient.Systems.VesselPositionSys
             get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
-        
-        public Vector3 PositionVectorDiff = Vector3.zero;
+
+        public float PercentageIncrement => (float)(Time.fixedDeltaTime / InterpolationDuration);
 
         #endregion
 
@@ -173,7 +173,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             finally
             {
-                LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
+                LerpPercentage += PercentageIncrement;
             }
         }
 
