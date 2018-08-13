@@ -23,9 +23,14 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static float LastVesselUpdatesSentTime { get; set; }
 
+        private static int UpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval 
+            / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
+        private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval
+            / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
+
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
-            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselUpdatesMsInterval :
-            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval;
+            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > UpdateIntervalLockedToUnity :
+            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SecondaryVesselUpdatesUpdateIntervalLockedToUnity;
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -60,7 +65,7 @@ namespace LunaClient.Systems.VesselPositionSys
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
 
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
-            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/

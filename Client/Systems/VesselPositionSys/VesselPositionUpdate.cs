@@ -71,16 +71,13 @@ namespace LunaClient.Systems.VesselPositionSys
         private int MessageCount => VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) ? queue.Count : 0;
         public double TimeDifference { get; private set; }
         public double ExtraInterpolationTime { get; private set; }
-        public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
+        public bool InterpolationFinished => Target == null || CurrentFrame >= NumFrames;
+
         public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
+        public float LerpPercentage => SettingsSystem.CurrentSettings.PositionInterpolation ? CurrentFrame / NumFrames : 1;
 
-        private float _lerpPercentage = 1;
-        public float LerpPercentage
-        {
-            get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
-            set => _lerpPercentage = Mathf.Clamp01(value);
-        }
-
+        public float CurrentFrame { get; set; }
+        public int NumFrames => (int)(InterpolationDuration / PercentageIncrement) + 1;
         public float PercentageIncrement => (float)(Time.fixedDeltaTime / InterpolationDuration);
 
         #endregion
@@ -144,7 +141,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds;
 
                 ProcessRestart();
-                LerpPercentage = 0;
+                CurrentFrame = 0;
 
                 if (Target != null)
                 {
@@ -173,7 +170,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             finally
             {
-                LerpPercentage += PercentageIncrement;
+                CurrentFrame++;
             }
         }
 
@@ -214,7 +211,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds && MessageCount > VesselPositionSystem.MinRecommendedMessageCount)
                 {
-                    LerpPercentage = 1;
+                    CurrentFrame = NumFrames;
                 }
 
                 ExtraInterpolationTime = Time.fixedDeltaTime;
