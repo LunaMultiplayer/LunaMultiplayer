@@ -71,7 +71,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool InterpolationFinished => Target == null || CurrentFrame >= NumFrames;
 
         public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
-        public float LerpPercentage => SettingsSystem.CurrentSettings.PositionInterpolation ? CurrentFrame / NumFrames : 1;
+        public float LerpPercentage => SettingsSystem.CurrentSettings.PositionInterpolation ? Mathf.Clamp01(CurrentFrame / NumFrames) : 1;
 
         public float CurrentFrame { get; set; }
         public int NumFrames => (int)(InterpolationDuration / PercentageIncrement) + 1;
