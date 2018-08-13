@@ -2,7 +2,6 @@
 using LunaClient.Systems.VesselPositionSys.ExtensionMethods;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -33,8 +32,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public CelestialBody LerpBody => LerpPercentage < 0.5 ? GetBody(BodyIndex) : GetBody(Target.BodyIndex);
 
         public VesselPositionUpdate Target { get; set; }
-
-        private bool CurrentlySpectatingThisVessel => VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId;
 
         #region Message Fields
 
