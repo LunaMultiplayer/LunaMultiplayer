@@ -104,9 +104,12 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             
             if (vessel.situation <= Vessel.Situations.FLYING)
             {
-                //If spectating, directly get the vector from the lerped lat,lon,alt. This method is more reliable but is not as fluid as using a lerped vector
                 var position = lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude);
-
+                vessel.SetPosition(position);
+            }
+            else
+            {
+                var position = vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
                 vessel.SetPosition(position);
             }
 
