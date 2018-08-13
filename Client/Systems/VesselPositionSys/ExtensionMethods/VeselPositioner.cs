@@ -101,17 +101,11 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
             //var startOrbitPos = startOrbit.getPositionAtUT(startOrbit.epoch);
             //var endOrbitPos = endOrbit.getPositionAtUT(endOrbit.epoch);
-            
-            if (vessel.situation <= Vessel.Situations.FLYING)
-            {
-                var position = lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude);
-                vessel.SetPosition(position);
-            }
-            else
-            {
-                var position = vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
-                vessel.SetPosition(position);
-            }
+
+            var position = vessel.situation <= Vessel.Situations.FLYING ? lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) :
+                vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
+
+            vessel.SetPosition(position);
 
             //Always run this at the end!!
             //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
