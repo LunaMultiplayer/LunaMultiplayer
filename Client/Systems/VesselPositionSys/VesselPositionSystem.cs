@@ -89,8 +89,10 @@ namespace LunaClient.Systems.VesselPositionSys
             LockEvent.onLockAcquire.Remove(PositionEvents.OnLockAcquire);
         }
 
-        private static void HandleVesselUpdates()
+        private void HandleVesselUpdates()
         {
+            if (!Enabled) return;
+
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 keyVal.Value.ApplyInterpolatedVesselUpdate();
