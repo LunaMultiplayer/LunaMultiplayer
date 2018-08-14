@@ -6,7 +6,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: {smallversion}.{build}
+version: $(smallversion).{build}
 #Do not build if we change any of this files
 skip_commits:
   files:
