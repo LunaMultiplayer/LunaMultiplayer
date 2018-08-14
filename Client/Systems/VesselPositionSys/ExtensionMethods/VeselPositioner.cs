@@ -1,4 +1,5 @@
 ﻿using LunaClient.Extensions;
+using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using UnityEngine;
 
@@ -102,10 +103,14 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             //var startOrbitPos = startOrbit.getPositionAtUT(startOrbit.epoch);
             //var endOrbitPos = endOrbit.getPositionAtUT(endOrbit.epoch);
 
-            var position = vessel.situation <= Vessel.Situations.FLYING ? lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) :
-                vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
-
-            vessel.SetPosition(position);
+            if (vessel.situation <= Vessel.Situations.PRELAUNCH || (vessel.situation <= Vessel.Situations.FLYING && SettingsSystem.CurrentSettings.PositionInterpolation))
+            {
+                vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
+            }
+            else
+            {
+                vessel.SetPosition(vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime()));
+            }
 
             //Always run this at the end!!
             //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
