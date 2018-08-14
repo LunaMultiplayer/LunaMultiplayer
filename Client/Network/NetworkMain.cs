@@ -2,7 +2,6 @@
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.BannedParts;
-using LunaClient.Windows.Mod;
 using LunaCommon.Message;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
@@ -86,7 +85,6 @@ namespace LunaClient.Network
         {
             NetworkConnection.ResetRequested = true;
             BannedPartsWindow.Singleton.Display = false;
-            ModWindow.Singleton.Display = false;
 
             if (ClientConnection?.Status > NetPeerStatus.NotRunning)
             {
