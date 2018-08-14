@@ -53,9 +53,9 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
             //As we are using a position from the PAST, we must compensate the planet rotation in the received LAN parameter
             //rel: https://forum.kerbalspaceprogram.com/index.php?/topic/176149-replaying-orbit-positions-from-the-past/
-            var startRotationFixFactor = vessel.situation <= Vessel.Situations.FLYING && update.Body != null ? 
+            var startRotationFixFactor = vessel.situation <= Vessel.Situations.FLYING && update.Body != null && update.Body.referenceBody != null ? 
                 update.TimeDifference * 360 / update.Body.SiderealDayLength() : 0;
-            var endRotationFixFactor = vessel.situation <= Vessel.Situations.FLYING && update.Body != null ? 
+            var endRotationFixFactor = vessel.situation <= Vessel.Situations.FLYING && update.Body != null && update.Body.referenceBody != null ?
                 (target.TimeDifference + update.ExtraInterpolationTime) * 360 / target.Body.SiderealDayLength() : 0;
 
             _startOrbit = new Orbit(update.Orbit[0], update.Orbit[1], update.Orbit[2], update.Orbit[3] + startRotationFixFactor,
