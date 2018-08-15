@@ -5,7 +5,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;
-using System.IO;
+using System;
 
 namespace LunaClient.Systems.Flag
 {
@@ -16,13 +16,17 @@ namespace LunaClient.Systems.Flag
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<FlagCliMsg>(msg)));
         }
 
-        public FlagDataMsgData GetFlagMessageData(string flagName, string fullFlagPath)
+        public FlagDataMsgData GetFlagMessageData(string flagName, byte[] flagData)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<FlagDataMsgData>();
             msgData.Flag.Owner = SettingsSystem.CurrentSettings.PlayerName;
             msgData.Flag.FlagName = flagName;
-            msgData.Flag.FlagData = File.ReadAllBytes(fullFlagPath);
-            msgData.Flag.NumBytes = msgData.Flag.FlagData.Length;
+            msgData.Flag.NumBytes = flagData.Length;
+
+            if (msgData.Flag.FlagData.Length < flagData.Length)
+                msgData.Flag.FlagData = new byte[flagData.Length];
+
+            Array.Copy(flagData, msgData.Flag.FlagData, flagData.Length);
 
             return msgData;
         }

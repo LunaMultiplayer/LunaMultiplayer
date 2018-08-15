@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Flags;
 using System.IO;
@@ -37,16 +36,22 @@ namespace LunaClient.Systems.Flag
             if (System.ServerFlags.TryGetValue(flagUrl, out var existingFlag) && existingFlag.Owner != SettingsSystem.CurrentSettings.PlayerName)
                 return;
 
-            var fullFlagPath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", $"{flagUrl}.png");
-            //Extra check for existing file
-            if (File.Exists(fullFlagPath))
+            var textureInfo = GameDatabase.Instance.GetTextureInfo(flagUrl);
+            if (textureInfo != null)
             {
+                var flagData = textureInfo.texture.GetRawTextureData();
+                if (flagData.Length > 1000000)
+                {
+                    LunaLog.LogError($"Cannot upload flag {Path.GetFileName(flagUrl)} size is greater than 1Mb!");
+                    return;
+                }
+
                 //Don't send the flag when the SHA sum already matches as that would mean that the server already has it
-                if (existingFlag != null && existingFlag.ShaSum == Common.CalculateSha256FileHash(fullFlagPath)) return;
+                if (existingFlag != null && existingFlag.ShaSum == Common.CalculateSha256Hash(flagData)) return;
 
                 LunaLog.Log($"[LMP]: Uploading {Path.GetFileName(flagUrl)} flag");
                 
-                System.MessageSender.SendMessage(System.MessageSender.GetFlagMessageData(flagUrl, fullFlagPath));
+                System.MessageSender.SendMessage(System.MessageSender.GetFlagMessageData(flagUrl, flagData));
             }
         }
     }

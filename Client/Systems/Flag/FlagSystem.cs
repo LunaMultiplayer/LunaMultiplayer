@@ -68,10 +68,14 @@ namespace LunaClient.Systems.Flag
         /// </summary>
         public void SendCurrentFlag()
         {
-            var fullFlagPath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", $"{SettingsSystem.CurrentSettings.SelectedFlag}.png");
-            if (!File.Exists(fullFlagPath)) return;
-            
-            MessageSender.SendMessage(MessageSender.GetFlagMessageData(SettingsSystem.CurrentSettings.SelectedFlag, fullFlagPath));
+            if (DefaultFlags.DefaultFlagList.Contains(SettingsSystem.CurrentSettings.SelectedFlag))
+                return;
+
+            var textureInfo = GameDatabase.Instance.GetTextureInfo(SettingsSystem.CurrentSettings.SelectedFlag);
+            if (textureInfo != null)
+            {
+                MessageSender.SendMessage(MessageSender.GetFlagMessageData(SettingsSystem.CurrentSettings.SelectedFlag, textureInfo.texture.GetRawTextureData()));
+            }
         }
 
         public bool FlagExists(string flagUrl)
@@ -85,7 +89,7 @@ namespace LunaClient.Systems.Flag
             {
                 try
                 {
-                    File.WriteAllBytes(Path.GetFileName(textureInfo.name) + ".png", textureInfo.normalMap.GetRawTextureData());
+                    File.WriteAllBytes(Path.GetFileName(textureInfo.name) + ".png", textureInfo.texture.GetRawTextureData());
                 }
                 catch (Exception e)
                 {
