@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.Chat;
+﻿using LunaClient.Network;
+using LunaClient.Systems.Chat;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
@@ -6,7 +7,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LunaClient.Network;
+using UnityEngine;
 
 namespace LunaClient.VesselUtilities
 {
@@ -15,15 +16,21 @@ namespace LunaClient.VesselUtilities
     /// </summary>
     public class VesselCommon
     {
-        public static float PositionAndFlightStateMessageOffsetSec => (float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs).TotalSeconds;
-        public static int PositionAndFlightStateMessageOffsetMs => (int)NetworkStatistics.PingMs;
+        private const int MaxOffsetMs = 1000;
+        private const float MaxOffsetSec = 1f;
+
+        private const int MinOffsetMs = 100;
+        private const float MinOffsetSec = 0.1f;
+
+        public static float PositionAndFlightStateMessageOffsetSec => Mathf.Clamp((float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs).TotalSeconds, MinOffsetSec, MaxOffsetSec);
+        public static int PositionAndFlightStateMessageOffsetMs => (int)Mathf.Clamp(NetworkStatistics.PingMs, MinOffsetMs, MaxOffsetMs);
 
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
             //Ignore updates to our own vessel if we aren't spectating
             return !IsSpectating && FlightGlobals.ActiveVessel?.id == vesselId;
         }
-        
+
         private static bool _isSpectating;
         public static bool IsSpectating
         {
@@ -295,7 +302,7 @@ namespace LunaClient.VesselUtilities
                 .Select(vi => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v.id == vi.VesselId))
                 .Where(v => v != null && v.id != Guid.Empty);
         }
-        
+
         /// <summary>
         /// Checks if the given config node from a protovessel has NaN orbits
         /// </summary>
