@@ -30,6 +30,9 @@ namespace LunaClient.Systems.KscScene
             }
         }
 
+        /// <summary>
+        /// Sometimes the vessel markers stay there with corrupt values so here we force clearing them
+        /// </summary>
         public void LevelLoaded(GameScenes data)
         {
             if (data == GameScenes.SPACECENTER)
