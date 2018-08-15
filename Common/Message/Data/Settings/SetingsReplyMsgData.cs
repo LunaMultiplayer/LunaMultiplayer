@@ -23,10 +23,6 @@ namespace LunaCommon.Message.Data.Settings
         public float SafetyBubbleDistance;
         public int VesselUpdatesMsInterval;
         public int SecondaryVesselUpdatesMsInterval;
-        public bool ForceInterpolationOffset; //TODO REMOVE
-        public int InterpolationOffsetMs; //TODO REMOVE
-        public bool ForceInterpolation; //TODO REMOVE
-        public bool InterpolationValue; //TODO REMOVE
         public bool AllowStockVessels;
         public bool CanRevert;
         public bool AutoHireCrews;
@@ -88,10 +84,6 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(SafetyBubbleDistance);
             lidgrenMsg.Write(VesselUpdatesMsInterval);
             lidgrenMsg.Write(SecondaryVesselUpdatesMsInterval);
-            lidgrenMsg.Write(ForceInterpolationOffset);
-            lidgrenMsg.Write(InterpolationOffsetMs);
-            lidgrenMsg.Write(ForceInterpolation);
-            lidgrenMsg.Write(InterpolationValue);
             lidgrenMsg.Write(AllowStockVessels);
             lidgrenMsg.Write(CanRevert);
             lidgrenMsg.Write(AutoHireCrews);
@@ -152,10 +144,6 @@ namespace LunaCommon.Message.Data.Settings
             SafetyBubbleDistance = lidgrenMsg.ReadFloat();
             VesselUpdatesMsInterval = lidgrenMsg.ReadInt32();
             SecondaryVesselUpdatesMsInterval = lidgrenMsg.ReadInt32();
-            ForceInterpolationOffset = lidgrenMsg.ReadBoolean();
-            InterpolationOffsetMs = lidgrenMsg.ReadInt32();
-            ForceInterpolation = lidgrenMsg.ReadBoolean();
-            InterpolationValue = lidgrenMsg.ReadBoolean();
             AllowStockVessels = lidgrenMsg.ReadBoolean();
             CanRevert = lidgrenMsg.ReadBoolean();
             AutoHireCrews = lidgrenMsg.ReadBoolean();
@@ -203,7 +191,7 @@ namespace LunaCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) +
-                sizeof(bool) * 24 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 21 + sizeof(int) * 7 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }
