@@ -9,7 +9,7 @@ namespace LunaCommon
         /// </summary>
         public static double Lerp(double from, double to, float t)
         {
-            return from * (1 - t) + to * t;
+            return from * (1d - t) + to * t;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace LunaCommon
         /// </summary>
         public static float Lerp(float v0, float v1, float t)
         {
-            return (1 - t) * v0 + t * v1;
+            return (1f - t) * v0 + t * v1;
         }
 
         /// <summary>
