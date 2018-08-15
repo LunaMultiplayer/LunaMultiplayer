@@ -21,8 +21,7 @@ namespace LunaCommon.Message.Client
         {
             [(ushort)FlagMessageType.ListRequest] = typeof(FlagListRequestMsgData),
             [(ushort)FlagMessageType.ListResponse] = typeof(FlagListResponseMsgData),
-            [(ushort)FlagMessageType.FlagData] = typeof(FlagDataMsgData),
-            [(ushort)FlagMessageType.FlagDelete] = typeof(FlagDeleteMsgData)
+            [(ushort)FlagMessageType.FlagData] = typeof(FlagDataMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Flag;

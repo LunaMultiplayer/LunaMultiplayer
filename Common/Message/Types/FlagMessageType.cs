@@ -4,7 +4,6 @@
     {
         ListRequest = 0,
         ListResponse = 1,
-        FlagData = 2,
-        FlagDelete = 3
+        FlagData = 2
     }
 }

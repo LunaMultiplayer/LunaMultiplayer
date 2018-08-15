@@ -20,9 +20,6 @@ namespace Server.Message
                     //We don't use this message anymore so we can recycle it
                     message.Recycle();
                     break;
-                case FlagMessageType.FlagDelete:
-                    FlagSyncMsgSender.HandleFlagDeleteMessage(client, (FlagDeleteMsgData)data);
-                    break;
                 case FlagMessageType.FlagData:
                     FlagSyncMsgSender.HandleFlagDataMessage(client, (FlagDataMsgData)data);
                     break;

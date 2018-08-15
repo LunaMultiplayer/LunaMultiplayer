@@ -1,13 +1,11 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using System.IO;
 
 namespace LunaClient.Systems.Flag
 {
@@ -39,28 +37,6 @@ namespace LunaClient.Systems.Flag
                         System.ServerFlags.AddOrUpdate(extendedFlagInfo.FlagName, extendedFlagInfo, (key, existingVal) => extendedFlagInfo);
                     }
                     break;
-                case FlagMessageType.FlagDelete:
-                    {
-                        var data = (FlagDeleteMsgData)msgData;
-                        System.ServerFlags.TryRemove(data.FlagName, out _);
-                        DeleteFlagFile(CommonUtil.CombinePaths(FlagSystem.FlagPath, data.FlagName));
-                    }
-                    break;
-            }
-        }
-
-        private static void DeleteFlagFile(string flagFile)
-        {
-            try
-            {
-                if (File.Exists(flagFile))
-                {
-                    File.Delete(flagFile);
-                }
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error deleting flag {flagFile}, exception: {e}");
             }
         }
     }

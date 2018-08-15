@@ -21,8 +21,7 @@ namespace LunaCommon.Message.Server
         {
             [(ushort)FlagMessageType.ListRequest] = typeof(FlagListRequestMsgData),
             [(ushort)FlagMessageType.ListResponse] = typeof(FlagListResponseMsgData),
-            [(ushort)FlagMessageType.FlagData] = typeof(FlagDataMsgData),
-            [(ushort)FlagMessageType.FlagDelete] = typeof(FlagDeleteMsgData)
+            [(ushort)FlagMessageType.FlagData] = typeof(FlagDataMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Flag;

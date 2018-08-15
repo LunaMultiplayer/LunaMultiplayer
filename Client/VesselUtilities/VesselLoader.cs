@@ -1,13 +1,12 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Systems.Asteroid;
+using LunaClient.Systems.Flag;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
-using LunaClient.Utilities;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using UniLinq;
 using UnityEngine;
@@ -189,7 +188,7 @@ namespace LunaClient.VesselUtilities
         {
             foreach (var part in vesselProto.protoPartSnapshots.Where(p => !string.IsNullOrEmpty(p.flagURL)))
             {
-                if (!File.Exists(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", $"{part.flagURL}.png")))
+                if (!FlagSystem.Singleton.FlagExists(part.flagURL))
                 {
                     LunaLog.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
                     part.flagURL = "Squad/Flags/default";

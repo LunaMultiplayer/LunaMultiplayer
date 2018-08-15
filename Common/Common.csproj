@@ -63,6 +63,7 @@
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />
+    <Compile Include="Flags\DefaultFlags.cs" />
     <Compile Include="IgnoredScenarios.cs" />
     <Compile Include="Locks\LockQueryContract.cs" />
     <Compile Include="Locks\LockQueryKerbal.cs" />
@@ -140,7 +141,6 @@
     <Compile Include="Message\Data\Facility\FacilityRepairMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagBaseMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagDataMsgData.cs" />
-    <Compile Include="Message\Data\Flag\FlagDeleteMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagListRequestMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagListResponseMsgData.cs" />
     <Compile Include="Message\Data\Groups\GroupBaseMsgData.cs" />
@@ -327,6 +327,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

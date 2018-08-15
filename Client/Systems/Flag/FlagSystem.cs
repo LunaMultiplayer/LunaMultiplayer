@@ -1,6 +1,7 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
+using LunaCommon.Flags;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -14,10 +15,10 @@ namespace LunaClient.Systems.Flag
         #region Fields
 
         public FlagEvents FlagEvents { get; } = new FlagEvents();
-        public static string FlagPath { get; } = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Flags");
+        public static string LmpFlagPath { get; } = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Flags");
         public ConcurrentDictionary<string, ExtendedFlagInfo> ServerFlags { get; } = new ConcurrentDictionary<string, ExtendedFlagInfo>();
         private bool FlagSystemReady => Enabled && HighLogic.CurrentGame?.flagURL != null;
-
+        
         #endregion
 
         #region Base overrides
@@ -61,35 +62,36 @@ namespace LunaClient.Systems.Flag
         #endregion
 
         #region Public methods
-
+        
         /// <summary>
         /// Send our flag to the server
         /// </summary>
         public void SendCurrentFlag()
         {
-            //If the flag does not come from the LMP folder then skip this
-            if (!SettingsSystem.CurrentSettings.SelectedFlag.Contains("LunaMultiplayer/Flags/"))
-                return;
-
-            var flagName = SettingsSystem.CurrentSettings.SelectedFlag.Substring("LunaMultiplayer/Flags/".Length);
-            var fullFlagPath = CommonUtil.CombinePaths(FlagPath, flagName);
-
+            var fullFlagPath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", $"{SettingsSystem.CurrentSettings.SelectedFlag}.png");
             if (!File.Exists(fullFlagPath)) return;
             
-            MessageSender.SendMessage(MessageSender.GetFlagMessageData(flagName, fullFlagPath));
+            MessageSender.SendMessage(MessageSender.GetFlagMessageData(SettingsSystem.CurrentSettings.SelectedFlag, fullFlagPath));
         }
 
-        public static bool FlagFileExists()
+        public bool FlagExists(string flagUrl)
         {
-            if (string.IsNullOrEmpty(SettingsSystem.CurrentSettings.SelectedFlag) || !SettingsSystem.CurrentSettings.SelectedFlag.Contains("/"))
-                return false;
+            return GameDatabase.Instance.ExistsTexture($"{flagUrl}");
+        }
 
-            var flagName = SettingsSystem.CurrentSettings.SelectedFlag
-                .Substring(SettingsSystem.CurrentSettings.SelectedFlag.LastIndexOf("/", StringComparison.Ordinal) + 1) + ".png";
-
-            var fullFlagPath = CommonUtil.CombinePaths(FlagPath, flagName);
-
-            return File.Exists(fullFlagPath);
+        public void SaveCurrentFlags()
+        {
+            foreach (var textureInfo in GameDatabase.Instance.GetAllTexturesInFolderType("Flag", true).Where(f=> !DefaultFlags.DefaultFlagList.Contains(f.name)))
+            {
+                try
+                {
+                    File.WriteAllBytes(Path.GetFileName(textureInfo.name) + ".png", textureInfo.normalMap.GetRawTextureData());
+                }
+                catch (Exception e)
+                {
+                    LunaLog.LogError($"Error while trying to save flag {textureInfo.name}: {e}");
+                }
+            }
         }
 
         #endregion
@@ -99,36 +101,24 @@ namespace LunaClient.Systems.Flag
         /// <summary>
         /// Here we handle an unloaded flag and we load it into the game
         /// </summary>
-        private static void HandleFlag(ExtendedFlagInfo flagInfo)
+        private void HandleFlag(ExtendedFlagInfo flagInfo)
         {
-            if (HighLogic.CurrentGame.flagURL.Contains("LunaMultiplayer/Flags/"))
-            {
-                var currentFlagName = HighLogic.CurrentGame.flagURL.Substring("LunaMultiplayer/Flags/".Length);
-                //If the flag name is the same as ours just skip it as otherwise we would overwrite ours
-                if (currentFlagName == flagInfo.FlagName)
-                    return;
-            }
+            //We have a flag with the same name!
+            if (FlagExists(flagInfo.FlagName))
+                return;
 
             var flagTexture = new Texture2D(4, 4);
             if (flagTexture.LoadImage(flagInfo.FlagData))
             {
-                //Flags have names like: Squad/Flags/default or LunaMultiplayer/Flags/coolflag
-                flagTexture.name = "LunaMultiplayer/Flags/" + Path.GetFileNameWithoutExtension(flagInfo.FlagName);
-                File.WriteAllBytes(flagInfo.FlagPath, flagInfo.FlagData);
-
+                //Flags have names like: Squad/Flags/default
+                flagTexture.name = flagInfo.FlagName;
                 var textureInfo = new GameDatabase.TextureInfo(null, flagTexture, false, true, false)
                 {
                     name = flagTexture.name
                 };
 
-                var textureExists = GameDatabase.Instance.databaseTexture.Any(t => t.name == textureInfo.name);
-
-                if (!textureExists)
-                    GameDatabase.Instance.databaseTexture.Add(textureInfo);
-                else
-                    GameDatabase.Instance.ReplaceTexture(textureInfo.name, textureInfo);
-
-                LunaLog.Log($"[LMP]: Loaded {flagTexture.name}");
+                GameDatabase.Instance.databaseTexture.Add(textureInfo);
+                LunaLog.Log($"[LMP]: Loaded flag {flagTexture.name}");
             }
             else
             {
