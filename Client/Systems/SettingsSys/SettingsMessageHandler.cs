@@ -27,8 +27,6 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
             SettingsSystem.ServerSettings.VesselUpdatesMsInterval = msgData.VesselUpdatesMsInterval;
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval = msgData.SecondaryVesselUpdatesMsInterval;
-            SettingsSystem.ServerSettings.ForceInterpolationOffset = msgData.ForceInterpolationOffset;
-            SettingsSystem.ServerSettings.ForceInterpolation = msgData.ForceInterpolation;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
             SettingsSystem.ServerSettings.MinScreenshotIntervalMs = msgData.MinScreenshotIntervalMs;
