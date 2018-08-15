@@ -51,46 +51,53 @@ namespace LunaClient.ModuleStore
             HarmonyPatcher.HarmonyInstance.Patch(TestModule.ExampleCallMethod, null, null, new HarmonyMethod(InitTranspilerMethod));
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
-                foreach (var partModule in partModules)
+                try
                 {
-                    try
+                    var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
+                    foreach (var partModule in partModules)
                     {
-                        _currentPartModuleName = partModule.Name;
-
-                        var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                            .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
-
-                        if (persistentFields.Any())
+                        try
                         {
-                            if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModuleName, out var definition))
-                            {                            
-                                //Ignore the whole part module if all the persistent fields are ignored
-                                var ignoredFields = definition.Fields.Where(f => f.Ignore).Select(f => f.FieldName);
-                                if (!persistentFields.Select(f => f.Name).Except(ignoredFields).Any())
-                                    continue;
-                            }
+                            _currentPartModuleName = partModule.Name;
 
-                            foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                            .Where(m=> !m.IsGenericMethod && MethodSetsPersistentField(m)))
+                            var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                                .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
+
+                            if (persistentFields.Any())
                             {
-                                try
+                                if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModuleName, out var definition))
                                 {
-                                    LunaLog.Log($"Patching method {partModuleMethod.Name} in module {partModule.Name}");
-                                    HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(TranspilerMethod));
+                                    //Ignore the whole part module if all the persistent fields are ignored
+                                    var ignoredFields = definition.Fields.Where(f => f.Ignore).Select(f => f.FieldName);
+                                    if (!persistentFields.Select(f => f.Name).Except(ignoredFields).Any())
+                                        continue;
                                 }
-                                catch
+
+                                foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                                .Where(m => !m.IsGenericMethod && MethodSetsPersistentField(m)))
                                 {
-                                    LunaLog.LogError($"Could not patch method {partModuleMethod.Name} in module {partModule.Name}");
-                                    HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(RestoreMethod));
+                                    try
+                                    {
+                                        LunaLog.Log($"Patching method {partModuleMethod.Name} in module {partModule.Name}");
+                                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(TranspilerMethod));
+                                    }
+                                    catch
+                                    {
+                                        LunaLog.LogError($"Could not patch method {partModuleMethod.Name} in module {partModule.Name}");
+                                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(RestoreMethod));
+                                    }
                                 }
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            LunaLog.LogError($"Exception patching module {partModule.Name} from assembly {assembly.FullName}: {ex.Message}");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        LunaLog.LogError($"Exception patching {partModule.Name} from assembly {assembly.FullName}: {ex.Message}");
-                    }
+                }
+                catch (Exception ex)
+                {
+                    LunaLog.LogError($"Exception loading assembly {assembly.FullName}: {ex.Message}");
                 }
             }
         }
