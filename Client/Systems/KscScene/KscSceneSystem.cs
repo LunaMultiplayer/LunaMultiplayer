@@ -19,6 +19,7 @@ namespace LunaClient.Systems.KscScene
             LockEvent.onLockAcquireUnityThread.Add(KscSceneEvents.OnLockAcquire);
             LockEvent.onLockReleaseUnityThread.Add(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Add(KscSceneEvents.OnSceneRequested);
+            GameEvents.onLevelWasLoadedGUIReady.Add(KscSceneEvents.LevelLoaded);
         }
 
         protected override void OnDisabled()
@@ -26,6 +27,7 @@ namespace LunaClient.Systems.KscScene
             LockEvent.onLockAcquireUnityThread.Remove(KscSceneEvents.OnLockAcquire);
             LockEvent.onLockReleaseUnityThread.Remove(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Remove(KscSceneEvents.OnSceneRequested);
+            GameEvents.onLevelWasLoadedGUIReady.Remove(KscSceneEvents.LevelLoaded);
         }
 
         #endregion

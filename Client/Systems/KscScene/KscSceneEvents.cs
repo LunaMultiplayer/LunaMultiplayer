@@ -29,5 +29,11 @@ namespace LunaClient.Systems.KscScene
                 ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
             }
         }
+
+        public void LevelLoaded(GameScenes data)
+        {
+            if (data == GameScenes.SPACECENTER)
+                KSCVesselMarkers.fetch?.RefreshMarkers();
+        }
     }
 }
