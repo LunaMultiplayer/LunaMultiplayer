@@ -2,10 +2,10 @@
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Flags;
-using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Systems.Flag
@@ -63,38 +63,43 @@ namespace LunaClient.Systems.Flag
 
         #region Public methods
         
-        /// <summary>
-        /// Send our flag to the server
-        /// </summary>
-        public void SendCurrentFlag()
-        {
-            if (DefaultFlags.DefaultFlagList.Contains(SettingsSystem.CurrentSettings.SelectedFlag))
-                return;
-
-            var textureInfo = GameDatabase.Instance.GetTextureInfo(SettingsSystem.CurrentSettings.SelectedFlag);
-            if (textureInfo != null)
-            {
-                MessageSender.SendMessage(MessageSender.GetFlagMessageData(SettingsSystem.CurrentSettings.SelectedFlag, textureInfo.normalMap.GetRawTextureData()));
-            }
-        }
-
         public bool FlagExists(string flagUrl)
         {
             return GameDatabase.Instance.ExistsTexture(flagUrl);
         }
 
-        public void SaveCurrentFlags()
+        public void SendFlag(string flagUrl)
         {
-            foreach (var textureInfo in GameDatabase.Instance.GetAllTexturesInFolderType("Flag", true).Where(f=> !DefaultFlags.DefaultFlagList.Contains(f.name)))
+            //If it's a default flag skip the sending
+            if (DefaultFlags.DefaultFlagList.Contains(flagUrl))
+                return;
+
+            //If the flag is owned by someone else don't sync it
+            if (ServerFlags.TryGetValue(flagUrl, out var existingFlag) && existingFlag.Owner != SettingsSystem.CurrentSettings.PlayerName)
+                return;
+
+            var textureInfo = GameDatabase.Instance.GetTextureInfo(flagUrl);
+            if (textureInfo != null)
             {
-                try
+                var filePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", $"{flagUrl}.png");
+                if (!File.Exists(filePath))
                 {
-                    File.WriteAllBytes(Path.GetFileName(textureInfo.name) + ".png", textureInfo.normalMap.GetRawTextureData());
+                    LunaLog.LogError($"Cannot upload flag {Path.GetFileName(flagUrl)} file not found");
+                    return;
                 }
-                catch (Exception e)
+
+                var flagData = File.ReadAllBytes(filePath);
+                if (flagData.Length > 1000000)
                 {
-                    LunaLog.LogError($"Error while trying to save flag {textureInfo.name}: {e}");
+                    LunaLog.LogError($"Cannot upload flag {Path.GetFileName(flagUrl)} size is greater than 1Mb!");
+                    return;
                 }
+
+                //Don't send the flag when the SHA sum already matches as that would mean that the server already has it
+                if (existingFlag != null && existingFlag.ShaSum == Common.CalculateSha256Hash(flagData)) return;
+
+                LunaLog.Log($"[LMP]: Uploading {Path.GetFileName(flagUrl)} flag");
+                MessageSender.SendMessage(MessageSender.GetFlagMessageData(flagUrl, flagData));
             }
         }
 

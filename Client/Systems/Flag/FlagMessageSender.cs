@@ -22,7 +22,7 @@ namespace LunaClient.Systems.Flag
             msgData.Flag.Owner = SettingsSystem.CurrentSettings.PlayerName;
             msgData.Flag.FlagName = flagName;
             msgData.Flag.NumBytes = flagData.Length;
-
+            
             if (msgData.Flag.FlagData.Length < flagData.Length)
                 msgData.Flag.FlagData = new byte[flagData.Length];
 

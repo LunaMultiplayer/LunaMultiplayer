@@ -524,11 +524,12 @@ namespace LunaClient
             if (FlagSystem.Singleton.FlagExists(SettingsSystem.CurrentSettings.SelectedFlag))
             {
                 returnGame.flagURL = SettingsSystem.CurrentSettings.SelectedFlag;
-                FlagSystem.Singleton.SendCurrentFlag();
+                FlagSystem.Singleton.SendFlag(SettingsSystem.CurrentSettings.SelectedFlag);
             }
             else
             {
-                returnGame.flagURL = "Squad/Flags/default";
+                SettingsSystem.CurrentSettings.SelectedFlag = returnGame.flagURL = "Squad/Flags/default";
+                SettingsSystem.SaveSettings();
             }
 
             returnGame.Title = "LunaMultiplayer";
