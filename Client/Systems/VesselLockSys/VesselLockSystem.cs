@@ -46,6 +46,7 @@ namespace LunaClient.Systems.VesselLockSys
             base.OnEnabled();
             GameEvents.onVesselChange.Add(VesselLockEvents.OnVesselChange);
             GameEvents.onGameSceneLoadRequested.Add(VesselLockEvents.OnSceneRequested);
+            GameEvents.onLevelWasLoadedGUIReady.Add(VesselLockEvents.LevelLoaded);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, TryGetCurrentVesselControlLock));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, UpdateActiveVesselsLocks));
@@ -62,6 +63,7 @@ namespace LunaClient.Systems.VesselLockSys
             base.OnDisabled();
             GameEvents.onVesselChange.Remove(VesselLockEvents.OnVesselChange);
             GameEvents.onGameSceneLoadRequested.Remove(VesselLockEvents.OnSceneRequested);
+            GameEvents.onLevelWasLoadedGUIReady.Remove(VesselLockEvents.LevelLoaded);
         }
 
         #endregion

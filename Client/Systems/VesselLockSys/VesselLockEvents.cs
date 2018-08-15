@@ -42,6 +42,19 @@ namespace LunaClient.Systems.VesselLockSys
         {
             if (requestedScene != GameScenes.FLIGHT)
             {
+                InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
+                VesselLockSystem.Singleton.StopSpectating();
+            }
+        }
+
+        /// <summary>
+        /// Be extra sure that we remove the spectate lock
+        /// </summary>
+        public void LevelLoaded(GameScenes data)
+        {
+            if (data != GameScenes.FLIGHT)
+            {
+                InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
                 VesselLockSystem.Singleton.StopSpectating();
             }
         }
