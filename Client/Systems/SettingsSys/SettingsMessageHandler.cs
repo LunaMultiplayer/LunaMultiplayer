@@ -107,7 +107,6 @@ namespace LunaClient.Systems.SettingsSys
                 };
             }
 
-            System.AdjustLocalSettings(msgData);
             MainSystem.NetworkState = ClientState.SettingsSynced;
         }
     }

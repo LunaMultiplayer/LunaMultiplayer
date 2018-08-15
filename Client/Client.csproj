@@ -160,7 +160,6 @@
     <Compile Include="Systems\SafetyBubble\SpawnPointLocation.cs" />
     <Compile Include="Systems\SafetyBubble\SafetyBubbleEvents.cs" />
     <Compile Include="Systems\SafetyBubble\SafetyBubbleSystem.cs" />
-    <Compile Include="Systems\SettingsSys\SettingsBackup.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />

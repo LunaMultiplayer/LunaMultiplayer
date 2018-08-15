@@ -23,10 +23,10 @@ namespace LunaCommon.Message.Data.Settings
         public float SafetyBubbleDistance;
         public int VesselUpdatesMsInterval;
         public int SecondaryVesselUpdatesMsInterval;
-        public bool ForceInterpolationOffset;
-        public int InterpolationOffsetMs;
-        public bool ForceInterpolation;
-        public bool InterpolationValue;
+        public bool ForceInterpolationOffset; //TODO REMOVE
+        public int InterpolationOffsetMs; //TODO REMOVE
+        public bool ForceInterpolation; //TODO REMOVE
+        public bool InterpolationValue; //TODO REMOVE
         public bool AllowStockVessels;
         public bool CanRevert;
         public bool AutoHireCrews;

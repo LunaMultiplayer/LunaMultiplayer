@@ -1,9 +1,7 @@
 ﻿using LunaClient.Base;
-using LunaClient.Localization;
 using LunaClient.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Settings;
-using System;
 using System.Text;
 
 namespace LunaClient.Systems.SettingsSys
@@ -22,13 +20,6 @@ namespace LunaClient.Systems.SettingsSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-
-            //Restore our local settings back
-            if (ServerSettings.ForceInterpolationOffset || ServerSettings.ForceInterpolation)
-            {
-                SettingsBackup.RestoreBackup();
-            }
-
             ServerSettings = new SettingsServerStructure();
         }
 
@@ -54,32 +45,6 @@ namespace LunaClient.Systems.SettingsSys
             }
 
             return validationResult;
-        }
-
-        /// <summary>
-        /// Here we can adjust local settings to what we received from the server
-        /// </summary>
-        public void AdjustLocalSettings(SettingsReplyMsgData msgData)
-        {
-            SettingsBackup.CreateBackup();
-
-            if (ServerSettings.ForceInterpolationOffset)
-            {
-                CurrentSettings.InterpolationOffsetSeconds = TimeSpan.FromMilliseconds(msgData.InterpolationOffsetMs).TotalSeconds;
-            }
-            else
-            {
-                //Increase the interpolation offset if necessary
-                var minRecommendedInterpolationOffset = TimeSpan.FromMilliseconds(ServerSettings.SecondaryVesselUpdatesMsInterval * 4).TotalSeconds;
-                if (CurrentSettings.InterpolationOffsetSeconds < minRecommendedInterpolationOffset)
-                {
-                    LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.IncreasedInterpolationOffset, 30, ScreenMessageStyle.UPPER_RIGHT);
-                    LunaLog.LogWarning(LocalizationContainer.ScreenText.IncreasedInterpolationOffset);
-                    CurrentSettings.InterpolationOffsetSeconds = minRecommendedInterpolationOffset;
-                }
-            }
-
-            if (ServerSettings.ForceInterpolation) CurrentSettings.PositionInterpolation = msgData.InterpolationValue;
         }
     }
 }

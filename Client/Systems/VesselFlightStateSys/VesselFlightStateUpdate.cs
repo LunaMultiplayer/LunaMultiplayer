@@ -149,7 +149,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                  *
                  */
 
-                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds && MessageCount > VesselFlightStateSystem.MinRecommendedMessageCount)
+                if (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec && MessageCount > VesselFlightStateSystem.MinRecommendedMessageCount)
                 {
                     LerpPercentage = 1;
                 }
@@ -173,7 +173,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     TimeDifference -= timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
 
@@ -184,7 +184,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 seconds
 
-            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
+            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - VesselCommon.PositionAndFlightStateMessageOffsetSec);
             var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
 
             //We cannot fix errors that are below the fixed delta time!

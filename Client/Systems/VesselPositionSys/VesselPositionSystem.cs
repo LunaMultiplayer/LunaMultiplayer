@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         #region Fields & properties
 
-        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(TimeSpan.FromSeconds(SettingsSystem.CurrentSettings.InterpolationOffsetSeconds).TotalMilliseconds,
+        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(VesselCommon.PositionAndFlightStateMessageOffsetMs, 
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
 
         private static float LastVesselUpdatesSentTime { get; set; }

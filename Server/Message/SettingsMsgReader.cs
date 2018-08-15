@@ -30,10 +30,6 @@ namespace Server.Message
             msgData.SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance;
             msgData.VesselUpdatesMsInterval = IntervalSettings.SettingsStore.VesselUpdatesMsInterval;
             msgData.SecondaryVesselUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselUpdatesMsInterval;
-            msgData.ForceInterpolationOffset = InterpolationSettings.SettingsStore.ForceInterpolationOffset;
-            msgData.InterpolationOffsetMs = InterpolationSettings.SettingsStore.InterpolationOffsetMs;
-            msgData.ForceInterpolation = InterpolationSettings.SettingsStore.ForceInterpolation;
-            msgData.InterpolationValue = InterpolationSettings.SettingsStore.InterpolationValue;
             msgData.WarpMaster = WarpSettings.SettingsStore.WarpMaster;
             msgData.MinScreenshotIntervalMs = ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs;
             msgData.MaxScreenshotWidth = ScreenshotSettings.SettingsStore.MaxScreenshotWidth;

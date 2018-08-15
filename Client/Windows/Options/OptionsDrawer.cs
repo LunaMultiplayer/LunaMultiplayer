@@ -69,7 +69,6 @@ namespace LunaClient.Windows.Options
             GUILayout.Space(10);
 
             DrawGeneralSettings();
-            DrawInterpolationSettings();
             DrawNetworkSettings();
 #if DEBUG
             DrawAdvancedDebugOptions();
@@ -89,31 +88,6 @@ namespace LunaClient.Windows.Options
                     SettingsSystem.CurrentSettings.IgnoreSyncChecks = settingSyncCheck;
                     SettingsSystem.SaveSettings();
                 }
-            }
-        }
-
-        private void DrawInterpolationSettings()
-        {
-            _showInterpolationSettings = GUILayout.Toggle(_showInterpolationSettings, LocalizationContainer.OptionsWindowText.InterpolationSettings, ButtonStyle);
-            if (_showInterpolationSettings)
-            {
-                GUI.enabled = MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceInterpolation;
-                var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionInterpolation, LocalizationContainer.OptionsWindowText.EnableInterpolation, "toggle");
-                if (settingInterpolator != SettingsSystem.CurrentSettings.PositionInterpolation)
-                {
-                    SettingsSystem.CurrentSettings.PositionInterpolation = settingInterpolator;
-                    SettingsSystem.SaveSettings();
-                }
-                GUI.enabled = true;
-                GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation && (MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceInterpolationOffset);
-                GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffsetSeconds * 1000:F0} ms");
-                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffsetSeconds, 0, 0, 5), 1);
-                if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
-                {
-                    SettingsSystem.CurrentSettings.InterpolationOffsetSeconds = interpolationOffset;
-                    SettingsSystem.SaveSettings();
-                }
-                GUI.enabled = true;
             }
         }
 

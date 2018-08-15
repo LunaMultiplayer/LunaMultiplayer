@@ -2,6 +2,7 @@
 using LunaClient.Systems.VesselPositionSys.ExtensionMethods;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
+using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -53,6 +54,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Vessel position information fields
 
+        public Orbit KspOrbit { get; set; }
         public Vector3d Velocity => new Vector3d(VelocityVector[0], VelocityVector[1], VelocityVector[2]);
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
@@ -71,7 +73,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool InterpolationFinished => Target == null || CurrentFrame >= NumFrames;
 
         public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
-        public float LerpPercentage => SettingsSystem.CurrentSettings.PositionInterpolation ? Mathf.Clamp01(CurrentFrame / NumFrames) : 1;
+        public float LerpPercentage => Mathf.Clamp01(CurrentFrame / NumFrames);
 
         public float CurrentFrame { get; set; }
         public int NumFrames => (int)(InterpolationDuration / PercentageIncrement) + 1;
@@ -154,6 +156,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 Vessel?.protoVessel?.UpdatePositionValues(Target);
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
+
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
             }
 
             if (Target == null) return;
@@ -178,12 +183,6 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
-            if (!SettingsSystem.CurrentSettings.PositionInterpolation)
-            {
-                TimeDifference = 0;
-                return;
-            }
-
             TimeDifference = Planetarium.GetUniversalTime() - GameTimeStamp;
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
@@ -206,7 +205,7 @@ namespace LunaClient.Systems.VesselPositionSys
                  *
                  */
 
-                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds && MessageCount > VesselPositionSystem.MinRecommendedMessageCount)
+                if (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec && MessageCount > VesselPositionSystem.MinRecommendedMessageCount)
                 {
                     CurrentFrame = NumFrames;
                 }
@@ -230,7 +229,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     TimeDifference -= timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
 
@@ -241,7 +240,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 s
 
-            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
+            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - VesselCommon.PositionAndFlightStateMessageOffsetSec);
             var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
 
             //We cannot fix errors that are below the delta time!

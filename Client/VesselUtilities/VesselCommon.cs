@@ -6,6 +6,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LunaClient.Network;
 
 namespace LunaClient.VesselUtilities
 {
@@ -14,7 +15,8 @@ namespace LunaClient.VesselUtilities
     /// </summary>
     public class VesselCommon
     {
-
+        public static float PositionAndFlightStateMessageOffsetSec => (float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs).TotalSeconds;
+        public static int PositionAndFlightStateMessageOffsetMs => (int)NetworkStatistics.PingMs;
 
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
