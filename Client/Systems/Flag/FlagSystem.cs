@@ -74,13 +74,13 @@ namespace LunaClient.Systems.Flag
             var textureInfo = GameDatabase.Instance.GetTextureInfo(SettingsSystem.CurrentSettings.SelectedFlag);
             if (textureInfo != null)
             {
-                MessageSender.SendMessage(MessageSender.GetFlagMessageData(SettingsSystem.CurrentSettings.SelectedFlag, textureInfo.texture.GetRawTextureData()));
+                MessageSender.SendMessage(MessageSender.GetFlagMessageData(SettingsSystem.CurrentSettings.SelectedFlag, textureInfo.normalMap.GetRawTextureData()));
             }
         }
 
         public bool FlagExists(string flagUrl)
         {
-            return GameDatabase.Instance.ExistsTexture($"{flagUrl}");
+            return GameDatabase.Instance.ExistsTexture(flagUrl);
         }
 
         public void SaveCurrentFlags()
@@ -89,7 +89,7 @@ namespace LunaClient.Systems.Flag
             {
                 try
                 {
-                    File.WriteAllBytes(Path.GetFileName(textureInfo.name) + ".png", textureInfo.texture.GetRawTextureData());
+                    File.WriteAllBytes(Path.GetFileName(textureInfo.name) + ".png", textureInfo.normalMap.GetRawTextureData());
                 }
                 catch (Exception e)
                 {
@@ -116,9 +116,9 @@ namespace LunaClient.Systems.Flag
             {
                 //Flags have names like: Squad/Flags/default
                 flagTexture.name = flagInfo.FlagName;
-                var textureInfo = new GameDatabase.TextureInfo(null, flagTexture, false, true, false)
+                var textureInfo = new GameDatabase.TextureInfo(null, flagTexture, true, true, false)
                 {
-                    name = flagTexture.name
+                    name = flagInfo.FlagName
                 };
 
                 GameDatabase.Instance.databaseTexture.Add(textureInfo);

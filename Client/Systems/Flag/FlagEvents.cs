@@ -39,7 +39,7 @@ namespace LunaClient.Systems.Flag
             var textureInfo = GameDatabase.Instance.GetTextureInfo(flagUrl);
             if (textureInfo != null)
             {
-                var flagData = textureInfo.texture.GetRawTextureData();
+                var flagData = textureInfo.normalMap.GetRawTextureData();
                 if (flagData.Length > 1000000)
                 {
                     LunaLog.LogError($"Cannot upload flag {Path.GetFileName(flagUrl)} size is greater than 1Mb!");
