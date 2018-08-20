@@ -19,6 +19,6 @@
   <Mtu>MTU (默认: 1408):</Mtu>
   <AutoExpandMtu>自动扩展MTU</AutoExpandMtu>
   <ConnectionTimeout>连接超时 (默认: 15):</ConnectionTimeout>
-  <GeneralSettings>General settings</GeneralSettings>
-  <IgnoreSyncChecks>Ignore sync checks</IgnoreSyncChecks>
+  <GeneralSettings>常规设置</GeneralSettings>
+  <IgnoreSyncChecks>忽略同步检查</IgnoreSyncChecks>
 </OptionsWindowText>
