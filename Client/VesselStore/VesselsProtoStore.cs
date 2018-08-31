@@ -1,6 +1,7 @@
 ﻿using LunaClient.Systems.VesselEvaSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
+using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -199,6 +200,41 @@ namespace LunaClient.VesselStore
                 for (var i = 0; i < vesselProtoUpd.ProtoVessel.actionGroups.values.Count; i++)
                 {
                     vesselProtoUpd.ProtoVessel.actionGroups.AddValue(msgData.ActionGroups[i].ActionGroupName, msgData.ActionGroups[i].State + ", " + msgData.ActionGroups[i].Time);
+                }
+            }
+        }
+
+        public static void UpdateVesselProtoValues(VesselUpdate vesselUpdate)
+        {
+            if (AllPlayerVessels.TryGetValue(vesselUpdate.VesselId, out var vesselProtoUpd))
+            {
+                if (vesselProtoUpd.ProtoVessel == null) return;
+
+                vesselProtoUpd.ProtoVessel.vesselName = vesselUpdate.Name;
+                vesselProtoUpd.ProtoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), vesselUpdate.Type);
+                vesselProtoUpd.ProtoVessel.distanceTraveled = vesselUpdate.DistanceTraveled;
+                vesselProtoUpd.ProtoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), vesselUpdate.Situation);
+                vesselProtoUpd.ProtoVessel.landed = vesselUpdate.Landed;
+                vesselProtoUpd.ProtoVessel.landedAt = vesselUpdate.LandedAt;
+                vesselProtoUpd.ProtoVessel.displaylandedAt = vesselUpdate.DisplayLandedAt;
+                vesselProtoUpd.ProtoVessel.splashed = vesselUpdate.Splashed;
+                vesselProtoUpd.ProtoVessel.missionTime = vesselUpdate.MissionTime;
+                vesselProtoUpd.ProtoVessel.launchTime = vesselUpdate.LaunchTime;
+                vesselProtoUpd.ProtoVessel.lastUT = vesselUpdate.LastUt;
+                vesselProtoUpd.ProtoVessel.persistent = vesselUpdate.Persistent;
+                vesselProtoUpd.ProtoVessel.refTransform = vesselUpdate.RefTransformId;
+                vesselProtoUpd.ProtoVessel.autoClean = vesselUpdate.AutoClean;
+                vesselProtoUpd.ProtoVessel.autoCleanReason = vesselUpdate.AutoCleanReason;
+                vesselProtoUpd.ProtoVessel.wasControllable = vesselUpdate.WasControllable;
+                vesselProtoUpd.ProtoVessel.stage = vesselUpdate.Stage;
+                vesselProtoUpd.ProtoVessel.CoM.x = vesselUpdate.Com[0];
+                vesselProtoUpd.ProtoVessel.CoM.y = vesselUpdate.Com[1];
+                vesselProtoUpd.ProtoVessel.CoM.z = vesselUpdate.Com[2];
+
+                vesselProtoUpd.ProtoVessel.actionGroups.ClearValues();
+                for (var i = 0; i < vesselProtoUpd.ProtoVessel.actionGroups.values.Count; i++)
+                {
+                    vesselProtoUpd.ProtoVessel.actionGroups.AddValue(vesselUpdate.ActionGroups[i].ActionGroupName, vesselUpdate.ActionGroups[i].State + ", " + vesselUpdate.ActionGroups[i].Time);
                 }
             }
         }

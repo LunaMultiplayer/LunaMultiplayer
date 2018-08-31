@@ -1,7 +1,9 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselUtilities;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -13,27 +15,52 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         #region Fields & properties
 
-        public bool UpdateSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f;
+        public bool UpdateSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT;
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
         private List<Vessel> AbandonedVesselsToUpdate { get; } = new List<Vessel>();
 
+        public ConcurrentDictionary<Guid, VesselUpdateQueue> VesselUpdates { get; } = new ConcurrentDictionary<Guid, VesselUpdateQueue>();
+
         #endregion
 
         #region Base overrides
-        
+
+        protected override bool ProcessMessagesInUnityThread => false;
+
         public override string SystemName { get; } = nameof(VesselUpdateSystem);
 
         protected override void OnEnabled()
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, SendVesselUpdates));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselUpdates));
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, SendSecondaryVesselUpdates));
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, SendUnloadedSecondaryVesselUpdates));
         }
+
+        protected override void OnDisabled()
+        {
+            base.OnDisabled();
+            VesselUpdates.Clear();
+        }
+
         #endregion
 
         #region Update routines
+
+        private void ProcessVesselUpdates()
+        {
+            foreach (var keyVal in VesselUpdates)
+            {
+                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)
+                {
+                    keyVal.Value.TryDequeue(out update);
+                    update.ProcessVesselUpdate();
+                    keyVal.Value.Recycle(update);
+                }
+            }
+        }
 
         private void SendVesselUpdates()
         {
