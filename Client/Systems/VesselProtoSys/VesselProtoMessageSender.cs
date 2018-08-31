@@ -85,8 +85,14 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
                     msgData.GameTime = TimeSyncerSystem.UniversalTime;
-                    FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
                     msgData.ForceReload = forceReloadOnReceive;
+                    msgData.VesselId = protoVessel.vesselID;
+                    msgData.NumBytes = numBytes;
+                    if (msgData.Data.Length < numBytes)
+                        Array.Resize(ref msgData.Data, numBytes);
+                    Array.Copy(VesselSerializedBytes, 0, msgData.Data, 0, numBytes);
+
+                    SendMessage(msgData);
                 }
                 else
                 {
@@ -97,19 +103,6 @@ namespace LunaClient.Systems.VesselProtoSys
                     }
                 }
             }
-        }
-
-        private void FillAndSendProtoMessageData(Guid vesselId, VesselProtoMsgData msgData, byte[] vesselBytes, int numBytes)
-        {
-            msgData.VesselId = vesselId;
-
-            if (msgData.Data.Length < numBytes)
-                Array.Resize(ref msgData.Data, numBytes);
-
-            Array.Copy(vesselBytes, 0, msgData.Data, 0, numBytes);
-            msgData.NumBytes = numBytes;
-
-            SendMessage(msgData);
         }
 
         #endregion
