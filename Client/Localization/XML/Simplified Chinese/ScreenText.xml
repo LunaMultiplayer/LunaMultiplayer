@@ -19,5 +19,5 @@
   <SackingKerbalsNotAllowed>此服务器不允许开除坎巴拉人</SackingKerbalsNotAllowed>
   <CannotLoadGames>LMP不允许加载游戏存档</CannotLoadGames>
   <KerbalNotYours>其他玩家正在使用此坎巴拉人</KerbalNotYours>
-  <UnsafeToSync>Cannot sync while in unstable orbit as you might crash! You can turn off this check in settings</UnsafeToSync>
+  <UnsafeToSync>在不稳定的轨道上无法同步，因为您可能会完蛋！ 您可以在设置关闭此检查</UnsafeToSync>
 </ScreenText>
