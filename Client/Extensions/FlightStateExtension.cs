@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LunaClient.Extensions
 {
-    public static class FlightCtrlStateExtensionMethods
+    public static class FlightCtrlStateExtension
     {
         public static void CopyFrom(this FlightCtrlState fs, VesselFlightStateMsgData msgData)
         {
