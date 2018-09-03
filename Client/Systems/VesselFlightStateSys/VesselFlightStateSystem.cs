@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
@@ -25,7 +26,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         private static float LastVesselFlightStateSentTime { get; set; }
 
-        private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
+        private static bool TimeToSendFlightStateUpdate => VesselCommon.PlayerVesselsNearby() ?
             TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselUpdatesMsInterval :
             TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval;
 
@@ -138,56 +139,11 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void SendFlightState()
         {
-            if (FlightStateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating && !FlightGlobals.ActiveVessel.isEVA)
+            if (FlightStateSystemReady && TimeToSendFlightStateUpdate && !VesselCommon.IsSpectating && !FlightGlobals.ActiveVessel.isEVA)
             {
                 MessageSender.SendCurrentFlightState();
                 LastVesselFlightStateSentTime = Time.time;
             }
-        }
-
-        #endregion
-
-        #region Private methods
-
-        /// <summary>
-        /// Here we copy the flight state we received and apply to the specific vessel.
-        /// This method is called by ksp as it's a delegate. It's called on every FixedUpdate
-        /// </summary>
-        private void LunaOnVesselFlyByWire(Guid id, FlightCtrlState st)
-        {
-            if (!Enabled || !FlightStateSystemReady) return;
-            
-            if (CurrentFlightState.TryGetValue(id, out var value))
-            {
-                if (VesselCommon.IsSpectating)
-                {
-                    st.CopyFrom(value.GetInterpolatedValue());
-                }
-                else
-                {
-                    //If we are close to a vessel and we both are in space don't copy the
-                    //input controls as then the vessel jitters, specially if the other player has SAS on
-                    if (FlightGlobals.ActiveVessel?.situation > Vessel.Situations.FLYING)
-                    {
-                        var interpolatedState = value.GetInterpolatedValue();
-                        st.mainThrottle = interpolatedState.mainThrottle;
-                        st.gearDown = interpolatedState.gearDown;
-                        st.gearUp = interpolatedState.gearUp;
-                        st.headlight = interpolatedState.headlight;
-                        st.killRot = interpolatedState.killRot;
-                    }
-                    else
-                    {
-                        st.CopyFrom(value.GetInterpolatedValue());
-                    }
-                }
-            }
-        }
-        
-        private void TryRemoveCallback(Vessel vesselToRemove)
-        {
-            if (FlyByWireDictionary.ContainsKey(vesselToRemove.id) && vesselToRemove.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
-                vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
         }
 
         #endregion
@@ -245,6 +201,13 @@ namespace LunaClient.Systems.VesselFlightStateSys
             {
                 keyVal.Value.AdjustExtraInterpolationTimes();
             }
+
+            //Now cleanup the target dictionary of old positions
+            foreach (var keyVal in TargetFlightStateQueue)
+            {
+                while (keyVal.Value.TryPeek(out var targetFlightState) && FlightStateUpdateIsTooOld(targetFlightState))
+                    keyVal.Value.TryDequeue(out _);
+            }
         }
 
         public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
@@ -271,6 +234,60 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             UpdateFlightStateInProtoVessel(protoVessel, msgData.Pitch, msgData.Yaw, msgData.Roll, msgData.PitchTrim,
                 msgData.YawTrim, msgData.RollTrim, msgData.MainThrottle);
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private static bool FlightStateUpdateIsTooOld(VesselFlightStateUpdate update)
+        {
+            var maxInterpolationTime = WarpSystem.Singleton.SubspaceIsEqualOrInThePast(update.SubspaceId) ?
+                TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesMsInterval).TotalSeconds * 2
+                : double.MaxValue;
+
+            return update.GameTimeStamp < Planetarium.GetUniversalTime() - maxInterpolationTime;
+        }
+
+        /// <summary>
+        /// Here we copy the flight state we received and apply to the specific vessel.
+        /// This method is called by ksp as it's a delegate. It's called on every FixedUpdate
+        /// </summary>
+        private void LunaOnVesselFlyByWire(Guid id, FlightCtrlState st)
+        {
+            if (!Enabled || !FlightStateSystemReady) return;
+
+            if (CurrentFlightState.TryGetValue(id, out var value))
+            {
+                if (VesselCommon.IsSpectating)
+                {
+                    st.CopyFrom(value.GetInterpolatedValue());
+                }
+                else
+                {
+                    //If we are close to a vessel and we both are in space don't copy the
+                    //input controls as then the vessel jitters, specially if the other player has SAS on
+                    if (FlightGlobals.ActiveVessel?.situation > Vessel.Situations.FLYING)
+                    {
+                        var interpolatedState = value.GetInterpolatedValue();
+                        st.mainThrottle = interpolatedState.mainThrottle;
+                        st.gearDown = interpolatedState.gearDown;
+                        st.gearUp = interpolatedState.gearUp;
+                        st.headlight = interpolatedState.headlight;
+                        st.killRot = interpolatedState.killRot;
+                    }
+                    else
+                    {
+                        st.CopyFrom(value.GetInterpolatedValue());
+                    }
+                }
+            }
+        }
+
+        private void TryRemoveCallback(Vessel vesselToRemove)
+        {
+            if (FlyByWireDictionary.ContainsKey(vesselToRemove.id) && vesselToRemove.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
+                vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
         }
 
         #endregion

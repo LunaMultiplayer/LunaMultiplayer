@@ -2,6 +2,7 @@
 using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using System;
@@ -193,11 +194,27 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 keyVal.Value.AdjustExtraInterpolationTimes();
             }
+
+            //Now cleanup the target dictionary of old positions
+            foreach (var keyVal in TargetVesselUpdateQueue)
+            {
+                while (keyVal.Value.TryPeek(out var targetUpd) && PositionUpdateIsTooOld(targetUpd))
+                    keyVal.Value.TryDequeue(out _);
+            }
         }
 
         #endregion
 
         #region Private methods
+
+        private static bool PositionUpdateIsTooOld(VesselPositionUpdate update)
+        {
+            var maxInterpolationTime = WarpSystem.Singleton.SubspaceIsEqualOrInThePast(update.SubspaceId) ?
+                TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
+                : double.MaxValue;
+
+            return update.GameTimeStamp < Planetarium.GetUniversalTime() - maxInterpolationTime;
+        }
 
         /// <summary>
         /// Unloaded vessels don't update their lat/lon/alt and it's orbit params.
