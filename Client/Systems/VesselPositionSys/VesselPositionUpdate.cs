@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Extensions;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselPositionSys.ExtensionMethods;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -157,8 +158,20 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel?.protoVessel?.UpdatePositionValues(Target);
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
 
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                double lanFixFactor = 0;
+                if (Vessel?.situation <= Vessel.Situations.SUB_ORBITAL)
+                {
+                    if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
+                    {
+                        lanFixFactor = Body.SiderealDayLength() > 0 ? Math.Abs((Planetarium.GetUniversalTime() - Orbit[6]) * 360 / Body.SiderealDayLength()) : 0;
+                    }
+                    else
+                    {
+                        lanFixFactor = Body.SiderealDayLength() > 0 ? Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId) * 360 / Body.SiderealDayLength()) : 0;
+                    }
+                }
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
             }
 
             if (Target == null) return;

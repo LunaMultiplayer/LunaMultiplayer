@@ -1,4 +1,6 @@
-﻿using LunaCommon;
+﻿using LunaClient.Systems.Warp;
+using LunaCommon;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
@@ -57,8 +59,17 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
             var updateTime = Planetarium.GetUniversalTime();
 
-            //Uncomment this if you want to show the other vessels as in their PAST positions
-            //updateTime = LunaMath.Lerp(startTime, targetTime, percentage);
+            if (vessel.situation <= Vessel.Situations.SUB_ORBITAL)
+            {
+                if (WarpSystem.Singleton.CurrentlyWarping || update.SubspaceId == -1)
+                {
+                    updateTime += Math.Abs(updateTime - LunaMath.Lerp(update.KspOrbit.epoch, target.KspOrbit.epoch, percentage));
+                }
+                else
+                {
+                    updateTime += Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(update.SubspaceId));
+                }
+            }
 
             vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, updateTime);
         }
@@ -95,7 +106,7 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
             //Always run this at the end!!
             //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-            if (!vessel.packed)
+            if (!vessel.packed && vessel.rootPart?.rb != null)
             {
                 var velBeforeCorrection = vessel.rootPart.rb.velocity;
                 vessel.rootPart.ResumeVelocity();
