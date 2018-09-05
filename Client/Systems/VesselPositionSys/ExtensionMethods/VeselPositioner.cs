@@ -37,14 +37,11 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
         private static void ApplyOrbitInterpolation(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
         {
-            var startTime = Planetarium.GetUniversalTime();
-            var targetTime = Planetarium.GetUniversalTime();
+            var currentPos = update.KspOrbit.getRelativePositionAtUT(Planetarium.GetUniversalTime());
+            var targetPos = target.KspOrbit.getRelativePositionAtUT(Planetarium.GetUniversalTime());
 
-            var currentPos = update.KspOrbit.getRelativePositionAtUT(startTime);
-            var targetPos = target.KspOrbit.getRelativePositionAtUT(targetTime);
-
-            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(startTime);
-            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(targetTime);
+            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime());
+            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime());
 
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, percentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, percentage);
