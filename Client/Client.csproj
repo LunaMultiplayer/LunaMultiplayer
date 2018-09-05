@@ -88,6 +88,7 @@
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
