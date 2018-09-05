@@ -66,6 +66,10 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
             vessel.SetPosition(vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime));
+            if (vessel.situation <= Vessel.Situations.PRELAUNCH)
+            {
+                vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
+            }
 
             ////Always run this at the end!!
             ////Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
