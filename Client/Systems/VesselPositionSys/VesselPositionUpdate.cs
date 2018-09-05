@@ -77,8 +77,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public float LerpPercentage => Mathf.Clamp01(CurrentFrame / NumFrames);
 
         public float CurrentFrame { get; set; }
-        public int NumFrames => (int)(InterpolationDuration / PercentageIncrement) + 1;
-        public float PercentageIncrement => (float)(Time.fixedDeltaTime / InterpolationDuration);
+        public int NumFrames => (int)(InterpolationDuration / Time.fixedDeltaTime) + 1;
 
         #endregion
 
@@ -178,33 +177,57 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void InitializeOrbits()
         {
-            double lanFixFactor = 0;
-            if (Body.SiderealDayLength() > 0)
+            var lanFixFactor = GetLanFixFactor(GameTimeStamp, SubspaceId, Body);
+            KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
+
+            lanFixFactor = GetLanFixFactor(Target.GameTimeStamp, Target.SubspaceId, Target.Body);
+            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+
+            var meanAnomalyFixFactor = GetMeanAnomalyFixFactor(GameTimeStamp, SubspaceId, KspOrbit);
+            KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5] + meanAnomalyFixFactor, Orbit[6], Body);
+
+            meanAnomalyFixFactor = GetMeanAnomalyFixFactor(Target.GameTimeStamp, Target.SubspaceId, Target.KspOrbit);
+            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5] + meanAnomalyFixFactor, Target.Orbit[6], Target.Body);
+        }
+
+        /// <summary>
+        /// Here we adjust the Mean anomaly according to the time of the subspace where the player send the message.
+        /// If we don't do this then the vessel will be in a incorrect position along the orbit as the epoch (the times) are not the same
+        /// </summary>
+        private double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Orbit orbit)
+        {
+            if (SubspaceId == -1 && timestamp < Planetarium.GetUniversalTime())
+                return (orbit.getObtAtUT(Planetarium.GetUniversalTime()) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
+
+            if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
             {
-                if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
+                var timeDiff = WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId);
+                return (orbit.getObtAtUT(Planetarium.GetUniversalTime()) - orbit.getObtAtUT(Planetarium.GetUniversalTime() - timeDiff)) * orbit.meanMotion;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Here we adjust the LAN according to the time of the subspace where the player send the message.
+        /// If we don't do this, then the orbit will be shifted in the longitude axis as your planet might be more
+        /// advanced in time so your planet rotations will not match
+        /// </summary>
+        private double GetLanFixFactor(double timestamp, int subspaceId, CelestialBody body)
+        {
+            if (body.SiderealDayLength() > 0)
+            {
+                if (SubspaceId == -1 && timestamp < Planetarium.GetUniversalTime())
+                    return Math.Abs((Planetarium.GetUniversalTime() - timestamp) * 360 / body.SiderealDayLength());
+
+                if (WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
                 {
-                    lanFixFactor = Math.Abs((Planetarium.GetUniversalTime() - Orbit[6]) * 360 / Body.SiderealDayLength());
-                }
-                else
-                {
-                    lanFixFactor = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId) * 360 / Body.SiderealDayLength());
+                    var timeDiff = WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(subspaceId);
+                    return Math.Abs(timeDiff * 360 / body.SiderealDayLength());
                 }
             }
 
-            KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
-            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
-
-            var diff = KspOrbit.getObtAtUT(Planetarium.GetUniversalTime()) * KspOrbit.meanMotion - KspOrbit.getObtAtUT(Orbit[6]) * KspOrbit.meanMotion;
-            if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId) || KspOrbit.epoch < Planetarium.GetUniversalTime() && (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1))
-                diff *= -1;
-
-            KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5] + diff, Orbit[6], Body);
-
-            diff = Target.KspOrbit.getObtAtUT(Planetarium.GetUniversalTime()) * Target.KspOrbit.meanMotion - Target.KspOrbit.getObtAtUT(Target.Orbit[6]) * Target.KspOrbit.meanMotion;
-            if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId) || KspOrbit.epoch < Planetarium.GetUniversalTime() && (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1))
-                diff *= -1;
-
-            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5] + diff, Target.Orbit[6], Target.Body);
+            return 0;
         }
 
         /// <summary>
