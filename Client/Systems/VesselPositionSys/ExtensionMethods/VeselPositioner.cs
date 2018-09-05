@@ -71,8 +71,8 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
                 vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
             }
 
-            ////Always run this at the end!!
-            ////Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+            //Always run this at the end!!
+            //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
             if (!vessel.packed && vessel.rootPart?.rb != null)
             {
                 var velBeforeCorrection = vessel.rootPart.rb.velocity;
