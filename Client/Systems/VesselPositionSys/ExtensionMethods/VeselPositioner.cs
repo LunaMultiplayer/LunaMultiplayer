@@ -52,9 +52,6 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
         private static void ApplyInterpolationsToLoadedVessel(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
         {
-            //Do not call vessel.orbitDriver.updateFromParameters()!!
-            //It will set the vessel at the CURRENT position and ignore that the orbit is from the PAST!
-
             var currentSurfaceRelRotation = Quaternion.Slerp(update.SurfaceRelRotation, target.SurfaceRelRotation, percentage);
 
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
@@ -68,20 +65,10 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
-            //var startLatLonAltPos = update.Body.GetWorldSurfacePosition(update.LatLonAlt[0], update.LatLonAlt[1], update.LatLonAlt[2]);
-            //var targetLatLonAltPos = target.Body.GetWorldSurfacePosition(target.LatLonAlt[0], target.LatLonAlt[1], target.LatLonAlt[2]);
-
-            //var startOrbitPos = startOrbit.getPositionAtUT(startOrbit.epoch);
-            //var endOrbitPos = endOrbit.getPositionAtUT(endOrbit.epoch);
-
             vessel.SetPosition(vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime));
-            if (vessel.situation <= Vessel.Situations.PRELAUNCH)
-            {
-                vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
-            }
 
-            //Always run this at the end!!
-            //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+            ////Always run this at the end!!
+            ////Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
             if (!vessel.packed && vessel.rootPart?.rb != null)
             {
                 var velBeforeCorrection = vessel.rootPart.rb.velocity;
