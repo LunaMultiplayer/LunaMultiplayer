@@ -207,7 +207,7 @@ namespace LunaClient.Systems.Warp
         /// Gets the current time difference against the server time on the subspace that we are located
         /// </summary>
         /// <returns></returns>
-        public double CurrentSubspaceTimeDifference => Subspaces.TryGetValue(CurrentSubspace, out var time) ? time : 0;
+        public double CurrentSubspaceTimeDifference => Subspaces.TryGetValue(CurrentSubspace, out var time) ? time : TimeSyncerSystem.UniversalTime - TimeSyncerSystem.ServerClockSec;
 
         /// <summary>
         /// Returns the subspace time sent as parameter.
