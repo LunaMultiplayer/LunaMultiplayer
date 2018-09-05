@@ -1,5 +1,6 @@
 ﻿using LunaClient.Extensions;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys.ExtensionMethods;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -7,7 +8,6 @@ using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using System;
-using LunaClient.Systems.TimeSyncer;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -195,9 +195,9 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Here we adjust the Mean anomaly according to the time of the subspace where the player send the message.
         /// If we don't do this then the vessel will be in a incorrect position along the orbit as the epoch (the times) are not the same
         /// </summary>
-        private double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Orbit orbit)
+        private static double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Orbit orbit)
         {
-            if (SubspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
+            if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
                 return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
 
             if (WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
@@ -214,11 +214,11 @@ namespace LunaClient.Systems.VesselPositionSys
         /// If we don't do this, then the orbit will be shifted in the longitude axis as your planet might be more
         /// advanced in time so your planet rotations will not match
         /// </summary>
-        private double GetLanFixFactor(double timestamp, int subspaceId, CelestialBody body)
+        private static double GetLanFixFactor(double timestamp, int subspaceId, CelestialBody body)
         {
             if (body.SiderealDayLength() > 0)
             {
-                if (SubspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
+                if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
                     return Math.Abs((TimeSyncerSystem.UniversalTime - timestamp) * 360 / body.SiderealDayLength());
 
                 if (WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
