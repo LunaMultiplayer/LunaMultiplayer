@@ -178,16 +178,16 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void InitializeOrbits()
         {
-            var lanFixFactor = GetLanFixFactor(GameTimeStamp, SubspaceId, Body);
+            var lanFixFactor = GetLanFixFactor(GameTimeStamp, SubspaceId, Vessel, Body);
             KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
 
-            lanFixFactor = GetLanFixFactor(Target.GameTimeStamp, Target.SubspaceId, Target.Body);
+            lanFixFactor = GetLanFixFactor(Target.GameTimeStamp, Target.SubspaceId, Vessel, Target.Body);
             Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
-            var meanAnomalyFixFactor = GetMeanAnomalyFixFactor(GameTimeStamp, SubspaceId, KspOrbit);
+            var meanAnomalyFixFactor = GetMeanAnomalyFixFactor(GameTimeStamp, SubspaceId, Vessel, KspOrbit);
             KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5] + meanAnomalyFixFactor, Orbit[6], Body);
 
-            meanAnomalyFixFactor = GetMeanAnomalyFixFactor(Target.GameTimeStamp, Target.SubspaceId, Target.KspOrbit);
+            meanAnomalyFixFactor = GetMeanAnomalyFixFactor(Target.GameTimeStamp, Target.SubspaceId, Vessel, Target.KspOrbit);
             Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5] + meanAnomalyFixFactor, Target.Orbit[6], Target.Body);
         }
 
@@ -195,8 +195,13 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Here we adjust the Mean anomaly according to the time of the subspace where the player send the message.
         /// If we don't do this then the vessel will be in a incorrect position along the orbit as the epoch (the times) are not the same
         /// </summary>
-        private static double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Orbit orbit)
+        private static double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Vessel vessel, Orbit orbit)
         {
+            //If the vessel is in orbit we return 0 as we want to see the vessel IN THE FUTURE. This makes the behaviour closer to what KSP in single player does
+            if (vessel?.situation >= Vessel.Situations.ORBITING)
+                return 0;
+
+            //If the vessel is in atmo, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin if we are in a different subspace
             if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
                 return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
 
@@ -214,8 +219,13 @@ namespace LunaClient.Systems.VesselPositionSys
         /// If we don't do this, then the orbit will be shifted in the longitude axis as your planet might be more
         /// advanced in time so your planet rotations will not match
         /// </summary>
-        private static double GetLanFixFactor(double timestamp, int subspaceId, CelestialBody body)
+        private static double GetLanFixFactor(double timestamp, int subspaceId, Vessel vessel, CelestialBody body)
         {
+            //If the vessel is in orbit we return 0 as we want to see the vessel IN THE FUTURE. This makes the behaviour closer to what KSP in single player does
+            if (vessel?.situation >= Vessel.Situations.ORBITING)
+                return 0;
+
+            //If the vessel is in atmo, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin if we are in a different subspace
             if (body.SiderealDayLength() > 0)
             {
                 if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
