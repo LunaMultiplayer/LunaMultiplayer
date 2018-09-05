@@ -13,6 +13,9 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Description of the server. Max 200 char")]
         public string Description { get; set; } = "Luna Server Description";
 
+        [XmlComment(Value = "By default this will be given by the masterserver but you can override it here if you want. Max 2 char")]
+        public string CountryCode { get; set; } = "";
+
         [XmlComment(Value = "Website text to display (discord, website, forum, etc). Can be left empty. Max 15 char")]
         public string WebsiteText { get; set; } = "LMP";
 

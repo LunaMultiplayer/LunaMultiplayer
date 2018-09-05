@@ -6,6 +6,7 @@ namespace Server.Web.Structures.Settings
     {
         public string ServerName => GeneralSettings.SettingsStore.ServerName;
         public string Description => GeneralSettings.SettingsStore.Description;
+        public string CountryCode => GeneralSettings.SettingsStore.CountryCode;
         public string WebsiteText => GeneralSettings.SettingsStore.WebsiteText;
         public string Website => GeneralSettings.SettingsStore.Website;
         public bool HasPassword => !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);

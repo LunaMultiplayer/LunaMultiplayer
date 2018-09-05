@@ -54,6 +54,7 @@ namespace Server.Lidgren
                 msgData.Password = !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
                 msgData.Cheats = GeneralSettings.SettingsStore.Cheats;
                 msgData.Description = GeneralSettings.SettingsStore.Description;
+                msgData.CountryCode = GeneralSettings.SettingsStore.CountryCode;
                 msgData.Website = GeneralSettings.SettingsStore.Website;
                 msgData.WebsiteText = GeneralSettings.SettingsStore.WebsiteText;
                 msgData.DropControlOnExit = GeneralSettings.SettingsStore.Cheats;
@@ -72,6 +73,7 @@ namespace Server.Lidgren
                 msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
 
                 msgData.Description = msgData.Description.Length > 200 ? msgData.Description.Substring(0, 200) : msgData.Description;
+                msgData.CountryCode = msgData.CountryCode.Length > 2 ? msgData.CountryCode.Substring(0, 2) : msgData.CountryCode;
                 msgData.Website = msgData.Website.Length > 60 ? msgData.Website.Substring(0, 60) : msgData.Website;
                 msgData.WebsiteText = msgData.WebsiteText.Length > 15 ? msgData.WebsiteText.Substring(0, 15) : msgData.WebsiteText;
                 msgData.ServerName = msgData.ServerName.Length > 30 ? msgData.ServerName.Substring(0, 30) : msgData.ServerName;

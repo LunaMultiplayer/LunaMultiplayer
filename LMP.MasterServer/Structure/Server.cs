@@ -76,7 +76,9 @@ namespace LMP.MasterServer.Structure
                 Cheats = msg.Cheats,
                 Password = msg.Password,
                 ServerVersion = msg.ServerVersion,
+                ServerName = msg.ServerName,
                 Description = msg.Description,
+                Country = msg.CountryCode,
                 Website = msg.Website,
                 WebsiteText = msg.WebsiteText,
                 DropControlOnExit = msg.DropControlOnExit,
@@ -86,12 +88,12 @@ namespace LMP.MasterServer.Structure
                 MaxPlayers = msg.MaxPlayers,
                 ModControl = msg.ModControl,
                 PlayerCount = msg.PlayerCount,
-                ServerName = msg.ServerName,
                 WarpMode = msg.WarpMode,
                 TerrainQuality = msg.TerrainQuality,
             };
 
-            SetCountryFromEndpoint(Info, ExternalEndpoint);
+            if(string.IsNullOrEmpty(Info.Country))
+                SetCountryFromEndpoint(Info, ExternalEndpoint);
 
             Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
             Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
