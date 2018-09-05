@@ -55,7 +55,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Vessel position information fields
 
-        public Orbit KspOrbit { get; set; }
+        public Orbit KspOrbit { get; set; } = new Orbit();
         public Vector3d Velocity => new Vector3d(VelocityVector[0], VelocityVector[1], VelocityVector[2]);
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
@@ -158,20 +158,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel?.protoVessel?.UpdatePositionValues(Target);
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
 
-                double lanFixFactor = 0;
-                if (Vessel?.situation <= Vessel.Situations.SUB_ORBITAL)
-                {
-                    if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
-                    {
-                        lanFixFactor = Body.SiderealDayLength() > 0 ? Math.Abs((Planetarium.GetUniversalTime() - Orbit[6]) * 360 / Body.SiderealDayLength()) : 0;
-                    }
-                    else
-                    {
-                        lanFixFactor = Body.SiderealDayLength() > 0 ? Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId) * 360 / Body.SiderealDayLength()) : 0;
-                    }
-                }
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                InitializeOrbits();
             }
 
             if (Target == null) return;
@@ -187,6 +174,37 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 CurrentFrame++;
             }
+        }
+
+        private void InitializeOrbits()
+        {
+            double lanFixFactor = 0;
+            if (Body.SiderealDayLength() > 0)
+            {
+                if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
+                {
+                    lanFixFactor = Math.Abs((Planetarium.GetUniversalTime() - Orbit[6]) * 360 / Body.SiderealDayLength());
+                }
+                else
+                {
+                    lanFixFactor = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId) * 360 / Body.SiderealDayLength());
+                }
+            }
+
+            KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
+            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+
+            var diff = KspOrbit.getObtAtUT(Planetarium.GetUniversalTime()) * KspOrbit.meanMotion - KspOrbit.getObtAtUT(Orbit[6]) * KspOrbit.meanMotion;
+            if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId) || KspOrbit.epoch < Planetarium.GetUniversalTime() && (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1))
+                diff *= -1;
+
+            KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5] + diff, Orbit[6], Body);
+
+            diff = Target.KspOrbit.getObtAtUT(Planetarium.GetUniversalTime()) * Target.KspOrbit.meanMotion - Target.KspOrbit.getObtAtUT(Target.Orbit[6]) * Target.KspOrbit.meanMotion;
+            if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId) || KspOrbit.epoch < Planetarium.GetUniversalTime() && (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1))
+                diff *= -1;
+
+            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5] + diff, Target.Orbit[6], Target.Body);
         }
 
         /// <summary>

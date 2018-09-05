@@ -1,6 +1,4 @@
-﻿using LunaClient.Systems.Warp;
-using LunaCommon;
-using System;
+﻿using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
@@ -42,12 +40,6 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             var startTime = Planetarium.GetUniversalTime();
             var targetTime = Planetarium.GetUniversalTime();
 
-            //Uncomment this if you want to show the other vessels as in their PAST positions
-            //This is the old way of how LMP handled the vessels positions when YOUR vessel is in the future
-            //Now the vessel positions are advanced and "projected"
-            //startTime = _startOrbit.epoch;
-            //targetTime = _endOrbit.epoch;
-
             var currentPos = update.KspOrbit.getRelativePositionAtUT(startTime);
             var targetPos = target.KspOrbit.getRelativePositionAtUT(targetTime);
 
@@ -57,21 +49,7 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, percentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, percentage);
 
-            var updateTime = Planetarium.GetUniversalTime();
-
-            if (vessel.situation <= Vessel.Situations.SUB_ORBITAL)
-            {
-                if (WarpSystem.Singleton.CurrentlyWarping || update.SubspaceId == -1)
-                {
-                    updateTime += Math.Abs(updateTime - LunaMath.Lerp(update.KspOrbit.epoch, target.KspOrbit.epoch, percentage));
-                }
-                else
-                {
-                    updateTime += Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(update.SubspaceId));
-                }
-            }
-
-            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, updateTime);
+            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, Planetarium.GetUniversalTime());
         }
 
         private static void ApplyInterpolationsToLoadedVessel(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)

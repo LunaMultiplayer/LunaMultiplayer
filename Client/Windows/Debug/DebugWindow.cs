@@ -163,8 +163,10 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"Inclination: {ourVessel.orbit.inclination}");
                         StringBuilder.AppendLine($"LAN: {ourVessel.orbit.LAN}");
                         StringBuilder.AppendLine($"Arg Periapsis: {ourVessel.orbit.argumentOfPeriapsis}");
-                        StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbit.meanAnomalyAtEpoch}");
+                        StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbit.meanAnomaly}");
+                        StringBuilder.AppendLine($"Mean anomaly at Epoch: {ourVessel.orbit.meanAnomalyAtEpoch}");
                         StringBuilder.AppendLine($"Epoch: {ourVessel.orbit.epoch}");
+                        StringBuilder.AppendLine($"ObT: {ourVessel.orbit.ObT}");
                         StringBuilder.AppendLine($"Obt Speed : {ourVessel.orbit.GetRelativeVel()}, |v|: {ourVessel.orbit.GetRelativeVel().magnitude}");
 
                         _orbitText = StringBuilder.ToString();
@@ -191,8 +193,10 @@ namespace LunaClient.Windows.Debug
                                 StringBuilder.AppendLine($"Inclination: {vessel.orbit.inclination}");
                                 StringBuilder.AppendLine($"LAN: {vessel.orbit.LAN}");
                                 StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbit.argumentOfPeriapsis}");
-                                StringBuilder.AppendLine($"Mean anomaly: {vessel.orbit.meanAnomalyAtEpoch}");
+                                StringBuilder.AppendLine($"Mean anomaly: {vessel.orbit.meanAnomaly}");
+                                StringBuilder.AppendLine($"Mean anomaly at Epoch: {vessel.orbit.meanAnomalyAtEpoch}");
                                 StringBuilder.AppendLine($"Epoch: {vessel.orbit.epoch}");
+                                StringBuilder.AppendLine($"ObT: {vessel.orbit.ObT}");
                                 StringBuilder.AppendLine($"Obt Speed : {vessel.orbit.GetRelativeVel()}, |v|: {vessel.orbit.GetRelativeVel().magnitude}");
                                 StringBuilder.AppendLine();
                             }
