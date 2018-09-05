@@ -200,7 +200,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
                 return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
 
-            if (WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
+            if (WarpSystem.Singleton.CurrentlyWarping || WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
             {
                 var timeDiff = WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(subspaceId);
                 return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(TimeSyncerSystem.UniversalTime - timeDiff)) * orbit.meanMotion;
@@ -221,7 +221,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
                     return Math.Abs((TimeSyncerSystem.UniversalTime - timestamp) * 360 / body.SiderealDayLength());
 
-                if (WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
+                if (WarpSystem.Singleton.CurrentlyWarping || WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
                 {
                     var timeDiff = WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(subspaceId);
                     return Math.Abs(timeDiff * 360 / body.SiderealDayLength());
