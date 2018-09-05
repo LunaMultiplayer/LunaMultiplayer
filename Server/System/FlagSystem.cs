@@ -10,9 +10,9 @@ using System.Linq;
 
 namespace Server.System
 {
-    public class FlagSyncMsgSender
+    public class FlagSystem
     {
-        private static string FlagPath => Path.Combine(ServerContext.UniverseDirectory, "Flags");
+        public static string FlagPath => Path.Combine(ServerContext.UniverseDirectory, "Flags");
 
         public static void HandleFlagDataMessage(ClientStructure client, FlagDataMsgData message)
         {

@@ -19,8 +19,8 @@ namespace Server.System
         /// </summary>
         private static readonly object FileLock = new object();
 
-        private static readonly string GroupsDirectory = Path.Combine(ServerContext.UniverseDirectory, "Groups");
-        private static readonly string GroupsFilePath = Path.Combine(GroupsDirectory, "Groups.xml");
+        public static readonly string GroupsPath = Path.Combine(ServerContext.UniverseDirectory, "Groups");
+        private static readonly string GroupsFilePath = Path.Combine(GroupsPath, "Groups.xml");
 
         public static ConcurrentDictionary<string, Group> Groups { get; } = new ConcurrentDictionary<string, Group>();
 
@@ -98,7 +98,7 @@ namespace Server.System
         {
             lock (FileLock)
             {
-                if (FileHandler.FolderExists(GroupsDirectory))
+                if (FileHandler.FolderExists(GroupsPath))
                     LunaXmlSerializer.WriteToXmlFile(Groups.Values.ToList(), GroupsFilePath);
             }
         }

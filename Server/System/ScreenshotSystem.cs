@@ -21,7 +21,7 @@ namespace Server.System
     public class ScreenshotSystem
     {
         private const string SmallFilePrefix = "small_";
-        private static readonly string ScreenshotFolder = Path.Combine(ServerContext.UniverseDirectory, "Screenshots");
+        public static readonly string ScreenshotPath = Path.Combine(ServerContext.UniverseDirectory, "Screenshots");
 
         private static readonly ConcurrentDictionary<string, DateTime> LastUploadRequest = new ConcurrentDictionary<string, DateTime>();
 
@@ -34,7 +34,7 @@ namespace Server.System
         {
             Task.Run(() =>
             {
-                var playerFolder = Path.Combine(ScreenshotFolder, client.PlayerName);
+                var playerFolder = Path.Combine(ScreenshotPath, client.PlayerName);
                 if (!Directory.Exists(playerFolder))
                 {
                     Directory.CreateDirectory(playerFolder);
@@ -87,7 +87,7 @@ namespace Server.System
             Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotFoldersReplyMsgData>();
-                msgData.Folders = Directory.GetDirectories(ScreenshotFolder).Select(d => new DirectoryInfo(d).Name).ToArray();
+                msgData.Folders = Directory.GetDirectories(ScreenshotPath).Select(d => new DirectoryInfo(d).Name).ToArray();
                 msgData.NumFolders = msgData.Folders.Length;
 
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
@@ -104,7 +104,7 @@ namespace Server.System
             Task.Run(() =>
             {
                 var screenshots = new List<ScreenshotInfo>();
-                var folder = Path.Combine(ScreenshotFolder, data.FolderName);
+                var folder = Path.Combine(ScreenshotPath, data.FolderName);
 
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotListReplyMsgData>();
                 foreach (var file in Directory.GetFiles(folder).Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(SmallFilePrefix)))
@@ -145,7 +145,7 @@ namespace Server.System
         {
             Task.Run(() =>
             {
-                var file = Path.Combine(ScreenshotFolder, data.FolderName, $"{data.DateTaken}.png");
+                var file = Path.Combine(ScreenshotPath, data.FolderName, $"{data.DateTaken}.png");
                 if (File.Exists(file))
                 {
                     var bitmap = new Bitmap(file);
@@ -184,9 +184,9 @@ namespace Server.System
         /// </summary>
         private static void CheckMaxFolders()
         {
-            while (Directory.GetDirectories(ScreenshotFolder).Length > ScreenshotSettings.SettingsStore.MaxScreenshotsFolders)
+            while (Directory.GetDirectories(ScreenshotPath).Length > ScreenshotSettings.SettingsStore.MaxScreenshotsFolders)
             {
-                var oldestFolder = Directory.GetDirectories(ScreenshotFolder).Select(d => new DirectoryInfo(d)).OrderBy(d => d.LastWriteTime).FirstOrDefault();
+                var oldestFolder = Directory.GetDirectories(ScreenshotPath).Select(d => new DirectoryInfo(d)).OrderBy(d => d.LastWriteTime).FirstOrDefault();
                 if (oldestFolder != null)
                 {
                     LunaLog.Debug($"Removing oldest screenshot folder {oldestFolder.Name}");
@@ -207,7 +207,7 @@ namespace Server.System
                 {
                     LunaLog.Debug($"Deleting old screenshot {oldestScreenshot.FullName}");
                     File.Delete(oldestScreenshot.FullName);
-                    File.Delete(Path.Combine(ScreenshotFolder, playerFolder, SmallFilePrefix + oldestScreenshot.Name));
+                    File.Delete(Path.Combine(ScreenshotPath, playerFolder, SmallFilePrefix + oldestScreenshot.Name));
                 }
             }
         }

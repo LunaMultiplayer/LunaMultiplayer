@@ -14,7 +14,7 @@ namespace Server.System
     /// </summary>
     public static class VesselStoreSystem
     {
-        public static string VesselsFolder = Path.Combine(ServerContext.UniverseDirectory, "Vessels");
+        public static string VesselsPath = Path.Combine(ServerContext.UniverseDirectory, "Vessels");
 
         public static ConcurrentDictionary<Guid, string> CurrentVesselsInXmlFormat = new ConcurrentDictionary<Guid, string>();
 
@@ -35,7 +35,7 @@ namespace Server.System
             {
                 lock (BackupLock)
                 {
-                    FileHandler.FileDelete(Path.Combine(VesselsFolder, $"{vesselId}.xml"));
+                    FileHandler.FileDelete(Path.Combine(VesselsPath, $"{vesselId}.xml"));
                 }
             });
         }
@@ -56,7 +56,7 @@ namespace Server.System
         {
             lock (BackupLock)
             {
-                foreach (var file in Directory.GetFiles(VesselsFolder).Where(f => Path.GetExtension(f) == ".xml"))
+                foreach (var file in Directory.GetFiles(VesselsPath).Where(f => Path.GetExtension(f) == ".xml"))
                 {
                     if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
                     {
@@ -76,7 +76,7 @@ namespace Server.System
                 var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
                 foreach (var vessel in vesselsInXml)
                 {
-                    FileHandler.WriteToFile(Path.Combine(VesselsFolder, $"{vessel.Key}.xml"), vessel.Value);
+                    FileHandler.WriteToFile(Path.Combine(VesselsPath, $"{vessel.Key}.xml"), vessel.Value);
                 }
             }
         }
