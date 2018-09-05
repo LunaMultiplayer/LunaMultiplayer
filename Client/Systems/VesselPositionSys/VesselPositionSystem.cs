@@ -110,7 +110,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void SendVesselPositionUpdates()
         {
-            if (PositionUpdateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating)
+            if (PositionUpdateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating && !WarpSystem.Singleton.CurrentlyWarping)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
                 LastVesselUpdatesSentTime = Time.time;
