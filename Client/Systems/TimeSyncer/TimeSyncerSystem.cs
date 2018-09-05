@@ -23,10 +23,16 @@ namespace LunaClient.Systems.TimeSyncer
 
         public static long ServerStartTime { get; set; }
 
+        private static double _universalTime;
+
         /// <summary>
         /// Thread safe way of accessing Planetarium.GetUniversalTime()
         /// </summary>
-        public static double UniversalTime { get; private set; }
+        public static double UniversalTime
+        {
+            get => MainSystem.IsUnityThread ? Planetarium.GetUniversalTime() : _universalTime;
+            private set => _universalTime = value;
+        }
 
         /// <summary>
         /// Gets the server clock in seconds.

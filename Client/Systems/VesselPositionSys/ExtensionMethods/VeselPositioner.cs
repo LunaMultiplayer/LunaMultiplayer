@@ -1,4 +1,5 @@
-﻿using LunaCommon;
+﻿using LunaClient.Systems.TimeSyncer;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
@@ -37,16 +38,16 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
         private static void ApplyOrbitInterpolation(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
         {
-            var currentPos = update.KspOrbit.getRelativePositionAtUT(Planetarium.GetUniversalTime());
-            var targetPos = target.KspOrbit.getRelativePositionAtUT(Planetarium.GetUniversalTime());
+            var currentPos = update.KspOrbit.getRelativePositionAtUT(TimeSyncerSystem.UniversalTime);
+            var targetPos = target.KspOrbit.getRelativePositionAtUT(TimeSyncerSystem.UniversalTime);
 
-            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime());
-            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime());
+            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(TimeSyncerSystem.UniversalTime);
+            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(TimeSyncerSystem.UniversalTime);
 
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, percentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, percentage);
 
-            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, Planetarium.GetUniversalTime());
+            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, TimeSyncerSystem.UniversalTime);
         }
 
         private static void ApplyInterpolationsToLoadedVessel(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
@@ -73,7 +74,7 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             //var startOrbitPos = startOrbit.getPositionAtUT(startOrbit.epoch);
             //var endOrbitPos = endOrbit.getPositionAtUT(endOrbit.epoch);
 
-            vessel.SetPosition(vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime()));
+            vessel.SetPosition(vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime));
             if (vessel.situation <= Vessel.Situations.PRELAUNCH)
             {
                 vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));

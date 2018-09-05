@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon;
@@ -246,7 +247,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesMsInterval).TotalSeconds * 2
                 : double.MaxValue;
 
-            return update.GameTimeStamp < Planetarium.GetUniversalTime() - maxInterpolationTime;
+            return update.GameTimeStamp < TimeSyncerSystem.UniversalTime - maxInterpolationTime;
         }
 
         /// <summary>

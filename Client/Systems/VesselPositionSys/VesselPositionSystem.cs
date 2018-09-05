@@ -213,7 +213,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
                 : double.MaxValue;
 
-            return update.GameTimeStamp < Planetarium.GetUniversalTime() - maxInterpolationTime;
+            return update.GameTimeStamp < TimeSyncerSystem.UniversalTime - maxInterpolationTime;
         }
 
         /// <summary>

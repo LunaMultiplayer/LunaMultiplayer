@@ -7,6 +7,7 @@ using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using System;
+using LunaClient.Systems.TimeSyncer;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -196,13 +197,13 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Orbit orbit)
         {
-            if (SubspaceId == -1 && timestamp < Planetarium.GetUniversalTime())
-                return (orbit.getObtAtUT(Planetarium.GetUniversalTime()) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
+            if (SubspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
+                return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
 
-            if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
+            if (WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
             {
-                var timeDiff = WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId);
-                return (orbit.getObtAtUT(Planetarium.GetUniversalTime()) - orbit.getObtAtUT(Planetarium.GetUniversalTime() - timeDiff)) * orbit.meanMotion;
+                var timeDiff = WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(subspaceId);
+                return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(TimeSyncerSystem.UniversalTime - timeDiff)) * orbit.meanMotion;
             }
 
             return 0;
@@ -217,8 +218,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (body.SiderealDayLength() > 0)
             {
-                if (SubspaceId == -1 && timestamp < Planetarium.GetUniversalTime())
-                    return Math.Abs((Planetarium.GetUniversalTime() - timestamp) * 360 / body.SiderealDayLength());
+                if (SubspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
+                    return Math.Abs((TimeSyncerSystem.UniversalTime - timestamp) * 360 / body.SiderealDayLength());
 
                 if (WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
                 {
@@ -237,7 +238,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = Planetarium.GetUniversalTime() - GameTimeStamp;
+            TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
