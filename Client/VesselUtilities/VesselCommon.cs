@@ -16,14 +16,11 @@ namespace LunaClient.VesselUtilities
     /// </summary>
     public class VesselCommon
     {
-        private const int MaxOffsetMs = 1000;
-        private const float MaxOffsetSec = 1f;
+        private const int MaxPositionAndFlightStateMsgOffsetMs = 1000;
+        private const int MinPositionAndFlightStateMsgOffsetMs = 100;
 
-        private const int MinOffsetMs = 100;
-        private const float MinOffsetSec = 0.1f;
-
-        public static float PositionAndFlightStateMessageOffsetSec => Mathf.Clamp((float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs).TotalSeconds, MinOffsetSec, MaxOffsetSec);
-        public static int PositionAndFlightStateMessageOffsetMs => (int)Mathf.Clamp(NetworkStatistics.PingMs, MinOffsetMs, MaxOffsetMs);
+        public static float PositionAndFlightStateMessageOffsetSec => (float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs).TotalSeconds;
+        public static int PositionAndFlightStateMessageOffsetMs => (int)Mathf.Clamp(NetworkStatistics.PingMs * 1.5f, MinPositionAndFlightStateMsgOffsetMs, MaxPositionAndFlightStateMsgOffsetMs);
 
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
