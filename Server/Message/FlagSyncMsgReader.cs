@@ -16,12 +16,12 @@ namespace Server.Message
             switch (data.FlagMessageType)
             {
                 case FlagMessageType.ListRequest:
-                    FlagSyncMsgSender.HandleFlagListRequestMessage(client);
+                    FlagSystem.HandleFlagListRequestMessage(client);
                     //We don't use this message anymore so we can recycle it
                     message.Recycle();
                     break;
                 case FlagMessageType.FlagData:
-                    FlagSyncMsgSender.HandleFlagDataMessage(client, (FlagDataMsgData)data);
+                    FlagSystem.HandleFlagDataMessage(client, (FlagDataMsgData)data);
                     break;
             }
         }
