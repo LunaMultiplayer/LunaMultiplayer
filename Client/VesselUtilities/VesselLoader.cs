@@ -5,6 +5,7 @@ using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
+using LunaClient.VesselStore;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -242,7 +243,20 @@ namespace LunaClient.VesselUtilities
                 }
                 currentProto.vesselRef.GoOnRails();
             }
-            currentProto.vesselRef.orbitDriver?.updateFromParameters();
+
+            if (currentProto.vesselRef.situation > Vessel.Situations.PRELAUNCH)
+            {
+                currentProto.vesselRef.orbitDriver.updateFromParameters();
+            }
+
+            if (double.IsNaN(currentProto.vesselRef.orbitDriver.pos.x))
+            {
+                LunaLog.Log($"[LMP]: Protovessel {currentProto.vesselID} has an invalid orbit");
+                if (VesselsProtoStore.AllPlayerVessels.TryGetValue(currentProto.vesselID, out var protoUpdate))
+                    protoUpdate.HasInvalidOrbit = true;
+
+                return false;
+            }
 
             PlayerColorSystem.Singleton.SetVesselOrbitColor(currentProto.vesselRef);
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)

@@ -15,6 +15,7 @@ namespace LunaClient.VesselStore
         public bool VesselHasUpdate { get; set; }
         public bool ForceReload { get; set; }
         public bool HasInvalidParts { get; set; }
+        public bool HasInvalidOrbit { get; set; }
 
         private ProtoVessel _deserializedProtoVessel;
         public ProtoVessel ProtoVessel
@@ -31,7 +32,7 @@ namespace LunaClient.VesselStore
 
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;
-        public bool ShouldBeLoaded => !HasInvalidParts;
+        public bool ShouldBeLoaded => !HasInvalidParts && !HasInvalidOrbit;
         public bool IsInSafetyBubble => SafetyBubbleSystem.Singleton.IsInSafetyBubble(ProtoVessel);
 
         private readonly ConcurrentDictionary<uint, ProtoPartSnapshot> _vesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
