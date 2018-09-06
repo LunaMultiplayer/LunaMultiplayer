@@ -1,13 +1,11 @@
 ﻿using Harmony;
-using LunaClient.Systems.Lock;
-using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
 // ReSharper disable All
 
 namespace LunaClient.Harmony
 {
     /// <summary>
-    /// This harmony patch is intended to avoid run the kill checks in vessels that are not yours
+    /// This harmony patch is intended to avoid run the kill checks in vessels that are immortal
     /// </summary>
     [HarmonyPatch(typeof(Vessel))]
     [HarmonyPatch("CheckKill")]
@@ -18,8 +16,11 @@ namespace LunaClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
 
-            return !LockSystem.LockQuery.UnloadedUpdateLockExists(__instance.id) || 
-                   LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(__instance.id, SettingsSystem.CurrentSettings.PlayerName);
+            //Do not check against the locks as they generate garbage. Instead check if the vessel is immortal by looking at the crash tolerance
+
+            if (__instance.rootPart == null) return true;
+
+            return __instance.rootPart.crashTolerance != float.PositiveInfinity;
         }
     }
 }

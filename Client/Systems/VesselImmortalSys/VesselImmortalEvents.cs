@@ -5,7 +5,15 @@ using LunaCommon.Locks;
 namespace LunaClient.Systems.VesselImmortalSys
 {
     public class VesselImmortalEvents : SubSystem<VesselImmortalSystem>
-    {        
+    {
+        /// <summary>
+        /// Set vessel immortal state just when the vessel has more/less parts (docking for example)
+        /// </summary>
+        public void PartCountChanged(Vessel vessel)
+        {
+            System.SetImmortalStateBasedOnLock(vessel);
+        }
+
         /// <summary>
         /// Set vessel immortal state just when the vessel goes on rails
         /// </summary>

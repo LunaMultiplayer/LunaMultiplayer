@@ -26,6 +26,7 @@ namespace LunaClient.Systems.VesselImmortalSys
             GameEvents.onVesselGoOnRails.Add(VesselImmortalEvents.VesselGoOnRails);
             GameEvents.onVesselGoOffRails.Add(VesselImmortalEvents.VesselGoOffRails);
             GameEvents.onVesselLoaded.Add(VesselImmortalEvents.VesselLoaded);
+            GameEvents.onVesselPartCountChanged.Add(VesselImmortalEvents.PartCountChanged);
             SpectateEvent.onStartSpectating.Add(VesselImmortalEvents.StartSpectating);
             SpectateEvent.onFinishedSpectating.Add(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Add(VesselImmortalEvents.OnLockAcquire);
@@ -37,6 +38,7 @@ namespace LunaClient.Systems.VesselImmortalSys
             GameEvents.onVesselGoOnRails.Remove(VesselImmortalEvents.VesselGoOnRails);
             GameEvents.onVesselGoOffRails.Remove(VesselImmortalEvents.VesselGoOffRails);
             GameEvents.onVesselLoaded.Remove(VesselImmortalEvents.VesselLoaded);
+            GameEvents.onVesselPartCountChanged.Remove(VesselImmortalEvents.PartCountChanged);
             SpectateEvent.onStartSpectating.Remove(VesselImmortalEvents.StartSpectating);
             SpectateEvent.onFinishedSpectating.Remove(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Remove(VesselImmortalEvents.OnLockAcquire);
