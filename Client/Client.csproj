@@ -91,7 +91,6 @@
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
-    <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
     <Compile Include="Harmony\DiscoverableObjectsUtil_SpawnAsteroid.cs" />
     <Compile Include="Harmony\FlightDriver_SetPause.cs" />
@@ -105,8 +104,6 @@
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
     <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
-    <Compile Include="Harmony\PartJoint_OnJointBreak.cs" />
-    <Compile Include="Harmony\Part_HandleCollision.cs" />
     <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
     <Compile Include="Harmony\ProtoCrewMember_Die.cs" />
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />

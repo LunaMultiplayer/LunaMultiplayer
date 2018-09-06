@@ -1,27 +1,33 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
 
 namespace LunaClient.Systems.VesselImmortalSys
 {
     public class VesselImmortalEvents : SubSystem<VesselImmortalSystem>
-    {
+    {        
+        /// <summary>
+        /// Set vessel immortal state just when the vessel goes on rails
+        /// </summary>
+        public void VesselGoOnRails(Vessel vessel)
+        {
+            System.SetImmortalStateBasedOnLock(vessel);
+        }
+
+        /// <summary>
+        /// Set vessel immortal state just when the vessel goes off rails
+        /// </summary>
+        public void VesselGoOffRails(Vessel vessel)
+        {
+            System.SetImmortalStateBasedOnLock(vessel);
+        }
+
         /// <summary>
         /// Set vessel immortal state just when the vessel loads
         /// </summary>
         public void VesselLoaded(Vessel vessel)
         {
-            if(vessel == null) return;
-
-            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == vessel.id)
-                return;
-
-            var isOurs = LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName) ||
-                LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName) ||
-                !LockSystem.LockQuery.UpdateLockExists(vessel.id);
-
-            System.SetVesselImmortalState(vessel, !isOurs);
+            System.SetImmortalStateBasedOnLock(vessel);
         }
 
         /// <summary>
