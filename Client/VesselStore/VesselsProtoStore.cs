@@ -196,10 +196,9 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.CoM.y = msgData.Com[1];
                 vesselProtoUpd.ProtoVessel.CoM.z = msgData.Com[2];
 
-                vesselProtoUpd.ProtoVessel.actionGroups.ClearValues();
                 for (var i = 0; i < vesselProtoUpd.ProtoVessel.actionGroups.values.Count; i++)
                 {
-                    vesselProtoUpd.ProtoVessel.actionGroups.AddValue(msgData.ActionGroups[i].ActionGroupName, msgData.ActionGroups[i].State + ", " + msgData.ActionGroups[i].Time);
+                    vesselProtoUpd.ProtoVessel.actionGroups.SetValue(msgData.ActionGroups[i].ActionGroupName, msgData.ActionGroups[i].Value);
                 }
             }
         }
@@ -231,10 +230,9 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.CoM.y = vesselUpdate.Com[1];
                 vesselProtoUpd.ProtoVessel.CoM.z = vesselUpdate.Com[2];
 
-                vesselProtoUpd.ProtoVessel.actionGroups.ClearValues();
                 for (var i = 0; i < vesselProtoUpd.ProtoVessel.actionGroups.values.Count; i++)
                 {
-                    vesselProtoUpd.ProtoVessel.actionGroups.AddValue(vesselUpdate.ActionGroups[i].ActionGroupName, vesselUpdate.ActionGroups[i].State + ", " + vesselUpdate.ActionGroups[i].Time);
+                    vesselProtoUpd.ProtoVessel.actionGroups.SetValue(vesselUpdate.ActionGroups[i].ActionGroupName, vesselUpdate.ActionGroups[i].Value);
                 }
             }
         }

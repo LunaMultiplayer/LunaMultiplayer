@@ -9,6 +9,8 @@ namespace LunaCommon.Message.Data.Vessel
         public bool State;
         public double Time;
 
+        public string Value => $"{State}, {Time}";
+
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(ActionGroupName);
