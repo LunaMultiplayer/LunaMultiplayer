@@ -65,22 +65,65 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
-            vessel.SetPosition(vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime));
             if (vessel.situation <= Vessel.Situations.PRELAUNCH)
             {
-                vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
+                SetVesselPositionAndRotation(vessel, lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
             }
+            else
+            {
+                SetVesselPositionAndRotation(vessel, vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime));
+            }
+        }
 
-            //Always run this at the end!!
-            //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+        private static bool MustResumeVelocity(Vessel vessel)
+        {
             if (!vessel.packed && vessel.rootPart?.rb != null)
             {
                 var velBeforeCorrection = vessel.rootPart.rb.velocity;
                 vessel.rootPart.ResumeVelocity();
-                if (velBeforeCorrection != vessel.rootPart.rb.velocity)
+                return velBeforeCorrection != vessel.rootPart.rb.velocity;
+            }
+
+            return false;
+        }
+
+        private static void SetVesselPositionAndRotation(Vessel vessel, Vector3d position)
+        {
+            if (!vessel.loaded)
+            {
+                vessel.vesselTransform.position = position;
+            }
+            else
+            {
+                var mustFixVelocity = MustResumeVelocity(vessel);
+                if (!vessel.packed)
                 {
-                    foreach (var part in vessel.Parts)
-                        part.ResumeVelocity();
+                    foreach (var part in vessel.parts)
+                    {
+                        if (part.physicalSignificance == Part.PhysicalSignificance.FULL)
+                        {
+                            part.partTransform.position = part.partTransform.position + (position - vessel.vesselTransform.position);
+                            if (mustFixVelocity)
+                            {            
+                                //Always run this at the end!!
+                                //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+                                part.ResumeVelocity();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var part in vessel.parts)
+                    {
+                        part.partTransform.position = position + (vessel.vesselTransform.rotation * part.orgPos);
+                        if (mustFixVelocity)
+                        {
+                            //Always run this at the end!!
+                            //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+                            part.ResumeVelocity();
+                        }
+                    }
                 }
             }
         }
