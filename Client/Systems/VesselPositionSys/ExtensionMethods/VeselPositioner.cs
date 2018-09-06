@@ -56,7 +56,6 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
 
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             vessel.srfRelRotation = currentSurfaceRelRotation;
-            vessel.SetRotation((Quaternion)lerpedBody.rotation * currentSurfaceRelRotation, true);
 
             vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
             vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
@@ -65,16 +64,21 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
+            var rotation = (Quaternion)lerpedBody.rotation * currentSurfaceRelRotation;
             if (vessel.situation <= Vessel.Situations.PRELAUNCH)
             {
-                SetVesselPositionAndRotation(vessel, lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
+                SetLoadedVesselPositionAndRotation(vessel, lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude), rotation);
             }
             else
             {
-                SetVesselPositionAndRotation(vessel, vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime));
+                SetLoadedVesselPositionAndRotation(vessel, vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime), rotation);
             }
         }
 
+        /// <summary>
+        /// Checks if we must resume the velocity of the part
+        /// It's important do resume it as otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+        /// </summary>
         private static bool MustResumeVelocity(Vessel vessel)
         {
             if (!vessel.packed && vessel.rootPart?.rb != null)
@@ -87,42 +91,43 @@ namespace LunaClient.Systems.VesselPositionSys.ExtensionMethods
             return false;
         }
 
-        private static void SetVesselPositionAndRotation(Vessel vessel, Vector3d position)
+        /// <summary>
+        /// Here we set the position and the rotation of every part at once, this is much more optimized than calling SetRotation and SetPosition
+        /// </summary>
+        private static void SetLoadedVesselPositionAndRotation(Vessel vessel, Vector3d position, Quaternion rotation)
         {
-            if (!vessel.loaded)
+            var mustFixVelocity = MustResumeVelocity(vessel);
+            if (!vessel.packed)
             {
-                vessel.vesselTransform.position = position;
-            }
-            else
-            {
-                var mustFixVelocity = MustResumeVelocity(vessel);
-                if (!vessel.packed)
+                foreach (var part in vessel.parts)
                 {
-                    foreach (var part in vessel.parts)
+                    if (part.physicalSignificance == Part.PhysicalSignificance.FULL)
                     {
-                        if (part.physicalSignificance == Part.PhysicalSignificance.FULL)
-                        {
-                            part.partTransform.position = part.partTransform.position + (position - vessel.vesselTransform.position);
-                            if (mustFixVelocity)
-                            {            
-                                //Always run this at the end!!
-                                //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                                part.ResumeVelocity();
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var part in vessel.parts)
-                    {
-                        part.partTransform.position = position + (vessel.vesselTransform.rotation * part.orgPos);
+                        //Apply rotation to part
+                        part.partTransform.rotation = rotation * part.orgRot;
+                        part.partTransform.position = vessel.vesselTransform.position + vessel.vesselTransform.rotation * part.orgPos;
+
+                        part.partTransform.position += position - vessel.vesselTransform.position;
                         if (mustFixVelocity)
                         {
                             //Always run this at the end!!
                             //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
                             part.ResumeVelocity();
                         }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var part in vessel.parts)
+                {
+                    part.partTransform.rotation = rotation * part.orgRot;
+                    part.partTransform.position = position + vessel.vesselTransform.rotation * part.orgPos;
+                    if (mustFixVelocity)
+                    {
+                        //Always run this at the end!!
+                        //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+                        part.ResumeVelocity();
                     }
                 }
             }
