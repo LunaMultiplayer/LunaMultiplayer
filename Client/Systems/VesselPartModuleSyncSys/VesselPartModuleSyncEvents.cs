@@ -14,6 +14,10 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             var part = module.part;
             if (part == null) return;
 
+            //The vessel is immortal so we are sure that it's not ours
+            if (float.IsPositiveInfinity(part.crashTolerance))
+                return;
+
             if (FieldModuleStore.InheritanceTypeChain.TryGetValue(module.moduleName, out var inheritChain))
             {
                 foreach (var baseModuleName in inheritChain)
