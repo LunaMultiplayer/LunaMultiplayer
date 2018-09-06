@@ -10,6 +10,7 @@ using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LunaClient.Extensions;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -243,7 +244,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpd))
                         {
                             CurrentlyUpdatingVesselId = vesselIdToReload;
-                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpd.Vessel, vesselProtoUpd.ProtoVessel, vesselProtoUpd.ForceReload, vesselProtoUpd.VesselParts.Keys);
+                            vesselProtoUpd.Vessel.UpdateVesselFromProtoVessel(vesselProtoUpd.ProtoVessel, vesselProtoUpd.ForceReload, vesselProtoUpd.VesselParts.Keys);
                             vesselProtoUpd.VesselHasUpdate = false;
                             VesselReloadEvent.onLmpVesselReloaded.Fire(vesselProtoUpd.Vessel);
                             CurrentlyUpdatingVesselId = Guid.Empty;

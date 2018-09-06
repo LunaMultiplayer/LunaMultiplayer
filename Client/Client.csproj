@@ -89,6 +89,8 @@
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\VesselExtension.cs" />
+    <Compile Include="Extensions\VesselPartCreator.cs" />
+    <Compile Include="Extensions\VesselProtoExtension.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
@@ -254,6 +256,8 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProto.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselUpdateQueue.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageHandler.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageSender.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceSystem.cs" />
@@ -271,7 +275,6 @@
     <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselToProtoRefresh.cs" />
-    <Compile Include="Systems\VesselProtoSys\ProtoToVesselRefresh.cs" />
     <Compile Include="VesselStore\VesselProtoUpdate.cs" />
     <Compile Include="Systems\VesselStateSys\VesselStateEvents.cs" />
     <Compile Include="Systems\VesselStateSys\VesselStateSystem.cs" />

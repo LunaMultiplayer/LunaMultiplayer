@@ -3,22 +3,19 @@ using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LunaClient.Systems.VesselProtoSys
+namespace LunaClient.Extensions
 {
-    /// <summary>
-    /// Class that updates a vessel and it's protovessel based on a protovessel definition received from the server
-    /// </summary>
-    public static class ProtoToVesselRefresh
+    public static class VesselProtoExtension
     {
         private static readonly List<ProtoCrewMember> MembersToAdd = new List<ProtoCrewMember>();
         private static readonly List<string> MembersToRemove = new List<string>();
-
+        
         /// <summary>
         /// This method will take a vessel and update all it's parts and proto based on a protovessel we received
         /// Protovessel --------------> Vessel & ProtoVessel
         /// This way we avoid having to unload and reload a vessel with it's terrible performance
         /// </summary>
-        public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel, bool forceReload, IEnumerable<uint> vesselPartsId = null)
+        public static void UpdateVesselFromProtoVessel(this Vessel vessel, ProtoVessel protoVessel, bool forceReload, IEnumerable<uint> vesselPartsId = null)
         {
             if (vessel == null || protoVessel == null || vessel.state == Vessel.State.DEAD) return;
 
@@ -37,7 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselProtoPartIds = vesselPartsId ?? protoVessel.protoPartSnapshots.Select(p => p.flightID);
 
             //If vessel is UNLOADED it won't have parts so we must take them from the proto...
-            var vesselPartsIds = vessel.loaded ? vessel.parts.Select(p => p.flightID) : vessel.protoVessel.protoPartSnapshots.Select(p=> p.flightID);
+            var vesselPartsIds = vessel.loaded ? vessel.parts.Select(p => p.flightID) : vessel.protoVessel.protoPartSnapshots.Select(p => p.flightID);
 
             var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
             if (hasMissingparts)
@@ -75,7 +72,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                 AdjustCrewMembersInProtoPart(protoPartToUpdate, partSnapshot);
                 protoPartToUpdate.state = partSnapshot.state;
-                
+
                 var part = protoPartToUpdate.partRef;
                 if (part != null) //Part can be null if the vessel is unloaded!!
                 {
@@ -93,7 +90,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     //if (protoPartsToRemove[i].partRef.FindModuleImplementing<ModuleDecouple>() != null)
                     //    protoPartsToRemove[i].partRef.decouple();
                     //else
-                        protoPartsToRemove[i].partRef.Die();
+                    protoPartsToRemove[i].partRef.Die();
                 }
 
                 vessel.protoVessel.protoPartSnapshots.Remove(protoPartsToRemove[i]);
@@ -115,43 +112,6 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
-        public static void CreateMissingPartsInCurrentProtoVessel(Vessel vessel, ProtoVessel protoVessel)
-        {
-            //TODO: This is old code where we created parts dinamically but it's quite buggy. It create parts in the CURRENT vessel so it wont work for other vessels
-
-            //We've run trough all the vessel parts and removed the ones that don't exist in the definition.
-            //Now run trough the parts in the definition and add the parts that don't exist in the vessel.
-            var partsToInit = new List<ProtoPartSnapshot>();
-            foreach (var partSnapshot in protoVessel.protoPartSnapshots)
-            {
-                if (partSnapshot.FindModule("ModuleDockingNode") != null)
-                {
-                    //We are in a docking port part so remove it from our own vessel if we have it
-                    var vesselPart = VesselCommon.FindPartInVessel(vessel, partSnapshot.flightID);
-                    if (vesselPart != null)
-                    {
-                        vesselPart.Die();
-                    }
-                }
-
-                //Skip parts that already exists
-                if (VesselCommon.FindPartInVessel(vessel, partSnapshot.flightID) != null)
-                    continue;
-
-                var newPart = partSnapshot.Load(vessel, false);
-                vessel.parts.Add(newPart);
-                partsToInit.Add(partSnapshot);
-            }
-
-            //Init new parts. This must be done in another loop as otherwise new parts won't have their correct attachment parts.
-            foreach (var partSnapshot in partsToInit)
-                partSnapshot.Init(vessel);
-
-            vessel.RebuildCrewList();
-            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
-            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
-        }
-        
         /// <summary>
         /// Add or remove crew from a part based on the part snapshot
         /// </summary>
@@ -205,7 +165,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
             }
         }
-        
+
         private static bool VesselJustLandedOrSplashed(Vessel vessel, ProtoVessel protoVessel)
         {
             return !vessel.isEVA && (!vessel.Landed && protoVessel.landed || !vessel.Splashed && protoVessel.splashed);
