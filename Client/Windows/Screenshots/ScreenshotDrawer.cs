@@ -1,4 +1,5 @@
 ﻿using LunaClient.Systems.Screenshot;
+using System.Text;
 using UniLinq;
 using UnityEngine;
 
@@ -8,11 +9,43 @@ namespace LunaClient.Windows.Screenshots
     {
         #region Folders
 
+        private static string _screenshotKeyLabel;
+        private static string ScreenshotKeyLabel
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_screenshotKeyLabel))
+                {
+                    var sb = new StringBuilder();
+                    sb.Append("Screenshot key: ");
+                    if (!GameSettings.TAKE_SCREENSHOT.primary.isNone)
+                    {
+                        sb.Append(GameSettings.TAKE_SCREENSHOT.primary.code);
+                    }
+
+                    if (!GameSettings.TAKE_SCREENSHOT.secondary.isNone)
+                    {
+                        if (!GameSettings.TAKE_SCREENSHOT.primary.isNone)
+                            sb.Append("/");
+                        sb.Append(GameSettings.TAKE_SCREENSHOT.secondary.code);
+                    }
+
+                    if (GameSettings.TAKE_SCREENSHOT.primary.isNone && GameSettings.TAKE_SCREENSHOT.secondary.isNone)
+                        sb.Append("NONE!");
+
+                    _screenshotKeyLabel = sb.ToString();
+                }
+
+                return _screenshotKeyLabel;
+            }
+        }
+
         public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
             DrawRefreshButton(() => System.MessageSender.RequestFolders());
+            GUILayout.Label(ScreenshotKeyLabel);
             GUILayout.Space(15);
 
             GUILayout.BeginVertical(BoxStyle);
