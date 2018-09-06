@@ -19,11 +19,7 @@ namespace LunaClient.ModuleStore
         /// Here we will have the IL code of the method ExampleCall
         /// </summary>
         private static readonly List<CodeInstruction> Instructions = new List<CodeInstruction>();
-
-        private static readonly MethodInfo InitTranspilerMethod = typeof(PartModulePatcher).GetMethod(nameof(InitTranspiler));
-        private static readonly MethodInfo TranspilerMethod = typeof(PartModulePatcher).GetMethod(nameof(Transpiler));
-        private static readonly MethodInfo RestoreMethod = typeof(PartModulePatcher).GetMethod(nameof(Restore));
-
+        
         private static string _currentPartModuleName;
         private static readonly List<CodeInstruction> InstructionsBackup = new List<CodeInstruction>();
 
@@ -48,7 +44,7 @@ namespace LunaClient.ModuleStore
         /// </summary>
         public static void Awake()
         {
-            HarmonyPatcher.HarmonyInstance.Patch(TestModule.ExampleCallMethod, null, null, new HarmonyMethod(InitTranspilerMethod));
+            HarmonyPatcher.HarmonyInstance.Patch(TestModule.ExampleCallMethod, null, null, new HarmonyMethod(typeof(PartModulePatcher).GetMethod(nameof(InitTranspiler))));
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 try
@@ -78,13 +74,13 @@ namespace LunaClient.ModuleStore
                                 {
                                     try
                                     {
-                                        LunaLog.Log($"Patching method {partModuleMethod.Name} in module {partModule.Name}");
-                                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(TranspilerMethod));
+                                        LunaLog.Log($"Patching method {partModuleMethod.Name} in module {partModule.Name} of assembly {assembly.FullName}");
+                                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(typeof(PartModulePatcher).GetMethod(nameof(Transpiler))));
                                     }
                                     catch
                                     {
-                                        LunaLog.LogError($"Could not patch method {partModuleMethod.Name} in module {partModule.Name}");
-                                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(RestoreMethod));
+                                        LunaLog.LogError($"Could not patch method {partModuleMethod.Name} in module {partModule.Name} of assembly {assembly.FullName}");
+                                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(typeof(PartModulePatcher).GetMethod(nameof(Restore))));
                                     }
                                 }
                             }
