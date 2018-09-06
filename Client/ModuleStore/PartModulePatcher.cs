@@ -16,7 +16,7 @@ namespace LunaClient.ModuleStore
     public class PartModulePatcher
     {
         /// <summary>
-        /// Here we will have the IL code of the method ExampleCall
+        /// Here we will have the IL code of the method <see cref="TestModule.ExampleCall"/>
         /// </summary>
         private static readonly List<CodeInstruction> Instructions = new List<CodeInstruction>();
         
@@ -32,6 +32,10 @@ namespace LunaClient.ModuleStore
             private void ExampleCall() => PartModuleEvent.onPartModuleFieldChange.Fire(this, "FIELDNAME");
         }
 
+        /// <summary>
+        /// This is the init transpiler. It will take the instructions of the ExampleCall method and store them in the
+        /// <see cref="Instructions"/> list so we can use them later.
+        /// </summary>
         public static IEnumerable<CodeInstruction> InitTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             //We only take the first 4 instructions as the other ones are the return
