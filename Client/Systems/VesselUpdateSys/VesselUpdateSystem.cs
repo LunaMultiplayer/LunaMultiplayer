@@ -15,8 +15,6 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         #region Fields & properties
 
-        public bool UpdateSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT;
-
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
         private List<Vessel> AbandonedVesselsToUpdate { get; } = new List<Vessel>();
 
@@ -64,7 +62,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private void SendVesselUpdates()
         {
-            if (UpdateSystemReady && !VesselCommon.IsSpectating)
+            if (!VesselCommon.IsSpectating)
             {
                 MessageSender.SendVesselUpdate(FlightGlobals.ActiveVessel);
             }
@@ -72,7 +70,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private void SendSecondaryVesselUpdates()
         {
-            if (UpdateSystemReady && !VesselCommon.IsSpectating)
+            if (!VesselCommon.IsSpectating)
             {
                 SecondaryVesselsToUpdate.Clear();
                 SecondaryVesselsToUpdate.AddRange(VesselCommon.GetSecondaryVessels());
@@ -86,7 +84,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private void SendUnloadedSecondaryVesselUpdates()
         {
-            if (UpdateSystemReady && !VesselCommon.IsSpectating)
+            if (!VesselCommon.IsSpectating)
             {
                 AbandonedVesselsToUpdate.Clear();
                 AbandonedVesselsToUpdate.AddRange(VesselCommon.GetUnloadedSecondaryVessels());
