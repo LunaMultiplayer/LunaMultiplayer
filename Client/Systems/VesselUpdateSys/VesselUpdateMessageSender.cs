@@ -69,7 +69,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             SendMessage(msgData);
         }
 
-
         private static void UpdateOwnProtoVesselValues(Vessel vessel)
         {
             if (vessel.protoVessel == null) return;

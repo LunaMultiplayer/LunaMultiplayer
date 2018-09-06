@@ -224,11 +224,11 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (vessel.orbit != null)
             {
-                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, TimeSyncerSystem.UniversalTime);
+                vessel.UpdatePosVel();
                 if (!vessel.LandedOrSplashed)
                 {
-                    vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
                     vessel.orbitDriver?.updateFromParameters();
+                    vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
                 }
             }
         }
@@ -240,21 +240,20 @@ namespace LunaClient.Systems.VesselPositionSys
         public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
             vessel.UpdateLandedSplashed();
+            vessel.UpdatePosVel();
+            vessel.precalc.CalculatePhysicsStats();
 
+            vessel.orbitDriver?.updateFromParameters();
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {
-                if (!vessel.packed) //If you do it and the vessel is packed the vessel will start flying to the sky
-                    vessel.mainBody.GetLatLonAlt(vessel.GetWorldPos3D(), out vessel.latitude, out vessel.longitude, out vessel.altitude);
+                vessel.mainBody.GetLatLonAlt(vessel.vesselTransform.position, out vessel.latitude, out vessel.longitude, out vessel.altitude);
             }
             else
             {
                 if (vessel.orbit != null)
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
             }
-
-            vessel.UpdatePosVel();
-            vessel.precalc.CalculatePhysicsStats();
         }
 
         #endregion
