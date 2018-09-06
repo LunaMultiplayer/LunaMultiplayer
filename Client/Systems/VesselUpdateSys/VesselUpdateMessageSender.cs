@@ -55,10 +55,9 @@ namespace LunaClient.Systems.VesselUpdateSys
             for (var i = 0; i < 17; i++)
             {
                 if (msgData.ActionGroups[i] == null)
-                {
-                    msgData.ActionGroups[i] = new ActionGroup { ActionGroupName = ((KSPActionGroup)(1 << (i & 31))).ToString() };
-                }
+                    msgData.ActionGroups[i] = new ActionGroup();
 
+                msgData.ActionGroups[i].ActionGroupName = ((KSPActionGroup)(1 << (i & 31))).ToString();
                 msgData.ActionGroups[i].State = vessel.ActionGroups.groups[i];
                 msgData.ActionGroups[i].Time = vessel.ActionGroups.cooldownTimes[i];
             }

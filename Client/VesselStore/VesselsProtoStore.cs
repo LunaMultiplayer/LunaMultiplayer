@@ -196,7 +196,7 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.CoM.y = msgData.Com[1];
                 vesselProtoUpd.ProtoVessel.CoM.z = msgData.Com[2];
 
-                for (var i = 0; i < vesselProtoUpd.ProtoVessel.actionGroups.values.Count; i++)
+                for (var i = 0; i < msgData.ActionGroups.Length; i++)
                 {
                     vesselProtoUpd.ProtoVessel.actionGroups.SetValue(msgData.ActionGroups[i].ActionGroupName, msgData.ActionGroups[i].Value);
                 }
@@ -230,7 +230,7 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.CoM.y = vesselUpdate.Com[1];
                 vesselProtoUpd.ProtoVessel.CoM.z = vesselUpdate.Com[2];
 
-                for (var i = 0; i < vesselProtoUpd.ProtoVessel.actionGroups.values.Count; i++)
+                for (var i = 0; i < vesselUpdate.ActionGroups.Length; i++)
                 {
                     vesselProtoUpd.ProtoVessel.actionGroups.SetValue(vesselUpdate.ActionGroups[i].ActionGroupName, vesselUpdate.ActionGroups[i].Value);
                 }
