@@ -1,11 +1,11 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.TimeSyncer;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Generic;
-using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.Systems.VesselResourceSys
 {
@@ -30,7 +30,6 @@ namespace LunaClient.Systems.VesselResourceSys
             {
                 for (var j = 0; j < vessel.protoVessel.protoPartSnapshots[i].resources.Count; j++)
                 {
-                    var protoResource = vessel.protoVessel.protoPartSnapshots[i].resources[j];
                     var resource = vessel.protoVessel.protoPartSnapshots[i].resources[j].resourceRef;
 
                     if(resource == null) continue;
@@ -42,11 +41,7 @@ namespace LunaClient.Systems.VesselResourceSys
                         Amount = resource.amount,
                         FlowState = resource.flowState
                     };
-
-                    //Now update the proto values our vessel...
-                    protoResource.amount = resource.amount;
-                    protoResource.flowState = resource.flowState;
-
+                    
                     _resources.Add(resourceInfo);
                 }
             }

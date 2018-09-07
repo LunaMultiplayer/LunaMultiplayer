@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.VesselUtilities;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -75,23 +74,8 @@ namespace LunaClient.Systems.VesselFairingsSys
                 {
                     LunaLog.Log($"Detected fairings deployed! Part FlightID: {proceduralFairingModules[i].part.flightID}");
                     MessageSender.SendVesselFairingDeployed(vessel, proceduralFairingModules[i].part.flightID);
-                    UpdateFairingsValuesInProtoVessel(vessel.protoVessel, module.part.flightID);
                 }
             }
-        }
-        
-        public void UpdateFairingsValuesInProtoVessel(ProtoVessel protoVessel, uint partFlightId)
-        {
-            if (protoVessel == null) return;
-
-            var protoPart = VesselCommon.FindProtoPartInProtovessel(protoVessel, partFlightId);
-            if (protoPart == null) return;
-
-            var protoModule = VesselCommon.FindProtoPartModuleInProtoPart(protoPart, "ModuleProceduralFairing");
-            if (protoModule == null) return;
-
-            protoModule.moduleValues.SetValue("fsm", "st_flight_deployed");
-            protoModule.moduleValues.RemoveNodesStartWith("XSECTION");
         }
     }
 }

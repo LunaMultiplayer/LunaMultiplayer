@@ -89,12 +89,10 @@ namespace LunaClient.Systems.VesselEvaSys
             if (module != null)
             {
                 MessageSender.SendEvaData(FlightGlobals.ActiveVessel, newState.name, eventToRun.name, module.lastBoundStep);
-                UpdateFsmStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, newState.name, module.lastBoundStep);
             }
             else
             {
                 MessageSender.SendEvaData(FlightGlobals.ActiveVessel, newState.name, eventToRun.name);
-                UpdateFsmStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, newState.name);
             }
         }
 

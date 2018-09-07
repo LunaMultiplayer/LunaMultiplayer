@@ -44,13 +44,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             msgData.Com[0] = vessel.localCoM.x;
             msgData.Com[1] = vessel.localCoM.y;
             msgData.Com[2] = vessel.localCoM.z;
-
-            vessel.protoVessel.autoClean = vessel.AutoClean;
-            vessel.protoVessel.autoCleanReason = vessel.AutoCleanReason;
-            vessel.protoVessel.wasControllable = vessel.IsControllable;
-            vessel.protoVessel.CoM = vessel.localCoM;
-            vessel.protoVessel.stage = vessel.currentStage;
-
+            
             for (var i = 0; i < 17; i++)
             {
                 if (msgData.ActionGroups[i] == null)
@@ -60,30 +54,8 @@ namespace LunaClient.Systems.VesselUpdateSys
                 msgData.ActionGroups[i].State = vessel.ActionGroups.groups[i];
                 msgData.ActionGroups[i].Time = vessel.ActionGroups.cooldownTimes[i];
             }
-
-            UpdateOwnProtoVesselValues(vessel);
-
+            
             SendMessage(msgData);
-        }
-
-        private static void UpdateOwnProtoVesselValues(Vessel vessel)
-        {
-            if (vessel.protoVessel == null) return;
-
-            vessel.protoVessel.vesselName = vessel.vesselName;
-            vessel.protoVessel.vesselType = vessel.vesselType;
-            vessel.protoVessel.situation = vessel.situation;
-            vessel.protoVessel.landed = vessel.Landed;
-            vessel.protoVessel.landedAt = vessel.landedAt;
-            vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
-            vessel.protoVessel.splashed = vessel.Splashed;
-            vessel.protoVessel.missionTime = vessel.missionTime;
-            vessel.protoVessel.launchTime = vessel.launchTime;
-            vessel.protoVessel.lastUT = vessel.lastUT;
-            vessel.protoVessel.persistent = vessel.isPersistent;
-            vessel.protoVessel.refTransform = vessel.referenceTransformId;
-
-            vessel.ActionGroups.Save(vessel.protoVessel.actionGroups);
         }
     }
 }

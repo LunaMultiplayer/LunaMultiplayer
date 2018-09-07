@@ -35,8 +35,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
                             if (snapshotVal != null && fieldVal != null && fieldVal != snapshotVal)
                             {
-                                module.snapshot?.moduleValues?.SetValue(fieldInfo.Name, fieldVal);
-
                                 LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.name} Module: {module.moduleName} BaseModule: {baseModuleName} " +
                                             $"Field: {fieldInfo.Name} ValueBefore: {snapshotVal} ValueNow: {fieldVal}");
 

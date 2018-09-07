@@ -5,7 +5,6 @@ using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon;
-using LunaCommon.Message.Data.Vessel;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
@@ -211,31 +210,31 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
         }
 
-        public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
-        {
-            if (protoVessel == null) return;
+        //public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
+        //{
+        //    if (protoVessel == null) return;
 
-            try
-            {
-                protoVessel.ctrlState.SetValue("pitch", pitch);
-                protoVessel.ctrlState.SetValue("yaw", yaw);
-                protoVessel.ctrlState.SetValue("roll", roll);
-                protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
-                protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
-                protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
-                protoVessel.ctrlState.SetValue("mainThrottle", throttle);
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"Error while updating protovessel with flight state info. {e}");
-            }
-        }
+        //    try
+        //    {
+        //        protoVessel.ctrlState.SetValue("pitch", pitch);
+        //        protoVessel.ctrlState.SetValue("yaw", yaw);
+        //        protoVessel.ctrlState.SetValue("roll", roll);
+        //        protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
+        //        protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
+        //        protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
+        //        protoVessel.ctrlState.SetValue("mainThrottle", throttle);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        LunaLog.LogError($"Error while updating protovessel with flight state info. {e}");
+        //    }
+        //}
 
-        public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, VesselFlightStateMsgData msgData)
-        {
-            UpdateFlightStateInProtoVessel(protoVessel, msgData.Pitch, msgData.Yaw, msgData.Roll, msgData.PitchTrim,
-                msgData.YawTrim, msgData.RollTrim, msgData.MainThrottle);
-        }
+        //public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, VesselFlightStateMsgData msgData)
+        //{
+        //    UpdateFlightStateInProtoVessel(protoVessel, msgData.Pitch, msgData.Yaw, msgData.Roll, msgData.PitchTrim,
+        //        msgData.YawTrim, msgData.RollTrim, msgData.MainThrottle);
+        //}
 
         #endregion
 

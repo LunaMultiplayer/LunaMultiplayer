@@ -46,7 +46,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             msgData.Z = flightState.Z;
 
             SendMessage(msgData);
-            System.UpdateFlightStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, msgData);
         }
     }
 }
