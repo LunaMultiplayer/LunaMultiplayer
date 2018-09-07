@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
 
 namespace LunaClient.Systems.VesselLockSys
@@ -90,6 +91,7 @@ namespace LunaClient.Systems.VesselLockSys
                     LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
                     LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                     LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+                    VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                     break;
                 case LockType.Update:
                     LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);

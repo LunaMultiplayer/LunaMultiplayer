@@ -73,7 +73,6 @@ namespace LunaClient.Systems.VesselPositionSys
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
 
-            LockEvent.onLockAcquire.Add(PositionEvents.OnLockAcquire);
             WarpEvent.onTimeWarpStopped.Add(PositionEvents.WarpStopped);
         }
 
@@ -86,8 +85,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
-
-            LockEvent.onLockAcquire.Remove(PositionEvents.OnLockAcquire);
         }
 
         private void HandleVesselUpdates()
