@@ -150,6 +150,8 @@ namespace LunaClient.VesselUtilities
             if (HighLogic.CurrentGame?.flightState == null)
                 return false;
 
+            var reloadingOwnVessel = vesselProto.vesselID == FlightGlobals.ActiveVessel?.id;
+
             //In case the vessel exists, silently remove them from unity and recreate it again
             var existingVessel = FlightGlobals.FindVessel(vesselProto.vesselID);
             if (existingVessel != null)
@@ -202,6 +204,16 @@ namespace LunaClient.VesselUtilities
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                 KSCVesselMarkers.fetch?.RefreshMarkers();
+
+            if (reloadingOwnVessel)
+            {
+                vesselProto.vesselRef.Load();
+                FlightGlobals.fetch.activeVessel = vesselProto.vesselRef;
+                OrbitPhysicsManager.CheckReferenceFrame();
+                OrbitPhysicsManager.HoldVesselUnpack();
+                FlightCamera.SetTarget(vesselProto.vesselRef);
+                vesselProto.vesselRef.MakeActive();
+            }
 
             return true;
         }
