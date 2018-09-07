@@ -27,12 +27,20 @@ namespace LunaClient.Systems.VesselRemoveSys
                 var reason = dyingVessel.id == _recoveringTerminatingVesselId ? "Recovered/Terminated" : "Destroyed";
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: {reason}");
 
-                //Add to the kill list so it's also removed from the store later on!
-                System.AddToKillList(dyingVessel.id, "OnVesselWillDestroy - " + reason);
-
-                //If we are killing our own vessel there's the possibility that the player hits "revert" so in this case DO NOT keep it in the remove list
-                System.MessageSender.SendVesselRemove(dyingVessel.id, !ownVesselDying);
-
+                if (!ownVesselDying)
+                {
+                    //Add to the kill list so it's also removed from the store later on!
+                    System.AddToKillList(dyingVessel.id, "OnVesselWillDestroy - " + reason);
+                    System.MessageSender.SendVesselRemove(dyingVessel.id);
+                }
+                else
+                {
+                    //We do not add our OWN vessel to the kill list as then if we revert we won't be able to send the vessel proto again
+                    //As the "VesselWillBeKilled" method will return true.
+                    //For this reason we also tell the other players to NOT keep it in the remove list
+                    System.MessageSender.SendVesselRemove(dyingVessel.id, false);
+                }
+                
                 //Vessel is dead so remove the locks after 1500ms to get the debris locks if any
                 LockSystem.Singleton.ReleaseAllVesselLocks(dyingVessel.GetVesselCrew().Select(c => c.name), dyingVessel.id, 1500);
             }
