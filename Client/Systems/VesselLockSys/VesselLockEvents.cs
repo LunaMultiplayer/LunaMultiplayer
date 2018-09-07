@@ -2,7 +2,6 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
-using System;
 
 namespace LunaClient.Systems.VesselLockSys
 {
@@ -129,8 +128,6 @@ namespace LunaClient.Systems.VesselLockSys
                         }
                     }
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
         }
