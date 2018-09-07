@@ -83,6 +83,7 @@
     <Compile Include="Events\StrategyEvent.cs" />
     <Compile Include="Events\VesselLoadEvent.cs" />
     <Compile Include="Events\VesselReloadEvent.cs" />
+    <Compile Include="Events\VesselInitializeEvent.cs" />
     <Compile Include="Events\VesselUnloadEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Harmony\OrbitRendererBase_OnUpdateCaption.cs" />
     <Compile Include="Harmony\TrackingStationWidget_Update.cs" />
     <Compile Include="Harmony\VesselLabels_ProcessLabel.cs" />
+    <Compile Include="Harmony\Vessel_Initialize.cs" />
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />

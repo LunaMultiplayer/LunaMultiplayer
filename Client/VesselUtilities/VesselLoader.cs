@@ -19,8 +19,6 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static readonly MethodInfo Load = typeof(ProtoVessel).GetMethod("Load", BindingFlags.NonPublic | BindingFlags.Instance);
-
         /// <summary>
         /// Loads/reloads a vessel into game
         /// </summary>
@@ -28,9 +26,9 @@ namespace LunaClient.VesselUtilities
         {
             try
             {
-                CurrentlyLoadingVesselId = vesselProto.vesselID;
                 if (ProtoVesselValidationsPassed(vesselProto))
                 {
+                    CurrentlyLoadingVesselId = vesselProto.vesselID;
                     RegisterServerAsteriodIfVesselIsAsteroid(vesselProto);
                     FixProtoVesselFlags(vesselProto);
                     GetLatestProtoVesselPosition(vesselProto);
@@ -151,9 +149,20 @@ namespace LunaClient.VesselUtilities
         {
             if (HighLogic.CurrentGame?.flightState == null)
                 return false;
-            
-            Load.Invoke(vesselProto, new object[] { HighLogic.CurrentGame.flightState, FlightGlobals.FindVessel(vesselProto.vesselID) });
 
+            //In case the vessel exists, silently remove them from unity and recreate it again
+            var existingVessel = FlightGlobals.FindVessel(vesselProto.vesselID);
+            if (existingVessel != null)
+            {
+                FlightGlobals.RemoveVessel(existingVessel);
+                foreach (var part in existingVessel.parts)
+                {
+                    Object.Destroy(part.gameObject);
+                }
+                Object.Destroy(existingVessel.gameObject);
+            }
+
+            vesselProto.Load(HighLogic.CurrentGame.flightState);
             if (vesselProto.vesselRef == null)
             {
                 LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} failed to create a vessel!");

@@ -10,8 +10,6 @@ namespace LunaCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.Remove;
         
         public bool AddToKillList;
-        public bool FastKill;
-        public bool Force;
 
         public override string ClassName { get; } = nameof(VesselRemoveMsgData);
 
@@ -20,8 +18,6 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
             
             lidgrenMsg.Write(AddToKillList);
-            lidgrenMsg.Write(FastKill);
-            lidgrenMsg.Write(Force);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -29,13 +25,11 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
             
             AddToKillList = lidgrenMsg.ReadBoolean();
-            FastKill = lidgrenMsg.ReadBoolean();
-            Force = lidgrenMsg.ReadBoolean();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(bool) * 3;
+            return base.InternalGetMessageSize() + sizeof(bool);
         }
     }
 }

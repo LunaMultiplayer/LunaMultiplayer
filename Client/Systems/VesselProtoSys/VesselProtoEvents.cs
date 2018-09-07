@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.ShareScienceSubject;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselUtilities;
@@ -30,21 +31,29 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Called when a vessel is initiated.
         /// </summary>
-        public void VesselCreate(Vessel data)
+        public void VesselInitialized(Vessel vessel, bool fromShipAssembly)
         {
+            if (vessel == null) return;
+
             //The vessel is being created by the loader
-            if (VesselLoader.CurrentlyLoadingVesselId == data.id)
+            if (VesselLoader.CurrentlyLoadingVesselId == vessel.id || fromShipAssembly)
                 return;
             
-            //This happens when vessel crashes
+            //This happens when the vessel you're spectating crashes
             if (VesselCommon.IsSpectating)
             {
-                VesselRemoveSystem.Singleton.AddToKillList(data.id, "Tried to create a new vessel while spectating");
+                VesselRemoveSystem.Singleton.AddToKillList(vessel.id, "Tried to create a new vessel while spectating");
+                VesselRemoveSystem.Singleton.KillVessel(vessel.id, "Tried to create a new vessel while spectating");
                 return;
             }
 
-            System.MessageSender.SendVesselMessage(data, false);
-            LockSystem.Singleton.AcquireUpdateLock(data.id, true);
+            //It's a debris vessel that we made it
+            if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
+            {
+                System.MessageSender.SendVesselMessage(vessel, false);
+                LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
+                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
+            }
         }
 
         /// <summary>
@@ -60,17 +69,33 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Triggered when the vessel parts change. We use this to detect if we are spectating and our vessel is different than the controller. 
-        /// If that's the case we trigger a reload
+        /// Triggered when the vessel parts change.
         /// </summary>
-        public void VesselPartCountChangedInSpectatingVessel(Vessel vessel)
+        public void VesselPartCountChanged(Vessel vessel)
         {
             if (vessel == null) return;
-            
-            if (!VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id != vessel.id) return;
 
-            if (vessel.protoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
+            //This event is called when the vessel is being created and we don't want to send protos of vessels we don't own or while our vessel is not 100% loaded (FlightReady)
+            if (vessel.vesselSpawning) return;
+
+            //We are spectating and the vessel has been modified so trigger a reload
+            if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id && vessel.protoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
+            {
                 VesselLoader.LoadVessel(vessel.protoVessel);
+                return;
+            }
+
+            if (!LockSystem.LockQuery.UpdateLockExists(vessel.id))
+            {
+                LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
+                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+            }
+
+            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            {
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+            }
         }
         
         /// <summary>

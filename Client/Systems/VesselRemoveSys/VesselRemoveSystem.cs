@@ -1,8 +1,8 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens;
+using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Localization;
-using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselPositionSys;
+using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
@@ -33,8 +33,6 @@ namespace LunaClient.Systems.VesselRemoveSys
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
         private static ConcurrentQueue<VesselRemoveEntry> VesselsToRemove { get; set; } = new ConcurrentQueue<VesselRemoveEntry>();
         private static ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
-
-        public Guid ManuallyKillingVesselId = Guid.Empty;
 
         #endregion
 
@@ -100,33 +98,40 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// Kills and unloads a vessel.
+        /// Kills a vessel.
         /// </summary>
-        public void KillVessel(Guid vesselId, string reason, bool switchVessel = true, bool removeFromStore = true)
+        public void KillVessel(Guid vesselId, string reason)
         {
-            //ALWAYS remove it from the proto store as this dictionary is maintained even if we are in the KSC
-            //This means that while in KSC if we receive a vessel remove msg, our FlightGlobals.Vessels will be empty
-            //But our VesselsProtoStore probably contains that vessel that must be removed.
-            if (removeFromStore)
-            {
-                VesselPositionSystem.Singleton.RemoveVessel(vesselId);
-                VesselFlightStateSystem.Singleton.RemoveVessel(vesselId);
-            }
+            VesselCommon.RemoveVesselFromSystems(vesselId);
+
             var killVessel = FlightGlobals.FindVessel(vesselId);
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}. Reason: {reason}");
-            if (switchVessel)
+            SwitchVesselIfKillingActiveVessel(killVessel);
+
+            try
             {
-                SwitchVesselIfSpectating(killVessel);
+                if (FlightGlobals.fetch.VesselTarget?.GetVessel().id == killVessel.id)
+                {
+                    FlightGlobals.fetch.SetVesselTarget(null);
+                }
+
+                FlightGlobals.RemoveVessel(killVessel);
+                foreach (var part in killVessel.parts)
+                {
+                    UnityEngine.Object.Destroy(part.gameObject);
+                }
+                UnityEngine.Object.Destroy(killVessel.gameObject);
+
+                HighLogic.CurrentGame.flightState.protoVessels.RemoveAll(v => v == null || v.vesselID == killVessel.id);
+                KSCVesselMarkers.fetch?.RefreshMarkers();
             }
-
-            UnloadVesselFromGame(killVessel);
-            KillGivenVessel(killVessel);
-            UnloadVesselFromScenario(killVessel);
-
-            //When vessel.Die() is called, KSP calls RefreshMarkers() so no need to call it ourselves
+            catch (Exception killException)
+            {
+                LunaLog.LogError($"[LMP]: Error destroying vessel: {killException}");
+            }
         }
 
         #endregion
@@ -166,83 +171,20 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         #region Private methods
 
-        private static void SwitchVesselIfSpectating(Vessel killVessel)
+        private static void SwitchVesselIfKillingActiveVessel(Vessel killVessel)
         {
             if (FlightGlobals.ActiveVessel?.id == killVessel.id)
             {
+                FlightGlobals.fetch.SetVesselTarget(null);
+
                 //Try to switch to a nearby loaded vessel...
-                var otherVessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v != null && v.id != killVessel.id);
-
-                //No nearby vessel detected... Get a random vessel and switch to it if exists, otherwise go to spacecenter
-                if (otherVessel == null)
-                    otherVessel = FlightGlobals.Vessels.FirstOrDefault(v => v != null && v.id != killVessel.id);
-
+                var otherVessel = FlightGlobals.FindNearestControllableVessel(killVessel);
                 if (otherVessel != null)
                     FlightGlobals.ForceSetActiveVessel(otherVessel);
                 else
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
 
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SpectatingRemoved, 10f, ScreenMessageStyle.UPPER_CENTER);
-            }
-        }
-
-        /// <summary>
-        /// Removes the vessel from the scenario. 
-        /// If you don't call this, the vessel will still be found in FlightGlobals.Vessels
-        /// </summary>
-        private static void UnloadVesselFromScenario(Vessel killVessel)
-        {
-            try
-            {
-                HighLogic.CurrentGame.DestroyVessel(killVessel);
-                HighLogic.CurrentGame.Updated();
-            }
-            catch (Exception destroyException)
-            {
-                LunaLog.LogError($"[LMP]: Error destroying vessel from the scenario: {destroyException}");
-            }
-        }
-
-        /// <summary>
-        /// Kills the vessel
-        /// </summary>
-        private void KillGivenVessel(Vessel killVessel)
-        {
-            try
-            {
-
-                if (killVessel == null) return;
-
-                ManuallyKillingVesselId = killVessel.id;
-
-                //CAUTION!!!!! This method will call our event "VesselRemoveEvents.OnVesselWillDestroy" Check the method to see what can happen!
-                killVessel.Die();
-            }
-            catch (Exception killException)
-            {
-                LunaLog.LogError($"[LMP]: Error destroying vessel: {killException}");
-            }
-            finally
-            {
-                ManuallyKillingVesselId = Guid.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Unload the vessel so the crew is kiled when we remove the vessel.
-        /// </summary>
-        private static void UnloadVesselFromGame(Vessel killVessel)
-        {
-            if (killVessel.loaded)
-            {
-                try
-                {
-                    killVessel.Unload();
-                }
-                catch (Exception unloadException)
-                {
-                    LunaLog.LogError($"[LMP]: Error unloading vessel: {unloadException}");
-                }
             }
         }
 

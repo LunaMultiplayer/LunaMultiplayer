@@ -2,7 +2,6 @@
 using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselUtilities;
 using System;
 
@@ -139,10 +138,6 @@ namespace LunaClient.Systems.KerbalSys
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
             if (dyingVessel == null) return;
-            
-            //We are MANUALLY killing a vessel and it's NOT KSP who is calling this method so ignore all the logic of below
-            if (VesselRemoveSystem.Singleton.ManuallyKillingVesselId == dyingVessel.id)
-                return;
 
             //Only send the vessel remove msg if we own the unloaded update lock
             if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) || dyingVessel.id == _recoveringTerminatingVesselId)

@@ -41,10 +41,10 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnEnabled();
 
-            GameEvents.onVesselCreate.Add(VesselProtoEvents.VesselCreate);
+            VesselInitializeEvent.onVesselInitialized.Add(VesselProtoEvents.VesselInitialized);
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
             GameEvents.onGameSceneLoadRequested.Add(VesselProtoEvents.OnSceneRequested);
-            GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChangedInSpectatingVessel);
+            GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChanged);
 
             GameEvents.OnTriggeredDataTransmission.Add(VesselProtoEvents.TriggeredDataTransmission);
             GameEvents.OnExperimentStored.Add(VesselProtoEvents.ExperimentStored);
@@ -58,10 +58,10 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnDisabled();
 
-            GameEvents.onVesselCreate.Remove(VesselProtoEvents.VesselCreate);
+            VesselInitializeEvent.onVesselInitialized.Remove(VesselProtoEvents.VesselInitialized);
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
             GameEvents.onGameSceneLoadRequested.Remove(VesselProtoEvents.OnSceneRequested);
-            GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChangedInSpectatingVessel);
+            GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChanged);
 
             GameEvents.OnTriggeredDataTransmission.Remove(VesselProtoEvents.TriggeredDataTransmission);
             GameEvents.OnExperimentStored.Remove(VesselProtoEvents.ExperimentStored);

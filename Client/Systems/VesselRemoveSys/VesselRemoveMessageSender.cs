@@ -20,15 +20,13 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// Sends a vessel remove to the server. If keepVesselInRemoveList is set to true, the vessel will be removed for good and the server
         /// will skip future updates related to this vessel
         /// </summary>
-        public void SendVesselRemove(Guid vesselId, bool keepVesselInRemoveList = true, bool forceServerSideRemove = false, bool fastKill = false)
+        public void SendVesselRemove(Guid vesselId, bool keepVesselInRemoveList = true)
         {
             LunaLog.Log($"[LMP]: Removing {vesselId} from the server");
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselRemoveMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vesselId;
             msgData.AddToKillList = keepVesselInRemoveList;
-            msgData.FastKill = keepVesselInRemoveList || fastKill;
-            msgData.Force = forceServerSideRemove;
 
             SendMessage(msgData);
         }

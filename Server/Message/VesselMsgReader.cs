@@ -7,7 +7,6 @@ using Server.Context;
 using Server.Log;
 using Server.Message.Base;
 using Server.Server;
-using Server.Settings.Structures;
 using Server.System;
 using System;
 using System.Linq;
@@ -73,10 +72,7 @@ namespace Server.Message
         {
             var data = (VesselRemoveMsgData) message;
 
-            if (data.Force)
-                LunaLog.Debug($"Received a FORCED remove against vessel {data.VesselId} from {client.PlayerName}");
-
-            if (!data.Force && LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
+            if (LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
                 return;
 
             if (VesselStoreSystem.VesselExists(data.VesselId))
@@ -89,7 +85,7 @@ namespace Server.Message
                 VesselContext.RemovedVessels.Add(data.VesselId);
 
             //Relay the message.
-            MessageQueuer.SendToAllClients<VesselSrvMsg>(data);
+            MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
         }
 
         private static void HandleVesselProto(ClientStructure client, VesselBaseMsgData message)

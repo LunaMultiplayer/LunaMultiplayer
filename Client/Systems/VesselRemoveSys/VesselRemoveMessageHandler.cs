@@ -22,7 +22,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.AddToKillList(msgData.VesselId, "Received a vessel remove message from server");
 
             //Do a simple kill and accept future updates of that vessel instead of just ignoring them
-            if (msgData.FastKill || !msgData.AddToKillList)
+            if (!msgData.AddToKillList)
                 System.KillVessel(msgData.VesselId, "Received a fast vessel kill message from server");
         }
     }

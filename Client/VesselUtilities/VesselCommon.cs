@@ -7,6 +7,8 @@ using LunaClient.Systems.VesselRemoveSys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPositionSys;
 using UnityEngine;
 
 namespace LunaClient.VesselUtilities
@@ -65,6 +67,15 @@ namespace LunaClient.VesselUtilities
         {
             return LockSystem.LockQuery.GetAllControlLocks()
                 .Select(v => v.VesselId);
+        }
+
+        /// <summary>
+        /// Removes the specified vessel from the vessel systems
+        /// </summary>
+        public static void RemoveVesselFromSystems(Guid vesselId)
+        {
+            VesselPositionSystem.Singleton.RemoveVessel(vesselId);
+            VesselFlightStateSystem.Singleton.RemoveVessel(vesselId);
         }
 
         /// <summary>

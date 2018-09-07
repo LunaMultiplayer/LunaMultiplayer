@@ -19,13 +19,11 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
-            //We are MANUALLY killing a vessel and it's NOT KSP who is calling this method so ignore all the logic of below
-            if (System.ManuallyKillingVesselId == dyingVessel.id)
-                return;
-
             //Only send the vessel remove msg if we own the unloaded update lock
             if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) || dyingVessel.id == _recoveringTerminatingVesselId)
             {
+                var ownVesselDying = FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == dyingVessel.id;
+
                 var reason = dyingVessel.id == _recoveringTerminatingVesselId ? "Recovered/Terminated" : "Destroyed";
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: {reason}");
 
@@ -33,7 +31,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.AddToKillList(dyingVessel.id, "OnVesselWillDestroy - " + reason);
 
                 //If we are killing our own vessel there's the possibility that the player hits "revert" so in this case DO NOT keep it in the remove list
-                System.MessageSender.SendVesselRemove(dyingVessel.id, false);
+                System.MessageSender.SendVesselRemove(dyingVessel.id, !ownVesselDying);
 
                 //Vessel is dead so remove the locks after 1500ms to get the debris locks if any
                 LockSystem.Singleton.ReleaseAllVesselLocks(dyingVessel.GetVesselCrew().Select(c => c.name), dyingVessel.id, 1500);
@@ -60,8 +58,6 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             //Vessel is recovered so remove the locks
             LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c => c.name), recoveredVessel.vesselID);
-
-            System.KillVessel(_recoveringTerminatingVesselId, "Recovering vessel");
         }
 
         /// <summary>
@@ -107,8 +103,6 @@ namespace LunaClient.Systems.VesselRemoveSys
                 LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
                 RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
                 System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
-
-                System.KillVessel(FlightGlobals.ActiveVessel.id, "Reverted to editor", false);
             }
         }
 

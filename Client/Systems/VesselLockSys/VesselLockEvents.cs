@@ -33,6 +33,13 @@ namespace LunaClient.Systems.VesselLockSys
                 //We switched to a vessel that is controlled by another player so start spectating
                 System.StartSpectating(vessel.id);
             }
+            else
+            {
+                LockSystem.Singleton.AcquireControlLock(vessel.id);
+                LockSystem.Singleton.AcquireUpdateLock(vessel.id);
+                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id);
+                LockSystem.Singleton.AcquireKerbalLock(vessel);
+            }
         }
 
         /// <summary>
