@@ -53,6 +53,8 @@ namespace LunaClient.Systems.SafetyBubble
 
         public bool VesselIsHidden(Guid vesselId) => HiddenVessels.Contains(vesselId);
 
+        public bool RemoveVessel(Guid vesselId) => HiddenVessels.Remove(vesselId);
+
         /// <summary>
         /// Hides or unhides a vessel so you can't see it nor interact with it
         /// </summary>
