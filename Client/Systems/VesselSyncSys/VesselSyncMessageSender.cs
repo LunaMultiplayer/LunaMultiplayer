@@ -1,12 +1,11 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.VesselStore;
+using LunaClient.Systems.TimeSyncer;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
-using LunaClient.Systems.TimeSyncer;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselSyncSys
@@ -23,7 +22,7 @@ namespace LunaClient.Systems.VesselSyncSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselSyncMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
 
-            var vesselIds = VesselsProtoStore.AllPlayerVessels.Keys.ToArray();
+            var vesselIds = FlightGlobals.Vessels.Where(v=> v!= null).Select(v => v.id).ToArray();
             msgData.VesselsCount = vesselIds.Length;
 
             //Always clear the array just for safety...

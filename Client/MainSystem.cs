@@ -306,7 +306,7 @@ namespace LunaClient
         public void HandleException(Exception e, string eventName)
         {
             LunaLog.LogError($"[LMP]: Threw in {eventName} event, exception: {e}");
-            NetworkConnection.Disconnect($"Unhandled error in main system! Detail: {eventName}");
+            NetworkConnection.Disconnect($"Unhandled error in {eventName} event! exception: {eventName}");
             StopGame();
             NetworkState = ClientState.Disconnected;
         }
@@ -328,7 +328,7 @@ namespace LunaClient
             if (HighLogic.LoadedScene != GameScenes.MAINMENU)
                 HighLogic.LoadScene(GameScenes.MAINMENU);
             BodiesGees.Clear();
-
+            FlightGlobals.Vessels.Clear();
             var craftBrowser = FindObjectOfType<CraftBrowserDialog>();
             if (craftBrowser != null)
             {

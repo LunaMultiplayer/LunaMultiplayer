@@ -2,7 +2,6 @@
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.VesselStore;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
@@ -22,11 +21,10 @@ namespace LunaClient.Systems.VesselEvaSys
             if (LockSystem.LockQuery.ControlLockBelongsToPlayer(msgData.VesselId, SettingsSystem.CurrentSettings.PlayerName))
                 return;
 
-            //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
-            VesselsProtoStore.UpdateVesselProtoEvaFsm(msgData);
-
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null || !vessel.isEVA) return;
+
+            System.UpdateFsmStateInProtoVessel(vessel.protoVessel, msgData.NewState, msgData.LastBoundStep);
 
             try
             {

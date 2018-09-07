@@ -70,7 +70,6 @@ namespace LunaClient.Systems.KerbalSys
             GameEvents.onVesselWillDestroy.Add(KerbalEvents.OnVesselWillDestroy);
 
             VesselLoadEvent.onLmpVesselLoaded.Add(KerbalEvents.OnVesselLoaded);
-            VesselReloadEvent.onLmpVesselReloaded.Add(KerbalEvents.OnVesselReloaded);
         }
 
         protected override void OnDisabled()
@@ -88,7 +87,6 @@ namespace LunaClient.Systems.KerbalSys
             GameEvents.onVesselWillDestroy.Remove(KerbalEvents.OnVesselWillDestroy);
 
             VesselLoadEvent.onLmpVesselLoaded.Remove(KerbalEvents.OnVesselLoaded);
-            VesselReloadEvent.onLmpVesselReloaded.Remove(KerbalEvents.OnVesselReloaded);
         }
 
         #endregion

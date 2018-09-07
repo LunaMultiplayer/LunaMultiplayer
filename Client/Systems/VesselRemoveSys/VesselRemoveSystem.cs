@@ -1,10 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Localization;
-using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
-using LunaClient.VesselStore;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
@@ -50,7 +48,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
-            GameEvents.onLevelWasLoaded.Add(VesselRemoveEvents.LevelLoaded);
 
             RevertEvent.onRevertedToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onRevertedToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
@@ -67,7 +64,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
-            GameEvents.onLevelWasLoaded.Remove(VesselRemoveEvents.LevelLoaded);
 
             RevertEvent.onRevertedToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onRevertedToPrelaunch.Remove(VesselRemoveEvents.OnRevertToEditor);
@@ -113,7 +109,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             //But our VesselsProtoStore probably contains that vessel that must be removed.
             if (removeFromStore)
             {
-                VesselsProtoStore.RemoveVessel(vesselId);
                 VesselPositionSystem.Singleton.RemoveVessel(vesselId);
                 VesselFlightStateSystem.Singleton.RemoveVessel(vesselId);
             }
@@ -132,24 +127,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             UnloadVesselFromScenario(killVessel);
 
             //When vessel.Die() is called, KSP calls RefreshMarkers() so no need to call it ourselves
-        }
-
-        /// <summary>
-        /// Removes the vessels that are inside the safety bubble
-        /// </summary>
-        public void RemoveVesselsInSafetyBubble()
-        {
-            foreach (var vessel in FlightGlobals.Vessels.ToArray())
-            {
-                if (vessel != null && SafetyBubbleSystem.Singleton.IsInSafetyBubble(vessel) && FlightGlobals.ActiveVessel?.id != vessel.id)
-                {
-                    LunaLog.Log($"[LMP]: Killing vessel {vessel.id} because it's inside safety bubble");
-
-                    UnloadVesselFromGame(vessel);
-                    KillGivenVessel(vessel);
-                    UnloadVesselFromScenario(vessel);
-                }
-            }
         }
 
         #endregion
@@ -194,11 +171,11 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (FlightGlobals.ActiveVessel?.id == killVessel.id)
             {
                 //Try to switch to a nearby loaded vessel...
-                var otherVessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id != killVessel.id);
+                var otherVessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v != null && v.id != killVessel.id);
 
                 //No nearby vessel detected... Get a random vessel and switch to it if exists, otherwise go to spacecenter
                 if (otherVessel == null)
-                    otherVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id != killVessel.id);
+                    otherVessel = FlightGlobals.Vessels.FirstOrDefault(v => v != null && v.id != killVessel.id);
 
                 if (otherVessel != null)
                     FlightGlobals.ForceSetActiveVessel(otherVessel);

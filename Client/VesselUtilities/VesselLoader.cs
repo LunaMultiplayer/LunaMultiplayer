@@ -3,128 +3,55 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselSwitcherSys;
-using LunaClient.VesselStore;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using UniLinq;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace LunaClient.VesselUtilities
 {
     public class VesselLoader
     {
-        public static Guid ReloadingVesselId { get; set; }
-
-        /// <summary>
-        /// Here we hold all the messages of "Target: xxx" message created by SetVesselTarget to remove them when we reload a vessel and set
-        /// back the target to it
-        /// </summary>
-        private static List<ScreenMessage> MessagesToRemove { get; } = new List<ScreenMessage>();
+        public static Guid CurrentlyLoadingVesselId;
 
         /// <summary>
         /// Invoke this private method to rebuild the vessel lists that appear on the tracking station
         /// </summary>
         private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        private static readonly MethodInfo Load = typeof(ProtoVessel).GetMethod("Load", BindingFlags.NonPublic | BindingFlags.Instance);
+
         /// <summary>
-        /// Load a vessel into the game
+        /// Loads/reloads a vessel into game
         /// </summary>
         public static bool LoadVessel(ProtoVessel vesselProto)
         {
             try
             {
-                return LoadVesselImpl(vesselProto);
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error loading vessel: {e}");
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Reloads an existing vessel into the game. Try to avoid this method as possible. It has really bad performance and
-        /// works really bad if you are reloading your own current vessel...
-        /// </summary>
-        public static bool ReloadVessel(ProtoVessel vesselProto)
-        {
-            if (vesselProto == null) return false;
-
-            LunaLog.Log($"Reloading vessel {vesselProto.vesselID}");
-            ReloadingVesselId = vesselProto.vesselID;
-            try
-            {
-                //Are we realoading our current active vessel?
-                var reloadingCurrentVessel = FlightGlobals.ActiveVessel?.id == vesselProto.vesselID;
-
-                //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
-                var currentTargetId = FlightGlobals.fetch.VesselTarget?.GetVessel()?.id;
-
-                //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
-                //Bear in mind that UnloadVessel will trigger VesselRemoveEvents.OnVesselWillDestroy!! So be sure to set ReloadingVesselId correctly
-                VesselRemoveSystem.Singleton.KillVessel(vesselProto.vesselID, "Reloading vessel", false, false);
-                if (LoadVesselImpl(vesselProto))
-                {
-                    //Case when the target is the vessel we are changing
-                    if (currentTargetId == vesselProto.vesselID)
-                    {
-                        //Record the time immediately before calling SetVesselTarget to remove it's message
-                        var currentTime = Time.realtimeSinceStartup;
-                        FlightGlobals.fetch.SetVesselTarget(vesselProto.vesselRef, true);
-
-                        RemoveSetTargetMessages(currentTime);
-                    }
-
-                    if (reloadingCurrentVessel)
-                    {
-                        OrbitPhysicsManager.HoldVesselUnpack();
-                        FlightGlobals.fetch.activeVessel.GoOnRails();
-                        VesselSwitcherSystem.Singleton.SwitchToVessel(vesselProto.vesselID);
-                    }
-
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error reloading vessel: {e}");
-                return false;
-            }
-            finally
-            {
-                ReloadingVesselId = Guid.Empty;
-            }
-        }
-
-        #region Private methods
-
-        /// <summary>
-        /// Performs the operation of actually loading the vessel into the game.  Does not handle errors.
-        /// </summary>
-        /// <param name="vesselProto"></param>
-        private static bool LoadVesselImpl(ProtoVessel vesselProto)
-        {
-            if (ProtoVesselValidationsPassed(vesselProto))
-            {
-                if (FlightGlobals.FindVessel(vesselProto.vesselID) == null)
+                CurrentlyLoadingVesselId = vesselProto.vesselID;
+                if (ProtoVesselValidationsPassed(vesselProto))
                 {
                     RegisterServerAsteriodIfVesselIsAsteroid(vesselProto);
                     FixProtoVesselFlags(vesselProto);
                     GetLatestProtoVesselPosition(vesselProto);
+
                     return LoadVesselIntoGame(vesselProto);
                 }
 
-                LunaLog.LogError($"A vessel with id '{vesselProto.vesselID}' already exists. Cannot load the same vessel again");
+                return false;
             }
-
-            return false;
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error loading vessel: {e}");
+                return false;
+            }
+            finally
+            {
+                CurrentlyLoadingVesselId = Guid.Empty;
+            }
         }
+
+        #region Private methods
 
         /// <summary>
         /// Asks the vessel position system for the last known position of a vessel
@@ -204,7 +131,7 @@ namespace LunaClient.VesselUtilities
         {
             //Register asteroids from other players
             if (ProtoVesselIsAsteroid(possibleAsteroid))
-                AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
+                AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID);
         }
 
         /// <summary>
@@ -220,45 +147,42 @@ namespace LunaClient.VesselUtilities
         /// <summary>
         /// Loads the vessel proto into the current game
         /// </summary>
-        private static bool LoadVesselIntoGame(ProtoVessel currentProto)
+        private static bool LoadVesselIntoGame(ProtoVessel vesselProto)
         {
             if (HighLogic.CurrentGame?.flightState == null)
                 return false;
+            
+            Load.Invoke(vesselProto, new object[] { HighLogic.CurrentGame.flightState, FlightGlobals.FindVessel(vesselProto.vesselID) });
 
-            LunaLog.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
-            currentProto.Load(HighLogic.CurrentGame.flightState);
-
-            if (currentProto.vesselRef == null)
+            if (vesselProto.vesselRef == null)
             {
-                LunaLog.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
+                LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} failed to create a vessel!");
                 return false;
             }
 
-            if (currentProto.vesselRef.isEVA)
+            vesselProto.vesselRef.protoVessel = vesselProto;
+            if (vesselProto.vesselRef.isEVA)
             {
-                var evaModule = currentProto.vesselRef.FindPartModuleImplementing<KerbalEVA>();
+                var evaModule = vesselProto.vesselRef.FindPartModuleImplementing<KerbalEVA>();
                 if (evaModule != null && evaModule.fsm != null && !evaModule.fsm.Started)
                 {
                     evaModule.fsm?.StartFSM("Idle (Grounded)");
                 }
-                currentProto.vesselRef.GoOnRails();
+                vesselProto.vesselRef.GoOnRails();
             }
 
-            if (currentProto.vesselRef.situation > Vessel.Situations.PRELAUNCH)
+            if (vesselProto.vesselRef.situation > Vessel.Situations.PRELAUNCH)
             {
-                currentProto.vesselRef.orbitDriver.updateFromParameters();
+                vesselProto.vesselRef.orbitDriver.updateFromParameters();
             }
 
-            if (double.IsNaN(currentProto.vesselRef.orbitDriver.pos.x))
+            if (double.IsNaN(vesselProto.vesselRef.orbitDriver.pos.x))
             {
-                LunaLog.Log($"[LMP]: Protovessel {currentProto.vesselID} has an invalid orbit");
-                if (VesselsProtoStore.AllPlayerVessels.TryGetValue(currentProto.vesselID, out var protoUpdate))
-                    protoUpdate.HasInvalidOrbit = true;
-
+                LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} has an invalid orbit");
                 return false;
             }
 
-            PlayerColorSystem.Singleton.SetVesselOrbitColor(currentProto.vesselRef);
+            PlayerColorSystem.Singleton.SetVesselOrbitColor(vesselProto.vesselRef);
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
             {
                 //When in trackstation rebuild the vessels left panel as otherwise the new vessel won't be listed
@@ -267,26 +191,10 @@ namespace LunaClient.VesselUtilities
                     BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
 
-            if(HighLogic.LoadedScene == GameScenes.SPACECENTER)
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                 KSCVesselMarkers.fetch?.RefreshMarkers();
 
             return true;
-        }
-
-        /// <summary>
-        /// This method removes the "Target: xxx" message created by SetVesselTarget
-        /// </summary>
-        private static void RemoveSetTargetMessages(float currentTime)
-        {
-            MessagesToRemove.Clear();
-
-            //If the message started on or after the SetVesselTarget call time, remove it
-            MessagesToRemove.AddRange(ScreenMessages.Instance.ActiveMessages.Where(m => m.startTime >= currentTime));
-
-            foreach (var message in MessagesToRemove)
-            {
-                ScreenMessages.RemoveMessage(message);
-            }
         }
 
         #endregion

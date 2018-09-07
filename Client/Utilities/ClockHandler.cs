@@ -52,7 +52,7 @@ namespace LunaClient.Utilities
             if (FlightGlobals.Vessels != null)
             {
                 VesselsToPack.Clear();
-                VesselsToPack.AddRange(FlightGlobals.Vessels.Where(v => !v.packed));
+                VesselsToPack.AddRange(FlightGlobals.Vessels.Where(v => v != null && !v.packed));
                 foreach (var vessel in VesselsToPack)
                 {
                     try

@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -15,9 +14,6 @@ namespace LunaClient.Systems.VesselResourceSys
         public void HandleMessage(IServerMessageBase msg)
         {
             if (!(msg.Data is VesselResourceMsgData msgData)) return;
-
-            //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
-            VesselsProtoStore.UpdateVesselProtoResources(msgData);
 
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null) return;

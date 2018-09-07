@@ -11,7 +11,7 @@ namespace LunaClient.Systems.FlagPlant
             if(data.vessel.id == Guid.Empty)
                 data.vessel.id = Guid.NewGuid();
 
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.vessel, true, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.vessel, false);
         }
     }
 }

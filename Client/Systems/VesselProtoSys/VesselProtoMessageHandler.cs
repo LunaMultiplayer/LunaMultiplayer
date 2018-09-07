@@ -1,11 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.VesselStore;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using LunaCommon.Message.Types;
-using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -16,24 +13,27 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(msg.Data is VesselBaseMsgData msgData)) return;
+            if (!(msg.Data is VesselProtoMsgData msgData)) return;
 
-            switch (msgData.VesselMessageType)
+            //We don't call VesselCommon.DoVesselChecks(msgData.VesselId) because we may receive a 
+            //proto update on our own vessel (when someone docks against us and we don't detect it for example
+            //Therefore, we must manually call VesselWillBeKilled and implement only 1 of the checks
+            if (VesselRemoveSystem.Singleton.VesselWillBeKilled(msgData.VesselId))
+                return;
+
+            if (!System.VesselProtos.ContainsKey(msgData.VesselId))
             {
-                case VesselMessageType.Proto:
-                    HandleVesselProto((VesselProtoMsgData)msgData);
-                    break;
-                default:
-                    LunaLog.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
-                    break;
+                System.VesselProtos.TryAdd(msgData.VesselId, new VesselProtoQueue());
             }
-        }
-
-        private static void HandleVesselProto(VesselProtoMsgData messageData)
-        {
-            if (!VesselRemoveSystem.Singleton.VesselWillBeKilled(messageData.VesselId) && messageData.VesselId != Guid.Empty)
+            if (System.VesselProtos.TryGetValue(msgData.VesselId, out var queue))
             {
-                VesselsProtoStore.HandleVesselProtoData(messageData.Data, messageData.NumBytes, messageData.VesselId, messageData.ForceReload, messageData.GameTime);
+                if (queue.TryPeek(out var update) && update.GameTime > msgData.GameTime)
+                {
+                    //A user reverted, so clear his message queue and start from scratch
+                    queue.Clear();
+                }
+
+                queue.Enqueue(msgData);
             }
         }
     }

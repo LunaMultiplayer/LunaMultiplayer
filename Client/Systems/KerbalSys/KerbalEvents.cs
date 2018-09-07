@@ -139,11 +139,7 @@ namespace LunaClient.Systems.KerbalSys
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
             if (dyingVessel == null) return;
-
-            //We are just reloading a vessel and the vessel.Die() was triggered so we should not do anything!
-            if (VesselLoader.ReloadingVesselId == dyingVessel.id)
-                return;
-
+            
             //We are MANUALLY killing a vessel and it's NOT KSP who is calling this method so ignore all the logic of below
             if (VesselRemoveSystem.Singleton.ManuallyKillingVesselId == dyingVessel.id)
                 return;
@@ -162,18 +158,6 @@ namespace LunaClient.Systems.KerbalSys
         /// Whenever we load a vessel trigger a refresh of the astronaut complex if we are in it
         /// </summary>
         public void OnVesselLoaded(Vessel data)
-        {
-            if (System.AstronautComplex != null)
-            {
-                HighLogic.CurrentGame.Updated();
-                System.RefreshCrewDialog();
-            }
-        }
-
-        /// <summary>
-        /// Whenever we reload a vessel trigger a refresh of the astronaut complex if we are in it
-        /// </summary>
-        public void OnVesselReloaded(Vessel data)
         {
             if (System.AstronautComplex != null)
             {

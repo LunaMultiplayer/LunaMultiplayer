@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Generic;
@@ -70,7 +69,7 @@ namespace LunaClient.Systems.VesselFairingsSys
             for (var i = 0; i < proceduralFairingModules.Count; i++)
             {
                 var module = proceduralFairingModules[i];
-                var storeValue = GetFairingStateFromStore(vessel.id, module.part.flightID);
+                var storeValue = module.snapshot.moduleValues.GetValue("fsm"); ;
 
                 if (storeValue == "st_idle" && FsmField?.GetValue(module) is KerbalFSM fsm && fsm.currentStateName == "st_flight_deployed")
                 {
@@ -80,24 +79,7 @@ namespace LunaClient.Systems.VesselFairingsSys
                 }
             }
         }
-
-        public string GetFairingStateFromStore(Guid vesselId, uint partFlightId)
-        {
-            if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselId, out var vesselProtoUpd))
-            {
-                var protoVessel = vesselProtoUpd.ProtoVessel;
-
-                var protoPart = VesselCommon.FindProtoPartInProtovessel(protoVessel, partFlightId);
-                if (protoPart == null) return null;
-
-                var protoModule = VesselCommon.FindProtoPartModuleInProtoPart(protoPart, "ModuleProceduralFairing");
-
-                return protoModule?.moduleValues.GetValue("fsm");
-            }
-
-            return null;
-        }
-
+        
         public void UpdateFairingsValuesInProtoVessel(ProtoVessel protoVessel, uint partFlightId)
         {
             if (protoVessel == null) return;

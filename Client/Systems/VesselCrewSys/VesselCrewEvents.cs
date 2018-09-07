@@ -25,7 +25,7 @@ namespace LunaClient.Systems.VesselCrewSys
                 VesselRemoveSystem.Singleton.AddToKillList(kerbalVessel.id, "Killing kerbal as it boarded a vessel");
                 LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalVessel.vesselName }, kerbalVessel.id);
 
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true, false);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
             }
         }
 
@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, false);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace LunaClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, false);
         }
     }
 }

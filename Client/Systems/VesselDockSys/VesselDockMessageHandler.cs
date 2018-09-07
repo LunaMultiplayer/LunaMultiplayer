@@ -4,7 +4,6 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -22,9 +21,6 @@ namespace LunaClient.Systems.VesselDockSys
             if (!(msg.Data is VesselDockMsgData msgData)) return;
 
             LunaLog.Log("Docking message received!");
-
-            //Add the new vessel data to the store
-            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.NumBytes, msgData.DominantVesselId, false);
 
             if (FlightGlobals.ActiveVessel?.id == msgData.WeakVesselId)
             {
@@ -62,10 +58,10 @@ namespace LunaClient.Systems.VesselDockSys
                  */
                 LunaLog.Log($"Creating the missing parts in our own vessel. Current: {FlightGlobals.ActiveVessel.parts.Count} Expected: {newProto.protoPartSnapshots.Count}");
                 //ProtoToVesselRefresh.CreateMissingPartsInCurrentProtoVessel(FlightGlobals.ActiveVessel, newProto);
-                VesselLoader.ReloadVessel(newProto);
+                VesselLoader.LoadVessel(newProto);
 
                 LunaLog.Log("Force sending the new proto vessel");
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, false);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
 
                 WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
                 return;

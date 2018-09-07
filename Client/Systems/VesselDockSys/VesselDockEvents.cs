@@ -4,7 +4,6 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
@@ -79,10 +78,8 @@ namespace LunaClient.Systems.VesselDockSys
 
             LunaLog.Log("Undock detected!");
 
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, true, true);
-            VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel1);
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2, true, true);
-            VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel2);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, true);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2, true);
 
             //Release the locks of the vessel we are not in
             var crewToReleaseLocks = FlightGlobals.ActiveVessel?.id == vessel1.id

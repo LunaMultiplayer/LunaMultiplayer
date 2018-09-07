@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -19,9 +18,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             var vesselId = msgData.VesselId;
             if (!VesselCommon.DoVesselChecks(vesselId))
                 return;
-
-            //Vessel might exist in the store but not in game (while in KSC for example)
-            VesselsProtoStore.UpdateVesselProtoFlightState(msgData);
 
             //System is not ready nor in use so just skip the message
             if (!System.FlightStateSystemReady)

@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
@@ -47,7 +46,9 @@ namespace LunaClient.Windows.Locks
 
                 for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
                 {
-                    var existingVesselLock = VesselLocks.FirstOrDefault(v => v.VesselId == FlightGlobals.Vessels[i].id);
+                    if (FlightGlobals.Vessels[i] == null) continue;
+
+                    var existingVesselLock = VesselLocks.FirstOrDefault(v => v != null && v.VesselId == FlightGlobals.Vessels[i].id);
                     if (existingVesselLock == null)
                     {
                         VesselLocks.Add(new VesselLockDisplay
@@ -59,7 +60,6 @@ namespace LunaClient.Windows.Locks
                             ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id),
                             UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id),
                             UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id),
-                            ExistsInStore = VesselsProtoStore.AllPlayerVessels.ContainsKey(FlightGlobals.Vessels[i].id)
                         });
                     }
                     else
@@ -70,11 +70,10 @@ namespace LunaClient.Windows.Locks
                         existingVesselLock.ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id);
                         existingVesselLock.UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id);
                         existingVesselLock.UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id);
-                        existingVesselLock.ExistsInStore = VesselsProtoStore.AllPlayerVessels.ContainsKey(FlightGlobals.Vessels[i].id);
                     }
                 }
 
-                VesselLocks.RemoveAll(v => FlightGlobals.Vessels.All(ev => ev.id != v.VesselId));
+                VesselLocks.RemoveAll(v => !FlightGlobals.Vessels.Any(ev => ev != null && ev.id == v.VesselId));
             }
         }
 

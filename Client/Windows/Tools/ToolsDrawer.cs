@@ -1,5 +1,4 @@
 ﻿using LunaClient.Systems.TimeSyncer;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using UniLinq;
 using UnityEngine;
@@ -37,8 +36,7 @@ namespace LunaClient.Windows.Tools
             {
                 if (GUILayout.Button("Pack all vessels", ButtonStyle))
                 {
-                    var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                    foreach (var vessel in vessels)
+                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                     {
                         if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
                         vessel.vesselRanges = ToolsUtils.PackRanges;
@@ -47,8 +45,7 @@ namespace LunaClient.Windows.Tools
 
                 if (GUILayout.Button("Unpack all vessels", ButtonStyle))
                 {
-                    var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                    foreach (var vessel in vessels)
+                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                     {
                         if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
                         vessel.vesselRanges = ToolsUtils.UnPackRanges;
@@ -57,8 +54,7 @@ namespace LunaClient.Windows.Tools
 
                 if (GUILayout.Button("Reset ranges", ButtonStyle))
                 {
-                    var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                    foreach (var vessel in vessels)
+                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                     {
                         if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
                         vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
@@ -73,16 +69,16 @@ namespace LunaClient.Windows.Tools
             {
                 if (GUILayout.Button("Reload own vessel", ButtonStyle))
                 {
-                    VesselLoader.ReloadVessel(FlightGlobals.ActiveVessel?.protoVessel);
+                    VesselLoader.LoadVessel(FlightGlobals.ActiveVessel?.protoVessel);
                 }
 
                 if (GUILayout.Button("Reload other vessels", ButtonStyle))
                 {
-                    var protos = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.ProtoVessel);
+                    var protos = FlightGlobals.Vessels.Where(v => v != null).Select(v => v.protoVessel).ToList();
                     foreach (var proto in protos)
                     {
                         if (FlightGlobals.ActiveVessel?.id == proto.vesselID) continue;
-                        VesselLoader.ReloadVessel(proto);
+                        VesselLoader.LoadVessel(proto);
                     }
                 }
             }

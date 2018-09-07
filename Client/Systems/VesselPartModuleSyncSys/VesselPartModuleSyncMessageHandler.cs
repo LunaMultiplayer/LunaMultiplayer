@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.ModuleStore;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -21,10 +20,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             //We received a msg for our own controlled/updated vessel so ignore it
             if (!VesselCommon.DoVesselChecks(msgData.VesselId))
                 return;
-
-            //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
-            VesselsProtoStore.UpdateVesselProtoPartModules(msgData);
-
+            
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null) return;
 

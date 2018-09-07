@@ -2,7 +2,6 @@
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -25,7 +24,6 @@ namespace LunaClient.Systems.VesselFairingsSys
             msgData.VesselId = vessel.id;
             msgData.PartFlightId = partFlightId;
 
-            VesselsProtoStore.UpdateVesselProtoPartFairing(msgData);
             SendMessage(msgData);
         }
     }

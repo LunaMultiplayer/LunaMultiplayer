@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,8 +13,8 @@ namespace LunaClient.Systems.Asteroid
     {
         #region Fields
 
-        public List<string> ServerAsteroids { get; } = new List<string>();
-        public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
+        public List<Guid> ServerAsteroids { get; } = new List<Guid>();
+        public Dictionary<Guid, string> ServerAsteroidTrackStatus { get; } = new Dictionary<Guid, string>();
 
         public bool AsteroidSystemReady => Enabled && Time.timeSinceLevelLoad > 5f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
 
@@ -63,17 +64,17 @@ namespace LunaClient.Systems.Asteroid
             //Check for changes to tracking
             foreach (var asteroid in GetCurrentAsteroids().Where(asteroid => asteroid.state != Vessel.State.DEAD))
             {
-                if (!ServerAsteroidTrackStatus.ContainsKey(asteroid.id.ToString()))
+                if (!ServerAsteroidTrackStatus.ContainsKey(asteroid.id))
                 {
-                    ServerAsteroidTrackStatus.Add(asteroid.id.ToString(), asteroid.DiscoveryInfo.trackingStatus.Value);
+                    ServerAsteroidTrackStatus.Add(asteroid.id, asteroid.DiscoveryInfo.trackingStatus.Value);
                 }
                 else
                 {
-                    if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id.ToString()])
+                    if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id])
                     {
                         LunaLog.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
-                        ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, true, false);
+                        ServerAsteroidTrackStatus[asteroid.id] = asteroid.DiscoveryInfo.trackingStatus.Value;
+                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, false);
                     }
                 }
             }
@@ -87,10 +88,11 @@ namespace LunaClient.Systems.Asteroid
         /// Registers the server asteroid - Prevents LMP from deleting it.
         /// </summary>
         /// <param name="asteroidId">Asteroid to register</param>
-        public void RegisterServerAsteroid(string asteroidId)
+        public void RegisterServerAsteroid(Guid asteroidId)
         {
             if (!ServerAsteroids.Contains(asteroidId))
                 ServerAsteroids.Add(asteroidId);
+
             //This will ignore Status changes so we don't resend the asteroid.
             if (ServerAsteroidTrackStatus.ContainsKey(asteroidId))
                 ServerAsteroidTrackStatus.Remove(asteroidId);

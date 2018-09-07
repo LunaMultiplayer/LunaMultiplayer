@@ -298,7 +298,7 @@ namespace LunaClient.Systems.VesselLockSys
             }
 
             return FlightGlobals.Vessels
-                .Where(v => v.id != FlightGlobals.ActiveVessel?.id &&
+                .Where(v => v!= null && v.id != FlightGlobals.ActiveVessel?.id &&
                             LockSystem.LockQuery.UpdateLockBelongsToPlayer(v.id, SettingsSystem.CurrentSettings.PlayerName) &&
                             (!v.loaded || v.state == Vessel.State.DEAD ||
                             SafetyBubbleSystem.Singleton.IsInSafetyBubble(v)))

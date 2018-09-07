@@ -3,7 +3,6 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys.ExtensionMethods;
 using LunaClient.Systems.Warp;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
@@ -156,7 +155,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 AdjustExtraInterpolationTimes();
 
                 Vessel?.protoVessel?.UpdatePositionValues(Target);
-                VesselsProtoStore.UpdateVesselProtoPosition(this);
 
                 InitializeOrbits();
             }

@@ -3,7 +3,6 @@ using LunaClient.Base.Interface;
 using LunaClient.ModuleStore;
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -30,7 +29,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             msgData.FieldName = fieldName;
             msgData.Value = value;
 
-            VesselsProtoStore.UpdateVesselProtoPartModules(msgData);
             SendMessage(msgData);
         }
     }

@@ -3,7 +3,6 @@ using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
-using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -26,8 +25,6 @@ namespace LunaClient.Systems.VesselPositionSys
             var msg = CreateMessageFromVessel(vessel);
             if (msg == null) return;
 
-            //Update our own values in the store aswell as otherwise if we leave the vessel it can still be in the safety bubble
-            VesselsProtoStore.UpdateVesselProtoPosition(msg);
             UpdateOwnVesselProtoFields(vessel, msg.BodyIndex);
 
             SendMessage(msg);

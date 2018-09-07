@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -53,10 +52,6 @@ namespace LunaClient.Systems.VesselResourceSys
             }
             
             msgData.Resources = _resources.ToArray();
-
-            //Update our own values in the store aswell as otherwise if we leave the vessel it can still be in the safety bubble
-            VesselsProtoStore.UpdateVesselProtoResources(msgData);
-
             SendMessage(msgData);
         }
     }

@@ -54,8 +54,7 @@ namespace LunaClient.Windows.Locks
                 .Append("Packed: ").Append(vesselLock.Packed).AppendLine()
                 .Append("Control: ").Append(vesselLock.ControlLockOwner).AppendLine()
                 .Append("Update: ").Append(vesselLock.UpdateLockOwner).AppendLine()
-                .Append("UnlUpdate: ").Append(vesselLock.UnloadedUpdateLockOwner).AppendLine()
-                .Append("Exists in store: ").Append(vesselLock.ExistsInStore);
+                .Append("UnlUpdate: ").Append(vesselLock.UnloadedUpdateLockOwner);
 
             return StrBuilder.ToString();
         }

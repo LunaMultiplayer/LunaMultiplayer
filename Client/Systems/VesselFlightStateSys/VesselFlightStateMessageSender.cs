@@ -3,7 +3,6 @@ using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
-using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -47,8 +46,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             msgData.Z = flightState.Z;
 
             SendMessage(msgData);
-
-            VesselsProtoStore.UpdateVesselProtoFlightState(msgData);
             System.UpdateFlightStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, msgData);
         }
     }

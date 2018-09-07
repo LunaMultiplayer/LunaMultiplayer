@@ -82,7 +82,7 @@ namespace LunaClient.VesselUtilities
                 }
 
                 var controlledVesselsIds = GetControlledVesselIds();
-                var loadedVesselIds = FlightGlobals.VesselsLoaded?.Select(v => v.id);
+                var loadedVesselIds = FlightGlobals.VesselsLoaded?.Where(v => v != null).Select(v => v.id);
 
                 if (loadedVesselIds != null)
                     return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel?.id);
@@ -284,7 +284,7 @@ namespace LunaClient.VesselUtilities
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
             return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
-                .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi.VesselId))
+                .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v != null && v.id == vi.VesselId))
                 .Where(v => v != null && v.id != Guid.Empty);
         }
 
@@ -296,7 +296,7 @@ namespace LunaClient.VesselUtilities
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
             return LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id && !LockSystem.LockQuery.UpdateLockExists(l.VesselId))
-                .Select(vi => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v.id == vi.VesselId))
+                .Select(vi => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v != null && v.id == vi.VesselId))
                 .Where(v => v != null && v.id != Guid.Empty);
         }
 

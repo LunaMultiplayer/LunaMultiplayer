@@ -5,7 +5,6 @@ using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
-using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
@@ -36,7 +35,6 @@ namespace LunaClient.Windows.Debug
         private static string _subspaceText;
         private static string _timeText;
         private static string _connectionText;
-        private static string _vesselStoreText;
         private static string _interpolationText;
         private static float _lastUpdateTime;
 
@@ -48,7 +46,6 @@ namespace LunaClient.Windows.Debug
         private static bool _displaySubspace;
         private static bool _displayTimes;
         private static bool _displayConnectionQueue;
-        private static bool _displayVesselStoreData;
         private static bool _displayInterpolationData;
 
         private static bool _display;
@@ -184,6 +181,8 @@ namespace LunaClient.Windows.Debug
                     {
                         foreach (var vessel in FlightGlobals.Vessels)
                         {
+                            if(vessel == null) continue;
+
                             if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
                             {
                                 StringBuilder.AppendLine($"Id: {vessel.id}");
@@ -254,21 +253,6 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.");
                     StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n");
                     _connectionText = StringBuilder.ToString();
-                    StringBuilder.Length = 0;
-                }
-
-                if (_displayVesselStoreData)
-                {
-                    StringBuilder.Append("Num of vessels: ").Append(VesselsProtoStore.AllPlayerVessels.Count).AppendLine();
-
-                    VesselProtoStoreData.Clear();
-                    VesselProtoStoreData.AddRange(VesselsProtoStore.AllPlayerVessels.Select(p=> new Tuple<Guid, string>(p.Key, p.Value.ProtoVessel.vesselName)));
-                    foreach (var vessel in VesselProtoStoreData)
-                    {
-                        StringBuilder.Append(vessel.Item1).Append(" - ").AppendLine(vessel.Item2);
-                    }
-
-                    _vesselStoreText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
 

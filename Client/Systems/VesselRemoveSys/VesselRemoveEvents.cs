@@ -19,10 +19,6 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
-            //We are just reloading a vessel and the vessel.Die() was triggered so we should not do anything!
-            if (VesselLoader.ReloadingVesselId == dyingVessel.id)
-                return;
-
             //We are MANUALLY killing a vessel and it's NOT KSP who is calling this method so ignore all the logic of below
             if (System.ManuallyKillingVesselId == dyingVessel.id)
                 return;
@@ -123,7 +119,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
             //vessel and remove them both from our game and server
             var vesselIdsToRemove = FlightGlobals.Vessels
-                .Where(v => v.rootPart?.missionID == vessel.rootPart.missionID && v.id != vessel.id)
+                .Where(v => v!= null && v.rootPart?.missionID == vessel.rootPart.missionID && v.id != vessel.id)
                 .Select(v => v.id).Distinct();
 
             foreach (var vesselIdToRemove in vesselIdsToRemove)
@@ -131,16 +127,6 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.AddToKillList(vesselIdToRemove, "Revert. Sub-vessel of the initial vessel");
                 System.MessageSender.SendVesselRemove(vesselIdToRemove);
             }
-        }
-
-        /// <summary>
-        /// This method is called just when the game scene is loaded. 
-        /// We use this to detect when switching to flight and then remove the vessels that are inside the safety bubble
-        /// </summary>
-        public void LevelLoaded(GameScenes data)
-        {
-            if (data == GameScenes.FLIGHT)
-                System.RemoveVesselsInSafetyBubble();
         }
     }
 }

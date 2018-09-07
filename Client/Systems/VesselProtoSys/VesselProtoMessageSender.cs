@@ -5,7 +5,6 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
@@ -34,27 +33,17 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             foreach (var vessel in vessels)
             {
-                SendVesselMessage(vessel, false, false);
+                SendVesselMessage(vessel, false);
             }
         }
 
-        public void SendVesselMessage(Vessel vessel, bool forceSend, bool forceReloadOnReceive)
+        public void SendVesselMessage(Vessel vessel, bool forceReloadOnReceive)
         {
-            if (vessel == null || (!forceSend && VesselCommon.IsSpectating) || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
+            if (vessel == null || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
                 return;
 
-            if (!forceSend && !LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                return;
-            if (!forceSend && !LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                return;
-
-            var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
-
-            if (forceSend || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
-                SendVesselMessage(vessel.BackupVessel(), forceReloadOnReceive);
-
-            if (!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
-                VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel);
+            vessel.protoVessel = vessel.BackupVessel();
+            SendVesselMessage(vessel.protoVessel, forceReloadOnReceive);
         }
 
         #region Private methods
@@ -81,8 +70,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
                 if (numBytes > 0)
                 {
-                    VesselsProtoStore.RawUpdateVesselProtoData(VesselSerializedBytes, numBytes, protoVessel.vesselID);
-
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
                     msgData.GameTime = TimeSyncerSystem.UniversalTime;
                     msgData.ForceReload = forceReloadOnReceive;

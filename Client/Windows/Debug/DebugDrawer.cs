@@ -30,10 +30,6 @@ namespace LunaClient.Windows.Debug
             if (_displayVesselsOrbit)
                 GUILayout.Label(_orbitVesselsText, LabelStyle);
 
-            _displayVesselStoreData = GUILayout.Toggle(_displayVesselStoreData, "Display vessel store data", ButtonStyle);
-            if (_displayVesselStoreData)
-                GUILayout.Label(_vesselStoreText, LabelStyle);
-
             _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics", ButtonStyle);
             if (_displayInterpolationData)
             {

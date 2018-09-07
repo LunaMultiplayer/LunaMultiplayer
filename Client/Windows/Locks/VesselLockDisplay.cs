@@ -9,7 +9,6 @@ namespace LunaClient.Windows.Locks
         public string VesselName { get; set; }
         public bool Selected { get; set; }
         public bool ExistsInGame { get; set; }
-        public bool ExistsInStore { get; set; }
         public bool Loaded { get; set; }
         public bool Packed { get; set; }
         public string ControlLockOwner { get; set; }
