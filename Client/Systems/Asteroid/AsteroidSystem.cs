@@ -114,7 +114,7 @@ namespace LunaClient.Systems.Asteroid
             if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
                 return true;
 
-            return protoVessel.protoPartSnapshots?[0].partName == "PotatoRoid";
+            return protoVessel.protoPartSnapshots?.FirstOrDefault()?.partName == "PotatoRoid";
         }
 
         public int GetAsteroidCount()
