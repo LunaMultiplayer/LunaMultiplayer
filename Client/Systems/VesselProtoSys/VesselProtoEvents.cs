@@ -6,11 +6,14 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
     {
+        private static List<Guid> QueuedVessels = new List<Guid>();
+
         /// <summary>
         /// Sends our vessel just when we start the flight
         /// </summary>
@@ -52,7 +55,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
             {
                 //We delay it a bit because we must wait until the vessel is named correctly and so on.
-                CoroutineUtil.StartDelayedRoutine("VesselInitialized", ()=> System.MessageSender.SendVesselMessage(vessel, false), 0.25f);
+                CoroutineUtil.StartDelayedRoutine("VesselInitialized", ()=> System.MessageSender.SendVesselMessage(vessel, false), 0.5f);
                 LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
                 LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
             }
@@ -72,6 +75,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         /// <summary>
         /// Triggered when the vessel parts change.
+        /// CAUTION!: When staging this method can be called a lot of times!
         /// </summary>
         public void VesselPartCountChanged(Vessel vessel)
         {
@@ -95,9 +99,22 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-            {
+            {                
+                //This method can be called a lot of times during staging (for every part that decouples)
+                //For this reason we wait 0.5 seconds so we send all the changes at once.
+                if (QueuedVessels.Contains(vessel.id)) return;
+
+                QueuedVessels.Add(vessel.id);
+                CoroutineUtil.StartDelayedRoutine("QueueVesselMessageAsPartsChanged", () => QueueNewVesselChange(vessel), 0.5f);
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
             }
+        }
+
+        private static void QueueNewVesselChange(Vessel vessel)
+        {
+            if (vessel == null) return;
+            QueuedVessels.Remove(vessel.id);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
         }
         
         /// <summary>

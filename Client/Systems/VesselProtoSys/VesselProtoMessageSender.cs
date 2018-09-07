@@ -22,6 +22,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static readonly object VesselArraySyncLock = new object();
 
+        private static Dictionary<Guid, Vessel> VesselsWithPartsChanged = new Dictionary<Guid, Vessel>();
+
         public void SendMessage(IMessageData msg)
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
