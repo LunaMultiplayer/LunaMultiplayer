@@ -40,41 +40,48 @@ namespace LunaClient.Systems.VesselUpdateSys
             var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null) return;
 
-            UpdateVesselFields(vessel);
-            UpdateActionGroups(vessel);
-            UpdateProtoVesselValues(vessel.protoVessel);
-        }
+            var previousSituation = vessel.situation;
+            var previousStage = vessel.currentStage;
 
+            UpdateVesselFields(vessel);
+            UpdateProtoVesselValues(vessel.protoVessel);
+
+            //Reload the vessel when the situation changes and vessel is unloaded.
+            //This will also fix the Landed and Splashed fields
+            if (!vessel.loaded && previousSituation != (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation))
+            {
+                VesselLoader.LoadVessel(vessel.protoVessel);
+            }
+
+            //Trigger a reload when staging!
+            if (previousStage != Stage)
+                VesselLoader.LoadVessel(vessel.protoVessel);
+        }
+        
         private void UpdateVesselFields(Vessel vessel)
         {
-            vessel.protoVessel.vesselName = vessel.vesselName = Name;
-            vessel.protoVessel.vesselType = vessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), Type);
-            vessel.protoVessel.distanceTraveled = vessel.distanceTraveled = DistanceTraveled;
+            vessel.vesselName = Name;
+            vessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), Type);
+            vessel.distanceTraveled = DistanceTraveled;
 
             vessel.protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
-            //Only change this value if vessel is loaded. When vessel is not loaded we reload it if the situation changes
+            
+            //Only change this value if vessel is loaded. When vessel is not loaded we reload it
             if (vessel.loaded)
-                vessel.situation = vessel.protoVessel.situation;
+            {
+                vessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
+                vessel.Landed = Landed;
+                vessel.Splashed = Splashed;
+            }
+            
+            vessel.landedAt = LandedAt;
+            vessel.displaylandedAt = DisplayLandedAt;
 
-            vessel.protoVessel.landed = Landed;
-            //Only change this value if vessel takes off and is loaded. 
-            //When the vessel lands the vessel must be reloaded as a whole by the vessel proto system if it's not loaded
-            if (vessel.loaded && vessel.Landed && !Landed)
-                vessel.Landed = vessel.protoVessel.landed;
-
-            vessel.protoVessel.landedAt = vessel.landedAt = LandedAt;
-            vessel.protoVessel.displaylandedAt = vessel.displaylandedAt = DisplayLandedAt;
-
-            vessel.protoVessel.splashed = Splashed;
-            //Only change this value if vessel splashes. When the vessel splashes the vessel must be reloaded as a whole by the vessel proto system
-            if (vessel.Splashed && !Splashed)
-                vessel.Splashed = vessel.protoVessel.splashed;
-
-            vessel.protoVessel.missionTime = vessel.missionTime = MissionTime;
-            vessel.protoVessel.launchTime = vessel.launchTime = LaunchTime;
-            vessel.protoVessel.lastUT = vessel.lastUT = LastUt;
-            vessel.protoVessel.persistent = vessel.isPersistent = Persistent;
-            vessel.protoVessel.refTransform = vessel.referenceTransformId = RefTransformId;
+            vessel.missionTime = MissionTime;
+            vessel.launchTime = LaunchTime;
+            vessel.lastUT = LastUt;
+            vessel.isPersistent = Persistent;
+            vessel.referenceTransformId = RefTransformId;
 
             if (AutoClean)
             {
@@ -88,10 +95,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.localCoM.x = Com[0];
             vessel.localCoM.y = Com[1];
             vessel.localCoM.z = Com[2];
-        }
 
-        private void UpdateActionGroups(Vessel vessel)
-        {
             for (var i = 0; i < 17; i++)
             {
                 var kspActGrp = (KSPActionGroup)(1 << (i & 31));
