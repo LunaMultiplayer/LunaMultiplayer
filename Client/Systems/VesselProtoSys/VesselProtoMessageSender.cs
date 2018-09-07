@@ -1,8 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.Systems.Lock;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselUtilities;
@@ -62,7 +60,7 @@ namespace LunaClient.Systems.VesselProtoSys
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool forceReloadOnReceive)
         {
             //Never send empty vessel id's (it happens with flags...)
-            if (protoVessel.vesselID == Guid.Empty || protoVessel.vesselName == null) return;
+            if (protoVessel.vesselID == Guid.Empty) return;
 
             //VesselSerializedBytes is shared so lock it!
             lock (VesselArraySyncLock)

@@ -3,6 +3,7 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.ShareScienceSubject;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
 
@@ -50,7 +51,8 @@ namespace LunaClient.Systems.VesselProtoSys
             //It's a debris vessel that we made it
             if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
             {
-                System.MessageSender.SendVesselMessage(vessel, false);
+                //We delay it a bit because we must wait until the vessel is named correctly and so on.
+                CoroutineUtil.StartDelayedRoutine("VesselInitialized", ()=> System.MessageSender.SendVesselMessage(vessel, false), 0.25f);
                 LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
                 LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
             }
