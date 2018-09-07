@@ -2,12 +2,9 @@
 using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
 using System;
-using System.Collections.Generic;
-using UniLinq;
 
 namespace LunaClient.Systems.VesselLockSys
 {
@@ -120,109 +117,6 @@ namespace LunaClient.Systems.VesselLockSys
             if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null && HighLogic.CurrentGame.Parameters.Flight != null)
                 HighLogic.CurrentGame.Parameters.Flight.CanEVA = true;
             SpectateEvent.onFinishedSpectating.Fire();
-        }
-
-        #endregion
-
-        #region Private methods
-
-
-        /// <summary>
-        /// Tries to get the control lock for a vessel in case it's possible to do so
-        /// </summary>
-        private static void TryGetControlLockForVessel(Vessel vessel)
-        {
-            if (vessel == null) return;
-
-            if (!LockSystem.LockQuery.ControlLockExists(vessel.id))
-            {
-                LockSystem.Singleton.AcquireControlLock(vessel.id);
-                LockSystem.Singleton.AcquireKerbalLock(vessel);
-            }
-        }
-
-        /// <summary>
-        /// Tries/force getting the update and unloaded update locks for a vessel.
-        /// </summary>
-        private static void GetUpdateLocksForVessel(Vessel vessel, bool force)
-        {
-            if (vessel == null) return;
-
-            LockSystem.Singleton.AcquireUpdateLock(vessel.id, force);
-            LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, force);
-        }
-
-        /// <summary>
-        /// Return the vessel ids of the vessels where we have an update lock
-        /// </summary>
-        /// <returns></returns>
-        private static IEnumerable<Guid> GetVesselIdsWeCurrentlyUpdate()
-        {
-            //An spectator should never have Update/UnloadedUpdate locks
-            if (VesselCommon.IsSpectating)
-                return new Guid[0];
-
-            return LockSystem.LockQuery
-                .GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Select(l => l.VesselId);
-        }
-
-        /// <summary>
-        /// Return the OTHER vessel ids of the vessels that are unloadedloaded not dead, not in safety bubble 
-        /// and that nobody has the unloaded update or update lock
-        /// </summary>
-        private static IEnumerable<Guid> GetValidUnloadedVesselIds()
-        {
-            return FlightGlobals.Vessels
-                .Where(v => v != null && v.state != Vessel.State.DEAD && !v.loaded &&
-                            v.id != FlightGlobals.ActiveVessel?.id &&
-                            !SafetyBubbleSystem.Singleton.IsInSafetyBubble(v) &&
-                            !v.LandedOrSplashed && //DO NOT get unloaded locks on landed vessels!
-                            !LockSystem.LockQuery.UnloadedUpdateLockExists(v.id) &&
-                            !LockSystem.LockQuery.UpdateLockExists(v.id))
-                .Select(v => v.id);
-        }
-
-        /// <summary>
-        /// Return the OTHER vessel ids of the vessels that are loaded (close to us) not dead and not in safety bubble.
-        /// </summary>
-        /// <returns></returns>
-        private static IEnumerable<Guid> GetValidSecondaryVesselIds()
-        {
-            //An spectator should never have Update/UnloadedUpdate locks
-            if (VesselCommon.IsSpectating)
-                return new Guid[0];
-
-            return FlightGlobals.VesselsLoaded
-                .Where(v => v != null && v.state != Vessel.State.DEAD &&
-                            v.id != FlightGlobals.ActiveVessel?.id &&
-                            !SafetyBubbleSystem.Singleton.IsInSafetyBubble(v) &&
-                            !LockSystem.LockQuery.UpdateLockExists(v.id))
-                .Select(v => v.id);
-        }
-
-        /// <summary>
-        /// Return the vessel ids of the OTHER vessels that are far, dead, in safety bubble, and being updated by us.
-        /// We use this list to relase the locks as we shouldn't update them
-        /// </summary>
-        /// <returns></returns>
-        private static IEnumerable<Guid> GetSecondaryVesselIdsThatShouldBeReleased()
-        {
-            //An spectator should never have Update/UnloadedUpdate locks
-            if (VesselCommon.IsSpectating)
-            {
-                return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                    .Select(l => l.VesselId)
-                    .Union(LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                        .Select(l => l.VesselId));
-            }
-
-            return FlightGlobals.Vessels
-                .Where(v => v!= null && v.id != FlightGlobals.ActiveVessel?.id &&
-                            LockSystem.LockQuery.UpdateLockBelongsToPlayer(v.id, SettingsSystem.CurrentSettings.PlayerName) &&
-                            (!v.loaded || v.state == Vessel.State.DEAD ||
-                            SafetyBubbleSystem.Singleton.IsInSafetyBubble(v)))
-                .Select(v => v.id);
         }
 
         #endregion
