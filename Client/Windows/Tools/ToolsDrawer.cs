@@ -69,16 +69,21 @@ namespace LunaClient.Windows.Tools
             {
                 if (GUILayout.Button("Reload own vessel", ButtonStyle))
                 {
-                    VesselLoader.LoadVessel(FlightGlobals.ActiveVessel?.protoVessel);
+                    if (FlightGlobals.ActiveVessel != null)
+                    {
+                        FlightGlobals.ActiveVessel.protoVessel = FlightGlobals.ActiveVessel.BackupVessel();
+                        VesselLoader.LoadVessel(FlightGlobals.ActiveVessel.protoVessel);
+                    }
                 }
 
                 if (GUILayout.Button("Reload other vessels", ButtonStyle))
                 {
-                    var protos = FlightGlobals.Vessels.Where(v => v != null).Select(v => v.protoVessel).ToList();
-                    foreach (var proto in protos)
+                    var vessels = FlightGlobals.Vessels.Where(v => v != null).ToList();
+                    foreach (var vessel in vessels)
                     {
-                        if (FlightGlobals.ActiveVessel?.id == proto.vesselID) continue;
-                        VesselLoader.LoadVessel(proto);
+                        if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
+                        vessel.protoVessel = vessel.BackupVessel();
+                        VesselLoader.LoadVessel(vessel.protoVessel);
                     }
                 }
             }
