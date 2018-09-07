@@ -35,6 +35,7 @@ namespace LunaClient.Systems.SafetyBubble
             FillUpPositions();
             GameEvents.onFlightReady.Add(SafetyBubbleEvents.FlightReady);
             GameEvents.onVesselLoaded.Add(SafetyBubbleEvents.VesselLoaded);
+            GameEvents.onVesselChange.Add(SafetyBubbleEvents.OnVesselChange);
         }
 
         protected override void OnDisabled()
@@ -42,6 +43,7 @@ namespace LunaClient.Systems.SafetyBubble
             SpawnPoints.Clear();
             GameEvents.onFlightReady.Remove(SafetyBubbleEvents.FlightReady);
             GameEvents.onVesselLoaded.Remove(SafetyBubbleEvents.VesselLoaded);
+            GameEvents.onVesselChange.Add(SafetyBubbleEvents.OnVesselChange);
             HiddenVessels.Clear();
         }
 
@@ -62,6 +64,11 @@ namespace LunaClient.Systems.SafetyBubble
                 HiddenVessels.Remove(vessel.id);
             else if (hide && !HiddenVessels.Contains(vessel.id))
                 HiddenVessels.Add(vessel.id);
+            else
+            {
+                //Dont need to do run this expensive method again...
+                return;
+            }
 
             foreach (var part in vessel.Parts)
             {

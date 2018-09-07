@@ -25,7 +25,16 @@ namespace LunaClient.Systems.SafetyBubble
 
         public void VesselLoaded(Vessel vessel)
         {
-            System.HideUnhideVessel(vessel, System.IsInSafetyBubble(vessel));
+            if (FlightGlobals.ActiveVessel.id != vessel.id)
+                System.HideUnhideVessel(vessel, System.IsInSafetyBubble(vessel));
+        }
+
+        /// <summary>
+        /// When changing vessels, always unhide it
+        /// </summary>
+        public void OnVesselChange(Vessel data)
+        {
+            System.HideUnhideVessel(data, false);
         }
     }
 }
