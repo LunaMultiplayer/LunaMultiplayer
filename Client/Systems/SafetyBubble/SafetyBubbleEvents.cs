@@ -22,5 +22,10 @@ namespace LunaClient.Systems.SafetyBubble
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
+
+        public void VesselLoaded(Vessel vessel)
+        {
+            System.HideUnhideVessel(vessel, System.IsInSafetyBubble(vessel));
+        }
     }
 }

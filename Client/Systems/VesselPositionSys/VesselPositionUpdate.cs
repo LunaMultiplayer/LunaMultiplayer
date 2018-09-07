@@ -1,4 +1,5 @@
 ﻿using LunaClient.Extensions;
+using LunaClient.Systems.SafetyBubble;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys.ExtensionMethods;
@@ -154,7 +155,18 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 AdjustExtraInterpolationTimes();
 
-                Vessel?.protoVessel?.UpdatePositionValues(Target);
+                if (Vessel != null && Vessel.protoVessel != null)
+                {
+                    Vessel.protoVessel.UpdatePositionValues(Target);
+                    if (SafetyBubbleSystem.Singleton.IsInSafetyBubble(Vessel.protoVessel) && !SafetyBubbleSystem.Singleton.VesselIsHidden(VesselId))
+                    {
+                        SafetyBubbleSystem.Singleton.HideUnhideVessel(Vessel, true);
+                    }
+                    else if (!SafetyBubbleSystem.Singleton.IsInSafetyBubble(Vessel.protoVessel) && SafetyBubbleSystem.Singleton.VesselIsHidden(VesselId))
+                    {
+                        SafetyBubbleSystem.Singleton.HideUnhideVessel(Vessel, false);
+                    }
+                }
 
                 InitializeOrbits();
             }

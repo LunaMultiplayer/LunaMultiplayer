@@ -1,7 +1,9 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace LunaClient.Systems.SafetyBubble
 {
@@ -18,6 +20,7 @@ namespace LunaClient.Systems.SafetyBubble
         public GameObject SafetyBubbleObjectY;
 
         public Dictionary<string, List<SpawnPointLocation>> SpawnPoints { get; } = new Dictionary<string, List<SpawnPointLocation>>();
+        public List<Guid> HiddenVessels = new List<Guid>();
 
         public SafetyBubbleEvents SafetyBubbleEvents { get; } = new SafetyBubbleEvents();
 
@@ -31,17 +34,48 @@ namespace LunaClient.Systems.SafetyBubble
         {
             FillUpPositions();
             GameEvents.onFlightReady.Add(SafetyBubbleEvents.FlightReady);
+            GameEvents.onVesselLoaded.Add(SafetyBubbleEvents.VesselLoaded);
         }
 
         protected override void OnDisabled()
         {
             SpawnPoints.Clear();
             GameEvents.onFlightReady.Remove(SafetyBubbleEvents.FlightReady);
+            GameEvents.onVesselLoaded.Remove(SafetyBubbleEvents.VesselLoaded);
+            HiddenVessels.Clear();
         }
 
         #endregion
 
         #region Public methods
+
+        public bool VesselIsHidden(Guid vesselId) => HiddenVessels.Contains(vesselId);
+
+        /// <summary>
+        /// Hides or unhides a vessel so you can't see it nor interact with it
+        /// </summary>
+        public void HideUnhideVessel(Vessel vessel, bool hide)
+        {
+            if (vessel == null) return;
+
+            if (!hide && HiddenVessels.Contains(vessel.id))
+                HiddenVessels.Remove(vessel.id);
+            else if (hide && !HiddenVessels.Contains(vessel.id))
+                HiddenVessels.Add(vessel.id);
+
+            foreach (var part in vessel.Parts)
+            {
+                foreach (var rend in part.GetComponentsInChildren<Renderer>())
+                    rend.enabled = !hide;
+                foreach (var collider in part.GetComponentsInChildren<Collider>())
+                    collider.enabled = !hide;
+
+                if (part.collider != null)
+                    part.collider.enabled = !hide;
+
+                part.SetDetectCollisions(!hide);
+            }
+        }
 
         /// <summary>
         /// Returns whether the given vessel is in a starting safety bubble or not.
