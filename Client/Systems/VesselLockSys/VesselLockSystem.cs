@@ -8,7 +8,6 @@ using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Generic;
 using UniLinq;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselLockSys
 {
@@ -30,9 +29,7 @@ namespace LunaClient.Systems.VesselLockSys
             "";
 
         private VesselLockEvents VesselLockEvents { get; } = new VesselLockEvents();
-
-        private bool VesselLockSystemReady => Enabled && Time.timeSinceLevelLoad > 1f;
-
+        
         private string SpectatingMessage => VesselCommon.IsSpectating ? LocalizationContainer.ScreenText.Spectating + $" {GetVesselOwner}." : "";
 
         #endregion
@@ -47,14 +44,12 @@ namespace LunaClient.Systems.VesselLockSys
             GameEvents.onVesselChange.Add(VesselLockEvents.OnVesselChange);
             GameEvents.onGameSceneLoadRequested.Add(VesselLockEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Add(VesselLockEvents.LevelLoaded);
+            GameEvents.onVesselLoaded.Add(VesselLockEvents.VesselLoaded);
+            LockEvent.onLockAcquireUnityThread.Add(VesselLockEvents.LockAcquire);
+            LockEvent.onLockReleaseUnityThread.Add(VesselLockEvents.LockReleased);
+            VesselUnloadEvent.onVesselUnloading.Add(VesselLockEvents.VesselUnloading);
 
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, TryGetCurrentVesselControlLock));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, UpdateActiveVesselsLocks));
-
-            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, UpdateSecondaryVesselsLocks));
-            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateUnloadedVesselsLocks));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
-
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, LockSystem.Singleton.MessageSender.SendLocksRequest));
         }
 
@@ -64,111 +59,36 @@ namespace LunaClient.Systems.VesselLockSys
             GameEvents.onVesselChange.Remove(VesselLockEvents.OnVesselChange);
             GameEvents.onGameSceneLoadRequested.Remove(VesselLockEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Remove(VesselLockEvents.LevelLoaded);
+            GameEvents.onVesselLoaded.Remove(VesselLockEvents.VesselLoaded);
+            LockEvent.onLockAcquireUnityThread.Remove(VesselLockEvents.LockAcquire);
+            LockEvent.onLockReleaseUnityThread.Remove(VesselLockEvents.LockReleased);
+            VesselUnloadEvent.onVesselUnloading.Remove(VesselLockEvents.VesselUnloading);
         }
 
         #endregion
 
         #region Update methods
-
-        /// <summary>
-        /// Tries to get the current vessel control lock. (Either because we are spectating or we switched to a vessel that currently does not have control locks)
-        /// </summary>
-        private void TryGetCurrentVesselControlLock()
-        {
-            if (Enabled && VesselLockSystemReady && FlightGlobals.ActiveVessel != null)
-            {
-                TryGetControlLockForVessel(FlightGlobals.ActiveVessel);
-            }
-        }
-
-        /// <summary>
-        /// Here we check if we have a control lock over the active vessel and if we do so, we get the update and unloaded update of the vessel currently controlling
-        /// </summary>
-        private void UpdateActiveVesselsLocks()
-        {
-            if (Enabled && VesselLockSystemReady && FlightGlobals.ActiveVessel != null && LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName))
-            {
-                //We have a control lock over the active vessel so if we are spectating stop doing it.
-                if (VesselCommon.IsSpectating)
-                {
-                    StopSpectating();
-                }
-
-                GetUpdateLocksForVessel(FlightGlobals.ActiveVessel, true);
-            }
-        }
-
-        /// <summary>
-        /// After some ms get the update lock for vessels that are close to us (not packed and not ours) not dead and that nobody has the update lock
-        /// If we are spectator we should never have any lock besides the spectator lock or control locks (if the according server setting is applied)
-        /// </summary>
-        private void UpdateSecondaryVesselsLocks()
-        {
-            if (Enabled && VesselLockSystemReady)
-            {
-                var validSecondaryVessels = GetValidSecondaryVesselIds();
-                foreach (var checkVessel in validSecondaryVessels)
-                {
-                    //Don't force it as maybe another player sent this request aswell
-                    LockSystem.Singleton.AcquireUpdateLock(checkVessel);
-                }
-
-                var vesselIdsWithUpdateLocks = GetVesselIdsWeCurrentlyUpdate();
-                foreach (var vesselId in vesselIdsWithUpdateLocks)
-                {
-                    //For all the vessels we HAVE the update lock, we FORCE the UNLOADED update lock if we don't have it.
-                    LockSystem.Singleton.AcquireUnloadedUpdateLock(vesselId, true);
-                }
-
-                //Now we get the vessels that we were updating and now are unloaded,dead or in safety bubble and release it's "Update" lock
-                var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased();
-                foreach (var releaseVessel in vesselsToRelease)
-                {
-                    LockSystem.Singleton.ReleaseUpdateLock(releaseVessel);
-                }
-            }
-        }
-
-        /// <summary>
-        /// After some ms get the unloaded update lock for vessels that are far to us (not loaded) not dead and that nobody has the update lock
-        /// </summary>
-        private void UpdateUnloadedVesselsLocks()
-        {
-            if (Enabled && VesselLockSystemReady)
-            {
-                var validSecondaryUnloadedVessels = GetValidUnloadedVesselIds();
-                foreach (var checkVessel in validSecondaryUnloadedVessels)
-                {
-                    //Don't force it as maybe another player sent this request aswell
-                    LockSystem.Singleton.AcquireUnloadedUpdateLock(checkVessel);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Show a message on the screen if we are spectating
         /// </summary>
         private void UpdateOnScreenSpectateMessage()
         {
-            if (Enabled && VesselLockSystemReady)
+            if (VesselCommon.IsSpectating)
             {
-                if (VesselCommon.IsSpectating)
+                if (_spectateMessage != null)
+                    _spectateMessage.duration = 0f;
+                _spectateMessage = LunaScreenMsg.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
+            }
+            else
+            {
+                if (_spectateMessage != null)
                 {
-                    if (_spectateMessage != null)
-                        _spectateMessage.duration = 0f;
-                    _spectateMessage = LunaScreenMsg.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
-                }
-                else
-                {
-                    if (_spectateMessage != null)
-                    {
-                        _spectateMessage.duration = 0f;
-                        _spectateMessage = null;
-                    }
+                    _spectateMessage.duration = 0f;
+                    _spectateMessage = null;
                 }
             }
         }
-
 
         #endregion
 

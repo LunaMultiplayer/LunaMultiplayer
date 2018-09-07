@@ -104,6 +104,14 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
+        /// Aquire the kerbal lock on the given vessel
+        /// </summary>
+        public void AcquireKerbalLock(Guid vesselId, bool force = false)
+        {
+            AcquireKerbalLock(FlightGlobals.FindVessel(vesselId), force);
+        }
+
+        /// <summary>
         /// Aquire the update lock on the given vessel
         /// </summary>
         public void AcquireUpdateLock(Guid vesselId, bool force = false)

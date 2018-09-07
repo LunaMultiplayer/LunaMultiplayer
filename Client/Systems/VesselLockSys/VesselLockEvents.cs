@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
+using System;
 
 namespace LunaClient.Systems.VesselLockSys
 {
@@ -36,9 +37,6 @@ namespace LunaClient.Systems.VesselLockSys
             else
             {
                 LockSystem.Singleton.AcquireControlLock(vessel.id);
-                LockSystem.Singleton.AcquireUpdateLock(vessel.id);
-                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id);
-                LockSystem.Singleton.AcquireKerbalLock(vessel);
             }
         }
 
@@ -64,6 +62,86 @@ namespace LunaClient.Systems.VesselLockSys
                 InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
                 VesselLockSystem.Singleton.StopSpectating();
             }
+        }
+
+        /// <summary>
+        /// When a vessel gets loaded try to acquire it's update lock if we can
+        /// </summary>
+        public void VesselLoaded(Vessel vessel)
+        {
+            if (!LockSystem.LockQuery.UpdateLockExists(vessel.id))
+            {
+                LockSystem.Singleton.AcquireUpdateLock(vessel.id);
+            }
+        }
+
+        /// <summary>
+        /// If we get the Update lock, force the getting of the unloaded update lock.
+        /// If we get a control lock, force getting the update and unloaded update
+        /// </summary>
+        public void LockAcquire(LockDefinition lockDefinition)
+        {
+            if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
+                return;
+
+            switch (lockDefinition.Type)
+            {
+                case LockType.Control:
+                    VesselLockSystem.Singleton.StopSpectating();
+                    LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+                    break;
+                case LockType.Update:
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// If a player releases an update or unloadedupdate lock try to get it.
+        /// If he releases a control lock and we are spectating try to get the current vessel control lock
+        /// </summary>
+        public void LockReleased(LockDefinition lockDefinition)
+        {
+            switch (lockDefinition.Type)
+            {
+                case LockType.Control:
+                    if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
+                    {
+                        LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselId);
+                    }
+                    break;
+                case LockType.UnloadedUpdate:
+                case LockType.Update:
+                    var vessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
+                    if (vessel != null)
+                    {
+                        switch (lockDefinition.Type)
+                        {
+                            case LockType.Update:
+                                LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId);
+                                break;
+                            case LockType.UnloadedUpdate:
+                                LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId);
+                                break;
+                        }
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+        }
+
+        /// <summary>
+        /// When a vessel is being unloaded, release it's update lock
+        /// </summary>
+        public void VesselUnloading(Vessel vessel)
+        {
+            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                LockSystem.Singleton.ReleaseUpdateLock(vessel.id);
         }
     }
 }
