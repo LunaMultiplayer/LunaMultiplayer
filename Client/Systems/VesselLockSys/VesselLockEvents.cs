@@ -92,6 +92,8 @@ namespace LunaClient.Systems.VesselLockSys
                     LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
                     LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                     LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+
+                    //As we got control of that vessel, remove its FS and position updates
                     VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                     break;
                 case LockType.Update:
