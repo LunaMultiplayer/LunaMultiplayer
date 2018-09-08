@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using UnityEngine;
 
@@ -225,7 +224,9 @@ namespace LunaClient
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
-            LunaLog.Log($"[LMP]: LMP {Assembly.GetExecutingAssembly().GetName().Version} Starting at: {KspPath}");
+            LunaLog.Log($"[LMP]: LMP {LmpVersioning.CurrentVersion} Starting at: {KspPath}");
+            LunaLog.Log($"[LMP]: Debug port: {CommonUtil.DebugPort}");
+
             if (!CompatibilityHandler.CheckKspVersion() || !InstallChecker.IsCorrectlyInstalled())
             {
                 Enabled = false;
@@ -239,12 +240,11 @@ namespace LunaClient
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
 
-            LunaLog.Log($"[LMP]: Debug port: {CommonUtil.DebugPort}");
             NetworkMain.AwakeNetworkSystem();
 
             ModSystem.Singleton.BuildDllFileList();
 
-            LunaLog.Log($"[LMP]: Luna Multiplayer {LmpVersioning.CurrentVersion} initialized!");
+            LunaLog.Log("[LMP]: LMP Finished awakening");
 
             //Trigger a reset!
             NetworkState = ClientState.Disconnected;
