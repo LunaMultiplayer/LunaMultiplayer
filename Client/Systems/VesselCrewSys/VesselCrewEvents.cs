@@ -44,7 +44,7 @@ namespace LunaClient.Systems.VesselCrewSys
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, false);
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.to.vessel, false);
+            //Do not send the kerbal as his orbit is not ready. It will be handled by the VesselLockEvents.OnVesselChange
         }
     }
 }
