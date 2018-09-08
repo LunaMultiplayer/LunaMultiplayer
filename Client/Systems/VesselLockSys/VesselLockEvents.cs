@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
 
@@ -109,6 +110,9 @@ namespace LunaClient.Systems.VesselLockSys
             switch (lockDefinition.Type)
             {
                 case LockType.Control:
+                    //Someone stopped controlling a vessel so remove it from the flight state system
+                    VesselFlightStateSystem.Singleton.RemoveVessel(lockDefinition.VesselId);
+
                     if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
                     {
                         LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselId);

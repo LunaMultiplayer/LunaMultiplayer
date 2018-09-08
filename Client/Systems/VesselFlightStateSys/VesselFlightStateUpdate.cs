@@ -107,12 +107,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
 
             if (Target == null) return InterpolatedCtrlState;
-            if (LerpPercentage > 1)
-            {
-                //We only send flight states of the ACTIVE vessel so perhaps some player switched a vessel and we are not receiveing any flight state
-                //To solve this just remove the vessel from the system
-                VesselFlightStateSystem.Singleton.RemoveVessel(VesselId);
-            }
 
             InterpolatedCtrlState.Lerp(CtrlState, Target.CtrlState, LerpPercentage);
             LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
