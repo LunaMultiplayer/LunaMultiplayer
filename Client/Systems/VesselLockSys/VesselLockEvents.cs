@@ -135,7 +135,6 @@ namespace LunaClient.Systems.VesselLockSys
                     }
                     break;
             }
-
         }
 
         /// <summary>
