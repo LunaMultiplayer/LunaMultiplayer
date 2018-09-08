@@ -24,11 +24,8 @@ namespace LunaClient.Systems.VesselLockSys
             if (LockSystem.LockQuery.GetControlLockOwner(vessel.id) == SettingsSystem.CurrentSettings.PlayerName)
                 return;
 
-            //Release all vessel locks as we are switching to a NEW vessel.
-            LockSystem.Singleton.ReleasePlayerLocks(LockType.Update);
-            LockSystem.Singleton.ReleasePlayerLocks(LockType.UnloadedUpdate);
+            //Release all vessel CONTROL locks as we are switching to a NEW vessel.
             LockSystem.Singleton.ReleasePlayerLocks(LockType.Control);
-            LockSystem.Singleton.ReleasePlayerLocks(LockType.Kerbal);
 
             if (LockSystem.LockQuery.ControlLockExists(vessel.id) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
