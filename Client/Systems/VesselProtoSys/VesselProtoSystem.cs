@@ -69,6 +69,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselProtos.Clear();
+            VesselProtoEvents.QueuedVessels.Clear();
         }
 
         #endregion

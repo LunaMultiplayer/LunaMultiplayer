@@ -12,7 +12,7 @@ namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
     {
-        private static List<Guid> QueuedVessels = new List<Guid>();
+        public static readonly List<Guid> QueuedVessels = new List<Guid>();
 
         /// <summary>
         /// Sends our vessel just when we start the flight
