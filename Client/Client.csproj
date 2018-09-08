@@ -276,8 +276,6 @@
     <Compile Include="Utilities\VectorUtil.cs" />
     <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
-    <Compile Include="Systems\VesselStateSys\VesselStateEvents.cs" />
-    <Compile Include="Systems\VesselStateSys\VesselStateSystem.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
