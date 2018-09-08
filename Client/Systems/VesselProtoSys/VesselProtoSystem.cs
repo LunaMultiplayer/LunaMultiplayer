@@ -144,6 +144,7 @@ namespace LunaClient.Systems.VesselProtoSys
                             continue;
 
                         var protoVessel = vesselProto.CreateProtoVessel();
+                        keyVal.Value.Recycle(vesselProto);
 
                         var existingVessel = FlightGlobals.FindVessel(vesselProto.VesselId);
                         if (existingVessel == null)
