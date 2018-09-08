@@ -242,15 +242,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             vessel.orbitDriver?.updateFromParameters();
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
-            if (vessel.LandedOrSplashed)
-            {
-                vessel.mainBody.GetLatLonAlt(vessel.vesselTransform.position, out vessel.latitude, out vessel.longitude, out vessel.altitude);
-            }
-            else
-            {
-                if (vessel.orbit != null)
-                    vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
-            }
+            vessel.mainBody.GetLatLonAlt(vessel.vesselTransform.position, out vessel.latitude, out vessel.longitude, out vessel.altitude);
         }
 
         #endregion
