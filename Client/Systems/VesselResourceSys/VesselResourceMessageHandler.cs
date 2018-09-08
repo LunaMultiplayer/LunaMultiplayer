@@ -15,32 +15,24 @@ namespace LunaClient.Systems.VesselResourceSys
         {
             if (!(msg.Data is VesselResourceMsgData msgData)) return;
 
-            var vessel = FlightGlobals.FindVessel(msgData.VesselId);
-            if (vessel == null) return;
-            
-            UpdateProtoVesselResources(vessel.protoVessel, msgData);
-        }
+            //We received a msg for our own controlled/updated vessel so ignore it
+            if (!VesselCommon.DoVesselChecks(msgData.VesselId))
+                return;
 
-        private static void UpdateProtoVesselResources(ProtoVessel protoVessel, VesselResourceMsgData msgData)
-        {
-            if (protoVessel == null) return;
-
-            for (var i = 0; i < msgData.ResourcesCount; i++)
+            if (!System.VesselResources.ContainsKey(msgData.VesselId))
             {
-                var resource = msgData.Resources[i];
-                    
-                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, resource.PartFlightId);
-                var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, resource.ResourceName);
-                if (resourceSnapshot != null)
+                System.VesselResources.TryAdd(msgData.VesselId, new VesselResourceQueue());
+            }
+
+            if (System.VesselResources.TryGetValue(msgData.VesselId, out var queue))
+            {
+                if (queue.TryPeek(out var resource) && resource.GameTime > msgData.GameTime)
                 {
-                    resourceSnapshot.amount = resource.Amount;
-                    resourceSnapshot.flowState = resource.FlowState;
-
-                    if (resourceSnapshot.resourceRef == null) continue;
-
-                    resourceSnapshot.resourceRef.amount = resource.Amount;
-                    resourceSnapshot.resourceRef.flowState = resource.FlowState;
+                    //A user reverted, so clear his message queue and start from scratch
+                    queue.Clear();
                 }
+
+                queue.Enqueue(msgData);
             }
         }
     }

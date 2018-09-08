@@ -1,6 +1,8 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselUtilities;
-using UnityEngine;
+using System;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselResourceSys
 {
@@ -8,12 +10,13 @@ namespace LunaClient.Systems.VesselResourceSys
     {
         #region Fields & properties
 
-        public bool ResourceSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
-                                                 FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
-                                                 !FlightGlobals.ActiveVessel.packed && FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
+        public ConcurrentDictionary<Guid, VesselResourceQueue> VesselResources { get; } = new ConcurrentDictionary<Guid, VesselResourceQueue>();
+
         #endregion
 
-        #region Base overrides
+        #region Base overrides        
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         public override string SystemName { get; } = nameof(VesselResourceSystem);
 
@@ -21,15 +24,35 @@ namespace LunaClient.Systems.VesselResourceSys
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselResources));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, ProcessVesselResources));
+        }
+
+        protected override void OnDisabled()
+        {
+            base.OnDisabled();
+            VesselResources.Clear();
         }
 
         #endregion
 
         #region Update routines
 
+        private void ProcessVesselResources()
+        {
+            foreach (var keyVal in VesselResources)
+            {
+                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)
+                {
+                    keyVal.Value.TryDequeue(out update);
+                    update.ProcessVesselResource();
+                    keyVal.Value.Recycle(update);
+                }
+            }
+        }
+
         private void SendVesselResources()
         {
-            if (ResourceSystemReady && !VesselCommon.IsSpectating)
+            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.loaded && !VesselCommon.IsSpectating)
             {
                 MessageSender.SendVesselResources(FlightGlobals.ActiveVessel);
             }

@@ -11,7 +11,7 @@ namespace LunaClient.Systems.VesselResourceSys
 {
     public class VesselResourceMessageSender : SubSystem<VesselResourceSystem>, IMessageSender
     {
-        private static List<VesselResourceInfo> _resources = new List<VesselResourceInfo>();
+        private static readonly List<VesselResourceInfo> Resources = new List<VesselResourceInfo>();
 
         public void SendMessage(IMessageData msg)
         {
@@ -20,7 +20,7 @@ namespace LunaClient.Systems.VesselResourceSys
 
         public void SendVesselResources(Vessel vessel)
         {
-            _resources.Clear();
+            Resources.Clear();
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselResourceMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
@@ -42,11 +42,11 @@ namespace LunaClient.Systems.VesselResourceSys
                         FlowState = resource.flowState
                     };
                     
-                    _resources.Add(resourceInfo);
+                    Resources.Add(resourceInfo);
                 }
             }
             
-            msgData.Resources = _resources.ToArray();
+            msgData.Resources = Resources.ToArray();
             SendMessage(msgData);
         }
     }
