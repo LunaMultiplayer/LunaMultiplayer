@@ -22,19 +22,5 @@ namespace LunaClient.Systems.SafetyBubble
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
-
-        public void VesselLoaded(Vessel vessel)
-        {
-            if (FlightGlobals.ActiveVessel.id != vessel.id)
-                System.HideUnhideVessel(vessel, System.IsInSafetyBubble(vessel));
-        }
-
-        /// <summary>
-        /// When changing vessels, always unhide it
-        /// </summary>
-        public void OnVesselChange(Vessel data)
-        {
-            System.HideUnhideVessel(data, false);
-        }
     }
 }

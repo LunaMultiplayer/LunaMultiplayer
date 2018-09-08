@@ -121,6 +121,7 @@
     <Compile Include="Harmony\TrackingStationWidget_Update.cs" />
     <Compile Include="Harmony\VesselLabels_ProcessLabel.cs" />
     <Compile Include="Harmony\Vessel_Initialize.cs" />
+    <Compile Include="Harmony\Vessel_Load.cs" />
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
