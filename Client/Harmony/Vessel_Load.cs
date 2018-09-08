@@ -14,9 +14,9 @@ namespace LunaClient.Harmony
         [HarmonyPrefix]
         private static bool PrefixLoad(Vessel __instance)
         {
-            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.loaded)
+            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.loaded && FlightGlobals.ActiveVessel.id != __instance.id)
             {
-                return !SafetyBubbleSystem.Singleton.IsInSafetyBubble(FlightGlobals.ActiveVessel, false);
+                return !SafetyBubbleSystem.Singleton.IsInSafetyBubble(__instance, false);
             }
 
             return true;
