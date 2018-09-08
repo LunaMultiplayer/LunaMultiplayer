@@ -122,33 +122,32 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private void UpdateProtoVesselValues(ProtoVessel protoVessel)
         {
-            if (protoVessel != null)
-            {
-                protoVessel.vesselName = Name;
-                protoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), Type);
-                protoVessel.distanceTraveled = DistanceTraveled;
-                protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
-                protoVessel.landed = Landed;
-                protoVessel.landedAt = LandedAt;
-                protoVessel.displaylandedAt = DisplayLandedAt;
-                protoVessel.splashed = Splashed;
-                protoVessel.missionTime = MissionTime;
-                protoVessel.launchTime = LaunchTime;
-                protoVessel.lastUT = LastUt;
-                protoVessel.persistent = Persistent;
-                protoVessel.refTransform = RefTransformId;
-                protoVessel.autoClean = AutoClean;
-                protoVessel.autoCleanReason = AutoCleanReason;
-                protoVessel.wasControllable = WasControllable;
-                protoVessel.stage = Stage;
-                protoVessel.CoM.x = Com[0];
-                protoVessel.CoM.y = Com[1];
-                protoVessel.CoM.z = Com[2];
+            if (protoVessel == null) return;
 
-                for (var i = 0; i < 17; i++)
-                {
-                    protoVessel.actionGroups.SetValue(ActionGroups[i].ActionGroupName, $"{ActionGroups[i].State}, {ActionGroups[i].Time}");
-                }
+            protoVessel.vesselName = Name;
+            protoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), Type);
+            protoVessel.distanceTraveled = DistanceTraveled;
+            protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
+            protoVessel.landed = Landed;
+            protoVessel.landedAt = LandedAt;
+            protoVessel.displaylandedAt = DisplayLandedAt;
+            protoVessel.splashed = Splashed;
+            protoVessel.missionTime = MissionTime;
+            protoVessel.launchTime = LaunchTime;
+            protoVessel.lastUT = LastUt;
+            protoVessel.persistent = Persistent;
+            protoVessel.refTransform = RefTransformId;
+            protoVessel.autoClean = AutoClean;
+            protoVessel.autoCleanReason = AutoCleanReason;
+            protoVessel.wasControllable = WasControllable;
+            protoVessel.stage = Stage;
+            protoVessel.CoM.x = Com[0];
+            protoVessel.CoM.y = Com[1];
+            protoVessel.CoM.z = Com[2];
+
+            for (var i = 0; i < 17; i++)
+            {
+                protoVessel.actionGroups.SetValue(ActionGroups[i].ActionGroupName, $"{ActionGroups[i].State}, {ActionGroups[i].Time}");
             }
         }
     }
