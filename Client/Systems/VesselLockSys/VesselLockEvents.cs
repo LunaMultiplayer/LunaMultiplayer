@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselProtoSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
 
@@ -35,6 +36,9 @@ namespace LunaClient.Systems.VesselLockSys
             else
             {
                 LockSystem.Singleton.AcquireControlLock(vessel.id);
+
+                //Send the vessel that we switched to. It might be a kerbal going eva for example and the other players won't have it
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
             }
         }
 
