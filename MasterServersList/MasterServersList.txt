@@ -4,10 +4,10 @@
 dagger.ole32.com:8700
 #Dagger nightly. List: http://dagger.ole32.com:8751
 dagger.ole32.com:8750
-#PictoCube (Alfred). List: http://37.187.108.37:8701
-37.187.108.37:8700
-#PictoCube (Alfred) nightly. List: http://37.187.108.37:8711
-37.187.108.37:8710
+#PictoCube (Alfred). List: http://pictocube.ddns.net:8701
+pictocube.ddns.net:8700
+#PictoCube (Alfred) nightly. List: http://pictocube.ddns.net:8711
+pictocube.ddns.net:8710
 #Tekbot. List: http://ms.lmp.dnsd.info:8701/
 ms.lmp.dnsd.info:8701
 #Tekbot Nightly. List: http://ms.lmp.dnsd.info:8751/
