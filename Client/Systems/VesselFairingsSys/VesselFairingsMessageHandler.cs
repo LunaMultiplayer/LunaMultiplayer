@@ -3,7 +3,6 @@ using LunaClient.Base.Interface;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselFairingsSys
@@ -19,25 +18,21 @@ namespace LunaClient.Systems.VesselFairingsSys
             //We received a msg for our own controlled/updated vessel so ignore it
             if (!VesselCommon.DoVesselChecks(msgData.VesselId))
                 return;
-            
-            var vessel = FlightGlobals.FindVessel(msgData.VesselId);
-            if (vessel == null) return;
 
-            var part = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, msgData.PartFlightId);
-            if (part != null)
+            if (!System.VesselFairings.ContainsKey(msgData.VesselId))
             {
-                var module = VesselCommon.FindProtoPartModuleInProtoPart(part, "ModuleProceduralFairing");
-                module?.moduleValues.SetValue("fsm", "st_flight_deployed");
-                module?.moduleValues.RemoveNodesStartWith("XSECTION");
+                System.VesselFairings.TryAdd(msgData.VesselId, new VesselFairingQueue());
+            }
 
-                try
+            if (System.VesselFairings.TryGetValue(msgData.VesselId, out var queue))
+            {
+                if (queue.TryPeek(out var resource) && resource.GameTime > msgData.GameTime)
                 {
-                    (module?.moduleRef as ModuleProceduralFairing)?.DeployFairing();
+                    //A user reverted, so clear his message queue and start from scratch
+                    queue.Clear();
                 }
-                catch (Exception)
-                {
-                    //TODO reload the module
-                }
+
+                queue.Enqueue(msgData);
             }
         }
     }

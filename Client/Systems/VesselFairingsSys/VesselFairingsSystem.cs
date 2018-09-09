@@ -1,8 +1,9 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselUtilities;
-using System.Collections.Generic;
+using System;
+using System.Collections.Concurrent;
 using System.Reflection;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselFairingsSys
 {
@@ -14,15 +15,17 @@ namespace LunaClient.Systems.VesselFairingsSys
     {
         #region Fields & properties
 
-        public bool FairingSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f;
-
-        private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
-
+        public bool FairingSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT;
+        
         private static readonly FieldInfo FsmField = typeof(ModuleProceduralFairing).GetField("fsm", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        public ConcurrentDictionary<Guid, VesselFairingQueue> VesselFairings { get; } = new ConcurrentDictionary<Guid, VesselFairingQueue>();
 
         #endregion
 
-        #region Base overrides
+        #region Base overrides        
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         public override string SystemName { get; } = nameof(VesselFairingsSystem);
 
@@ -30,8 +33,9 @@ namespace LunaClient.Systems.VesselFairingsSys
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselFairings));
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, SendSecondaryVesselFairings));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselFairings));
         }
+
         #endregion
 
         #region Update routines
@@ -40,42 +44,34 @@ namespace LunaClient.Systems.VesselFairingsSys
         {
             if (FairingSystemReady && !VesselCommon.IsSpectating)
             {
-                CheckAndSendFairingChanges(FlightGlobals.ActiveVessel);
+                var proceduralFairingModules = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleProceduralFairing>();
+                for (var i = 0; i < proceduralFairingModules.Count; i++)
+                {
+                    var module = proceduralFairingModules[i];
+                    var storeValue = module.snapshot.moduleValues.GetValue("fsm"); ;
+
+                    if (storeValue == "st_idle" && FsmField?.GetValue(module) is KerbalFSM fsm && fsm.currentStateName == "st_flight_deployed")
+                    {
+                        LunaLog.Log($"Detected fairings deployed! Part FlightID: {proceduralFairingModules[i].part.flightID}");
+                        MessageSender.SendVesselFairingDeployed(FlightGlobals.ActiveVessel, proceduralFairingModules[i].part.flightID);
+                    }
+                }
             }
         }
 
-        private void SendSecondaryVesselFairings()
+        private void ProcessVesselFairings()
         {
-            if (FairingSystemReady && !VesselCommon.IsSpectating)
+            foreach (var keyVal in VesselFairings)
             {
-                SecondaryVesselsToUpdate.Clear();
-                SecondaryVesselsToUpdate.AddRange(VesselCommon.GetSecondaryVessels());
-
-                for (var i = 0; i < SecondaryVesselsToUpdate.Count; i++)
+                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)
                 {
-                    CheckAndSendFairingChanges(SecondaryVesselsToUpdate[i]);
+                    keyVal.Value.TryDequeue(out update);
+                    update.ProcessFairing();
+                    keyVal.Value.Recycle(update);
                 }
             }
         }
 
         #endregion
-
-        private void CheckAndSendFairingChanges(Vessel vessel)
-        {
-            if (vessel == null) return;
-
-            var proceduralFairingModules = vessel.FindPartModulesImplementing<ModuleProceduralFairing>();
-            for (var i = 0; i < proceduralFairingModules.Count; i++)
-            {
-                var module = proceduralFairingModules[i];
-                var storeValue = module.snapshot.moduleValues.GetValue("fsm"); ;
-
-                if (storeValue == "st_idle" && FsmField?.GetValue(module) is KerbalFSM fsm && fsm.currentStateName == "st_flight_deployed")
-                {
-                    LunaLog.Log($"Detected fairings deployed! Part FlightID: {proceduralFairingModules[i].part.flightID}");
-                    MessageSender.SendVesselFairingDeployed(vessel, proceduralFairingModules[i].part.flightID);
-                }
-            }
-        }
     }
 }

@@ -236,6 +236,8 @@
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairing.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingQueue.cs" />
     <Compile Include="Systems\VesselFlightStateSys\FlightStateEvents.cs" />
     <Compile Include="Extensions\FlightStateExtension.cs" />
     <Compile Include="Systems\VesselFlightStateSys\FlightStateQueue.cs" />
