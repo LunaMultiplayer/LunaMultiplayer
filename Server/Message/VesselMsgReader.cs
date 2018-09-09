@@ -59,10 +59,6 @@ namespace Server.Message
                     VesselDataUpdater.WriteFairingDataToFile(messageData);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
-                case VesselMessageType.Eva:
-                    VesselDataUpdater.WriteEvaDataToFile(messageData);
-                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
-                    break;
                 default:
                     throw new NotImplementedException("Vessel message type not implemented");
             }

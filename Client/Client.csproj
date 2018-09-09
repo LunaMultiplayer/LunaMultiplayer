@@ -218,9 +218,6 @@
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewEvents.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewSystem.cs" />
-    <Compile Include="Systems\VesselEvaSys\VesselEvaMessageHandler.cs" />
-    <Compile Include="Systems\VesselEvaSys\VesselEvaMessageSender.cs" />
-    <Compile Include="Systems\VesselEvaSys\VesselEvaSystem.cs" />
     <Compile Include="Systems\Facility\FacilityEvents.cs" />
     <Compile Include="Systems\Facility\FacilitySystem.cs" />
     <Compile Include="Systems\Facility\FacilityMessageHandler.cs" />

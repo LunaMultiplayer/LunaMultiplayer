@@ -11,7 +11,6 @@
         Resource = 6,
         Sync = 7,
         PartSync = 8,
-        Fairing = 9,
-        Eva = 10
+        Fairing = 9
     }
 }
