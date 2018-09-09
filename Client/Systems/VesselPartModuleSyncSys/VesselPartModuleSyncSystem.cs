@@ -59,7 +59,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             }
         }
 
-
         #endregion
     }
 }
