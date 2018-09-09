@@ -1,5 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
+using LunaClient.Systems.TimeSyncer;
+using System;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
@@ -16,9 +19,13 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
         private VesselPartModuleSyncEvents VesselPartModuleSyncEvents { get; } = new VesselPartModuleSyncEvents();
 
+        public ConcurrentDictionary<Guid, VesselPartSyncQueue> VesselPartsSyncs { get; } = new ConcurrentDictionary<Guid, VesselPartSyncQueue>();
+
         #endregion
 
-        #region Base overrides
+        #region Base overrides        
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         public override string SystemName { get; } = nameof(VesselPartModuleSyncSystem);
 
@@ -26,6 +33,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         {
             base.OnEnabled();
             PartModuleEvent.onPartModuleFieldChange.Add(VesselPartModuleSyncEvents.PartModuleFieldChange);
+            SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncs));
         }
 
         protected override void OnDisabled()
@@ -33,6 +41,24 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             base.OnDisabled();
             PartModuleEvent.onPartModuleFieldChange.Remove(VesselPartModuleSyncEvents.PartModuleFieldChange);
         }
+
+        #endregion
+
+        #region Update routines
+
+        private void ProcessVesselPartSyncs()
+        {
+            foreach (var keyVal in VesselPartsSyncs)
+            {
+                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)
+                {
+                    keyVal.Value.TryDequeue(out update);
+                    update.ProcessPartSync();
+                    keyVal.Value.Recycle(update);
+                }
+            }
+        }
+
 
         #endregion
     }

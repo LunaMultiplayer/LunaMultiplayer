@@ -1,10 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.ModuleStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
@@ -20,62 +18,21 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             //We received a msg for our own controlled/updated vessel so ignore it
             if (!VesselCommon.DoVesselChecks(msgData.VesselId))
                 return;
-            
-            var vessel = FlightGlobals.FindVessel(msgData.VesselId);
-            if (vessel == null) return;
 
-            UpdateVesselValues(vessel.protoVessel, msgData);
-        }
-
-        private static void UpdateVesselValues(ProtoVessel protoVessel, VesselPartSyncMsgData msgData)
-        {
-            if (protoVessel == null) return;
-
-            var part = VesselCommon.FindProtoPartInProtovessel(protoVessel, msgData.PartFlightId);
-            if (part != null)
+            if (!System.VesselPartsSyncs.ContainsKey(msgData.VesselId))
             {
-                var module = VesselCommon.FindProtoPartModuleInProtoPart(part, msgData.ModuleName);
-                if (module != null)
-                {
-                    module.moduleValues.SetValue(msgData.FieldName, msgData.Value);
-                    UpdateVesselModuleIfNeeded(protoVessel.vesselID, part.flightID, msgData, module, part);
-                }
+                System.VesselPartsSyncs.TryAdd(msgData.VesselId, new VesselPartSyncQueue());
             }
-        }
 
-        private static void UpdateVesselModuleIfNeeded(Guid vesselId, uint partFlightId, VesselPartSyncMsgData msgData, ProtoPartModuleSnapshot module, ProtoPartSnapshot part)
-        {
-            if (module.moduleRef == null) return;
-
-            switch (CustomizationsHandler.SkipModule(vesselId, partFlightId, msgData.BaseModuleName, msgData.FieldName, true, out var customization))
+            if (System.VesselPartsSyncs.TryGetValue(msgData.VesselId, out var queue))
             {
-                case CustomizationResult.TooEarly:
-                case CustomizationResult.Ignore:
-                    break;
-                case CustomizationResult.Ok:
-                    if (customization.IgnoreSpectating && FlightGlobals.ActiveVessel?.id == vesselId) break;
+                if (queue.TryPeek(out var resource) && resource.GameTime > msgData.GameTime)
+                {
+                    //A user reverted, so clear his message queue and start from scratch
+                    queue.Clear();
+                }
 
-                    if (customization.SetValueInModule)
-                    {
-                        if (FieldModuleStore.ModuleFieldsDictionary.TryGetValue(msgData.BaseModuleName, out var moduleDef))
-                        {
-                            if (moduleDef.PersistentModuleField.TryGetValue(msgData.FieldName, out var fieldDef))
-                            {
-                                var convertedVal = Convert.ChangeType(msgData.Value, fieldDef.FieldType);
-                                if (convertedVal != null) fieldDef.SetValue(module.moduleRef, convertedVal);
-                            }
-                        }
-                    }
-
-                    if (customization.CallLoad)
-                        module.moduleRef.Load(module.moduleValues);
-                    if (customization.CallOnAwake)
-                        module.moduleRef.OnAwake();
-                    if (customization.CallOnLoad)
-                        module.moduleRef.OnLoad(module.moduleValues);
-                    if (customization.CallOnStart)
-                        module.moduleRef.OnStart(part.partRef.GetModuleStartState());
-                    break;
+                queue.Enqueue(msgData);
             }
         }
     }

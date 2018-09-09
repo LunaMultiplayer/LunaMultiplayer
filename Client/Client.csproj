@@ -247,6 +247,8 @@
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageSender.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncSystem.cs" />
+    <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartSync.cs" />
+    <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartSyncQueue.cs" />
     <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VesselProtoUpdater.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionEvents.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionUpdateQueue.cs" />
