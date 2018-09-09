@@ -96,8 +96,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log("[LMP]: Detected a revert to launch!");
-                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
-                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, false);
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Assigned);
             }
         }
 
@@ -109,25 +108,40 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
-                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
-                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Available);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id);
             }
         }
 
-        private static void RemoveOldVesselAndItsDebris(Vessel vessel)
+        private static void RemoveOldVesselAndItsDebris(Vessel vessel, ProtoCrewMember.RosterStatus kerbalStatus)
         {
             if (vessel == null) return;
 
+            if (FlightGlobals.ActiveVessel.isEVA)
+            {
+                var kerbal = HighLogic.CurrentGame.CrewRoster[FlightGlobals.ActiveVessel.vesselName];
+                if (kerbal != null)
+                    kerbal.rosterStatus = kerbalStatus;
+
+                System.AddToKillList(FlightGlobals.ActiveVessel.id, "Revert. Active vessel is a kerbal");
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id);
+            }
+
             //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
             //vessel and remove them both from our game and server
-            var vesselIdsToRemove = FlightGlobals.Vessels
-                .Where(v => v!= null && v.rootPart?.missionID == vessel.rootPart.missionID && v.id != vessel.id)
-                .Select(v => v.id).Distinct();
+            var vesselsToRemove = FlightGlobals.Vessels
+                .Where(v => v!= null && v.rootPart?.missionID == vessel.rootPart.missionID && v.id != vessel.id).Distinct();
 
-            foreach (var vesselIdToRemove in vesselIdsToRemove)
+            foreach (var vesselToRemove in vesselsToRemove)
             {
-                System.AddToKillList(vesselIdToRemove, "Revert. Sub-vessel of the initial vessel");
-                System.MessageSender.SendVesselRemove(vesselIdToRemove);
+                if (vesselToRemove.isEVA)
+                {
+                    var kerbal = HighLogic.CurrentGame.CrewRoster[vesselToRemove.vesselName];
+                    if (kerbal != null)
+                        kerbal.rosterStatus = kerbalStatus;
+                }
+
+                System.MessageSender.SendVesselRemove(vesselToRemove.id);
             }
         }
     }
