@@ -13,7 +13,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
         public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(msg.Data is VesselPartSyncMsgData msgData) || !System.PartSyncSystemReady) return;
+            if (!(msg.Data is VesselPartSyncMsgData msgData)) return;
 
             //We received a msg for our own controlled/updated vessel so ignore it
             if (!VesselCommon.DoVesselChecks(msgData.VesselId))
