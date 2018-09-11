@@ -2,9 +2,9 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <SyncMethods>
         <MethodDefinition>
-            <MethodName>BrakeAction</MethodName>
+            <MethodName>Toggle</MethodName>
             <Fields>
-                <string>brakeInput</string>
+                <string>animSwitch</string>
             </Fields>
         </MethodDefinition>
     </SyncMethods>

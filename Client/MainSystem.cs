@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using PartModulePatcher = LunaClient.ModuleStore.Patching.PartModulePatcher;
 
 namespace LunaClient
 {

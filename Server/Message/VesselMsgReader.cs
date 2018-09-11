@@ -51,8 +51,12 @@ namespace Server.Message
                     VesselDataUpdater.WriteResourceDataToFile(messageData);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
-                case VesselMessageType.PartSync:
-                    VesselDataUpdater.WriteModuleDataToFile(messageData);
+                case VesselMessageType.PartFieldSync:
+                    VesselDataUpdater.WriteFieldModuleDataToFile(messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
+                    break;
+                case VesselMessageType.PartMethodSync:
+                    VesselDataUpdater.WriteMethodModuleDataToFile(messageData);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
                 case VesselMessageType.Fairing:

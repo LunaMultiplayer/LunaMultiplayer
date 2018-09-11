@@ -10,37 +10,23 @@ using System.Reflection;
 namespace LunaClient.ModuleStore
 {
     /// <summary>
-    /// This storage class stores all the fields that have the "ispersistent" as true. And also the customizations to them
+    /// This storage class stores all the fields that have the "ispersistent" as true. And also the customizations to the part modules
     /// When we run trough all the part modules looking for changes we will get the fields to check from this class.
-    /// Also we will use the customization values to decide if we apply the change or we send it accordingly
+    /// Also we will use the customization methods to act accordingly
     /// </summary>
     public class FieldModuleStore
     {
-        private static readonly FieldDefinition DefaultFieldDefinition = new FieldDefinition
-        {
-            FieldName = string.Empty,
-            Ignore = false,
-            ServerIgnore = false,
-            IgnoreSpectating = false,
-            Interval = 2500,
-            SetValueInModule = false,
-            CallLoad = true,
-            CallOnAwake = true,
-            CallOnLoad = true,
-            CallOnStart = true
-        };
-
         private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "PartSync");
 
         /// <summary>
-        /// Here we store all the part modules loaded and its fields that have the "ispersistent" as true.
+        /// Here we store all the part modules loaded and its fields that have the "ispersistent" as true to use it on the default part sync behaviour.
         /// </summary>
         public static readonly Dictionary<string, FieldModuleDefinition> ModuleFieldsDictionary = new Dictionary<string, FieldModuleDefinition>();
 
         /// <summary>
-        /// Here we store our customized part module fields
+        /// Here we store our customized part modules behaviours
         /// </summary>
-        public static Dictionary<string, ModuleDefinition> CustomizedModuleFieldsBehaviours = new Dictionary<string, ModuleDefinition>();
+        public static Dictionary<string, ModuleDefinition> CustomizedModuleBehaviours = new Dictionary<string, ModuleDefinition>();
 
         /// <summary>
         /// Here we store the inheritance chain of the types up to PartModule
@@ -52,6 +38,7 @@ namespace LunaClient.ModuleStore
 
         /// <summary>
         /// Check all part modules that inherit from PartModule. Then it gets all the fields of those classes that have the "ispersistent" as true.
+        /// Basically it fills up the ModuleFieldsDictionary dictionary
         /// </summary>
         public static void ReadLoadedPartModules()
         {
@@ -83,7 +70,8 @@ namespace LunaClient.ModuleStore
         }
 
         /// <summary>
-        /// Reads the module customizations xml
+        /// Reads the module customizations xml.
+        /// Basically it fills up the CustomizedModuleBehaviours dictionary
         /// </summary>
         public static void ReadCustomizationXml()
         {
@@ -93,29 +81,12 @@ namespace LunaClient.ModuleStore
             {
                 var moduleDefinition = LunaXmlSerializer.ReadXmlFromPath<ModuleDefinition>(file);
                 moduleDefinition.ModuleName = Path.GetFileNameWithoutExtension(file);
-
-                if (moduleDefinition.Fields.Select(m => m.FieldName).Distinct().Count() != moduleDefinition.Fields.Count)
-                {
-                    LunaLog.LogError($"Duplicate fields found in file: {file}. The module will be ignored");
-                    continue;
-                }
-
                 moduleValues.Add(moduleDefinition);
             }
 
-            CustomizedModuleFieldsBehaviours = moduleValues.ToDictionary(m => m.ModuleName, v => v);
+            CustomizedModuleBehaviours = moduleValues.ToDictionary(m => m.ModuleName, v => v);
         }
         
-        /// <summary>
-        /// Returns the customization for a field. if it doesn't exist, it returns a default value
-        /// </summary>
-        public static FieldDefinition GetCustomFieldDefinition(string moduleName, string fieldName)
-        {
-            return CustomizedModuleFieldsBehaviours.TryGetValue(moduleName, out var customization) ?
-                customization.Fields.FirstOrDefault(f => f.FieldName == fieldName) ?? DefaultFieldDefinition
-                : DefaultFieldDefinition;
-        }
-
         /// <summary>
         /// Gets the inheritance chain of a type up to PartModule.
         /// For example. 
