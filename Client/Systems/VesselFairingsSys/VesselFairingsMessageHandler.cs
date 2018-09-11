@@ -13,7 +13,7 @@ namespace LunaClient.Systems.VesselFairingsSys
 
         public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(msg.Data is VesselFairingMsgData msgData) || !System.FairingSystemReady) return;
+            if (!(msg.Data is VesselFairingMsgData msgData)) return;
 
             //We received a msg for our own controlled/updated vessel so ignore it
             if (!VesselCommon.DoVesselChecks(msgData.VesselId))
