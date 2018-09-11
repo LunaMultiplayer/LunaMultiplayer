@@ -233,6 +233,7 @@
     <Compile Include="Systems\Ping\PingSystem.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingEvents.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
