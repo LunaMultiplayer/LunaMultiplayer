@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <ActionMethods></ActionMethods>
-    <EventMethods>
+    <ActionMethods>
         <MethodDefinition>
-            <MethodName>Toggle</MethodName>
+            <MethodName>HibernateToggle</MethodName>
             <Fields>
-                <string>animSwitch</string>
+                <string>hibernation</string>
             </Fields>
         </MethodDefinition>
-    </EventMethods>
+    </ActionMethods>
+    <EventMethods></EventMethods>
     <Methods></Methods>
 </ModuleDefinition>

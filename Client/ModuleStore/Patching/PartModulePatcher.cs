@@ -1,8 +1,9 @@
 ﻿using Harmony;
-using LunaClient.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace LunaClient.ModuleStore.Patching
 {
@@ -11,16 +12,19 @@ namespace LunaClient.ModuleStore.Patching
     /// </summary>
     public partial class PartModulePatcher
     {
-        private static string _currentPartModuleName;
         private static readonly List<CodeInstruction> InstructionsBackup = new List<CodeInstruction>();
-        
+
+        #region Transpilers references
+
+        private static readonly HarmonyMethod RestoreTranspilerMethod = new HarmonyMethod(typeof(PartModulePatcher).GetMethod(nameof(Restore)));
+
+        #endregion
+
         /// <summary>
         /// Call this method to scan all the PartModules and patch the methods
         /// </summary>
         public static void Awake()
         {
-            HarmonyPatcher.HarmonyInstance.Patch(TestModule.ExampleFieldChangeCallMethod, null, null, new HarmonyMethod(typeof(Patching.PartModulePatcher).GetMethod(nameof(InitFieldChangeCallInstructions))));
-            HarmonyPatcher.HarmonyInstance.Patch(TestModule.ExampleMethodCallMethod, null, null, new HarmonyMethod(typeof(Patching.PartModulePatcher).GetMethod(nameof(InitMethodCallInstructions))));
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 try
@@ -30,10 +34,12 @@ namespace LunaClient.ModuleStore.Patching
                     {
                         try
                         {
-                            _currentPartModuleName = partModule.Name;
-
-                            PatchPersistentFields(partModule, assembly);
-                            PatchPersistentMethods(partModule, assembly);
+                            if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out var definition))
+                            {
+                                PatchActions(partModule, definition);
+                                PatchEvents(partModule, definition);
+                                PatchMethods(partModule, definition);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -54,6 +60,30 @@ namespace LunaClient.ModuleStore.Patching
         public static IEnumerable<CodeInstruction> Restore(IEnumerable<CodeInstruction> instructions)
         {
             return InstructionsBackup.AsEnumerable();
+        }
+        
+        /// <summary>
+        /// This method takes the IL code of the part module and appends the ActionCallInstructions at the end
+        /// </summary>
+        public static IEnumerable<CodeInstruction> AppendInstructions(MethodBase originalMethod, IEnumerable<CodeInstruction> instructions, List<CodeInstruction> afterPatch)
+        {
+            InstructionsBackup.Clear();
+
+            var codes = new List<CodeInstruction>(instructions);
+            InstructionsBackup.AddRange(codes);
+
+            for (var i = 0; i < afterPatch.Count; i++)
+            {
+                if (afterPatch[i].opcode == OpCodes.Ldstr)
+                {
+                    //Change the name operand so the proper "method name" is shown
+                    afterPatch[i].operand = originalMethod.Name;
+                }
+            }
+
+            codes.InsertRange(codes.Count - 1, afterPatch);
+
+            return codes.AsEnumerable();
         }
     }
 }

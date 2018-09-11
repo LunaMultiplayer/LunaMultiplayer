@@ -43,8 +43,7 @@ using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
 using System.Threading;
-using LunaClient.Systems.VesselPartModuleFieldSyncSys;
-using LunaClient.Systems.VesselPartModuleMethodSyncSys;
+using LunaClient.Systems.VesselPartSyncSys;
 
 namespace LunaClient.Network
 {
@@ -180,11 +179,8 @@ namespace LunaClient.Network
                         case VesselMessageType.Resource:
                             VesselResourceSystem.Singleton.EnqueueMessage(msg);
                             break;
-                        case VesselMessageType.PartFieldSync:
-                            VesselPartModuleFieldSyncSystem.Singleton.EnqueueMessage(msg);
-                            break;
-                        case VesselMessageType.PartMethodSync:
-                            VesselPartModuleMethodSyncSystem.Singleton.EnqueueMessage(msg);
+                        case VesselMessageType.PartSync:
+                            VesselPartSyncSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Fairing:
                             VesselFairingsSystem.Singleton.EnqueueMessage(msg);

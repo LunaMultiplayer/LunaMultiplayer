@@ -5,15 +5,15 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
 
-namespace LunaClient.Systems.VesselPartModuleMethodSyncSys
+namespace LunaClient.Systems.VesselPartSyncSys
 {
-    public class VesselPartModuleMethodSyncMessageHandler : SubSystem<VesselPartModuleMethodSyncSystem>, IMessageHandler
+    public class VesselPartSyncMessageHandler : SubSystem<VesselPartSyncSystem>, IMessageHandler
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(msg.Data is VesselPartMethodSyncMsgData msgData)) return;
+            if (!(msg.Data is VesselPartSyncMsgData msgData)) return;
 
             //We received a msg for our own controlled/updated vessel so ignore it
             if (!VesselCommon.DoVesselChecks(msgData.VesselId))
