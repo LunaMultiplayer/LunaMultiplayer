@@ -10,7 +10,8 @@
         Update = 5,
         Resource = 6,
         Sync = 7,
-        PartSync = 8,
-        Fairing = 9
+        PartFieldSync = 8,
+        PartMethodSync = 9,
+        Fairing = 10
     }
 }
