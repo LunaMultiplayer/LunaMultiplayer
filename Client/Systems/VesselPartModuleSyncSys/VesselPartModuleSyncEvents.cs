@@ -2,9 +2,9 @@
 using LunaClient.Extensions;
 using LunaClient.ModuleStore;
 
-namespace LunaClient.Systems.VesselPartModuleFieldSyncSys
+namespace LunaClient.Systems.VesselPartModuleSyncSys
 {
-    public class VesselPartModuleFieldSyncEvents : SubSystem<VesselPartModuleFieldSyncSystem>
+    public class VesselPartModuleSyncEvents : SubSystem<VesselPartModuleSyncSystem>
     {
         public void PartModuleFieldChange(PartModule module, string fieldName)
         {
@@ -26,8 +26,8 @@ namespace LunaClient.Systems.VesselPartModuleFieldSyncSys
                     {
                         if (definition.PersistentModuleField.TryGetValue(fieldName, out var fieldInfo))
                         {
-                            var timeToSend = CustomizationsHandler.TimeToSendFieldModule(vessel.id, part.flightID, baseModuleName, fieldInfo.Name);
-                            if (!timeToSend)
+                            var customizationResult = CustomizationsHandler.SkipModule(vessel.id, part.flightID, baseModuleName, fieldInfo.Name, false, out _);
+                            if (customizationResult != CustomizationResult.Ok)
                                 return;
 
                             var fieldVal = fieldInfo.GetValue(module).ToInvariantString();

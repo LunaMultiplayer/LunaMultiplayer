@@ -25,7 +25,7 @@ using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPartModuleMethodSyncSys;
+using LunaClient.Systems.VesselPartModuleSyncSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -176,10 +176,10 @@ namespace LunaClient.Windows.Systems
             {
                 VesselUpdateSystem.Singleton.Enabled = GUILayout.Toggle(VesselUpdateSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
-            _vesselPartSync = GUILayout.Toggle(_vesselPartSync, "Vessel part method sync", ButtonStyle);
+            _vesselPartSync = GUILayout.Toggle(_vesselPartSync, "Vessel part sync", ButtonStyle);
             if (_vesselPartSync)
             {
-                VesselPartModuleMethodSyncSystem.Singleton.Enabled = GUILayout.Toggle(VesselPartModuleMethodSyncSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                VesselPartModuleSyncSystem.Singleton.Enabled = GUILayout.Toggle(VesselPartModuleSyncSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             _vesselResource = GUILayout.Toggle(_vesselResource, "Vessel resources", ButtonStyle);
             if (_vesselResource)

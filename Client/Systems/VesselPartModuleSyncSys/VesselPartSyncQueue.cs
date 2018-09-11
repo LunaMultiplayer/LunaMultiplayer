@@ -1,11 +1,11 @@
 ﻿using LunaClient.Base;
 using LunaCommon.Message.Data.Vessel;
 
-namespace LunaClient.Systems.VesselPartModuleFieldSyncSys
+namespace LunaClient.Systems.VesselPartModuleSyncSys
 {
-    public class VesselPartFieldSyncQueue : CachedConcurrentQueue<VesselPartFieldSync, VesselPartFieldSyncMsgData>
+    public class VesselPartSyncQueue : CachedConcurrentQueue<VesselPartSync, VesselPartSyncMsgData>
     {
-        protected override void AssignFromMessage(VesselPartFieldSync value, VesselPartFieldSyncMsgData msgData)
+        protected override void AssignFromMessage(VesselPartSync value, VesselPartSyncMsgData msgData)
         {
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
@@ -15,6 +15,7 @@ namespace LunaClient.Systems.VesselPartModuleFieldSyncSys
             value.BaseModuleName = msgData.BaseModuleName.Clone() as string;
             value.FieldName = msgData.FieldName.Clone() as string;
             value.Value = msgData.Value.Clone() as string;
+            value.ServerIgnore = msgData.ServerIgnore;
         }
     }
 }

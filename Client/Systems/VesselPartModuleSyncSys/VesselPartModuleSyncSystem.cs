@@ -5,21 +5,21 @@ using System;
 using System.Collections.Concurrent;
 using UnityEngine;
 
-namespace LunaClient.Systems.VesselPartModuleFieldSyncSys
+namespace LunaClient.Systems.VesselPartModuleSyncSys
 {
     /// <summary>
     /// This class sends some parts of the vessel information to other players. We do it in another system as we don't want to send this information so often as
     /// the vessel position system and also we want to send it more oftenly than the vessel proto.
     /// </summary>
-    public class VesselPartModuleFieldSyncSystem : MessageSystem<VesselPartModuleFieldSyncSystem, VesselPartModuleFieldSyncMessageSender, VesselPartModuleFieldSyncMessageHandler>
+    public class VesselPartModuleSyncSystem : MessageSystem<VesselPartModuleSyncSystem, VesselPartModuleSyncMessageSender, VesselPartModuleSyncMessageHandler>
     {
         #region Fields & properties
 
         public bool PartSyncSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f;
 
-        private VesselPartModuleFieldSyncEvents VesselPartModuleSyncEvents { get; } = new VesselPartModuleFieldSyncEvents();
+        private VesselPartModuleSyncEvents VesselPartModuleSyncEvents { get; } = new VesselPartModuleSyncEvents();
 
-        public ConcurrentDictionary<Guid, VesselPartFieldSyncQueue> VesselPartsSyncs { get; } = new ConcurrentDictionary<Guid, VesselPartFieldSyncQueue>();
+        public ConcurrentDictionary<Guid, VesselPartSyncQueue> VesselPartsSyncs { get; } = new ConcurrentDictionary<Guid, VesselPartSyncQueue>();
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselPartModuleFieldSyncSys
 
         protected override bool ProcessMessagesInUnityThread => false;
 
-        public override string SystemName { get; } = nameof(VesselPartModuleFieldSyncSystem);
+        public override string SystemName { get; } = nameof(VesselPartModuleSyncSystem);
 
         protected override void OnEnabled()
         {

@@ -227,10 +227,11 @@ namespace Server.System
         /// We received a part module change from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
         /// </summary>
-        public static void WriteFieldModuleDataToFile(VesselBaseMsgData message)
+        public static void WriteModuleDataToFile(VesselBaseMsgData message)
         {
-            if (!(message is VesselPartFieldSyncMsgData msgData)) return;
+            if (!(message is VesselPartSyncMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+            if (msgData.ServerIgnore) return;
 
             //Sync part changes ALWAYS and ignore the rate they arrive
             Task.Run(() =>
@@ -239,29 +240,7 @@ namespace Server.System
                 {
                     if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
 
-                    var updatedText = UpdateProtoVesselFileWithNewPartModulesFieldData(xmlData, msgData);
-                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
-                }
-            });
-        }
-
-        /// <summary>
-        /// We received a part module change from a player
-        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
-        /// </summary>
-        public static void WriteMethodModuleDataToFile(VesselBaseMsgData message)
-        {
-            if (!(message is VesselPartMethodSyncMsgData msgData)) return;
-            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
-
-            //Sync part changes ALWAYS and ignore the rate they arrive
-            Task.Run(() =>
-            {
-                lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
-                {
-                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
-
-                    var updatedText = UpdateProtoVesselFileWithNewPartModulesMethodData(xmlData, msgData);
+                    var updatedText = UpdateProtoVesselFileWithNewPartModulesData(xmlData, msgData);
                     VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
                 }
             });
@@ -488,7 +467,7 @@ namespace Server.System
         /// <summary>
         /// Updates the proto vessel with the values we received about a part module change of a vessel
         /// </summary>
-        private static string UpdateProtoVesselFileWithNewPartModulesFieldData(string vesselData, VesselPartFieldSyncMsgData msgData)
+        private static string UpdateProtoVesselFileWithNewPartModulesData(string vesselData, VesselPartSyncMsgData msgData)
         {
             var document = new XmlDocument();
             document.LoadXml(vesselData);
@@ -501,29 +480,6 @@ namespace Server.System
 
             var fieldNode = document.SelectSingleNode(xpath);
             if (fieldNode != null) fieldNode.InnerText = msgData.Value;
-
-            return document.ToIndentedString();
-        }
-
-        /// <summary>
-        /// Updates the proto vessel with the values we received about a part module change of a vessel
-        /// </summary>
-        private static string UpdateProtoVesselFileWithNewPartModulesMethodData(string vesselData, VesselPartMethodSyncMsgData msgData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
-                         $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
-                         $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
-
-            foreach (var fieldName in msgData.FieldValues)
-            {
-                var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{fieldName.FieldName}']";
-
-                var fieldNode = document.SelectSingleNode(xpath);
-                if (fieldNode != null) fieldNode.InnerText = fieldName.Value;
-            }
 
             return document.ToIndentedString();
         }

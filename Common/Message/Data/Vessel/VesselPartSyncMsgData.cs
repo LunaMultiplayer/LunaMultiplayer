@@ -4,19 +4,20 @@ using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Vessel
 {
-    public class VesselPartFieldSyncMsgData : VesselBaseMsgData
+    public class VesselPartSyncMsgData : VesselBaseMsgData
     {
-        internal VesselPartFieldSyncMsgData() { }
+        internal VesselPartSyncMsgData() { }
 
         public uint PartFlightId;
         public string ModuleName;
         public string BaseModuleName;
         public string FieldName;
         public string Value;
+        public bool ServerIgnore;
 
-        public override VesselMessageType VesselMessageType => VesselMessageType.PartFieldSync;
+        public override VesselMessageType VesselMessageType => VesselMessageType.PartSync;
 
-        public override string ClassName { get; } = nameof(VesselPartFieldSyncMsgData);
+        public override string ClassName { get; } = nameof(VesselPartSyncMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
@@ -27,6 +28,7 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(BaseModuleName);
             lidgrenMsg.Write(FieldName);
             lidgrenMsg.Write(Value);
+            lidgrenMsg.Write(ServerIgnore);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -38,11 +40,12 @@ namespace LunaCommon.Message.Data.Vessel
             BaseModuleName = lidgrenMsg.ReadString();
             FieldName = lidgrenMsg.ReadString();
             Value = lidgrenMsg.ReadString();
+            ServerIgnore = lidgrenMsg.ReadBoolean();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + BaseModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + BaseModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount() + sizeof(bool);
         }
     }
 }

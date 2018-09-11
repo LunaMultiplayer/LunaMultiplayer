@@ -1,18 +1,40 @@
 <?xml version="1.0"?>
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <SyncMethods>
-        <MethodDefinition>
-            <MethodName>Activate</MethodName>
-            <Fields>
-                <string>EngineIgnited</string>
-            </Fields>
-        </MethodDefinition>
-        <MethodDefinition>
-            <MethodName>Shutdown</MethodName>
-            <Fields>
-                <string>EngineIgnited</string>
-                <string>engineShutdown</string>
-            </Fields>
-        </MethodDefinition>
-    </SyncMethods>
+    <Fields>
+        <!--Current throttle of an engine. It's synced with another system so we can ignore it-->
+        <FieldDefinition>
+            <FieldName>currentThrottle</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+        <!--If the engine is on or off-->
+        <FieldDefinition>
+            <FieldName>EngineIgnited</FieldName>
+            <Ignore>false</Ignore>
+            <ServerIgnore>false</ServerIgnore>
+            <IgnoreSpectating>false</IgnoreSpectating>
+            <Interval>250</Interval>
+            <SetValueInModule>false</SetValueInModule>
+            <CallLoad>true</CallLoad>
+            <CallOnAwake>true</CallOnAwake>
+            <CallOnLoad>true</CallOnLoad>
+            <CallOnStart>true</CallOnStart>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>manuallyOverridden</FieldName>
+            <Ignore>false</Ignore>
+            <ServerIgnore>false</ServerIgnore>
+            <IgnoreSpectating>false</IgnoreSpectating>
+            <Interval>600000</Interval>
+            <SetValueInModule>false</SetValueInModule>
+            <CallLoad>true</CallLoad>
+            <CallOnAwake>true</CallOnAwake>
+            <CallOnLoad>true</CallOnLoad>
+            <CallOnStart>true</CallOnStart>
+        </FieldDefinition>
+        <!--Flameout. On SSME, can be triggered but not in the context of running out of oxidizer (might check).-->
+        <FieldDefinition>
+            <FieldName>flameout</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+    </Fields>
 </ModuleDefinition>
