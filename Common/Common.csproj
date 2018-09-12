@@ -223,7 +223,8 @@
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselPartSyncMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselPartSyncFieldMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselPartSyncCallMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselResourceInfo.cs" />
     <Compile Include="Message\Data\Vessel\VesselResourceMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselSyncMsgData.cs" />

@@ -1,5 +1,4 @@
 ﻿using LunaCommon.Xml;
-using System.Collections.Generic;
 
 namespace LunaClient.ModuleStore.Structures
 {
@@ -10,8 +9,5 @@ namespace LunaClient.ModuleStore.Structures
 
         [XmlComment(Value = "Max interval to sync this method call")]
         public int MaxIntervalInMs { get; set; }
-
-        [XmlComment(Value = "Fields to sync after the method is called")]
-        public List<string> Fields { get; set; } = new List<string>();
     }
 }

@@ -36,8 +36,6 @@ namespace LunaClient.ModuleStore.Patching
                         {
                             if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out var definition))
                             {
-                                PatchActions(partModule, definition);
-                                PatchEvents(partModule, definition);
                                 PatchMethods(partModule, definition);
                             }
                         }

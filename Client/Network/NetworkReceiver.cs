@@ -29,6 +29,8 @@ using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPartSyncCallSys;
+using LunaClient.Systems.VesselPartSyncFieldSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -43,7 +45,6 @@ using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
 using System.Threading;
-using LunaClient.Systems.VesselPartSyncSys;
 
 namespace LunaClient.Network
 {
@@ -179,8 +180,11 @@ namespace LunaClient.Network
                         case VesselMessageType.Resource:
                             VesselResourceSystem.Singleton.EnqueueMessage(msg);
                             break;
-                        case VesselMessageType.PartSync:
-                            VesselPartSyncSystem.Singleton.EnqueueMessage(msg);
+                        case VesselMessageType.PartSyncField:
+                            VesselPartSyncFieldSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.PartSyncCall:
+                            VesselPartSyncCallSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Fairing:
                             VesselFairingsSystem.Singleton.EnqueueMessage(msg);

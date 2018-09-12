@@ -30,7 +30,8 @@ namespace LunaClient.Windows.Systems
         private static bool _vesselLock;
         private static bool _vesselPosition;
         private static bool _vesselUpdate;
-        private static bool _vesselPartSync;
+        private static bool _vesselPartSyncField;
+        private static bool _vesselPartSyncCall;
         private static bool _vesselResource;
         private static bool _vesselFairing;
         private static bool _vesselProto;

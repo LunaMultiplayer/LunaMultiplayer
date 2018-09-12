@@ -25,13 +25,6 @@ namespace LunaClient.ModuleStore.Patching
                     LunaLog.LogError($"Method {method.MethodName} not found in part module {partModule.Name}");
                     continue;
                 }
-
-                if (partModuleMethod.GetCustomAttributes(typeof(KSPEvent), true).Any() || partModuleMethod.GetCustomAttributes(typeof(KSPAction), true).Any())
-                {
-                    LunaLog.LogError($"Method {method.MethodName} is not valid as it has the KSPMethod/KSPAction attribute");
-                    continue;
-                }
-
                 if (partModuleMethod.GetParameters().Any())
                 {
                     LunaLog.LogError($"Method {method.MethodName} is not valid as it doesn't have a parameterless signature");

@@ -229,7 +229,7 @@ namespace Server.System
         /// </summary>
         public static void WritePartSyncDataToFile(VesselBaseMsgData message)
         {
-            if (!(message is VesselPartSyncMsgData msgData)) return;
+            if (!(message is VesselPartSyncFieldMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
             //Sync part changes ALWAYS and ignore the rate they arrive
@@ -466,7 +466,7 @@ namespace Server.System
         /// <summary>
         /// Updates the proto vessel with the values we received about a part module change
         /// </summary>
-        private static string UpdateProtoVesselFileWithNewPartSyncData(string vesselData, VesselPartSyncMsgData msgData)
+        private static string UpdateProtoVesselFileWithNewPartSyncData(string vesselData, VesselPartSyncFieldMsgData msgData)
         {
             var document = new XmlDocument();
             document.LoadXml(vesselData);
@@ -475,13 +475,10 @@ namespace Server.System
                          $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
                          $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
 
-            foreach (var fieldName in msgData.FieldValues)
-            {
-                var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{fieldName.FieldName}']";
+            var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
 
-                var fieldNode = document.SelectSingleNode(xpath);
-                if (fieldNode != null) fieldNode.InnerText = fieldName.Value;
-            }
+            var fieldNode = document.SelectSingleNode(xpath);
+            if (fieldNode != null) fieldNode.InnerText = msgData.Value;
 
             return document.ToIndentedString();
         }

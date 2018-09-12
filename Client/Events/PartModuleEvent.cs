@@ -6,8 +6,7 @@ namespace LunaClient.Events
 {
     public class PartModuleEvent : LmpBaseEvent
     {
-        public static EventData<PartModule, string, KSPActionParam> onPartModuleActionCalled;
-        public static EventData<PartModule, string> onPartModuleEventCalled;
+        public static EventData<PartModule, string> onPartModuleFieldChanged;
         public static EventData<PartModule, string> onPartModuleMethodCalled;
     }
 }

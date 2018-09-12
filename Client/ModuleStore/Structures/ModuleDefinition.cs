@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Xml;
 using System.Collections.Generic;
+using UniLinq;
 
 namespace LunaClient.ModuleStore.Structures
 {
@@ -8,13 +9,14 @@ namespace LunaClient.ModuleStore.Structures
         [XmlComment(Value = "Module that we are modifying")]
         public string ModuleName { get; set; }
 
-        [XmlComment(Value = "KSPAction methods to sync")]
-        public List<MethodDefinition> ActionMethods { get; set; } = new List<MethodDefinition>();
-
-        [XmlComment(Value = "KSPEvent methods to sync")]
-        public List<MethodDefinition> EventMethods { get; set; } = new List<MethodDefinition>();
-
-        [XmlComment(Value = "Standard methods to sync")]
+        [XmlComment(Value = "Fields to sync")]
+        public List<FieldDefinition> Fields { get; set; } = new List<FieldDefinition>();
+        
+        [XmlComment(Value = "Methods to sync")]
         public List<MethodDefinition> Methods { get; set; } = new List<MethodDefinition>();
+
+        public FieldDefinition GetCustomizationForField(string fieldName) => Fields.FirstOrDefault(f => f.FieldName == fieldName);
+
+        public MethodDefinition GetCustomizationForMethod(string methodName) => Methods.FirstOrDefault(f => f.MethodName == methodName);
     }
 }

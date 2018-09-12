@@ -1,21 +1,19 @@
 <?xml version="1.0"?>
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <ActionMethods></ActionMethods>
-    <EventMethods>
+    <Fields>
+        <FieldDefinition>
+            <FieldName>EngineIgnited</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>engineShutdown</FieldName>
+        </FieldDefinition>
+    </Fields>
+    <Methods>
         <MethodDefinition>
             <MethodName>Activate</MethodName>
-            <Fields>
-                <string>EngineIgnited</string>
-                <string>engineShutdown</string>
-            </Fields>
         </MethodDefinition>
         <MethodDefinition>
             <MethodName>Shutdown</MethodName>
-            <Fields>
-                <string>EngineIgnited</string>
-                <string>engineShutdown</string>
-            </Fields>
         </MethodDefinition>
-    </EventMethods>
-    <Methods></Methods>
+    </Methods>
 </ModuleDefinition>
