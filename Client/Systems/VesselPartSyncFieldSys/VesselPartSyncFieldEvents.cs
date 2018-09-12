@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.ModuleStore;
+using System;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
 {
@@ -29,6 +30,8 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             var fieldVal = VesselPartModuleAccess.GetPartModuleFieldValue(module.vessel.id, module.part.flightID, module.moduleName, fieldName);
+            if (fieldVal == null) return;
+
             if (FieldModuleStore.InheritanceTypeChain.TryGetValue(module.moduleName, out var inheritChain))
             {
                 foreach (var baseModuleName in inheritChain)
@@ -42,6 +45,17 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
             LunaLog.Log($"Part field {fieldName} changed in module {module.moduleName} from part {module.part.flightID}.");
             System.MessageSender.SendVesselPartSyncFieldMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, fieldVal.ToString());
+        }
+
+        /// <summary>
+        /// Sends our vessel just when we start the flight
+        /// </summary>
+        public void FlightReady()
+        {
+            if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
+                return;
+
+            VesselPartModuleAccess.AddVessel(FlightGlobals.ActiveVessel);
         }
 
         public void VesselLoaded(Vessel vessel)

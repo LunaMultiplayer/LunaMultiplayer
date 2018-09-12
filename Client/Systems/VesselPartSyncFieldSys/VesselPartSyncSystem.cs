@@ -34,6 +34,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             base.OnEnabled();
             PartModuleEvent.onPartModuleFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleFieldChanged);
 
+            GameEvents.onFlightReady.Add(VesselPartModuleSyncFieldEvents.FlightReady);
             GameEvents.onVesselLoaded.Add(VesselPartModuleSyncFieldEvents.VesselLoaded);
             GameEvents.onVesselPartCountChanged.Add(VesselPartModuleSyncFieldEvents.VesselPartCountChanged);
             VesselUnloadEvent.onVesselUnloaded.Add(VesselPartModuleSyncFieldEvents.VesselUnloaded);
@@ -46,6 +47,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             base.OnDisabled();
             PartModuleEvent.onPartModuleFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleFieldChanged);
 
+            GameEvents.onFlightReady.Remove(VesselPartModuleSyncFieldEvents.FlightReady);
             GameEvents.onVesselLoaded.Remove(VesselPartModuleSyncFieldEvents.VesselLoaded);
             GameEvents.onVesselPartCountChanged.Remove(VesselPartModuleSyncFieldEvents.VesselPartCountChanged);
             VesselUnloadEvent.onVesselUnloaded.Remove(VesselPartModuleSyncFieldEvents.VesselUnloaded);
