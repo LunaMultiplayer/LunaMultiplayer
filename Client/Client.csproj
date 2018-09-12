@@ -286,7 +286,6 @@
     <Compile Include="Utilities\Detourer.cs" />
     <Compile Include="Utilities\Json.cs" />
     <Compile Include="Utilities\VectorUtil.cs" />
-    <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
