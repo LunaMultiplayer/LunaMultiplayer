@@ -31,6 +31,12 @@ namespace LunaClient.Systems.VesselFairingsSys
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselFairings));
         }
 
+        protected override void OnDisabled()
+        {
+            base.OnDisabled();
+            VesselFairings.Clear();
+        }
+
         #endregion
 
         #region Update routines
@@ -46,6 +52,18 @@ namespace LunaClient.Systems.VesselFairingsSys
                     keyVal.Value.Recycle(update);
                 }
             }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Removes a vessel from the system
+        /// </summary>
+        public void RemoveVessel(Guid vesselId)
+        {
+            VesselFairings.TryRemove(vesselId, out _);
         }
 
         #endregion

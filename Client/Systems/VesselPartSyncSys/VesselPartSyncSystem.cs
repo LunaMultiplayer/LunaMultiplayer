@@ -44,6 +44,7 @@ namespace LunaClient.Systems.VesselPartSyncSys
             PartModuleEvent.onPartModuleActionCalled.Remove(VesselPartModuleSyncEvents.PartModuleActionCalled);
             PartModuleEvent.onPartModuleEventCalled.Remove(VesselPartModuleSyncEvents.PartModuleEventCalled);
             PartModuleEvent.onPartModuleMethodCalled.Remove(VesselPartModuleSyncEvents.PartModuleMethodCalled);
+            VesselPartsSyncs.Clear();
         }
 
         #endregion
@@ -61,6 +62,18 @@ namespace LunaClient.Systems.VesselPartSyncSys
                     keyVal.Value.Recycle(update);
                 }
             }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Removes a vessel from the system
+        /// </summary>
+        public void RemoveVessel(Guid vesselId)
+        {
+            VesselPartsSyncs.TryRemove(vesselId, out _);
         }
 
         #endregion

@@ -174,7 +174,7 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         /// <summary>
-        /// Remvoes a vessel from the system
+        /// Removes a vessel from the system
         /// </summary>
         public void RemoveVessel(Guid vesselId)
         {

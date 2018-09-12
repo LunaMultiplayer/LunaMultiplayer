@@ -175,5 +175,17 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Removes a vessel from the system
+        /// </summary>
+        public void RemoveVessel(Guid vesselId)
+        {
+            VesselProtos.TryRemove(vesselId, out _);
+        }
+
+        #endregion
     }
 }

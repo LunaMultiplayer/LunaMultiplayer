@@ -3,9 +3,13 @@ using LunaClient.Systems.Chat;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPartSyncSys;
 using LunaClient.Systems.VesselPositionSys;
+using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselResourceSys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +80,10 @@ namespace LunaClient.VesselUtilities
         {
             VesselPositionSystem.Singleton.RemoveVessel(vesselId);
             VesselFlightStateSystem.Singleton.RemoveVessel(vesselId);
+            VesselResourceSystem.Singleton.RemoveVessel(vesselId);
+            VesselProtoSystem.Singleton.RemoveVessel(vesselId);
+            VesselPartSyncSystem.Singleton.RemoveVessel(vesselId);
+            VesselFairingsSystem.Singleton.RemoveVessel(vesselId);
         }
 
         /// <summary>
