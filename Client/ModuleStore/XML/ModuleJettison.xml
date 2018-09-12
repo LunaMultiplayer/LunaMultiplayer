@@ -2,21 +2,28 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>persistentState</FieldName>
+            <FieldName>activejettisonName</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>isJettisoned</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>automateSafeDeploy</FieldName>
+            <FieldName>shroudHideOverride</FieldName>
         </FieldDefinition>
+        <!--<FieldDefinition>
+            <FieldName>throttle</FieldName>
+            <MaxIntervalInMs>60000</MaxIntervalInMs>
+        </FieldDefinition>-->
     </Fields>
     <Methods>
         <MethodDefinition>
             <!--TODO: check if this is fine as is called twice-->
-            <MethodName>CutParachute</MethodName>
+            <MethodName>Jettison</MethodName>
         </MethodDefinition>
         <MethodDefinition>
             <!--TODO: check if this is fine as is called twice-->
-            <MethodName>Deploy</MethodName>
+            <MethodName>Shutdown</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

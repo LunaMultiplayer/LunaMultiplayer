@@ -2,17 +2,18 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>deployState</FieldName>
+            <FieldName>EfficiencyBonus</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>IsActivated</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
-            <MethodName>Extend</MethodName>
+            <MethodName>StartResourceConverter</MethodName>
         </MethodDefinition>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
-            <MethodName>Retract</MethodName>
+            <MethodName>StopResourceConverter</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

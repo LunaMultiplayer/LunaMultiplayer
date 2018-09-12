@@ -2,15 +2,13 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>JetpackDeployed</FieldName>
+            <FieldName>seed</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <FieldName>lampOn</FieldName>
+            <FieldName>AsteroidName</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>prefabBaseURL</FieldName>
         </FieldDefinition>
     </Fields>
-    <Methods>
-        <MethodDefinition>
-            <MethodName>ToggleLamp</MethodName>
-        </MethodDefinition>
-    </Methods>
 </ModuleDefinition>

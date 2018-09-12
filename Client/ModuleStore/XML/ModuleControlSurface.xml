@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <FieldDefinition>
+            <FieldName>mirrorDeploy</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>usesMirrorDeploy</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>ignorePitch</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>ignoreYaw</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>ignoreRoll</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>deploy</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>deployInvert</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>partDeployInvert</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>authorityLimiter</FieldName>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>

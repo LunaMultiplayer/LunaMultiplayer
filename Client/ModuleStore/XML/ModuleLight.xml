@@ -2,21 +2,32 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>persistentState</FieldName>
+            <FieldName>isOn</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>uiWriteLock</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>automateSafeDeploy</FieldName>
+            <FieldName>lightR</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>lightG</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>lightB</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
             <!--TODO: check if this is fine as is called twice-->
-            <MethodName>CutParachute</MethodName>
+            <MethodName>LightsOff</MethodName>
         </MethodDefinition>
         <MethodDefinition>
             <!--TODO: check if this is fine as is called twice-->
-            <MethodName>Deploy</MethodName>
+            <MethodName>LightsOn</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

@@ -4,15 +4,6 @@
         <!--Launch time of the panel. It afects the efficiency. An old solar panel produce less electricity-->
         <FieldDefinition>
             <FieldName>launchUT</FieldName>
-            <Ignore>false</Ignore>
-            <ServerIgnore>false</ServerIgnore>
-            <IgnoreSpectating>false</IgnoreSpectating>
-            <Interval>600000</Interval>
-            <SetValueInModule>false</SetValueInModule>
-            <CallLoad>true</CallLoad>
-            <CallOnAwake>true</CallOnAwake>
-            <CallOnLoad>true</CallOnLoad>
-            <CallOnStart>true</CallOnStart>
         </FieldDefinition>
     </Fields>
 </ModuleDefinition>

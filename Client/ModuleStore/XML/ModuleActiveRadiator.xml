@@ -2,17 +2,17 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>deployState</FieldName>
+            <FieldName>IsCooling</FieldName>
+            <!--This value can change a bit too often in some weird cases-->
+            <MaxIntervalInMs>250</MaxIntervalInMs>
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
-            <MethodName>Extend</MethodName>
+            <MethodName>Activate</MethodName>
         </MethodDefinition>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
-            <MethodName>Retract</MethodName>
+            <MethodName>Shutdown</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

@@ -3,47 +3,48 @@
     <Fields>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chuteYawRateAtMaxSpeed</FieldName>
+            <FieldName>rcsEnabled</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chuteMaxSpeedForYawRate</FieldName>
+            <FieldName>thrustPercentage</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chuteYawRateAtMinSpeed</FieldName>
+            <FieldName>enableYaw</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chuteMinSpeedForYawRate</FieldName>
+            <FieldName>enablePitch</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chuteRollRate</FieldName>
+            <FieldName>enableRoll</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chutePitchRate</FieldName>
+            <FieldName>enableXw</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chuteDefaultForwardPitch</FieldName>
+            <FieldName>enableY</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>semiDeployedChuteForwardPitch</FieldName>
+            <FieldName>enableZ</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chutePitchRateDivisorWhenTurning</FieldName>
+            <FieldName>useThrottle</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>chuteRollRateDivisorWhenPitching</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>chuteYawRateDivisorWhenPitching</FieldName>
+            <FieldName>fullThrust</FieldName>
         </FieldDefinition>
     </Fields>
+    <Methods>
+        <MethodDefinition>
+            <MethodName>ToggleToggles</MethodName>
+        </MethodDefinition>
+    </Methods>
 </ModuleDefinition>

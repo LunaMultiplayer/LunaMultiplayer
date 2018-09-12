@@ -2,23 +2,27 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>aniState</FieldName>
+            <FieldName>fireEffectName</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <FieldName>animSwitch</FieldName>
+            <FieldName>powerEffectName</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <FieldName>animationIsDisabled</FieldName>
+            <FieldName>effectStrength</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>deployPercent</FieldName>
+            <FieldName>effectStrengthSpeed</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>effectTarget</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
-            <MethodName>Toggle</MethodName>
+            <MethodName>FireAction</MethodName>
+        </MethodDefinition>
+        <MethodDefinition>
+            <MethodName>ToggleAction</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

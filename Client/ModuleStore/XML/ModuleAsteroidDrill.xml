@@ -2,17 +2,12 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>deployState</FieldName>
+            <FieldName>DirectAttach</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
-            <MethodName>Extend</MethodName>
-        </MethodDefinition>
-        <!--TODO: check if this is fine as is called twice-->
-        <MethodDefinition>
-            <MethodName>Retract</MethodName>
+            <MethodName>Toggle</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

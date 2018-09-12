@@ -1,13 +1,18 @@
 <?xml version="1.0"?>
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <ActionMethods>
+    <Fields>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>hibernation</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: UIFIELD-->
+            <FieldName>hibernateOnWarp</FieldName>
+        </FieldDefinition>
+    </Fields>
+    <Methods>
         <MethodDefinition>
             <MethodName>HibernateToggle</MethodName>
-            <Fields>
-                <string>hibernation</string>
-            </Fields>
         </MethodDefinition>
-    </ActionMethods>
-    <EventMethods></EventMethods>
-    <Methods></Methods>
+    </Methods>
 </ModuleDefinition>

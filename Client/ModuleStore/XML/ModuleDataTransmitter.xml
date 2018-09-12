@@ -2,17 +2,12 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>actuatorModeCycle</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>authorityLimiter</FieldName>
+            <FieldName>xmitIncomplete</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <MethodName>OnToggle</MethodName>
+            <MethodName>TransmitIncompleteToggle</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

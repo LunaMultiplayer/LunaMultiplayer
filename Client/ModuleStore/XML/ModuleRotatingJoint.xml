@@ -2,37 +2,38 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>EngineIgnited</FieldName>
+            <FieldName>invertDrive</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <FieldName>engineShutdown</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <FieldName>staged</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <FieldName>flameout</FieldName>
-        </FieldDefinition>
-        <!--<FieldDefinition>
-            <FieldName>currentThrottle</FieldName>
-            <MaxIntervalInMs>60000</MaxIntervalInMs>
-        </FieldDefinition>-->
-        <FieldDefinition>
-            <FieldName>manuallyOverridden</FieldName>
+            <FieldName>driveEngaged</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>thrustPercentage</FieldName>
+            <FieldName>torqueRatio</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>savedMode</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>savedControlMode</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
             <!--TODO: check if this is fine as is called twice-->
-            <MethodName>Activate</MethodName>
+            <MethodName>EngageDrive</MethodName>
         </MethodDefinition>
         <MethodDefinition>
             <!--TODO: check if this is fine as is called twice-->
-            <MethodName>Shutdown</MethodName>
+            <MethodName>InvertDrive</MethodName>
+        </MethodDefinition>
+        <MethodDefinition>
+            <!--TODO: check if this is fine as is called twice-->
+            <MethodName>LockDrive</MethodName>
+        </MethodDefinition>
+        <MethodDefinition>
+            <!--TODO: check if this is fine as is called twice-->
+            <MethodName>NeutralDrive</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

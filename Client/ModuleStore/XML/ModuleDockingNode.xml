@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <FieldDefinition>
+            <FieldName>crossfeed</FieldName>
+        </FieldDefinition>
+    </Fields>
+    <Methods>
+        <!--TODO: check if this is fine as is called twice-->
+        <MethodDefinition>
+            <MethodName>DisableXFeed</MethodName>
+        </MethodDefinition>
+        <!--TODO: check if this is fine as is called twice-->
+        <MethodDefinition>
+            <MethodName>EnableXFeed</MethodName>
+        </MethodDefinition>
+        <!--TODO: this can be messy-->
+        <MethodDefinition>
+            <MethodName>Decouple</MethodName>
+        </MethodDefinition>
+        <!--TODO: this can be messy-->
+        <MethodDefinition>
+            <MethodName>Undock</MethodName>
+        </MethodDefinition>
+        <!--TODO: this can be messy-->
+        <MethodDefinition>
+            <MethodName>UndockSameVessel</MethodName>
+        </MethodDefinition>
+    </Methods>
+</ModuleDefinition>
