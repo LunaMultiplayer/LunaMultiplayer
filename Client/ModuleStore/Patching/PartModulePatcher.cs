@@ -55,13 +55,13 @@ namespace LunaClient.ModuleStore.Patching
                         }
                         catch (Exception ex)
                         {
-                            LunaLog.LogError($"Exception patching module {partModule.Name} from assembly {assembly.FullName}: {ex.Message}");
+                            LunaLog.LogError($"Exception patching module {partModule.Name} from assembly {assembly.GetName().Name}: {ex.Message}");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    LunaLog.LogError($"Exception loading assembly {assembly.FullName}: {ex.Message}");
+                    LunaLog.LogError($"Exception loading assembly {assembly.GetName().Name}: {ex.Message}");
                 }
             }
         }
@@ -71,23 +71,23 @@ namespace LunaClient.ModuleStore.Patching
         /// </summary>
         private static void PatchFieldsAndMethods(Type partModule, ModuleDefinition definition)
         {
-            foreach (var partModuleMethod in partModule.GetMethods(AccessTools.all))
+            foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
             {
-                if (definition.Fields.Any() && MethodSetsCustomizedField(partModuleMethod, definition))
+                if (!partModuleMethod.IsGenericMethod && definition.Fields.Any() && MethodSetsCustomizedField(partModuleMethod, definition))
                 {
                     var patchMethodCalls = definition.Methods.Any(m => m.MethodName == partModuleMethod.Name);
                     try
                     {
                         LunaLog.Log(patchMethodCalls
-                            ? $"Patching method {partModuleMethod.Name} for field changes and method call in module {partModule.Name} of assembly {partModule.Assembly.FullName}"
-                            : $"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.FullName}");
+                            ? $"Patching method {partModuleMethod.Name} for field changes and method call in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}"
+                            : $"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
 
                         HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, patchMethodCalls ? HarmonyCustomMethod.MethodPostfixMethod : null,
                             FieldChangeTranspilerMethod);
                     }
                     catch
                     {
-                        LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.FullName}");
+                        LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
                         HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, patchMethodCalls ? HarmonyCustomMethod.MethodPostfixMethod : null, 
                             RestoreTranspilerMethod);
                     }
@@ -100,7 +100,7 @@ namespace LunaClient.ModuleStore.Patching
                         continue;
                     }
 
-                    LunaLog.Log($"Patching method {partModuleMethod.Name} for method call in module {partModule.Name} of assembly {partModule.Assembly.FullName}");
+                    LunaLog.Log($"Patching method {partModuleMethod.Name} for method call in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
                     HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, HarmonyCustomMethod.MethodPostfixMethod);
                 }
             }
