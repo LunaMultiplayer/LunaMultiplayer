@@ -129,8 +129,11 @@ namespace LunaClient.ModuleStore.Patching
         /// This method takes the IL code of the part module. If it finds that you're changing the value (OpCodes.Ldstr) of a field that has the attribute "KSPField" and that
         /// attribute has the "isPersistant" then we add the FieldChangeCallInstructions IL opcodes just after it so the event is triggered.
         /// </summary>
-        public static IEnumerable<CodeInstruction> FieldChangeTranspiler(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> FieldChangeTranspiler(MethodBase originalMethod, IEnumerable<CodeInstruction> instructions)
         {
+            if (originalMethod.DeclaringType == null) return instructions.AsEnumerable();
+
+            var currentPartModule = originalMethod.DeclaringType.Name;
             InstructionsBackup.Clear();
 
             var codes = new List<CodeInstruction>(instructions);
@@ -143,24 +146,27 @@ namespace LunaClient.ModuleStore.Patching
                 if (codes[i].opcode == OpCodes.Stfld)
                 {
                     if (!(codes[i].operand is FieldInfo operand)) continue;
+                    var fieldName = operand.Name;
 
-                    var attributes = operand.GetCustomAttributes(typeof(KSPField), false).Cast<KSPField>().ToArray();
-                    if (attributes.Any() && attributes.First().isPersistant)
+                    if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(currentPartModule, out var definition))
                     {
-                        for (var j = 0; j < FieldChangeCallInstructions.Count; j++)
-                        {
-                            if (FieldChangeCallInstructions[j].opcode == OpCodes.Ldstr)
-                            {
-                                //Change the name operand so the proper "field name" is shown
-                                FieldChangeCallInstructions[j].operand = operand.Name;
-                            }
+                        if (!definition.Fields.Any(f => f.FieldName == fieldName))
+                            continue;
+                    }
 
-                            codes.Insert(i + 1 + j, new CodeInstruction(FieldChangeCallInstructions[j]));
+                    for (var j = 0; j < FieldChangeCallInstructions.Count; j++)
+                    {
+                        if (FieldChangeCallInstructions[j].opcode == OpCodes.Ldstr)
+                        {
+                            //Change the name operand so the proper "field name" is shown
+                            FieldChangeCallInstructions[j].operand = operand.Name;
                         }
 
-                        length += FieldChangeCallInstructions.Count;
-                        i += FieldChangeCallInstructions.Count;
+                        codes.Insert(i + 1 + j, new CodeInstruction(FieldChangeCallInstructions[j]));
                     }
+
+                    length += FieldChangeCallInstructions.Count;
+                    i += FieldChangeCallInstructions.Count;
                 }
             }
 
