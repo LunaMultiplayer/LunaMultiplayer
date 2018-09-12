@@ -1,11 +1,8 @@
 <?xml version="1.0"?>
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <SyncMethods>
-        <MethodDefinition>
-            <MethodName>BrakeAction</MethodName>
-            <Fields>
-                <string>brakeInput</string>
-            </Fields>
-        </MethodDefinition>
-    </SyncMethods>
+    <Fields>
+        <FieldDefinition>
+            <FieldName>brakeInput</FieldName>
+        </FieldDefinition>
+    </Fields>
 </ModuleDefinition>
