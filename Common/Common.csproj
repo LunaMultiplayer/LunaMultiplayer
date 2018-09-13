@@ -61,6 +61,7 @@
     <Compile Include="Enums\GameMode.cs" />
     <Compile Include="Enums\HandshakeReply.cs" />
     <Compile Include="Enums\MasterServerMessageType.cs" />
+    <Compile Include="Enums\PartSyncFieldType.cs" />
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />

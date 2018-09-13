@@ -9,11 +9,8 @@ namespace LunaClient.ModuleStore.Patching
     /// </summary>
     internal class TestModule : PartModule
     {
-        public static readonly MethodInfo ExampleFieldChangeCallMethod = typeof(TestModule).GetMethod(nameof(ExampleFieldChangeCall), AccessTools.all);
         public static readonly MethodInfo AfterMethodCallMethodInfo = typeof(TestModule).GetMethod(nameof(AfterMethodCall), AccessTools.all);
-
-        private void ExampleFieldChangeCall() => PartModuleEvent.onPartModuleFieldChanged.Fire(this, "FIELDNAME");
-
+        
         private void AfterMethodCall() => PartModuleEvent.onPartModuleMethodCalled.Fire(this, "METHODNAME");
     }
 }

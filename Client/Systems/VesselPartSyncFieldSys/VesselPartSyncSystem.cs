@@ -32,7 +32,14 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            PartModuleEvent.onPartModuleFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleFieldChanged);
+            PartModuleEvent.onPartModuleBoolFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleBoolFieldChanged);
+            PartModuleEvent.onPartModuleIntFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleIntFieldChanged);
+            PartModuleEvent.onPartModuleFloatFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleFloatFieldChanged);
+            PartModuleEvent.onPartModuleDoubleFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleDoubleFieldChanged);
+            PartModuleEvent.onPartModuleVectorFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleVectorFieldChanged);
+            PartModuleEvent.onPartModuleQuaternionFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleQuaternionFieldChanged);
+            PartModuleEvent.onPartModuleStringFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
+            PartModuleEvent.onPartModuleObjectFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
 
             GameEvents.onFlightReady.Add(VesselPartModuleSyncFieldEvents.FlightReady);
             GameEvents.onVesselLoaded.Add(VesselPartModuleSyncFieldEvents.VesselLoaded);
@@ -45,7 +52,14 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            PartModuleEvent.onPartModuleFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleFieldChanged);
+            PartModuleEvent.onPartModuleBoolFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleBoolFieldChanged);
+            PartModuleEvent.onPartModuleIntFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleIntFieldChanged);
+            PartModuleEvent.onPartModuleFloatFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleFloatFieldChanged);
+            PartModuleEvent.onPartModuleDoubleFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleDoubleFieldChanged);
+            PartModuleEvent.onPartModuleVectorFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleVectorFieldChanged);
+            PartModuleEvent.onPartModuleQuaternionFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleQuaternionFieldChanged);
+            PartModuleEvent.onPartModuleStringFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
+            PartModuleEvent.onPartModuleObjectFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
 
             GameEvents.onFlightReady.Remove(VesselPartModuleSyncFieldEvents.FlightReady);
             GameEvents.onVesselLoaded.Remove(VesselPartModuleSyncFieldEvents.VesselLoaded);

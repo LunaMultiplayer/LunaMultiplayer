@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using Harmony.ILCopying;
 using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.ModuleStore.Harmony;
 using LunaClient.ModuleStore.Structures;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using UnityEngine;
 
 namespace LunaClient.ModuleStore.Patching
 {
@@ -26,11 +28,16 @@ namespace LunaClient.ModuleStore.Patching
         /// </summary>
         private static readonly List<CodeInstruction> FieldChangeCallInstructions = new List<CodeInstruction>();
 
+        /// <summary>
+        /// Here we keep a reference of the customized fields that a method is changing
+        /// </summary>
+        private static readonly List<FieldInfo> FieldsChangedInCurrentMethod = new List<FieldInfo>();
+
         #region Transpilers references
 
         private static readonly HarmonyMethod RestoreTranspilerMethod = new HarmonyMethod(typeof(PartModulePatcher).GetMethod(nameof(Restore)));
-        private static readonly HarmonyMethod InitFieldChangeTranspilerMethod = new HarmonyMethod(typeof(PartModulePatcher).GetMethod(nameof(InitFieldChangeCallInstructions)));
         private static readonly HarmonyMethod FieldChangeTranspilerMethod = new HarmonyMethod(typeof(PartModulePatcher).GetMethod(nameof(FieldChangeTranspiler)));
+
         #endregion
 
         /// <summary>
@@ -38,7 +45,6 @@ namespace LunaClient.ModuleStore.Patching
         /// </summary>
         public static void Awake()
         {
-            HarmonyPatcher.HarmonyInstance.Patch(TestModule.ExampleFieldChangeCallMethod, null, null, InitFieldChangeTranspilerMethod);
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 try
@@ -73,7 +79,9 @@ namespace LunaClient.ModuleStore.Patching
         {
             foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
             {
-                if (!partModuleMethod.IsGenericMethod && definition.Fields.Any() && MethodSetsCustomizedField(partModuleMethod, definition))
+                FieldsChangedInCurrentMethod.Clear();
+                FieldsChangedInCurrentMethod.AddRange(GetCustomizedFieldsChangedByMethod(partModuleMethod, definition));
+                if (!partModuleMethod.IsGenericMethod && definition.Fields.Any() && FieldsChangedInCurrentMethod.Any())
                 {
                     var patchMethodCalls = definition.Methods.Any(m => m.MethodName == partModuleMethod.Name);
                     try
@@ -88,7 +96,7 @@ namespace LunaClient.ModuleStore.Patching
                     catch
                     {
                         LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, patchMethodCalls ? HarmonyCustomMethod.MethodPostfixMethod : null, 
+                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, patchMethodCalls ? HarmonyCustomMethod.MethodPostfixMethod : null,
                             RestoreTranspilerMethod);
                     }
                 }
@@ -115,21 +123,10 @@ namespace LunaClient.ModuleStore.Patching
         }
 
         /// <summary>
-        /// This is the init transpiler. It will take the instructions of the ExampleCall method and store them in the
-        /// <see cref="FieldChangeCallInstructions"/> list so we can use them later.
-        /// </summary>
-        public static IEnumerable<CodeInstruction> InitFieldChangeCallInstructions(IEnumerable<CodeInstruction> instructions)
-        {
-            //We only take the first 4 instructions as the other ones are the return
-            FieldChangeCallInstructions.AddRange(instructions.Take(4));
-            return FieldChangeCallInstructions;
-        }
-
-        /// <summary>
         /// This method takes the IL code of the part module. If it finds that you're changing the value (OpCodes.Ldstr) of a field that has the attribute "KSPField" and that
         /// attribute has the "isPersistant" then we add the FieldChangeCallInstructions IL opcodes just after it so the event is triggered.
         /// </summary>
-        public static IEnumerable<CodeInstruction> FieldChangeTranspiler(MethodBase originalMethod, IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> FieldChangeTranspiler(ILGenerator generator, MethodBase originalMethod, IEnumerable<CodeInstruction> instructions)
         {
             if (originalMethod.DeclaringType == null) return instructions.AsEnumerable();
 
@@ -139,45 +136,194 @@ namespace LunaClient.ModuleStore.Patching
             var codes = new List<CodeInstruction>(instructions);
             InstructionsBackup.AddRange(codes);
 
-            var length = codes.Count;
-            for (var i = 0; i < length; i++)
+            var evaluationVar = generator.DeclareLocal(typeof(bool));
+
+            var localVarMapping = new Dictionary<FieldInfo, LocalBuilder>();
+            foreach (var field in FieldsChangedInCurrentMethod)
             {
-                //This is the case when a field value is being set
-                if (codes[i].opcode == OpCodes.Stfld)
+                var localVar = generator.DeclareLocal(field.FieldType);
+                localVarMapping.Add(field, localVar);
+                codes.Insert(0, new CodeInstruction(OpCodes.Ldarg_0));
+                codes.Insert(1, new CodeInstruction(OpCodes.Ldfld, field));
+
+                switch (localVar.LocalIndex)
                 {
-                    if (!(codes[i].operand is FieldInfo operand)) continue;
-                    var fieldName = operand.Name;
+                    case 0:
+                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_0));
+                        break;
+                    case 1:
+                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_1));
+                        break;
+                    case 2:
+                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_2));
+                        break;
+                    case 3:
+                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_3));
+                        break;
+                    default:
+                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_S, localVar.LocalIndex));
+                        break;
 
-                    if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(currentPartModule, out var definition))
-                    {
-                        if (!definition.Fields.Any(f => f.FieldName == fieldName))
-                            continue;
-                    }
-
-                    for (var j = 0; j < FieldChangeCallInstructions.Count; j++)
-                    {
-                        if (FieldChangeCallInstructions[j].opcode == OpCodes.Ldstr)
-                        {
-                            //Change the name operand so the proper "field name" is shown
-                            FieldChangeCallInstructions[j].operand = operand.Name;
-                        }
-
-                        codes.Insert(i + 1 + j, new CodeInstruction(FieldChangeCallInstructions[j]));
-                    }
-
-                    length += FieldChangeCallInstructions.Count;
-                    i += FieldChangeCallInstructions.Count;
                 }
+
+                //Now all the function method is run...
+                switch (localVar.LocalIndex)
+                {
+                    case 0:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_0));
+                        break;
+                    case 1:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_1));
+                        break;
+                    case 2:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_2));
+                        break;
+                    case 3:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_3));
+                        break;
+                    default:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, localVar.LocalIndex));
+                        break;
+                }
+
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldfld, field));
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ceq));
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldc_I4_0));
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ceq));
+
+                switch (evaluationVar.LocalIndex)
+                {
+                    case 0:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_0));
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_0));
+                        break;
+                    case 1:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_1));
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_1));
+                        break;
+                    case 2:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_2));
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_2));
+                        break;
+                    case 3:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_3));
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_3));
+                        break;
+                    default:
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_S, evaluationVar.LocalIndex));
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, evaluationVar.LocalIndex));
+                        break;
+                }
+
+                var jmpInstruction = new CodeInstruction(OpCodes.Brfalse_S);
+                codes.Insert(codes.Count - 1, jmpInstruction);
+
+                LoadFunctionByFieldType(field, codes);
+
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldstr, field.Name));
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldfld, field));
+
+                CallFunctionByFieldType(field, codes);
+
+                var label = generator.DefineLabel();
+                codes[codes.Count - 1].labels.Add(label);
+                jmpInstruction.operand = label;
             }
 
             return codes.AsEnumerable();
         }
 
+        private static void LoadFunctionByFieldType(FieldInfo field, List<CodeInstruction> codes)
+        {
+            if (field.FieldType.IsEnum)
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
+            }
+            else if (field.FieldType == typeof(bool))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleBoolFieldChanged")));
+            }
+            else if (field.FieldType == typeof(int))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
+            }
+            else if (field.FieldType == typeof(float))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleFloatFieldChanged")));
+            }
+            else if (field.FieldType == typeof(double))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleDoubleFieldChanged")));
+            }
+            else if (field.FieldType == typeof(string))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleStringFieldChanged")));
+            }
+            else if (field.FieldType == typeof(Quaternion))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleQuaternionFieldChanged")));
+            }
+            else if (field.FieldType == typeof(Vector3))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleVectorFieldChanged")));
+            }
+            else
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleObjectFieldChanged")));
+            }
+        }
+
+        private static void CallFunctionByFieldType(FieldInfo field, List<CodeInstruction> codes)
+        {
+            if (field.FieldType.IsEnum)
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
+            }
+            else if (field.FieldType == typeof(bool))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, bool>), "Fire")));
+            }
+            else if (field.FieldType == typeof(int))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
+            }
+            else if (field.FieldType == typeof(float))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, float>), "Fire")));
+            }
+            else if (field.FieldType == typeof(double))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, double>), "Fire")));
+            }
+            else if (field.FieldType == typeof(string))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, string>), "Fire")));
+            }
+            else if (field.FieldType == typeof(Quaternion))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Quaternion>), "Fire")));
+            }
+            else if (field.FieldType == typeof(Vector3))
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Vector3>), "Fire")));
+            }
+            else
+            {
+                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, object>), "Fire")));
+            }
+        }
+
+
         /// <summary>
         /// Checks if the given method has a IL instruction that SETS (therefore, it changes the value) a customized field
         /// </summary>
-        private static bool MethodSetsCustomizedField(MethodBase partModuleMethod, ModuleDefinition definition)
+        private static IEnumerable<FieldInfo> GetCustomizedFieldsChangedByMethod(MethodBase partModuleMethod, ModuleDefinition definition)
         {
+            var listOfFields = new HashSet<FieldInfo>();
+
             var method = DynamicTools.CreateDynamicMethod(partModuleMethod, "read");
             var instructions = MethodBodyReader.GetInstructions(method.GetILGenerator(), partModuleMethod);
 
@@ -187,10 +333,10 @@ namespace LunaClient.ModuleStore.Patching
                 if (!(instruction.operand is FieldInfo operand)) continue;
 
                 if (definition.Fields.Any(f => f.FieldName == operand.Name))
-                    return true;
+                    listOfFields.Add(operand);
             }
 
-            return false;
+            return listOfFields;
         }
     }
 }

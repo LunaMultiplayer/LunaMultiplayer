@@ -1,6 +1,8 @@
 ﻿using Lidgren.Network;
+using LunaCommon.Enums;
 using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -11,7 +13,16 @@ namespace LunaCommon.Message.Data.Vessel
         public uint PartFlightId;
         public string ModuleName;
         public string FieldName;
-        public string Value;
+
+        public PartSyncFieldType FieldType;
+
+        public string StrValue;
+        public bool BoolValue;
+        public int IntValue;
+        public float FloatValue;
+        public double DoubleValue;
+        public float[] VectorValue = new float[3];
+        public float[] QuaternionValue = new float[4];
 
         public override VesselMessageType VesselMessageType => VesselMessageType.PartSyncField;
 
@@ -24,7 +35,38 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(PartFlightId);
             lidgrenMsg.Write(ModuleName);
             lidgrenMsg.Write(FieldName);
-            lidgrenMsg.Write(Value);
+
+            lidgrenMsg.Write((byte)FieldType);
+
+            switch (FieldType)
+            {
+                case PartSyncFieldType.Boolean:
+                    lidgrenMsg.Write(BoolValue);
+                    break;
+                case PartSyncFieldType.Integer:
+                    lidgrenMsg.Write(IntValue);
+                    break;
+                case PartSyncFieldType.Float:
+                    lidgrenMsg.Write(FloatValue);
+                    break;
+                case PartSyncFieldType.Double:
+                    lidgrenMsg.Write(DoubleValue);
+                    break;
+                case PartSyncFieldType.Vector3:
+                    for (var i = 0; i < 3; i++)
+                        lidgrenMsg.Write(VectorValue[i]);
+                    break;
+                case PartSyncFieldType.Quaternion:
+                    for (var i = 0; i < 4; i++)
+                        lidgrenMsg.Write(QuaternionValue[i]);
+                    break;
+                case PartSyncFieldType.Object:
+                case PartSyncFieldType.String:
+                    lidgrenMsg.Write(StrValue);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -34,12 +76,72 @@ namespace LunaCommon.Message.Data.Vessel
             PartFlightId = lidgrenMsg.ReadUInt32();
             ModuleName = lidgrenMsg.ReadString();
             FieldName = lidgrenMsg.ReadString();
-            Value = lidgrenMsg.ReadString();
+
+            FieldType = (PartSyncFieldType)lidgrenMsg.ReadByte();
+
+            switch (FieldType)
+            {
+                case PartSyncFieldType.Boolean:
+                    BoolValue = lidgrenMsg.ReadBoolean();
+                    break;
+                case PartSyncFieldType.Integer:
+                    IntValue = lidgrenMsg.ReadInt32();
+                    break;
+                case PartSyncFieldType.Float:
+                    FloatValue = lidgrenMsg.ReadFloat();
+                    break;
+                case PartSyncFieldType.Double:
+                    DoubleValue = lidgrenMsg.ReadDouble();
+                    break;
+                case PartSyncFieldType.Vector3:
+                    for (var i = 0; i < 3; i++)
+                        VectorValue[i] = lidgrenMsg.ReadFloat();
+                    break;
+                case PartSyncFieldType.Quaternion:
+                    for (var i = 0; i < 4; i++)
+                        VectorValue[i] = lidgrenMsg.ReadFloat();
+                    break;
+                case PartSyncFieldType.Object:
+                case PartSyncFieldType.String:
+                    StrValue = lidgrenMsg.ReadString();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount();
+            var msgSize = base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + FieldName.GetByteCount();
+
+            switch (FieldType)
+            {
+                case PartSyncFieldType.Boolean:
+                    msgSize += sizeof(bool);
+                    break;
+                case PartSyncFieldType.Integer:
+                    msgSize += sizeof(int);
+                    break;
+                case PartSyncFieldType.Float:
+                    msgSize += sizeof(float);
+                    break;
+                case PartSyncFieldType.Double:
+                    msgSize += sizeof(double);
+                    break;
+                case PartSyncFieldType.Vector3:
+                    msgSize += sizeof(float) * 3;
+                    break;
+                case PartSyncFieldType.Quaternion:
+                    msgSize += sizeof(float) * 4;
+                    break;
+                case PartSyncFieldType.String:
+                    msgSize += StrValue.GetByteCount();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return msgSize;
         }
     }
 }

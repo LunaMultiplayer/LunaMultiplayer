@@ -1,4 +1,5 @@
-﻿using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Enums;
+using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Xml;
 using Server.Log;
 using Server.Settings.Structures;
@@ -114,7 +115,7 @@ namespace Server.System
                 });
             }
         }
-        
+
         /// <summary>
         /// We received a flight state information from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
@@ -222,7 +223,7 @@ namespace Server.System
                 }
             });
         }
-        
+
         /// <summary>
         /// We received a part module change from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
@@ -310,7 +311,7 @@ namespace Server.System
                              $"{msgData.SrfRelRotation[1].ToString(CultureInfo.InvariantCulture)}," +
                              $"{msgData.SrfRelRotation[2].ToString(CultureInfo.InvariantCulture)}," +
                              $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}";
-            
+
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='INC']");
             if (node != null) node.InnerText = msgData.Orbit[0].ToString(CultureInfo.InvariantCulture);
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='ECC']");
@@ -478,7 +479,42 @@ namespace Server.System
             var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
 
             var fieldNode = document.SelectSingleNode(xpath);
-            if (fieldNode != null) fieldNode.InnerText = msgData.Value;
+            if (fieldNode != null)
+            {
+                switch (msgData.FieldType)
+                {
+                    case PartSyncFieldType.Boolean:
+                        fieldNode.InnerText = msgData.BoolValue.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case PartSyncFieldType.Integer:
+                        fieldNode.InnerText = msgData.IntValue.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case PartSyncFieldType.Float:
+                        fieldNode.InnerText = msgData.FloatValue.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case PartSyncFieldType.Double:
+                        fieldNode.InnerText = msgData.DoubleValue.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case PartSyncFieldType.Vector3:
+                        fieldNode.InnerText = $"{msgData.VectorValue[0].ToString(CultureInfo.InvariantCulture)}," +
+                                              $"{msgData.VectorValue[1].ToString(CultureInfo.InvariantCulture)}," +
+                                              $"{msgData.VectorValue[2].ToString(CultureInfo.InvariantCulture)}";
+                        break;
+                    case PartSyncFieldType.Quaternion:
+                        fieldNode.InnerText = $"{msgData.QuaternionValue[0].ToString(CultureInfo.InvariantCulture)}," +
+                                         $"{msgData.QuaternionValue[1].ToString(CultureInfo.InvariantCulture)}," +
+                                         $"{msgData.QuaternionValue[2].ToString(CultureInfo.InvariantCulture)}," +
+                                         $"{msgData.QuaternionValue[3].ToString(CultureInfo.InvariantCulture)}";
+                        break;
+                    case PartSyncFieldType.Object:
+                    case PartSyncFieldType.String:
+                        fieldNode.InnerText = msgData.StrValue;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+            }
 
             return document.ToIndentedString();
         }

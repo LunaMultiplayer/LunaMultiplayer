@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.ModuleStore;
 using System;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
 {
@@ -23,6 +24,82 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             return true;
         }
 
+        #region PartField change events
+
+        public void PartModuleBoolFieldChanged(PartModule module, string fieldName, bool newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new BOOL value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldBoolMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleIntFieldChanged(PartModule module, string fieldName, int newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new INT value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldIntMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleFloatFieldChanged(PartModule module, string fieldName, float newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new FLOAT value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldFloatMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleDoubleFieldChanged(PartModule module, string fieldName, double newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new DOUBLE value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldDoubleMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleVectorFieldChanged(PartModule module, string fieldName, Vector3 newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new VECTOR value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldVectorMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleQuaternionFieldChanged(PartModule module, string fieldName, Quaternion newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new QUATERNION value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldQuaternionMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleStringFieldChanged(PartModule module, string fieldName, string newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new STRING value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldStringMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleObjectFieldChanged(PartModule module, string fieldName, object newValue)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new OBJECT value of {newValue}.");
+            LunaLog.LogWarning($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a field type that is not supported!");
+            System.MessageSender.SendVesselPartSyncFieldObjectMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+        }
+
+        #endregion
 
         public void PartModuleFieldChanged(PartModule module, string fieldName)
         {
@@ -43,8 +120,6 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 }
             }
 
-            LunaLog.Log($"Part field {fieldName} changed in module {module.moduleName} from part {module.part.flightID}.");
-            System.MessageSender.SendVesselPartSyncFieldMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, fieldVal.ToString());
         }
 
         /// <summary>
