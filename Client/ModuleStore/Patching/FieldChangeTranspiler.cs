@@ -99,9 +99,7 @@ namespace LunaClient.ModuleStore.Patching
         /// Example: 
         /// public void MyFunction()
         /// {
-        ///     String backupField1 = TrackedField1;
-        ///     Int backupField2 = TrackedField2;
-        ///     Bool backupField3 = TrackedField3;
+        ///     ----- Fields declared before ----
         /// 
         ///     ----- Function Code------
         /// 
@@ -114,6 +112,9 @@ namespace LunaClient.ModuleStore.Patching
         /// } 
         private static void TranspileEvaluations(List<CodeInstruction> codes)
         {
+            var startComparisonInstructions = new List<CodeInstruction>();
+            var jmpInstructions = new List<CodeInstruction>();
+
             var fields = _definition.Fields.ToList();
             for (var i = 0; i < fields.Count; i++)
             {
@@ -145,6 +146,10 @@ namespace LunaClient.ModuleStore.Patching
                 {
                     RedirectExistingReturns(codes);
                 }
+                else
+                {
+                    startComparisonInstructions.Add(codes[codes.Count - 2]);
+                }
 
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldfld, field));
@@ -175,9 +180,22 @@ namespace LunaClient.ModuleStore.Patching
                         codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, _evaluationVar.LocalIndex));
                         break;
                 }
-
-                var jmpInstruction = new CodeInstruction(OpCodes.Brfalse_S);
-                codes.Insert(codes.Count - 1, jmpInstruction);
+                
+                //If we are in the last field then return to the last "ret" of the function
+                if (i == fields.Count - 1)
+                {
+                    if (!codes[codes.Count - 1].labels.Any())
+                    {
+                        codes[codes.Count - 1].labels.Add(_generator.DefineLabel());
+                    }
+                    codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Brfalse_S, codes[codes.Count - 1].labels[0]));
+                }
+                else
+                {
+                    var jmpInstruction = new CodeInstruction(OpCodes.Brfalse_S);
+                    codes.Insert(codes.Count - 1, jmpInstruction);
+                    jmpInstructions.Add(jmpInstruction);
+                }
 
                 LoadFunctionByFieldType(field.FieldType, codes);
 
@@ -187,13 +205,36 @@ namespace LunaClient.ModuleStore.Patching
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldfld, field));
 
                 CallFunctionByFieldType(field.FieldType, codes);
+            }
 
-                if (!codes[codes.Count - 1].labels.Any())
-                {
-                    codes[codes.Count - 1].labels.Add(_generator.DefineLabel());
-                }
+            FixFallbackInstructions(startComparisonInstructions, jmpInstructions);
+        }
 
-                jmpInstruction.operand = codes[codes.Count - 1].labels[0];
+        /// <summary>
+        /// Now we must fix all the instructions when the if's fail
+        /// Example:
+        /// public void MyFunction()
+        /// {
+        ///     ----- Fields declared before ----
+        /// 
+        ///     ----- Function Code------
+        /// 
+        ///     if (TrackedField1 != backupField1) -----> If it fails it must get a GOTO "if (TrackedField2 != backupField2)"
+        ///         PartModuleEvent.onPartModuleStringFieldChanged.Fire();
+        /// 
+        ///     if (TrackedField2 != backupField2) -----> If it fails it must get a GOTO "if (TrackedField3 != backupField3)"
+        ///         PartModuleEvent.onPartModuleIntFieldChanged.Fire();
+        /// 
+        ///     if (TrackedField3 != backupField3) -----> This one already jumps to the last ret of the function
+        ///         PartModuleEvent.onPartModuleBoolFieldChanged.Fire();
+        /// } 
+        /// </summary>
+        private static void FixFallbackInstructions(List<CodeInstruction> startComparisonInstructions, List<CodeInstruction> jmpInstructions)
+        {
+            for (var i = 0; i < startComparisonInstructions.Count; i++)
+            {
+                startComparisonInstructions[i].labels.Add(_generator.DefineLabel());
+                jmpInstructions[i].operand = startComparisonInstructions[i].labels[0];
             }
         }
 
@@ -222,7 +263,7 @@ namespace LunaClient.ModuleStore.Patching
         {
             //Store the instruction we just added as we must redirect all the returns that the method already had towards this line
             var firstCheck = _generator.DefineLabel();
-            codes[codes.Count - 1].labels.Add(firstCheck);
+            codes[codes.Count - 2].labels.Add(firstCheck);
 
             //This is the last "ret" that every function has
             var lastReturnInstructionLabel = codes.Last().labels.FirstOrDefault();
