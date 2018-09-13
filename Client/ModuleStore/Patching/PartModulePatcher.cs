@@ -22,11 +22,11 @@ namespace LunaClient.ModuleStore.Patching
         /// Here we store the original method instructions in case we fuck things up
         /// </summary>
         private static readonly List<CodeInstruction> InstructionsBackup = new List<CodeInstruction>();
-        
+
         /// <summary>
-        /// Here we keep a reference of the customized fields that a method is changing
+        /// Keep a reference to know what customization applies
         /// </summary>
-        private static readonly List<FieldInfo> FieldsChangedInCurrentMethod = new List<FieldInfo>();
+        private static ModuleDefinition _customizationModule;
 
         #region Transpilers references
 
@@ -49,9 +49,9 @@ namespace LunaClient.ModuleStore.Patching
                     {
                         try
                         {
-                            if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out var definition))
+                            if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out _customizationModule))
                             {
-                                PatchFieldsAndMethods(partModule, definition);
+                                PatchFieldsAndMethods(partModule);
                             }
                         }
                         catch (Exception ex)
@@ -70,15 +70,15 @@ namespace LunaClient.ModuleStore.Patching
         /// <summary>
         /// Patches the methods defined in the XML with the transpiler
         /// </summary>
-        private static void PatchFieldsAndMethods(Type partModule, ModuleDefinition definition)
+        private static void PatchFieldsAndMethods(Type partModule)
         {
-            foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+            foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                .Where(m => m.Name == "OnUpdate" || m.Name == "OnFixedUpdate" || m.Name == "FixedUpdate" || m.Name == "Update" || m.Name == "LateUpdate" ||
+                            m.GetCustomAttributes(typeof(KSPAction), false).Any() || m.GetCustomAttributes(typeof(KSPEvent), false).Any(a => ((KSPEvent)a).guiActive)))
             {
-                FieldsChangedInCurrentMethod.Clear();
-                FieldsChangedInCurrentMethod.AddRange(GetCustomizedFieldsChangedByMethod(partModuleMethod, definition));
-                if (!partModuleMethod.IsGenericMethod && definition.Fields.Any() && FieldsChangedInCurrentMethod.Any())
+                if (_customizationModule.Fields.Any())
                 {
-                    var patchMethodCalls = definition.Methods.Any(m => m.MethodName == partModuleMethod.Name);
+                    var patchMethodCalls = _customizationModule.Methods.Any(m => m.MethodName == partModuleMethod.Name);
                     try
                     {
                         LunaLog.Log(patchMethodCalls
@@ -95,7 +95,7 @@ namespace LunaClient.ModuleStore.Patching
                             RestoreTranspilerMethod);
                     }
                 }
-                else if (definition.Methods.Any(m => m.MethodName == partModuleMethod.Name))
+                else if (_customizationModule.Methods.Any(m => m.MethodName == partModuleMethod.Name))
                 {
                     if (partModuleMethod.GetParameters().Any())
                     {
@@ -134,7 +134,7 @@ namespace LunaClient.ModuleStore.Patching
 
             var evaluationVar = generator.DeclareLocal(typeof(bool));
 
-            foreach (var field in FieldsChangedInCurrentMethod)
+            foreach (var field in GetCustomizedFieldsChangedByMethod(originalMethod, _customizationModule))
             {
                 //Here we declare a local var to store the OLD value of the field that we are tracking
 
