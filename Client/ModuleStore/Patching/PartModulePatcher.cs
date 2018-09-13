@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using Enumerable = UniLinq.Enumerable;
 
 namespace LunaClient.ModuleStore.Patching
 {
@@ -134,10 +135,12 @@ namespace LunaClient.ModuleStore.Patching
 
             var evaluationVar = generator.DeclareLocal(typeof(bool));
 
-            foreach (var field in GetCustomizedFieldsChangedByMethod(originalMethod, _customizationModule))
+            var fields = GetCustomizedFieldsChangedByMethod(originalMethod, _customizationModule).ToList();
+            for (var i = 0; i < fields.Count; i++)
             {
-                //Here we declare a local var to store the OLD value of the field that we are tracking
+                var field = fields[i];
 
+                //Here we declare a local var to store the OLD value of the field that we are tracking
                 var localVar = generator.DeclareLocal(field.FieldType);
                 codes.Insert(0, new CodeInstruction(OpCodes.Ldarg_0));
                 codes.Insert(1, new CodeInstruction(OpCodes.Ldfld, field));
@@ -163,7 +166,7 @@ namespace LunaClient.ModuleStore.Patching
                 }
 
                 //Now all the function method is run...
-
+                
                 //Then we write the comparision and the triggering of the event at the bottom
                 switch (localVar.LocalIndex)
                 {
@@ -182,6 +185,24 @@ namespace LunaClient.ModuleStore.Patching
                     default:
                         codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, localVar.LocalIndex));
                         break;
+                }
+
+                //If we are inserting the first field, redirect all the "returns" towards this instruction so we always do the comparison checks
+                if (i == 0)
+                {
+                    //Store the instruction we just added as we must redirect all the returns that the method already had towards this line
+                    var firstCheck = generator.DefineLabel();
+                    codes[codes.Count - 1].labels.Add(firstCheck);
+
+                    //This is the last "ret" that every function has
+                    var lastReturnInstructionLabel = Enumerable.FirstOrDefault(codes.Last().labels);
+                    foreach (var codeInstruction in codes)
+                    {
+                        if (codeInstruction.operand is Label lbl && lbl == lastReturnInstructionLabel)
+                        {
+                            codeInstruction.operand = firstCheck;
+                        }
+                    }
                 }
 
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
