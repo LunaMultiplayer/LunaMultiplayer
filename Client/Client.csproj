@@ -134,6 +134,7 @@
     <Compile Include="Localization\Structures\UpdateWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
     <Compile Include="ModuleStore\Harmony\HarmonyMethod.cs" />
+    <Compile Include="ModuleStore\Patching\FieldChangeTranspiler.cs" />
     <Compile Include="ModuleStore\Patching\PartModulePatcher.cs" />
     <Compile Include="ModuleStore\Patching\TestModule.cs" />
     <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />
