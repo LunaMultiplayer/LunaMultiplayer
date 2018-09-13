@@ -61,7 +61,11 @@ namespace LunaClient.ModuleStore.Patching
             for (var i = 0; i < fields.Count; i++)
             {
                 var field = AccessTools.Field(_originalMethod.DeclaringType, fields[i].FieldName);
-                if (field == null) continue;
+                if (field == null)
+                {
+                    LunaLog.LogError($"Field {fields[i].FieldName} not found in module {_originalMethod.DeclaringType}");
+                    continue;
+                }
 
                 //Here we declare a local var to store the OLD value of the field that we are tracking
                 var localVar = _generator.DeclareLocal(field.FieldType);
@@ -115,9 +119,8 @@ namespace LunaClient.ModuleStore.Patching
             {
                 var field = AccessTools.Field(_originalMethod.DeclaringType, fields[i].FieldName);
                 if (field == null) continue;
-                //Now all the function method is run...
 
-                //Then we write the comparision and the triggering of the event at the bottom
+                //We write the comparision and the triggering of the event at the bottom
                 switch (FieldIndexToLocalVarDictionary[i])
                 {
                     case 0:
