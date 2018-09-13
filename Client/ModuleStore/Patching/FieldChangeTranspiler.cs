@@ -148,7 +148,7 @@ namespace LunaClient.ModuleStore.Patching
                     codes[codes.Count - 1].labels.Add(firstCheck);
 
                     //This is the last "ret" that every function has
-                    var lastReturnInstructionLabel = Enumerable.FirstOrDefault(codes.Last().labels);
+                    var lastReturnInstructionLabel = codes.Last().labels.FirstOrDefault();
                     foreach (var codeInstruction in codes)
                     {
                         if (codeInstruction.operand is Label lbl && lbl == lastReturnInstructionLabel)
