@@ -143,19 +143,7 @@ namespace LunaClient.ModuleStore.Patching
                 //If we are inserting the first field, redirect all the "returns" towards this instruction so we always do the comparison checks
                 if (i == 0)
                 {
-                    //Store the instruction we just added as we must redirect all the returns that the method already had towards this line
-                    var firstCheck = _generator.DefineLabel();
-                    codes[codes.Count - 1].labels.Add(firstCheck);
-
-                    //This is the last "ret" that every function has
-                    var lastReturnInstructionLabel = codes.Last().labels.FirstOrDefault();
-                    foreach (var codeInstruction in codes)
-                    {
-                        if (codeInstruction.operand is Label lbl && lbl == lastReturnInstructionLabel)
-                        {
-                            codeInstruction.operand = firstCheck;
-                        }
-                    }
+                    RedirectExistingReturns(codes);
                 }
 
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
@@ -206,6 +194,44 @@ namespace LunaClient.ModuleStore.Patching
                 }
 
                 jmpInstruction.operand = codes[codes.Count - 1].labels[0];
+            }
+        }
+
+        /// <summary>
+        /// Here we redirect all the "Returns" that the function might have so they point to the first comparison
+        /// Example: 
+        /// public void MyFunction()
+        /// {
+        ///     String backupField1 = TrackedField1;
+        ///     Int backupField2 = TrackedField2;
+        ///     Bool backupField3 = TrackedField3;
+        /// 
+        ///     ----- Function Code------
+        ///     return; ---------------------> This becomes a kind of "GOTO: if (TrackedField1 != backupField1)"
+        ///     ----- Function Code------
+        /// 
+        ///     if (TrackedField1 != backupField1)
+        ///         PartModuleEvent.onPartModuleStringFieldChanged.Fire();
+        ///     if (TrackedField2 != backupField2)
+        ///         PartModuleEvent.onPartModuleIntFieldChanged.Fire();
+        ///     if (TrackedField3 != backupField3)
+        ///         PartModuleEvent.onPartModuleBoolFieldChanged.Fire();
+        /// } 
+        /// </summary>
+        private static void RedirectExistingReturns(List<CodeInstruction> codes)
+        {
+            //Store the instruction we just added as we must redirect all the returns that the method already had towards this line
+            var firstCheck = _generator.DefineLabel();
+            codes[codes.Count - 1].labels.Add(firstCheck);
+
+            //This is the last "ret" that every function has
+            var lastReturnInstructionLabel = codes.Last().labels.FirstOrDefault();
+            foreach (var codeInstruction in codes)
+            {
+                if (codeInstruction.operand is Label lbl && lbl == lastReturnInstructionLabel)
+                {
+                    codeInstruction.operand = firstCheck;
+                }
             }
         }
 
