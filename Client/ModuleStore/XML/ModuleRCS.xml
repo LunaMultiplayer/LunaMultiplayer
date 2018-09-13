@@ -23,7 +23,7 @@
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
-            <FieldName>enableXw</FieldName>
+            <FieldName>enableX</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <!--TODO: UIFIELD-->
