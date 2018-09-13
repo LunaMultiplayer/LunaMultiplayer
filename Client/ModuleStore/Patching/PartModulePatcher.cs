@@ -217,14 +217,14 @@ namespace LunaClient.ModuleStore.Patching
                 var jmpInstruction = new CodeInstruction(OpCodes.Brfalse_S);
                 codes.Insert(codes.Count - 1, jmpInstruction);
 
-                LoadFunctionByFieldType(field, codes);
+                LoadFunctionByFieldType(field.FieldType, codes);
 
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldstr, field.Name));
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldfld, field));
 
-                CallFunctionByFieldType(field, codes);
+                CallFunctionByFieldType(field.FieldType, codes);
 
                 if (!codes[codes.Count - 1].labels.Any())
                 {
@@ -237,37 +237,37 @@ namespace LunaClient.ModuleStore.Patching
             return codes.AsEnumerable();
         }
 
-        private static void LoadFunctionByFieldType(FieldInfo field, List<CodeInstruction> codes)
+        private static void LoadFunctionByFieldType(Type fieldType, List<CodeInstruction> codes)
         {
-            if (field.FieldType.IsEnum)
+            if (fieldType.IsEnum)
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
             }
-            else if (field.FieldType == typeof(bool))
+            else if (fieldType == typeof(bool))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleBoolFieldChanged")));
             }
-            else if (field.FieldType == typeof(int))
+            else if (fieldType == typeof(int))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
             }
-            else if (field.FieldType == typeof(float))
+            else if (fieldType == typeof(float))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleFloatFieldChanged")));
             }
-            else if (field.FieldType == typeof(double))
+            else if (fieldType == typeof(double))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleDoubleFieldChanged")));
             }
-            else if (field.FieldType == typeof(string))
+            else if (fieldType == typeof(string))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleStringFieldChanged")));
             }
-            else if (field.FieldType == typeof(Quaternion))
+            else if (fieldType == typeof(Quaternion))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleQuaternionFieldChanged")));
             }
-            else if (field.FieldType == typeof(Vector3))
+            else if (fieldType == typeof(Vector3))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleVectorFieldChanged")));
             }
@@ -277,37 +277,37 @@ namespace LunaClient.ModuleStore.Patching
             }
         }
 
-        private static void CallFunctionByFieldType(FieldInfo field, List<CodeInstruction> codes)
+        private static void CallFunctionByFieldType(Type fieldType, List<CodeInstruction> codes)
         {
-            if (field.FieldType.IsEnum)
+            if (fieldType.IsEnum)
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
             }
-            else if (field.FieldType == typeof(bool))
+            else if (fieldType == typeof(bool))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, bool>), "Fire")));
             }
-            else if (field.FieldType == typeof(int))
+            else if (fieldType == typeof(int))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
             }
-            else if (field.FieldType == typeof(float))
+            else if (fieldType == typeof(float))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, float>), "Fire")));
             }
-            else if (field.FieldType == typeof(double))
+            else if (fieldType == typeof(double))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, double>), "Fire")));
             }
-            else if (field.FieldType == typeof(string))
+            else if (fieldType == typeof(string))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, string>), "Fire")));
             }
-            else if (field.FieldType == typeof(Quaternion))
+            else if (fieldType == typeof(Quaternion))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Quaternion>), "Fire")));
             }
-            else if (field.FieldType == typeof(Vector3))
+            else if (fieldType == typeof(Vector3))
             {
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Vector3>), "Fire")));
             }
