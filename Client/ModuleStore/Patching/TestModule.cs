@@ -11,6 +11,6 @@ namespace LunaClient.ModuleStore.Patching
     {
         public static readonly MethodInfo AfterMethodCallMethodInfo = typeof(TestModule).GetMethod(nameof(AfterMethodCall), AccessTools.all);
         
-        private void AfterMethodCall() => PartModuleEvent.onPartModuleMethodCalled.Fire(this, "METHODNAME");
+        private void AfterMethodCall() => PartModuleEvent.onPartModuleMethodCalling.Fire(this, "METHODNAME");
     }
 }

@@ -32,14 +32,14 @@ namespace LunaClient.Systems.VesselPartSyncCallSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            PartModuleEvent.onPartModuleMethodCalled.Add(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
+            PartModuleEvent.onPartModuleMethodCalling.Add(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncCalls));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            PartModuleEvent.onPartModuleMethodCalled.Remove(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
+            PartModuleEvent.onPartModuleMethodCalling.Remove(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
 
             VesselPartsSyncs.Clear();
         }

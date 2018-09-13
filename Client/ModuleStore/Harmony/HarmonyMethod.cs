@@ -7,12 +7,12 @@ namespace LunaClient.ModuleStore.Harmony
 {
     public class HarmonyCustomMethod
     {
-        public static readonly HarmonyMethod MethodPostfixMethod = new HarmonyMethod(typeof(HarmonyCustomMethod).GetMethod(nameof(MethodPostfix)));
+        public static readonly HarmonyMethod MethodPrefixMethod = new HarmonyMethod(typeof(HarmonyCustomMethod).GetMethod(nameof(MethodPrefix)));
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static void MethodPostfix(PartModule __instance, MethodInfo __originalMethod)
+        public static void MethodPrefix(PartModule __instance, MethodInfo __originalMethod)
         {
-            PartModuleEvent.onPartModuleMethodCalled.Fire(__instance, __originalMethod.Name);
+            PartModuleEvent.onPartModuleMethodCalling.Fire(__instance, __originalMethod.Name);
         }
     }
 }

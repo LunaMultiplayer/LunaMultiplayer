@@ -16,18 +16,13 @@ namespace LunaClient.ModuleStore.Patching
     /// <summary>
     /// This class intention is to patch part modules methods so if they modify a field that is persistent it triggers an event
     /// </summary>
-    public partial class PartModulePatcher
+    public class PartModulePatcher
     {
         /// <summary>
         /// Here we store the original method instructions in case we fuck things up
         /// </summary>
         private static readonly List<CodeInstruction> InstructionsBackup = new List<CodeInstruction>();
-
-        /// <summary>
-        /// Here we will have the IL code of the method <see cref="TestModule.ExampleFieldChangeCall"/>
-        /// </summary>
-        private static readonly List<CodeInstruction> FieldChangeCallInstructions = new List<CodeInstruction>();
-
+        
         /// <summary>
         /// Here we keep a reference of the customized fields that a method is changing
         /// </summary>
@@ -73,7 +68,7 @@ namespace LunaClient.ModuleStore.Patching
         }
 
         /// <summary>
-        /// Patches the ACTION methods defined in the XML with the transpiler
+        /// Patches the methods defined in the XML with the transpiler
         /// </summary>
         private static void PatchFieldsAndMethods(Type partModule, ModuleDefinition definition)
         {
@@ -90,13 +85,13 @@ namespace LunaClient.ModuleStore.Patching
                             ? $"Patching method {partModuleMethod.Name} for field changes and method call in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}"
                             : $"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
 
-                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, patchMethodCalls ? HarmonyCustomMethod.MethodPostfixMethod : null,
+                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, patchMethodCalls ? HarmonyCustomMethod.MethodPrefixMethod : null, null,
                             FieldChangeTranspilerMethod);
                     }
                     catch
                     {
                         LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, patchMethodCalls ? HarmonyCustomMethod.MethodPostfixMethod : null,
+                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, patchMethodCalls ? HarmonyCustomMethod.MethodPrefixMethod : null, null,
                             RestoreTranspilerMethod);
                     }
                 }
@@ -109,7 +104,7 @@ namespace LunaClient.ModuleStore.Patching
                     }
 
                     LunaLog.Log($"Patching method {partModuleMethod.Name} for method call in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                    HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, HarmonyCustomMethod.MethodPostfixMethod);
+                    HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, HarmonyCustomMethod.MethodPrefixMethod);
                 }
             }
         }
@@ -122,15 +117,16 @@ namespace LunaClient.ModuleStore.Patching
             return InstructionsBackup.AsEnumerable();
         }
 
+        #region Magic stuff
+
         /// <summary>
-        /// This method takes the IL code of the part module. If it finds that you're changing the value (OpCodes.Ldstr) of a field that has the attribute "KSPField" and that
-        /// attribute has the "isPersistant" then we add the FieldChangeCallInstructions IL opcodes just after it so the event is triggered.
+        /// This is black magic. By using opcodes we store all the fields that we are tracking into local variables at the beginning of the method.
+        /// Then, after the method has run, we compare the current values against the stored ones and we trigger the onPartModuleFieldChanged event
         /// </summary>
         public static IEnumerable<CodeInstruction> FieldChangeTranspiler(ILGenerator generator, MethodBase originalMethod, IEnumerable<CodeInstruction> instructions)
         {
             if (originalMethod.DeclaringType == null) return instructions.AsEnumerable();
 
-            var currentPartModule = originalMethod.DeclaringType.Name;
             InstructionsBackup.Clear();
 
             var codes = new List<CodeInstruction>(instructions);
@@ -138,11 +134,11 @@ namespace LunaClient.ModuleStore.Patching
 
             var evaluationVar = generator.DeclareLocal(typeof(bool));
 
-            var localVarMapping = new Dictionary<FieldInfo, LocalBuilder>();
             foreach (var field in FieldsChangedInCurrentMethod)
             {
+                //Here we declare a local var to store the OLD value of the field that we are tracking
+
                 var localVar = generator.DeclareLocal(field.FieldType);
-                localVarMapping.Add(field, localVar);
                 codes.Insert(0, new CodeInstruction(OpCodes.Ldarg_0));
                 codes.Insert(1, new CodeInstruction(OpCodes.Ldfld, field));
 
@@ -167,6 +163,8 @@ namespace LunaClient.ModuleStore.Patching
                 }
 
                 //Now all the function method is run...
+
+                //Then we write the comparision and the triggering of the event at the bottom
                 switch (localVar.LocalIndex)
                 {
                     case 0:
@@ -228,9 +226,12 @@ namespace LunaClient.ModuleStore.Patching
 
                 CallFunctionByFieldType(field, codes);
 
-                var label = generator.DefineLabel();
-                codes[codes.Count - 1].labels.Add(label);
-                jmpInstruction.operand = label;
+                if (!codes[codes.Count - 1].labels.Any())
+                {
+                    codes[codes.Count - 1].labels.Add(generator.DefineLabel());
+                }
+
+                jmpInstruction.operand = codes[codes.Count - 1].labels[0];
             }
 
             return codes.AsEnumerable();
@@ -316,6 +317,7 @@ namespace LunaClient.ModuleStore.Patching
             }
         }
 
+        #endregion
 
         /// <summary>
         /// Checks if the given method has a IL instruction that SETS (therefore, it changes the value) a customized field
