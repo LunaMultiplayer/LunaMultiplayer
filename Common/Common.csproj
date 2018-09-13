@@ -220,10 +220,10 @@
     <Compile Include="Message\Data\ShareProgress\ScienceSubjectInfo.cs" />
     <Compile Include="Message\Data\ShareProgress\TechNodeInfo.cs" />
     <Compile Include="Message\Data\Vessel\FieldNameValue.cs" />
-    <Compile Include="Message\Data\Vessel\ActionGroup.cs" />
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselActionGroupMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselPartSyncFieldMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselPartSyncCallMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselResourceInfo.cs" />

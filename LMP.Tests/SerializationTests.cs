@@ -34,16 +34,6 @@ namespace LMP.Tests
             msgData.Persistent = false;
             msgData.RefTransformId = (uint)Rnd.Next();
 
-            for (var i = 0; i < 17; i++)
-            {
-                if (msgData.ActionGroups[i] == null)
-                    msgData.ActionGroups[i] = new ActionGroup();
-
-                msgData.ActionGroups[i].ActionGroupName = "ActionGroupName" + i;
-                msgData.ActionGroups[i].State = true;
-                msgData.ActionGroups[i].Time = Rnd.NextDouble();
-            }
-
             var msg = Factory.CreateNew<VesselCliMsg>(msgData);
             
             //Serialize

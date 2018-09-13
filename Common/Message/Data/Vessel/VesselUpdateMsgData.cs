@@ -29,8 +29,6 @@ namespace LunaCommon.Message.Data.Vessel
         public int Stage;
         public float[] Com = new float[3];
 
-        public ActionGroup[] ActionGroups = new ActionGroup[17];
-
         public override string ClassName { get; } = nameof(VesselUpdateMsgData);
 
 
@@ -58,9 +56,6 @@ namespace LunaCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(Com[i]);
-
-            for (var i = 0; i < 17; i++)
-                ActionGroups[i].Serialize(lidgrenMsg);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -87,29 +82,14 @@ namespace LunaCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 Com[i] = lidgrenMsg.ReadFloat();
-
-            for (var i = 0; i < 17; i++)
-            {
-                if (ActionGroups[i] == null)
-                    ActionGroups[i] = new ActionGroup();
-
-                ActionGroups[i].Deserialize(lidgrenMsg);
-            }
         }
         
         internal override int InternalGetMessageSize()
         {
-            var arraySize = 0;
-            for (var i = 0; i < 17; i++)
-            {
-                arraySize += ActionGroups[i].GetByteCount();
-            }
-
             return base.InternalGetMessageSize() 
                 + sizeof(double) * 4 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int)
                 + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() 
-                + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount()
-                + arraySize;
+                + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount();
         }
     }
 }

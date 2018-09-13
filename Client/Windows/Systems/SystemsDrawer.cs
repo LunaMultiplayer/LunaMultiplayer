@@ -19,6 +19,7 @@ using LunaClient.Systems.ShareScienceSubject;
 using LunaClient.Systems.ShareStrategy;
 using LunaClient.Systems.ShareTechnology;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.VesselActionGroupSys;
 using LunaClient.Systems.VesselCrewSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFairingsSys;
@@ -191,6 +192,11 @@ namespace LunaClient.Windows.Systems
             if (_vesselResource)
             {
                 VesselResourceSystem.Singleton.Enabled = GUILayout.Toggle(VesselResourceSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _vesselActionGroup = GUILayout.Toggle(_vesselActionGroup, "Vessel action group", ButtonStyle);
+            if (_vesselActionGroup)
+            {
+                VesselActionGroupSystem.Singleton.Enabled = GUILayout.Toggle(VesselActionGroupSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             _vesselFairing = GUILayout.Toggle(_vesselFairing, "Vessel fairing", ButtonStyle);
             if (_vesselFairing)

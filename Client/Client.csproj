@@ -69,6 +69,7 @@
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="DebugDrawer.cs" />
+    <Compile Include="Events\ActionGroupEvent.cs" />
     <Compile Include="Events\Base\LmpBaseEvent.cs" />
     <Compile Include="Events\ExperimentEvent.cs" />
     <Compile Include="Events\ExternalSeatEvent.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
+    <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
@@ -278,6 +280,11 @@
     <Compile Include="Systems\VesselSyncSys\VesselSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselSyncSys\VesselSyncMessageSender.cs" />
     <Compile Include="Systems\VesselSyncSys\VesselSyncSystem.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroup.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupMessageHandler.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupMessageSender.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupQueue.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupSystem.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdate.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateQueue.cs" />
     <Compile Include="Utilities\UpdateHandler.cs" />

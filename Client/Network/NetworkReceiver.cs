@@ -26,6 +26,7 @@ using LunaClient.Systems.ShareStrategy;
 using LunaClient.Systems.ShareTechnology;
 using LunaClient.Systems.ShareUpgradeableFacilities;
 using LunaClient.Systems.Status;
+using LunaClient.Systems.VesselActionGroupSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
@@ -185,6 +186,9 @@ namespace LunaClient.Network
                             break;
                         case VesselMessageType.PartSyncCall:
                             VesselPartSyncCallSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.ActionGroup:
+                            VesselActionGroupSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Fairing:
                             VesselFairingsSystem.Singleton.EnqueueMessage(msg);

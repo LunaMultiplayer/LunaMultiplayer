@@ -31,7 +31,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         public bool WasControllable;
         public int Stage;
         public float[] Com = new float[3];
-        public ActionGroup[] ActionGroups = new ActionGroup[17];
 
         #endregion
         
@@ -110,13 +109,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                     }
                     continue;
                 }
-
-                if (vessel.ActionGroups.groups[i] != ActionGroups[i].State)
-                {
-                    vessel.ActionGroups.ToggleGroup(kspActGrp);
-                    vessel.ActionGroups.groups[i] = ActionGroups[i].State;
-                    vessel.ActionGroups.cooldownTimes[i] = ActionGroups[i].Time;
-                }
             }
         }
 
@@ -144,11 +136,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             protoVessel.CoM.x = Com[0];
             protoVessel.CoM.y = Com[1];
             protoVessel.CoM.z = Com[2];
-
-            for (var i = 0; i < 17; i++)
-            {
-                protoVessel.actionGroups.SetValue(ActionGroups[i].ActionGroupName, $"{ActionGroups[i].State}, {ActionGroups[i].Time}");
-            }
         }
     }
 }

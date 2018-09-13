@@ -169,6 +169,28 @@ namespace Server.System
         }
 
         /// <summary>
+        /// We received a action group information from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
+        /// </summary>
+        public static void WriteActionGroupDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselActionGroupMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            //Sync part changes ALWAYS and ignore the rate they arrive
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
+                {
+                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+
+                    var updatedText = UpdateProtoVesselWithNewUpdateData(xmlData, msgData);
+                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                }
+            });
+        }
+
+        /// <summary>
         /// We received a resource information from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later received an update vesselproto
         /// </summary>
@@ -365,7 +387,21 @@ namespace Server.System
         }
 
         /// <summary>
-        /// Updates the proto vessel with the values we received about a position of a vessel
+        /// Updates the proto vessel with the values we received of an action group value
+        /// </summary>
+        private static string UpdateProtoVesselWithNewUpdateData(string vesselData, VesselActionGroupMsgData msgData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ACTIONGROUPS']/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.ActionGroupString}']");
+            if (node != null) node.InnerText = $"{msgData.Value.ToString(CultureInfo.InvariantCulture)}, 0";
+
+            return document.ToIndentedString();
+        }
+
+        /// <summary>
+        /// Updates the proto vessel with the values we received with values of a vessel
         /// </summary>
         private static string UpdateProtoVesselWithNewUpdateData(string vesselData, VesselUpdateMsgData msgData)
         {
@@ -428,12 +464,6 @@ namespace Server.System
             //if (node != null) node.InnerText = $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
             //                                $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
             //                                $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}";
-
-            foreach (var actionGroup in msgData.ActionGroups)
-            {
-                node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ACTIONGROUPS']/{ConfigNodeXmlParser.ValueNode}[@name='{actionGroup.ActionGroupName}']");
-                if (node != null) node.InnerText = $"{actionGroup.State.ToString(CultureInfo.InvariantCulture)}, {actionGroup.Time.ToString(CultureInfo.InvariantCulture)}";
-            }
 
             return document.ToIndentedString();
         }

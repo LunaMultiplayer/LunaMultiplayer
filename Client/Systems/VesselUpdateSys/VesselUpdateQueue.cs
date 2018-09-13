@@ -28,16 +28,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             value.WasControllable = msgData.WasControllable;
             value.Stage = msgData.Stage;
             Array.Copy(msgData.Com, value.Com, 3);
-
-            for (var i = 0; i < value.ActionGroups.Length; i++)
-            {
-                if (value.ActionGroups[i] == null)
-                    value.ActionGroups[i] = new ActionGroup();
-
-                value.ActionGroups[i].ActionGroupName = msgData.ActionGroups[i].ActionGroupName.Clone() as string;
-                value.ActionGroups[i].State = msgData.ActionGroups[i].State;
-                value.ActionGroups[i].Time = msgData.ActionGroups[i].Time;
-            }
         }
     }
 }
