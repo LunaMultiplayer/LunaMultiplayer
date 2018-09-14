@@ -15,27 +15,40 @@ namespace LunaClient.ModuleStore.Patching
         private static ModuleDefinition _definition;
         private static ILGenerator _generator;
         private static MethodBase _originalMethod;
-        
-        //Here we store the local variables index against the field index we are playing with
-        private static readonly Dictionary<int, int> FieldIndexToLocalVarDictionary = new Dictionary<int, int>();
+        private static List<CodeInstruction> _codes;
 
         /// <summary>
-        /// This is black magic. By using opcodes we store all the fields that we are tracking into local variables at the beginning of the method.
-        /// Then, after the method has run, we compare the current values against the stored ones and we trigger the onPartModuleFieldChanged event
+        /// We create local vars to store the values of the tracked fields. Those local vars will have an index to identify them.
+        /// Here we store the KEY-FIED so we can access them easely
         /// </summary>
-        public static IEnumerable<CodeInstruction> TranspileMethod(ModuleDefinition definition, ILGenerator generator,
+        private static readonly Dictionary<int, int> FieldIndexToLocalVarDictionary = new Dictionary<int, int>();
+
+        private static int LastIndex => _codes.Count - 1;
+
+        /// <summary>
+        /// Creates the static references and init the transpiler
+        /// </summary>
+        public static void InitTranspiler(ModuleDefinition definition, ILGenerator generator,
             MethodBase originalMethod, List<CodeInstruction> codes)
         {
             _definition = definition;
             _generator = generator;
             _originalMethod = originalMethod;
+            _codes = codes;
 
             FieldIndexToLocalVarDictionary.Clear();
-            
-            TranspileBackupFields(codes);
-            TranspileEvaluations(codes);
+        }
 
-            return codes.AsEnumerable();
+        /// <summary>
+        /// This is black magic. By using opcodes we store all the fields that we are tracking into local variables at the beginning of the method.
+        /// Then, after the method has run, we compare the current values against the stored ones and we trigger the onPartModuleFieldChanged event
+        /// </summary>
+        public static IEnumerable<CodeInstruction> Transpile()
+        {
+            TranspileBackupFields();
+            TranspileEvaluations();
+
+            return _codes.AsEnumerable();
         }
 
         /// <summary>
@@ -50,7 +63,7 @@ namespace LunaClient.ModuleStore.Patching
         ///     ----- Function Code------
         /// } 
         /// </summary>
-        private static void TranspileBackupFields(List<CodeInstruction> codes)
+        private static void TranspileBackupFields()
         {
             var fields = _definition.Fields.ToList();
             for (var i = 0; i < fields.Count; i++)
@@ -66,25 +79,25 @@ namespace LunaClient.ModuleStore.Patching
                 var localVar = _generator.DeclareLocal(field.FieldType);
                 FieldIndexToLocalVarDictionary.Add(i, localVar.LocalIndex);
 
-                codes.Insert(0, new CodeInstruction(OpCodes.Ldarg_0));
-                codes.Insert(1, new CodeInstruction(OpCodes.Ldfld, field));
+                _codes.Insert(0, new CodeInstruction(OpCodes.Ldarg_0));
+                _codes.Insert(1, new CodeInstruction(OpCodes.Ldfld, field));
 
                 switch (FieldIndexToLocalVarDictionary[i])
                 {
                     case 0:
-                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_0));
+                        _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_0));
                         break;
                     case 1:
-                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_1));
+                        _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_1));
                         break;
                     case 2:
-                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_2));
+                        _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_2));
                         break;
                     case 3:
-                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_3));
+                        _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_3));
                         break;
                     default:
-                        codes.Insert(2, new CodeInstruction(OpCodes.Stloc_S, FieldIndexToLocalVarDictionary[i]));
+                        _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_S, FieldIndexToLocalVarDictionary[i]));
                         break;
                 }
             }
@@ -105,7 +118,7 @@ namespace LunaClient.ModuleStore.Patching
         ///     if (TrackedField3 != backupField3)
         ///         PartModuleEvent.onPartModuleBoolFieldChanged.Fire();
         /// } 
-        private static void TranspileEvaluations(List<CodeInstruction> codes)
+        private static void TranspileEvaluations()
         {
             var startComparisonInstructions = new List<CodeInstruction>();
             var jmpInstructions = new List<CodeInstruction>();
@@ -113,95 +126,95 @@ namespace LunaClient.ModuleStore.Patching
             var fields = _definition.Fields.ToList();
             for (var i = 0; i < fields.Count; i++)
             {
-                var evaluationVar = _generator.DeclareLocal(typeof(bool));
-
                 var field = AccessTools.Field(_originalMethod.DeclaringType, fields[i].FieldName);
                 if (field == null) continue;
+
+                var evaluationVar = _generator.DeclareLocal(typeof(bool));
 
                 //We write the comparision and the triggering of the event at the bottom
                 switch (FieldIndexToLocalVarDictionary[i])
                 {
                     case 0:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_0));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_0));
                         break;
                     case 1:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_1));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_1));
                         break;
                     case 2:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_2));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_2));
                         break;
                     case 3:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_3));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_3));
                         break;
                     default:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, FieldIndexToLocalVarDictionary[i]));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_S, FieldIndexToLocalVarDictionary[i]));
                         break;
                 }
 
                 //If we are inserting the first field, redirect all the "returns" towards this instruction so we always do the comparison checks
                 if (i == 0)
                 {
-                    RedirectExistingReturns(codes);
+                    RedirectExistingReturns(_codes);
                 }
                 else
                 {
-                    startComparisonInstructions.Add(codes[codes.Count - 2]);
+                    startComparisonInstructions.Add(_codes[_codes.Count - 2]);
                 }
 
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldfld, field));
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ceq));
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldc_I4_0));
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ceq));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ceq));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldc_I4_0));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ceq));
 
                 switch (evaluationVar.LocalIndex)
                 {
                     case 0:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_0));
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_0));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Stloc_0));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_0));
                         break;
                     case 1:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_1));
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_1));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Stloc_1));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_1));
                         break;
                     case 2:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_2));
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_2));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Stloc_2));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_2));
                         break;
                     case 3:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_3));
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_3));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Stloc_3));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_3));
                         break;
                     default:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_S, evaluationVar.LocalIndex));
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, evaluationVar.LocalIndex));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Stloc_S, evaluationVar.LocalIndex));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_S, evaluationVar.LocalIndex));
                         break;
                 }
                 
                 //If we are in the last field then return to the last "ret" of the function
                 if (i == fields.Count - 1)
                 {
-                    if (!codes[codes.Count - 1].labels.Any())
+                    if (!_codes[LastIndex].labels.Any())
                     {
-                        codes[codes.Count - 1].labels.Add(_generator.DefineLabel());
+                        _codes[LastIndex].labels.Add(_generator.DefineLabel());
                     }
-                    codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Brfalse_S, codes[codes.Count - 1].labels[0]));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Brfalse_S, _codes[LastIndex].labels[0]));
                 }
                 else
                 {
                     var jmpInstruction = new CodeInstruction(OpCodes.Brfalse_S);
-                    codes.Insert(codes.Count - 1, jmpInstruction);
+                    _codes.Insert(LastIndex, jmpInstruction);
                     jmpInstructions.Add(jmpInstruction);
                 }
 
-                LoadFunctionByFieldType(field.FieldType, codes);
+                LoadFunctionByFieldType(field.FieldType, _codes);
 
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldstr, field.Name));
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldarg_0));
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldfld, field));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldstr, field.Name));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
 
-                CallFunctionByFieldType(field.FieldType, codes);
+                CallFunctionByFieldType(field.FieldType, _codes);
             }
 
             FixFallbackInstructions(startComparisonInstructions, jmpInstructions);

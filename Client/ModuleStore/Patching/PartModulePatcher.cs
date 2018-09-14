@@ -122,7 +122,9 @@ namespace LunaClient.ModuleStore.Patching
             InstructionsBackup.Clear();
             InstructionsBackup.AddRange(codes);
 
-            return FieldChangeTranspiler.TranspileMethod(_customizationModule, generator, originalMethod, codes);
+            FieldChangeTranspiler.InitTranspiler(_customizationModule, generator, originalMethod, codes);
+
+            return FieldChangeTranspiler.Transpile();
 
         }
     }
