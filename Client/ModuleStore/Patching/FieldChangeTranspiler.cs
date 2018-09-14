@@ -15,10 +15,7 @@ namespace LunaClient.ModuleStore.Patching
         private static ModuleDefinition _definition;
         private static ILGenerator _generator;
         private static MethodBase _originalMethod;
-
-        //This is a variable to hold all the comparison "!=" between values
-        private static LocalBuilder _evaluationVar;
-
+        
         //Here we store the local variables index against the field index we are playing with
         private static readonly Dictionary<int, int> FieldIndexToLocalVarDictionary = new Dictionary<int, int>();
 
@@ -34,8 +31,6 @@ namespace LunaClient.ModuleStore.Patching
             _originalMethod = originalMethod;
 
             FieldIndexToLocalVarDictionary.Clear();
-
-            _evaluationVar = _generator.DeclareLocal(typeof(bool));
             
             TranspileBackupFields(codes);
             TranspileEvaluations(codes);
@@ -118,6 +113,8 @@ namespace LunaClient.ModuleStore.Patching
             var fields = _definition.Fields.ToList();
             for (var i = 0; i < fields.Count; i++)
             {
+                var evaluationVar = _generator.DeclareLocal(typeof(bool));
+
                 var field = AccessTools.Field(_originalMethod.DeclaringType, fields[i].FieldName);
                 if (field == null) continue;
 
@@ -157,7 +154,7 @@ namespace LunaClient.ModuleStore.Patching
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldc_I4_0));
                 codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ceq));
 
-                switch (_evaluationVar.LocalIndex)
+                switch (evaluationVar.LocalIndex)
                 {
                     case 0:
                         codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_0));
@@ -176,8 +173,8 @@ namespace LunaClient.ModuleStore.Patching
                         codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_3));
                         break;
                     default:
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_S, _evaluationVar.LocalIndex));
-                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, _evaluationVar.LocalIndex));
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Stloc_S, evaluationVar.LocalIndex));
+                        codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldloc_S, evaluationVar.LocalIndex));
                         break;
                 }
                 
@@ -268,12 +265,21 @@ namespace LunaClient.ModuleStore.Patching
 
             //This is the last "ret" that every function has
             var lastReturnInstructionLabel = codes.Last().labels.FirstOrDefault();
-            foreach (var codeInstruction in codes)
+
+            //Skip the last "ret" of the function as otherwise we will get an endless loop
+            for (var i = 0; i < codes.Count - 1; i++)
             {
-                if (codeInstruction.opcode == OpCodes.Ret || codeInstruction.operand is Label lbl && lbl == lastReturnInstructionLabel)
+                //IF the code is a "return" then change it for a break and go to the first check
+                if (codes[i].opcode == OpCodes.Ret)
                 {
-                    codeInstruction.opcode = OpCodes.Br;
-                    codeInstruction.operand = firstCheck;
+                    codes[i].opcode = OpCodes.Br;
+                    codes[i].operand = firstCheck;
+                }
+
+                //Whatever the opcode is, if it ends up in last instruction, redirect it to the first check
+                if (codes[i].operand is Label lbl && lbl == lastReturnInstructionLabel)
+                {
+                    codes[i].operand = firstCheck;
                 }
             }
         }
