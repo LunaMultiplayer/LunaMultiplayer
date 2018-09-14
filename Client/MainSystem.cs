@@ -307,7 +307,7 @@ namespace LunaClient
         {
             LunaLog.LogError($"[LMP]: Threw in {eventName} event, exception: {e}");
             NetworkConnection.Disconnect($"Unhandled error in {eventName} event! exception: {eventName}");
-            StopGame();
+            ForceQuit = true;
             NetworkState = ClientState.Disconnected;
         }
 
@@ -325,10 +325,15 @@ namespace LunaClient
         private void StopGame()
         {
             HighLogic.SaveFolder = "LunaMultiplayer";
+
             if (HighLogic.LoadedScene != GameScenes.MAINMENU)
                 HighLogic.LoadScene(GameScenes.MAINMENU);
+
             BodiesGees.Clear();
             FlightGlobals.Vessels.Clear();
+            FlightGlobals.VesselsLoaded.Clear();
+            FlightGlobals.VesselsUnloaded.Clear();
+            FlightGlobals.fetch.activeVessel = null;
             var craftBrowser = FindObjectOfType<CraftBrowserDialog>();
             if (craftBrowser != null)
             {
