@@ -264,7 +264,7 @@ namespace LunaClient.ModuleStore.Patching
             codes[codes.Count - 2].labels.Add(firstCheck);
 
             //This is the last "ret" that every function has
-            var lastReturnInstructionLabel = codes.Last().labels.FirstOrDefault();
+            var lastReturnInstructionLabels = codes.Last().labels;
 
             //Skip the last "ret" of the function as otherwise we will get an endless loop
             for (var i = 0; i < codes.Count - 1; i++)
@@ -277,7 +277,7 @@ namespace LunaClient.ModuleStore.Patching
                 }
 
                 //Whatever the opcode is, if it ends up in last instruction, redirect it to the first check
-                if (codes[i].operand is Label lbl && lbl == lastReturnInstructionLabel)
+                if (codes[i].operand is Label lbl && lastReturnInstructionLabels.Contains(lbl))
                 {
                     codes[i].operand = firstCheck;
                 }
