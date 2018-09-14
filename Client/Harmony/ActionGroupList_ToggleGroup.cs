@@ -24,7 +24,7 @@ namespace LunaClient.Harmony
                 return;
             }
 
-            ActionGroupEvent.onActionGroupFired.Fire(group, __instance.groups[groupIndex]);
+            ActionGroupEvent.onActionGroupFired.Fire(__instance.v, group, __instance.groups[groupIndex]);
         }
     }
 }

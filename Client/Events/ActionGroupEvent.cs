@@ -6,6 +6,6 @@ namespace LunaClient.Events
 {
     public class ActionGroupEvent : LmpBaseEvent
     {
-        public static EventData<KSPActionGroup, bool> onActionGroupFired;
+        public static EventData<Vessel, KSPActionGroup, bool> onActionGroupFired;
     }
 }

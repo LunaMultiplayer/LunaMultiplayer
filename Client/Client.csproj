@@ -222,6 +222,7 @@
     <Compile Include="Systems\Status\StatusTexts.cs" />
     <Compile Include="Systems\TimeSyncer\TimerSyncerEvents.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupEvents.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewEvents.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewSystem.cs" />
     <Compile Include="Systems\Facility\FacilityEvents.cs" />
