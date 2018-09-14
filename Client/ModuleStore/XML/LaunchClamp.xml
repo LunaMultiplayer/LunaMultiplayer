@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--Launch clamps part module. No need to track the fields of it as they are only changed in editor and not in flight-->
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Methods>
         <MethodDefinition>
