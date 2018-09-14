@@ -79,18 +79,16 @@ namespace LunaClient.Systems.VesselPositionSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
-
-            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
         }
 
         private void HandleVesselUpdates()
         {
-            if (!Enabled) return;
-
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 keyVal.Value.ApplyInterpolatedVesselUpdate();

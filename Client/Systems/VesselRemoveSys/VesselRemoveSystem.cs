@@ -158,6 +158,8 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         private void RemoveQueuedVessels()
         {
+            if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
+
             while (VesselsToRemove.TryDequeue(out var vesselRemoveEntry))
             {
                 KillVessel(vesselRemoveEntry.VesselId, vesselRemoveEntry.Reason);

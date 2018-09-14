@@ -49,6 +49,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private void ProcessVesselUpdates()
         {
+            if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
+
             foreach (var keyVal in VesselUpdates)
             {
                 while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)

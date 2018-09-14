@@ -132,6 +132,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void CheckVesselsToLoad()
         {
+            if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
+
             try
             {
                 foreach (var keyVal in VesselProtos)
