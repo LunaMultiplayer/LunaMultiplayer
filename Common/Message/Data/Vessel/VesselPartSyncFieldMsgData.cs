@@ -66,6 +66,10 @@ namespace LunaCommon.Message.Data.Vessel
                 case PartSyncFieldType.String:
                     lidgrenMsg.Write(StrValue);
                     break;
+                case PartSyncFieldType.Enum:
+                    lidgrenMsg.Write(IntValue);
+                    lidgrenMsg.Write(StrValue);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -108,6 +112,10 @@ namespace LunaCommon.Message.Data.Vessel
                 case PartSyncFieldType.String:
                     StrValue = lidgrenMsg.ReadString();
                     break;
+                case PartSyncFieldType.Enum:
+                    IntValue = lidgrenMsg.ReadInt32();
+                    StrValue = lidgrenMsg.ReadString();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -139,6 +147,9 @@ namespace LunaCommon.Message.Data.Vessel
                     break;
                 case PartSyncFieldType.String:
                     msgSize += StrValue.GetByteCount();
+                    break;
+                case PartSyncFieldType.Enum:
+                    msgSize += sizeof(int) + StrValue.GetByteCount();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -560,6 +560,7 @@ namespace Server.System
                         break;
                     case PartSyncFieldType.Object:
                     case PartSyncFieldType.String:
+                    case PartSyncFieldType.Enum:
                         fieldNode.InnerText = msgData.StrValue;
                         break;
                     default:

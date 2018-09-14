@@ -94,6 +94,16 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             SendMessage(msgData);
         }
 
+        public void SendVesselPartSyncFieldEnumMsg(Vessel vessel, Part part, string moduleName, string field, int value, string valueStr)
+        {
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
+            msgData.FieldType = PartSyncFieldType.Enum;
+            msgData.IntValue = value;
+            msgData.StrValue = valueStr;
+
+            SendMessage(msgData);
+        }
+
         private static VesselPartSyncFieldMsgData GetBaseMsg(Vessel vessel, Part part, string moduleName, string field)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncFieldMsgData>();

@@ -207,14 +207,23 @@ namespace LunaClient.ModuleStore.Patching
                     jmpInstructions.Add(jmpInstruction);
                 }
 
-                LoadFunctionByFieldType(field.FieldType, _codes);
+                LoadFunctionByFieldType(field.FieldType);
 
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldstr, field.Name));
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
 
-                CallFunctionByFieldType(field.FieldType, _codes);
+                if (field.FieldType.IsEnum)
+                {
+                    //For enums we must do the call of the "ToString()"
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldflda, field));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Constrained, field.FieldType));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(object), "ToString")));
+                }
+
+                CallFunctionByFieldType(field.FieldType);
             }
 
             FixFallbackInstructions(startComparisonInstructions, jmpInstructions);
@@ -300,86 +309,86 @@ namespace LunaClient.ModuleStore.Patching
         /// <summary>
         /// Calls the correct onPartModuleXXXFieldChanged based on type
         /// </summary>
-        private static void LoadFunctionByFieldType(Type fieldType, List<CodeInstruction> codes)
+        private static void LoadFunctionByFieldType(Type fieldType)
         {
-            if (fieldType.IsEnum)
+            if (fieldType == typeof(bool))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
-            }
-            else if (fieldType == typeof(bool))
-            {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleBoolFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleBoolFieldChanged")));
             }
             else if (fieldType == typeof(int))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
             }
             else if (fieldType == typeof(float))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleFloatFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleFloatFieldChanged")));
             }
             else if (fieldType == typeof(double))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleDoubleFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleDoubleFieldChanged")));
             }
             else if (fieldType == typeof(string))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleStringFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleStringFieldChanged")));
             }
             else if (fieldType == typeof(Quaternion))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleQuaternionFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleQuaternionFieldChanged")));
             }
             else if (fieldType == typeof(Vector3))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleVectorFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleVectorFieldChanged")));
+            }
+            else if (fieldType.IsEnum)
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleEnumFieldChanged")));
             }
             else
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleObjectFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleObjectFieldChanged")));
             }
         }
 
         /// <summary>
         /// Calls the correct Fire() based on type
         /// </summary>
-        private static void CallFunctionByFieldType(Type fieldType, List<CodeInstruction> codes)
+        private static void CallFunctionByFieldType(Type fieldType)
         {
-            if (fieldType.IsEnum)
+            if (fieldType == typeof(bool))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
-            }
-            else if (fieldType == typeof(bool))
-            {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, bool>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, bool>), "Fire")));
             }
             else if (fieldType == typeof(int))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
             }
             else if (fieldType == typeof(float))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, float>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, float>), "Fire")));
             }
             else if (fieldType == typeof(double))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, double>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, double>), "Fire")));
             }
             else if (fieldType == typeof(string))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, string>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, string>), "Fire")));
             }
             else if (fieldType == typeof(Quaternion))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Quaternion>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Quaternion>), "Fire")));
             }
             else if (fieldType == typeof(Vector3))
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Vector3>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Vector3>), "Fire")));
+            }
+            else if(fieldType.IsEnum)
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int, string>), "Fire")));
             }
             else
             {
-                codes.Insert(codes.Count - 1, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, object>), "Fire")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, object>), "Fire")));
             }
         }
     }

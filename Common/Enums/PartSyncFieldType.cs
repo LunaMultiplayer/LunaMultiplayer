@@ -10,5 +10,6 @@
         Quaternion = 5,
         String = 6,
         Object = 7,
+        Enum = 8
     }
 }

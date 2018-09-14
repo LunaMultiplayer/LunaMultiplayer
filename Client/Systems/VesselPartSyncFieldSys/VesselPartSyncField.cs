@@ -49,52 +49,27 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                     {
                         case PartSyncFieldType.Boolean:
                             module.moduleValues.SetValue(FieldName, BoolValue);
-                            if (module.moduleRef != null)
-                            {
-                                module.moduleRef.Fields[FieldName].SetValue(BoolValue, module.moduleRef);
-                            }
                             break;
                         case PartSyncFieldType.Integer:
                             module.moduleValues.SetValue(FieldName, IntValue);
-                            if (module.moduleRef != null)
-                            {
-                                module.moduleRef.Fields[FieldName].SetValue(IntValue, module.moduleRef);
-                            }
                             break;
                         case PartSyncFieldType.Float:
                             module.moduleValues.SetValue(FieldName, FloatValue);
-                            if (module.moduleRef != null)
-                            {
-                                module.moduleRef.Fields[FieldName].SetValue(FloatValue, module.moduleRef);
-                            }
                             break;
                         case PartSyncFieldType.Double:
                             module.moduleValues.SetValue(FieldName, DoubleValue);
-                            if (module.moduleRef != null)
-                            {
-                                module.moduleRef.Fields[FieldName].SetValue(DoubleValue, module.moduleRef);
-                            }
                             break;
                         case PartSyncFieldType.Vector3:
                             module.moduleValues.SetValue(FieldName, VectorValue);
-                            if (module.moduleRef != null)
-                            {
-                                module.moduleRef.Fields[FieldName].SetValue(VectorValue, module.moduleRef);
-                            }
                             break;
                         case PartSyncFieldType.Quaternion:
                             module.moduleValues.SetValue(FieldName, QuaternionValue);
-                            if (module.moduleRef != null)
-                            {
-                                module.moduleRef.Fields[FieldName].SetValue(QuaternionValue, module.moduleRef);
-                            }
                             break;
                         case PartSyncFieldType.String:
                             module.moduleValues.SetValue(FieldName, StrValue);
-                            if (module.moduleRef != null)
-                            {
-                                module.moduleRef.Fields[FieldName].SetValue(StrValue, module.moduleRef);
-                            }
+                            break;
+                        case PartSyncFieldType.Enum:
+                            module.moduleValues.SetValue(FieldName, StrValue);
                             break;
                         case PartSyncFieldType.Object:
                             module.moduleValues.SetValue(FieldName, StrValue);

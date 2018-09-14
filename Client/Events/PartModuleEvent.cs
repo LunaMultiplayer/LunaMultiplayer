@@ -16,6 +16,7 @@ namespace LunaClient.Events
         public static EventData<PartModule, string, Vector3> onPartModuleVectorFieldChanged;
         public static EventData<PartModule, string, Quaternion> onPartModuleQuaternionFieldChanged;
         public static EventData<PartModule, string, object> onPartModuleObjectFieldChanged;
+        public static EventData<PartModule, string, int, string> onPartModuleEnumFieldChanged;
 
         public static EventData<PartModule, string> onPartModuleMethodCalling;
     }

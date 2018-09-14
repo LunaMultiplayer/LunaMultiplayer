@@ -96,6 +96,15 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             LunaLog.LogWarning($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a field type that is not supported!");
             System.MessageSender.SendVesselPartSyncFieldObjectMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
+        
+        public void PartModuleEnumFieldChanged(PartModule module, string fieldName, int newValue, string newValueStr)
+        {
+            if (!CallIsValid(module))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new ENUM value of {newValueStr}.");
+            System.MessageSender.SendVesselPartSyncFieldEnumMsg(module.vessel, module.part, module.moduleName, fieldName, newValue, newValueStr);
+        }
 
         #endregion
     }

@@ -40,6 +40,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleQuaternionFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleQuaternionFieldChanged);
             PartModuleEvent.onPartModuleStringFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
             PartModuleEvent.onPartModuleObjectFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
+            PartModuleEvent.onPartModuleEnumFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncs));
         }
@@ -55,6 +56,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleQuaternionFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleQuaternionFieldChanged);
             PartModuleEvent.onPartModuleStringFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
             PartModuleEvent.onPartModuleObjectFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
+            PartModuleEvent.onPartModuleEnumFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
 
             VesselPartsSyncs.Clear();
         }

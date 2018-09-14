@@ -45,6 +45,10 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 case PartSyncFieldType.String:
                     value.StrValue = msgData.StrValue.Clone() as string;
                     break;
+                case PartSyncFieldType.Enum:
+                    value.IntValue = msgData.IntValue;
+                    value.StrValue = msgData.StrValue.Clone() as string;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
