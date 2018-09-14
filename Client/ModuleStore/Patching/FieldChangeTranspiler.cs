@@ -233,8 +233,9 @@ namespace LunaClient.ModuleStore.Patching
         {
             for (var i = 0; i < startComparisonInstructions.Count; i++)
             {
-                startComparisonInstructions[i].labels.Add(_generator.DefineLabel());
-                jmpInstructions[i].operand = startComparisonInstructions[i].labels[0];
+                var lbl = _generator.DefineLabel();
+                startComparisonInstructions[i].labels.Add(lbl);
+                jmpInstructions[i].operand = lbl;
             }
         }
 
@@ -269,8 +270,9 @@ namespace LunaClient.ModuleStore.Patching
             var lastReturnInstructionLabel = codes.Last().labels.FirstOrDefault();
             foreach (var codeInstruction in codes)
             {
-                if (codeInstruction.operand is Label lbl && lbl == lastReturnInstructionLabel)
+                if (codeInstruction.opcode == OpCodes.Ret || codeInstruction.operand is Label lbl && lbl == lastReturnInstructionLabel)
                 {
+                    codeInstruction.opcode = OpCodes.Br;
                     codeInstruction.operand = firstCheck;
                 }
             }
