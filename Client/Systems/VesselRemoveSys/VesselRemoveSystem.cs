@@ -1,6 +1,7 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Base;
 using LunaClient.Events;
+using LunaClient.Extensions;
 using LunaClient.Localization;
 using LunaClient.VesselUtilities;
 using LunaCommon.Time;
@@ -18,12 +19,12 @@ namespace LunaClient.Systems.VesselRemoveSys
     {
         private class VesselRemoveEntry
         {
-            public Guid VesselId { get; }
+            public Vessel Vessel { get; }
             public string Reason { get; }
 
-            public VesselRemoveEntry(Guid vesselId, string reason)
+            public VesselRemoveEntry(Vessel vessel, string reason)
             {
-                VesselId = vesselId;
+                Vessel = vessel;
                 Reason = "Queued: " + reason;
             }
         }
@@ -84,9 +85,31 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <summary>
         /// Add a vessel so it will be killed later
         /// </summary>
-        public void AddToKillList(Guid vesselId, string reason)
+        public void AddToKillList(uint vesselPersistentId, Guid vesselId, string reason)
         {
-            VesselsToRemove.Enqueue(new VesselRemoveEntry(vesselId, reason));
+            var vesselToKill = FlightGlobals.fetch.FindVessel(vesselPersistentId, vesselId);
+            if (vesselToKill != null)
+            {
+                AddToKillList(vesselToKill, reason);
+            }
+        }
+
+        /// <summary>
+        /// Add a protoVessel related vessel so it will be killed later
+        /// </summary>
+        public void AddToKillList(ProtoVessel protoVessel, string reason)
+        {
+            AddToKillList(protoVessel.persistentId, protoVessel.vesselID, reason);
+        }
+
+        /// <summary>
+        /// Add a vessel so it will be killed later
+        /// </summary>
+        public void AddToKillList(Vessel vessel, string reason)
+        {
+            if (vessel == null) return;
+
+            VesselsToRemove.Enqueue(new VesselRemoveEntry(vessel, reason));
         }
 
         /// <summary>
@@ -94,20 +117,27 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public bool VesselWillBeKilled(Guid vesselId)
         {
-            return VesselsToRemove.Any(v => v.VesselId == vesselId) || RemovedVessels.ContainsKey(vesselId);
+            return VesselsToRemove.Any(v => v.Vessel?.id == vesselId) || RemovedVessels.ContainsKey(vesselId);
         }
 
         /// <summary>
         /// Kills a vessel.
         /// </summary>
-        public void KillVessel(Guid vesselId, string reason)
+        public void KillVessel(uint vesselPersistentId, Guid vesselId, string reason)
         {
-            VesselCommon.RemoveVesselFromSystems(vesselId);
+            KillVessel(FlightGlobals.fetch.FindVessel(vesselPersistentId, vesselId), reason);
+        }
 
-            var killVessel = FlightGlobals.FindVessel(vesselId);
+        /// <summary>
+        /// Kills a vessel.
+        /// </summary>
+        public void KillVessel(Vessel killVessel, string reason)
+        {
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
 
+            VesselCommon.RemoveVesselFromSystems(killVessel.id);
+            
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}. Reason: {reason}");
             SwitchVesselIfKillingActiveVessel(killVessel);
 
@@ -162,10 +192,10 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             while (VesselsToRemove.TryDequeue(out var vesselRemoveEntry))
             {
-                KillVessel(vesselRemoveEntry.VesselId, vesselRemoveEntry.Reason);
-
                 //Always add to the killed list even if it exists that vessel or not.
-                RemovedVessels.TryAdd(vesselRemoveEntry.VesselId, LunaNetworkTime.UtcNow);
+                RemovedVessels.TryAdd(vesselRemoveEntry.Vessel.id, LunaNetworkTime.UtcNow);
+
+                KillVessel(vesselRemoveEntry.Vessel, vesselRemoveEntry.Reason);
             }
         }
 

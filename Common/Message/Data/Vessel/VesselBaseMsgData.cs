@@ -14,23 +14,26 @@ namespace LunaCommon.Message.Data.Vessel
 
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often (specially positions and flight states)
         public Guid VesselId;
+        public uint VesselPersistentId;
         public double GameTime;
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             GuidUtil.Serialize(VesselId, lidgrenMsg);
+            lidgrenMsg.Write(VesselPersistentId);
             lidgrenMsg.Write(GameTime);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
+            VesselPersistentId = lidgrenMsg.ReadUInt32();
             GameTime = lidgrenMsg.ReadDouble();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return GuidUtil.ByteSize + sizeof(double);
+            return GuidUtil.ByteSize + sizeof(double) + sizeof(uint);
         }
     }
 }

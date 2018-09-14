@@ -8,6 +8,7 @@ namespace LunaClient.Systems.VesselProtoSys
     public class VesselProto
     {
         public Guid VesselId;
+        public uint VesselPersistentId;
         public byte[] RawData = new byte[0];
         public int NumBytes;
         public bool ForceReload;
@@ -24,8 +25,8 @@ namespace LunaClient.Systems.VesselProtoSys
             if (configNode == null || VesselCommon.VesselHasNaNPosition(configNode))
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
-                VesselRemoveSystem.Singleton.KillVessel(VesselId, "Malformed vessel");
-                VesselRemoveSystem.Singleton.AddToKillList(VesselId, "Malformed vessel");
+                VesselRemoveSystem.Singleton.KillVessel(VesselPersistentId, VesselId, "Malformed vessel");
+                VesselRemoveSystem.Singleton.AddToKillList(VesselPersistentId, VesselId, "Malformed vessel");
                 return null;
             }
 
@@ -33,8 +34,8 @@ namespace LunaClient.Systems.VesselProtoSys
             if (newProto == null)
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
-                VesselRemoveSystem.Singleton.KillVessel(VesselId, "Malformed vessel");
-                VesselRemoveSystem.Singleton.AddToKillList(VesselId, "Malformed vessel");
+                VesselRemoveSystem.Singleton.KillVessel(VesselPersistentId, VesselId, "Malformed vessel");
+                VesselRemoveSystem.Singleton.AddToKillList(VesselPersistentId, VesselId, "Malformed vessel");
                 return null;
             }
 

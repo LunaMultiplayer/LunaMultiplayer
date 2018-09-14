@@ -2,6 +2,7 @@
 using LunaCommon.Locks;
 using System;
 using UniLinq;
+using LunaClient.Extensions;
 
 namespace LunaClient.Systems.PlayerColorSys
 {
@@ -26,7 +27,7 @@ namespace LunaClient.Systems.PlayerColorSys
         public void OnLockAcquire(LockDefinition lockDefinition)
         {
             if (lockDefinition.Type == LockType.Control)
-                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
+                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace LunaClient.Systems.PlayerColorSys
         public void OnLockRelease(LockDefinition lockDefinition)
         {
             if (lockDefinition.Type == LockType.Control)
-                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
+                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
         }
         
         /// <summary>
@@ -52,9 +53,9 @@ namespace LunaClient.Systems.PlayerColorSys
         /// <summary>
         /// Find the vessel using the lock name
         /// </summary>
-        private static void UpdateVesselColorsFromLockVesselId(Guid vesselId)
+        private static void UpdateVesselColorsFromLockVesselId(uint vesselPersistentId, Guid vesselId)
         {
-            var vessel = FlightGlobals.FindVessel(vesselId);
+            var vessel = FlightGlobals.fetch.FindVessel(vesselPersistentId, vesselId);
             if (vessel != null)
             {
                 System.SetVesselOrbitColor(vessel);

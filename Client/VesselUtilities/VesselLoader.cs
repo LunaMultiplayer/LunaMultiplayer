@@ -1,4 +1,5 @@
 ﻿using KSP.UI.Screens;
+using LunaClient.Extensions;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.PlayerColorSys;
@@ -153,7 +154,7 @@ namespace LunaClient.VesselUtilities
             var reloadingOwnVessel = vesselProto.vesselID == FlightGlobals.ActiveVessel?.id;
 
             //In case the vessel exists, silently remove them from unity and recreate it again
-            var existingVessel = FlightGlobals.FindVessel(vesselProto.vesselID);
+            var existingVessel = FlightGlobals.fetch.FindVessel(vesselProto.persistentId, vesselProto.vesselID);
             if (existingVessel != null)
             {
                 FlightGlobals.RemoveVessel(existingVessel);

@@ -7,7 +7,7 @@ namespace LunaClient.Events
 {
     public class ExternalSeatEvent : LmpBaseEvent
     {
-        public static EventData<KerbalSeat, Guid, string> onExternalSeatBoard;
+        public static EventData<KerbalSeat, Guid, uint, string> onExternalSeatBoard;
         public static EventData<Vessel, KerbalEVA> onExternalSeatUnboard;
     }
 }

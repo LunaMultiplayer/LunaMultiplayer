@@ -54,6 +54,7 @@ namespace LunaClient.Windows.Locks
                         VesselLocks.Add(new VesselLockDisplay
                         {
                             VesselId = FlightGlobals.Vessels[i].id,
+                            VesselPersistentId = FlightGlobals.Vessels[i].persistentId,
                             Loaded = FlightGlobals.Vessels[i].loaded,
                             Packed = FlightGlobals.Vessels[i].packed,
                             VesselName = FlightGlobals.Vessels[i].name,
@@ -73,7 +74,7 @@ namespace LunaClient.Windows.Locks
                     }
                 }
 
-                VesselLocks.RemoveAll(v => !FlightGlobals.Vessels.Any(ev => ev != null && ev.id == v.VesselId));
+                VesselLocks.RemoveAll(v => FlightGlobals.Vessels.All(ev => ev?.id != v.VesselId));
             }
         }
 

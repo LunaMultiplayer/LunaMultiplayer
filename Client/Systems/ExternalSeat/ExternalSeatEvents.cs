@@ -9,7 +9,7 @@ namespace LunaClient.Systems.ExternalSeat
 {
     public class ExternalSeatEvents : SubSystem<ExternalSeatSystem>
     {
-        public void ExternalSeatBoard(KerbalSeat seat, Guid kerbalVesselId, string kerbalName)
+        public void ExternalSeatBoard(KerbalSeat seat, Guid kerbalVesselId, uint kerbalVesselPersistentId, string kerbalName)
         {
             if (VesselCommon.IsSpectating) return;
 
@@ -17,9 +17,9 @@ namespace LunaClient.Systems.ExternalSeat
 
             LunaLog.Log("Crew-board to an external seat detected!");
             
-            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVesselId);
-            VesselRemoveSystem.Singleton.AddToKillList(kerbalVesselId, "Killing kerbal as it boarded a external seat");
-            LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalVesselId);
+            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVesselId, kerbalVesselPersistentId);
+            VesselRemoveSystem.Singleton.AddToKillList(kerbalVesselPersistentId, kerbalVesselId, "Killing kerbal as it boarded a external seat");
+            LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalVesselId, kerbalVesselPersistentId);
 
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(seat.vessel, false);
         }

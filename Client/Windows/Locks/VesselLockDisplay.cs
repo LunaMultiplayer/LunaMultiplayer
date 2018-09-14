@@ -6,6 +6,7 @@ namespace LunaClient.Windows.Locks
     internal class VesselLockDisplay
     {
         public Guid VesselId { get; set; }
+        public uint VesselPersistentId { get; set; }
         public string VesselName { get; set; }
         public bool Selected { get; set; }
         public bool ExistsInGame { get; set; }

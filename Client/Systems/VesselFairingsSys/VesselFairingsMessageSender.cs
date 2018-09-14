@@ -15,14 +15,15 @@ namespace LunaClient.Systems.VesselFairingsSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselFairingDeployed(Vessel vessel, uint partFlightId)
+        public void SendVesselFairingDeployed(Vessel vessel, uint partPersistentId)
         {
             if (vessel == null) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFairingMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
-            msgData.PartFlightId = partFlightId;
+            msgData.VesselPersistentId = vessel.persistentId;
+            msgData.PartPersistentId = partPersistentId;
 
             SendMessage(msgData);
         }

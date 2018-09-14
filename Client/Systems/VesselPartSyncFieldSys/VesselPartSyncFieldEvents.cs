@@ -1,6 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.ModuleStore;
-using System;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
@@ -32,7 +30,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new BOOL value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldBoolMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldBoolMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleIntFieldChanged(PartModule module, string fieldName, int newValue)
@@ -41,7 +39,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new INT value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldIntMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldIntMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleFloatFieldChanged(PartModule module, string fieldName, float newValue)
@@ -50,7 +48,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new FLOAT value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldFloatMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldFloatMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleDoubleFieldChanged(PartModule module, string fieldName, double newValue)
@@ -59,7 +57,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new DOUBLE value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldDoubleMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldDoubleMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleVectorFieldChanged(PartModule module, string fieldName, Vector3 newValue)
@@ -68,7 +66,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new VECTOR value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldVectorMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldVectorMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleQuaternionFieldChanged(PartModule module, string fieldName, Quaternion newValue)
@@ -77,7 +75,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new QUATERNION value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldQuaternionMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldQuaternionMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleStringFieldChanged(PartModule module, string fieldName, string newValue)
@@ -86,7 +84,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new STRING value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldStringMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldStringMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleObjectFieldChanged(PartModule module, string fieldName, object newValue)
@@ -96,56 +94,9 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new OBJECT value of {newValue}.");
             LunaLog.LogWarning($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a field type that is not supported!");
-            System.MessageSender.SendVesselPartSyncFieldObjectMsg(module.vessel.id, module.part.flightID, module.moduleName, fieldName, newValue);
+            System.MessageSender.SendVesselPartSyncFieldObjectMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         #endregion
-
-        public void PartModuleFieldChanged(PartModule module, string fieldName)
-        {
-            if (!CallIsValid(module))
-                return;
-
-            var fieldVal = VesselPartModuleAccess.GetPartModuleFieldValue(module.vessel.id, module.part.flightID, module.moduleName, fieldName);
-            if (fieldVal == null) return;
-
-            if (FieldModuleStore.InheritanceTypeChain.TryGetValue(module.moduleName, out var inheritChain))
-            {
-                foreach (var baseModuleName in inheritChain)
-                {
-                    if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(baseModuleName, out var customization))
-                    {
-                        customization.GetCustomizationForField(fieldName);
-                    }
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Sends our vessel just when we start the flight
-        /// </summary>
-        public void FlightReady()
-        {
-            if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
-                return;
-
-            VesselPartModuleAccess.AddVessel(FlightGlobals.ActiveVessel);
-        }
-
-        public void VesselLoaded(Vessel vessel)
-        {
-            VesselPartModuleAccess.AddVessel(vessel);
-        }
-
-        public void VesselPartCountChanged(Vessel vessel)
-        {
-            VesselPartModuleAccess.UpdateVessel(vessel);
-        }
-
-        public void VesselUnloaded(Vessel vessel)
-        {
-            VesselPartModuleAccess.RemoveVessel(vessel.id);
-        }
     }
 }

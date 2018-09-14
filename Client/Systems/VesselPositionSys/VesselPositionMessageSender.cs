@@ -38,6 +38,7 @@ namespace LunaClient.Systems.VesselPositionSys
             try
             {
                 msgData.VesselId = vessel.id;
+                msgData.VesselPersistentId = vessel.persistentId;
                 msgData.BodyIndex = vessel.mainBody.flightGlobalsIndex;
                 msgData.Landed = vessel.Landed;
                 msgData.Splashed = vessel.Splashed;

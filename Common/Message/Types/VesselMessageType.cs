@@ -13,6 +13,7 @@
         PartSyncField = 8,
         PartSyncCall = 9,
         ActionGroup = 10,
-        Fairing = 11
+        Fairing = 11,
+        Persistent = 12,
     }
 }

@@ -25,6 +25,7 @@ namespace LunaClient.Systems.VesselResourceSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselResourceMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
+            msgData.VesselPersistentId = vessel.persistentId;
             
             for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)
             {
@@ -37,6 +38,7 @@ namespace LunaClient.Systems.VesselResourceSys
                     var resourceInfo = new VesselResourceInfo
                     {
                         ResourceName = resource.resourceName,
+                        PartPersistentId = vessel.protoVessel.protoPartSnapshots[i].persistentId,
                         PartFlightId = vessel.protoVessel.protoPartSnapshots[i].flightID,
                         Amount = resource.amount,
                         FlowState = resource.flowState

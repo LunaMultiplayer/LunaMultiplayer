@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselSwitcherSys
@@ -33,12 +32,12 @@ namespace LunaClient.Systems.VesselSwitcherSys
         /// <summary>
         /// Specifies the vessel that we should switch to
         /// </summary>
-        public void SwitchToVessel(Guid vesselId)
+        public void SwitchToVessel(Vessel vessel)
         {
-            VesselToSwitchTo = FlightGlobals.FindVessel(vesselId);
-            if (VesselToSwitchTo != null)
+            if (vessel != null)
             {
-                LunaLog.Log($"[LMP]: Switching to vessel {vesselId}");
+                VesselToSwitchTo = vessel;
+                LunaLog.Log($"[LMP]: Switching to vessel {vessel.vesselName}");
                 MainSystem.Singleton.StartCoroutine(SwitchToVessel());
             }
         }

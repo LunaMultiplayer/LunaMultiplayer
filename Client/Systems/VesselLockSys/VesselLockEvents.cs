@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Extensions;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
@@ -35,7 +36,7 @@ namespace LunaClient.Systems.VesselLockSys
             }
             else
             {
-                LockSystem.Singleton.AcquireControlLock(vessel.id);
+                LockSystem.Singleton.AcquireControlLock(vessel.persistentId, vessel.id);
 
                 //Send the vessel that we switched to. It might be a kerbal going eva for example and the other players won't have it
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
@@ -73,7 +74,7 @@ namespace LunaClient.Systems.VesselLockSys
         {
             if (!LockSystem.LockQuery.UpdateLockExists(vessel.id))
             {
-                LockSystem.Singleton.AcquireUpdateLock(vessel.id);
+                LockSystem.Singleton.AcquireUpdateLock(vessel.persistentId, vessel.id);
             }
         }
 
@@ -90,16 +91,16 @@ namespace LunaClient.Systems.VesselLockSys
             {
                 case LockType.Control:
                     VesselLockSystem.Singleton.StopSpectating();
-                    LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
-                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
-                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId, true);
 
                     //As we got control of that vessel, remove its FS and position updates
                     VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                     break;
                 case LockType.Update:
-                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
-                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId, true);
                     break;
             }
         }
@@ -118,21 +119,21 @@ namespace LunaClient.Systems.VesselLockSys
 
                     if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
                     {
-                        LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselId);
+                        LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
                     }
                     break;
                 case LockType.UnloadedUpdate:
                 case LockType.Update:
-                    var vessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
+                    var vessel = FlightGlobals.fetch.FindVessel(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
                     if (vessel != null)
                     {
                         switch (lockDefinition.Type)
                         {
                             case LockType.Update:
-                                LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId);
+                                LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
                                 break;
                             case LockType.UnloadedUpdate:
-                                LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId);
+                                LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
                                 break;
                         }
                     }
@@ -146,7 +147,7 @@ namespace LunaClient.Systems.VesselLockSys
         public void VesselUnloading(Vessel vessel)
         {
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                LockSystem.Singleton.ReleaseUpdateLock(vessel.id);
+                LockSystem.Singleton.ReleaseUpdateLock(vessel.id, vessel.persistentId);
         }
     }
 }

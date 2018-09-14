@@ -290,6 +290,28 @@ namespace Server.System
             });
         }
 
+        /// <summary>
+        /// We received a fairing change from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
+        /// </summary>
+        public static void WritePersistentDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselPersistentMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            //Sync new persistent id's ALWAYS and ignore the rate they arrive
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
+                {
+                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+
+                    var updatedText = UpdateProtoVesselFileWithNewPersistentIdData(xmlData, msgData);
+                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                }
+            });
+        }
+
         private static IEnumerable<string> GetPartNames(string vesselData)
         {
             var document = new XmlDocument();
@@ -574,6 +596,29 @@ namespace Server.System
                 {
                     moduleNode.RemoveChild(fairingsSections[i]);
                 }
+            }
+
+            return document.ToIndentedString();
+        }
+
+        /// <summary>
+        /// Updates the proto vessel with the values we received about a new persistent id of a vessel/part
+        /// </summary>
+        private static string UpdateProtoVesselFileWithNewPersistentIdData(string vesselData, VesselPersistentMsgData msgData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            if (msgData.PartPersistentChange)
+            {
+                var query = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='persistentId' and text()=""{msgData.From}""]";
+                var node = document.SelectSingleNode(query);
+                if (node != null) node.InnerText = msgData.To.ToString(CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                var node = document.SelectSingleNode($@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='persistentId' and text()=""{msgData.From}""]");
+                if (node != null) node.InnerText = msgData.To.ToString(CultureInfo.InvariantCulture);
             }
 
             return document.ToIndentedString();

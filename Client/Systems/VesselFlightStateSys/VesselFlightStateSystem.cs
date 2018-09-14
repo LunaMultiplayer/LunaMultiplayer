@@ -155,7 +155,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (vessel == null || vessel.isEVA) return;
 
             //We must never have our own active and controlled vessel in the dictionary
-            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel == vessel)
                 return;
 
             FlyByWireDictionary.TryAdd(vessel.id, st => LunaOnVesselFlyByWire(vessel.id, st));
@@ -209,32 +209,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     keyVal.Value.TryDequeue(out _);
             }
         }
-
-        //public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
-        //{
-        //    if (protoVessel == null) return;
-
-        //    try
-        //    {
-        //        protoVessel.ctrlState.SetValue("pitch", pitch);
-        //        protoVessel.ctrlState.SetValue("yaw", yaw);
-        //        protoVessel.ctrlState.SetValue("roll", roll);
-        //        protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
-        //        protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
-        //        protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
-        //        protoVessel.ctrlState.SetValue("mainThrottle", throttle);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        LunaLog.LogError($"Error while updating protovessel with flight state info. {e}");
-        //    }
-        //}
-
-        //public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, VesselFlightStateMsgData msgData)
-        //{
-        //    UpdateFlightStateInProtoVessel(protoVessel, msgData.Pitch, msgData.Yaw, msgData.Roll, msgData.PitchTrim,
-        //        msgData.YawTrim, msgData.RollTrim, msgData.MainThrottle);
-        //}
 
         #endregion
 

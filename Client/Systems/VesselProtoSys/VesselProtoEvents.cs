@@ -24,8 +24,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
             if (!System.CheckVessel(FlightGlobals.ActiveVessel))
             {
-                VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id, "Vessel check not passed");
-                VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel.id, "Vessel check not passed");
+                VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel, "Vessel check not passed");
+                VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel, "Vessel check not passed");
                 return;
             }
 
@@ -46,8 +46,8 @@ namespace LunaClient.Systems.VesselProtoSys
             //This happens when the vessel you're spectating crashes
             if (VesselCommon.IsSpectating)
             {
-                VesselRemoveSystem.Singleton.AddToKillList(vessel.id, "Tried to create a new vessel while spectating");
-                VesselRemoveSystem.Singleton.KillVessel(vessel.id, "Tried to create a new vessel while spectating");
+                VesselRemoveSystem.Singleton.AddToKillList(vessel, "Tried to create a new vessel while spectating");
+                VesselRemoveSystem.Singleton.KillVessel(vessel, "Tried to create a new vessel while spectating");
                 return;
             }
 
@@ -56,8 +56,8 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 //We delay it a bit because we must wait until the vessel is named correctly and so on.
                 CoroutineUtil.StartDelayedRoutine("VesselInitialized", ()=> System.MessageSender.SendVesselMessage(vessel, false), 0.5f);
-                LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
-                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
+                LockSystem.Singleton.AcquireUpdateLock(vessel.persistentId, vessel.id, true);
+                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.persistentId, vessel.id, true);
             }
         }
 
@@ -93,8 +93,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
             if (!LockSystem.LockQuery.UpdateLockExists(vessel.id))
             {
-                LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
-                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
+                LockSystem.Singleton.AcquireUpdateLock(vessel.persistentId, vessel.id, true);
+                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.persistentId, vessel.id, true);
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
             }
 

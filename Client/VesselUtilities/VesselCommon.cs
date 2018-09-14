@@ -5,6 +5,8 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPartSyncCallSys;
+using LunaClient.Systems.VesselPartSyncFieldSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -12,8 +14,6 @@ using LunaClient.Systems.VesselResourceSys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LunaClient.Systems.VesselPartSyncCallSys;
-using LunaClient.Systems.VesselPartSyncFieldSys;
 using UnityEngine;
 
 namespace LunaClient.VesselUtilities
@@ -47,15 +47,6 @@ namespace LunaClient.VesselUtilities
         {
             get => IsSpectating ? _spectatingVesselId : Guid.Empty;
             set => _spectatingVesselId = value;
-        }
-
-        /// <summary>
-        /// Return the controlled vessels
-        /// </summary>
-        public static IEnumerable<Vessel> GetControlledVessels()
-        {
-            return GetControlledVesselIds()
-                .Select(FlightGlobals.FindVessel);
         }
 
         /// <summary>
@@ -110,36 +101,6 @@ namespace LunaClient.VesselUtilities
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Finds a part in a vessel without generating garbage. Returns null if not found
-        /// </summary>
-        public static Part FindPartInVessel(Vessel vessel, uint partFlightId)
-        {
-            if (vessel == null) return null;
-
-            for (var i = 0; i < vessel.Parts.Count; i++)
-            {
-                if (vessel.Parts[i].flightID == partFlightId)
-                    return vessel.Parts[i];
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Finds a part in a vessel without generating garbage. Returns null if not found
-        /// </summary>
-        public static Part FindPartInVessel(Vessel vessel, string partName)
-        {
-            if (vessel == null) return null;
-
-            for (var i = 0; i < vessel.Parts.Count; i++)
-            {
-                if (vessel.Parts[i].partName == partName)
-                    return vessel.Parts[i];
-            }
-            return null;
         }
 
         /// <summary>
@@ -240,28 +201,23 @@ namespace LunaClient.VesselUtilities
         /// <summary>
         /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
         /// </summary>
-        public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, uint partFlightId)
+        public static ProtoPartSnapshot FindProtoPartInProtovessel(uint partPersistentId, ProtoVessel protoVessel, uint partFlightId)
         {
+            if (FlightGlobals.FindUnloadedPart(partPersistentId, out var existingProtoPart))
+            {
+                return existingProtoPart;
+            }
+
+            if (FlightGlobals.FindLoadedPart(partPersistentId, out var existingPart))
+            {
+                return existingPart.protoPartSnapshot;
+            }
+
             if (protoVessel == null) return null;
 
             for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
             {
                 if (protoVessel.protoPartSnapshots[i].flightID == partFlightId)
-                    return protoVessel.protoPartSnapshots[i];
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
-        /// </summary>
-        public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, string partName)
-        {
-            if (protoVessel == null) return null;
-
-            for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
-            {
-                if (protoVessel.protoPartSnapshots[i].partName == partName)
                     return protoVessel.protoPartSnapshots[i];
             }
             return null;

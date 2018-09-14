@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using LunaClient.Extensions;
 using LunaClient.VesselUtilities;
 using System;
 
@@ -13,8 +14,10 @@ namespace LunaClient.Systems.VesselPartSyncCallSys
 
         public double GameTime;
         public Guid VesselId;
+        public uint VesselPersistentId;
 
         public uint PartFlightId;
+        public uint PartPersistentId;
         public string ModuleName;
         public string MethodName;
         
@@ -22,10 +25,10 @@ namespace LunaClient.Systems.VesselPartSyncCallSys
 
         public void ProcessPartMethodCallSync()
         {
-            var vessel = FlightGlobals.FindVessel(VesselId);
+            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null || !vessel.loaded) return;
 
-            var part = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
+            var part = VesselCommon.FindProtoPartInProtovessel(PartPersistentId, vessel.protoVessel, PartFlightId);
             if (part != null)
             {
                 var module = VesselCommon.FindProtoPartModuleInProtoPart(part, ModuleName);

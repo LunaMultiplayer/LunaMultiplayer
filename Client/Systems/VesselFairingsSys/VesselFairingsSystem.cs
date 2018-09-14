@@ -65,7 +65,7 @@ namespace LunaClient.Systems.VesselFairingsSys
         {
             VesselFairings.TryRemove(vesselId, out _);
         }
-
+        
         #endregion
     }
 }

@@ -88,6 +88,7 @@
     <Compile Include="Events\VesselUnloadEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
+    <Compile Include="Extensions\FlightGlobalExtension.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\VesselExtension.cs" />
@@ -257,13 +258,16 @@
     <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallMessageSender.cs" />
     <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallQueue.cs" />
     <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallSystem.cs" />
-    <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartModuleAccess.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldEvents.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldMessageHandler.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldMessageSender.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncSystem.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncField.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldQueue.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageSender.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageHandler.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentEvents.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VesselProtoUpdater.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionEvents.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionUpdateQueue.cs" />

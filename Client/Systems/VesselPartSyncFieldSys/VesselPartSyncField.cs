@@ -1,4 +1,5 @@
-﻿using LunaClient.VesselUtilities;
+﻿using LunaClient.Extensions;
+using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using System;
 using UnityEngine;
@@ -14,8 +15,10 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public double GameTime;
         public Guid VesselId;
+        public uint VesselPersistentId;
 
         public uint PartFlightId;
+        public uint PartPersistentId;
         public string ModuleName;
         public string FieldName;
 
@@ -33,10 +36,10 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void ProcessPartMethodSync()
         {
-            var vessel = FlightGlobals.FindVessel(VesselId);
+            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null) return;
 
-            var part = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
+            var part = VesselCommon.FindProtoPartInProtovessel(PartPersistentId, vessel.protoVessel, PartFlightId);
             if (part != null)
             {
                 var module = VesselCommon.FindProtoPartModuleInProtoPart(part, ModuleName);
@@ -48,49 +51,49 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
                             module.moduleValues.SetValue(FieldName, BoolValue);
                             if (module.moduleRef != null)
                             {
-                                VesselPartModuleAccess.SetPartModuleFieldValue(VesselId, part.flightID, ModuleName, FieldName, BoolValue);
+                                module.moduleRef.Fields[FieldName].SetValue(BoolValue, module.moduleRef);
                             }
                             break;
                         case PartSyncFieldType.Integer:
                             module.moduleValues.SetValue(FieldName, IntValue);
                             if (module.moduleRef != null)
                             {
-                                VesselPartModuleAccess.SetPartModuleFieldValue(VesselId, part.flightID, ModuleName, FieldName, IntValue);
+                                module.moduleRef.Fields[FieldName].SetValue(IntValue, module.moduleRef);
                             }
                             break;
                         case PartSyncFieldType.Float:
                             module.moduleValues.SetValue(FieldName, FloatValue);
                             if (module.moduleRef != null)
                             {
-                                VesselPartModuleAccess.SetPartModuleFieldValue(VesselId, part.flightID, ModuleName, FieldName, FloatValue);
+                                module.moduleRef.Fields[FieldName].SetValue(FloatValue, module.moduleRef);
                             }
                             break;
                         case PartSyncFieldType.Double:
                             module.moduleValues.SetValue(FieldName, DoubleValue);
                             if (module.moduleRef != null)
                             {
-                                VesselPartModuleAccess.SetPartModuleFieldValue(VesselId, part.flightID, ModuleName, FieldName, DoubleValue);
+                                module.moduleRef.Fields[FieldName].SetValue(DoubleValue, module.moduleRef);
                             }
                             break;
                         case PartSyncFieldType.Vector3:
                             module.moduleValues.SetValue(FieldName, VectorValue);
                             if (module.moduleRef != null)
                             {
-                                VesselPartModuleAccess.SetPartModuleFieldValue(VesselId, part.flightID, ModuleName, FieldName, VectorValue);
+                                module.moduleRef.Fields[FieldName].SetValue(VectorValue, module.moduleRef);
                             }
                             break;
                         case PartSyncFieldType.Quaternion:
                             module.moduleValues.SetValue(FieldName, QuaternionValue);
                             if (module.moduleRef != null)
                             {
-                                VesselPartModuleAccess.SetPartModuleFieldValue(VesselId, part.flightID, ModuleName, FieldName, QuaternionValue);
+                                module.moduleRef.Fields[FieldName].SetValue(QuaternionValue, module.moduleRef);
                             }
                             break;
                         case PartSyncFieldType.String:
                             module.moduleValues.SetValue(FieldName, StrValue);
                             if (module.moduleRef != null)
                             {
-                                VesselPartModuleAccess.SetPartModuleFieldValue(VesselId, part.flightID, ModuleName, FieldName, StrValue);
+                                module.moduleRef.Fields[FieldName].SetValue(StrValue, module.moduleRef);
                             }
                             break;
                         case PartSyncFieldType.Object:

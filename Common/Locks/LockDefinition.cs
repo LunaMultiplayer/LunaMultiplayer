@@ -23,6 +23,11 @@ namespace LunaCommon.Locks
         public Guid VesselId { get; internal set; } = Guid.Empty;
 
         /// <summary>
+        /// Vessel persistent id assigned to the lock. Can be Guid.Empty for an asteroid lock
+        /// </summary>
+        public uint VesselPersistentId { get; internal set; } = 0;
+
+        /// <summary>
         /// The type of the lock. It should never be null
         /// </summary>
         public LockType Type { get; internal set; }
@@ -46,11 +51,12 @@ namespace LunaCommon.Locks
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public LockDefinition(LockType type, string playerName, Guid vesselId)
+        public LockDefinition(LockType type, string playerName, Guid vesselId, uint persistentId)
         {
             Type = type;
             PlayerName = playerName;
             VesselId = vesselId;
+            VesselPersistentId = persistentId;
         }
 
         /// <summary>

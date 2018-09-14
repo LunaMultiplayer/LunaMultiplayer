@@ -1,4 +1,5 @@
-﻿using LunaClient.VesselUtilities;
+﻿using LunaClient.Extensions;
+using LunaClient.VesselUtilities;
 using System;
 using System.Globalization;
 
@@ -13,6 +14,7 @@ namespace LunaClient.Systems.VesselActionGroupSys
 
         public double GameTime;
         public Guid VesselId;
+        public uint VesselPersistentId;
         public KSPActionGroup ActionGroup;
         public bool Value;
 
@@ -20,7 +22,7 @@ namespace LunaClient.Systems.VesselActionGroupSys
         
         public void ProcessActionGroup()
         {
-            var vessel = FlightGlobals.FindVessel(VesselId);
+            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null) return;
 
             //Ignore SAS if we are spectating as it will fight with the FI

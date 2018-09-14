@@ -1,4 +1,5 @@
-﻿using LunaClient.VesselUtilities;
+﻿using LunaClient.Extensions;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
 
@@ -13,6 +14,7 @@ namespace LunaClient.Systems.VesselResourceSys
 
         public double GameTime;
         public Guid VesselId;
+        public uint VesselPersistentId;
         public int ResourcesCount;
         public VesselResourceInfo[] Resources = new VesselResourceInfo[0];
 
@@ -20,7 +22,7 @@ namespace LunaClient.Systems.VesselResourceSys
 
         public void ProcessVesselResource()
         {
-            var vessel = FlightGlobals.FindVessel(VesselId);
+            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null) return;
             
             UpdateVesselFields(vessel);
@@ -32,7 +34,7 @@ namespace LunaClient.Systems.VesselResourceSys
 
             for (var i = 0; i < ResourcesCount; i++)
             {
-                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, Resources[i].PartFlightId);
+                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(Resources[i].PartPersistentId, vessel.protoVessel, Resources[i].PartFlightId);
                 var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, Resources[i].ResourceName);
                 if (resourceSnapshot != null)
                 {

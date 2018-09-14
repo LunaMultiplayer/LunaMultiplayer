@@ -10,6 +10,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
+            value.VesselPersistentId = msgData.VesselPersistentId;
             value.Name = msgData.Name.Clone() as string;
             value.Type = msgData.Type.Clone() as string;
             value.DistanceTraveled = msgData.DistanceTraveled;

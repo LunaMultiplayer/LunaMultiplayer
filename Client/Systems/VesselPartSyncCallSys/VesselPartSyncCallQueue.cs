@@ -9,8 +9,11 @@ namespace LunaClient.Systems.VesselPartSyncCallSys
         {
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
+            value.VesselPersistentId = msgData.VesselPersistentId;
 
             value.PartFlightId = msgData.PartFlightId;
+            value.PartPersistentId = msgData.PartPersistentId;
+
             value.ModuleName = msgData.ModuleName.Clone() as string;
             value.MethodName = msgData.MethodName.Clone() as string;
         }

@@ -8,9 +8,10 @@ namespace LunaCommon.Message.Data.Vessel
         /// <inheritdoc />
         internal VesselFairingMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Fairing;
-        
+
         public uint PartFlightId;
-        
+        public uint PartPersistentId;
+
         public override string ClassName { get; } = nameof(VesselFairingMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
@@ -18,6 +19,7 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PartFlightId);
+            lidgrenMsg.Write(PartPersistentId);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -25,11 +27,12 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
 
             PartFlightId = lidgrenMsg.ReadUInt32();
+            PartPersistentId = lidgrenMsg.ReadUInt32();
         }
-        
+
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(uint);
+            return base.InternalGetMessageSize() + sizeof(uint) * 2;
         }
     }
 }

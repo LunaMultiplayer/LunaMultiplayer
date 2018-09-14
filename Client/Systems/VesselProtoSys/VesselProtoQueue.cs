@@ -10,6 +10,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
+            value.VesselPersistentId = msgData.VesselPersistentId;
             value.ForceReload = msgData.ForceReload;
             value.NumBytes = msgData.NumBytes;
 

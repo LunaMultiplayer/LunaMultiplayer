@@ -40,7 +40,7 @@ namespace LunaClient.Systems.VesselPartSyncCallSys
             }
 
             LunaLog.Log($"Part sync method {methodName} in module {module.moduleName} from part {module.part.flightID} was called.");
-            System.MessageSender.SendVesselPartSyncCallMsg(module.vessel.id, module.part.flightID, module.moduleName, methodName);
+            System.MessageSender.SendVesselPartSyncCallMsg(module.vessel, module.part, module.moduleName, methodName);
         }
     }
 }

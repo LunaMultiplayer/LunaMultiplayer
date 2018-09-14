@@ -1,4 +1,5 @@
-﻿using LunaClient.VesselUtilities;
+﻿using LunaClient.Extensions;
+using LunaClient.VesselUtilities;
 using System;
 
 namespace LunaClient.Systems.VesselFairingsSys
@@ -12,31 +13,46 @@ namespace LunaClient.Systems.VesselFairingsSys
 
         public double GameTime;
         public Guid VesselId;
+        public uint VesselPersistentId;
 
         public uint PartFlightId;
+        public uint PartPersistentId;
 
         #endregion
 
         public void ProcessFairing()
         {
-            var vessel = FlightGlobals.FindVessel(VesselId);
-            if (vessel == null) return;
-
-            var part = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
-            if (part != null)
+            if (FlightGlobals.FindUnloadedPart(PartPersistentId, out var protoPart))
             {
-                var module = VesselCommon.FindProtoPartModuleInProtoPart(part, "ModuleProceduralFairing");
-                module?.moduleValues.SetValue("fsm", "st_flight_deployed");
-                module?.moduleValues.RemoveNodesStartWith("XSECTION");
+                ProcessFairingChange(protoPart);
+            }
+            else
+            {
+                //Finding using persistentId failed, try searching it with the flightId...
+                var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
+                if (vessel == null) return;
 
-                try
+                var part = VesselCommon.FindProtoPartInProtovessel(PartPersistentId, vessel.protoVessel, PartFlightId);
+                if (part != null)
                 {
-                    (module?.moduleRef as ModuleProceduralFairing)?.DeployFairing();
+                    ProcessFairingChange(protoPart);
                 }
-                catch (Exception)
-                {
-                    //TODO reload the module
-                }
+            }
+        }
+
+        private static void ProcessFairingChange(ProtoPartSnapshot protoPart)
+        {
+            var module = VesselCommon.FindProtoPartModuleInProtoPart(protoPart, "ModuleProceduralFairing");
+            module?.moduleValues.SetValue("fsm", "st_flight_deployed");
+            module?.moduleValues.RemoveNodesStartWith("XSECTION");
+
+            try
+            {
+                (module?.moduleRef as ModuleProceduralFairing)?.DeployFairing();
+            }
+            catch (Exception)
+            {
+                //TODO reload the module
             }
         }
     }

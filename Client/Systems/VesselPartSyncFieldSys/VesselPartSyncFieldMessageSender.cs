@@ -6,7 +6,6 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using System;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
@@ -18,45 +17,45 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselPartSyncFieldBoolMsg(Guid vesselId, uint partFlightId, string moduleName, string field, bool value)
+        public void SendVesselPartSyncFieldBoolMsg(Vessel vessel, Part part, string moduleName, string field, bool value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Boolean;
             msgData.BoolValue = value;
 
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldIntMsg(Guid vesselId, uint partFlightId, string moduleName, string field, int value)
+        public void SendVesselPartSyncFieldIntMsg(Vessel vessel, Part part, string moduleName, string field, int value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Integer;
             msgData.IntValue = value;
 
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldFloatMsg(Guid vesselId, uint partFlightId, string moduleName, string field, float value)
+        public void SendVesselPartSyncFieldFloatMsg(Vessel vessel, Part part, string moduleName, string field, float value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Float;
             msgData.FloatValue = value;
 
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldDoubleMsg(Guid vesselId, uint partFlightId, string moduleName, string field, double value)
+        public void SendVesselPartSyncFieldDoubleMsg(Vessel vessel, Part part, string moduleName, string field, double value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Double;
             msgData.DoubleValue = value;
 
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldVectorMsg(Guid vesselId, uint partFlightId, string moduleName, string field, Vector3 value)
+        public void SendVesselPartSyncFieldVectorMsg(Vessel vessel, Part part, string moduleName, string field, Vector3 value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Vector3;
             msgData.VectorValue[0] = value.x;
             msgData.VectorValue[1] = value.y;
@@ -65,9 +64,9 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldQuaternionMsg(Guid vesselId, uint partFlightId, string moduleName, string field, Quaternion value)
+        public void SendVesselPartSyncFieldQuaternionMsg(Vessel vessel, Part part, string moduleName, string field, Quaternion value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Quaternion;
             msgData.QuaternionValue[0] = value.x;
             msgData.QuaternionValue[1] = value.y;
@@ -77,30 +76,32 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldStringMsg(Guid vesselId, uint partFlightId, string moduleName, string field, string value)
+        public void SendVesselPartSyncFieldStringMsg(Vessel vessel, Part part, string moduleName, string field, string value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.String;
             msgData.StrValue = value;
 
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldObjectMsg(Guid vesselId, uint partFlightId, string moduleName, string field, object value)
+        public void SendVesselPartSyncFieldObjectMsg(Vessel vessel, Part part, string moduleName, string field, object value)
         {
-            var msgData = GetBaseMsg(vesselId, partFlightId, moduleName, field);
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.String;
             msgData.StrValue = value.ToString();
 
             SendMessage(msgData);
         }
 
-        private static VesselPartSyncFieldMsgData GetBaseMsg(Guid vesselId, uint partFlightId, string moduleName, string field)
+        private static VesselPartSyncFieldMsgData GetBaseMsg(Vessel vessel, Part part, string moduleName, string field)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncFieldMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
-            msgData.VesselId = vesselId;
-            msgData.PartFlightId = partFlightId;
+            msgData.VesselId = vessel.id;
+            msgData.VesselPersistentId = vessel.persistentId;
+            msgData.PartFlightId = part.flightID;
+            msgData.PartPersistentId = part.persistentId;
             msgData.ModuleName = moduleName;
             msgData.FieldName = field;
 

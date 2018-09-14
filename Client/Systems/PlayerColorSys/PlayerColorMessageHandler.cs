@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Extensions;
 using LunaClient.Systems.Lock;
 using LunaClient.Windows.Status;
 using LunaCommon.Enums;
@@ -58,7 +59,7 @@ namespace LunaClient.Systems.PlayerColorSys
         public void UpdateVesselColors(string playerName)
         {
             var controlledVesselIds = LockSystem.LockQuery.GetAllControlLocks(playerName)
-                .Select(l => FlightGlobals.FindVessel(l.VesselId))
+                .Select(l => FlightGlobals.fetch.FindVessel(l.VesselPersistentId, l.VesselId))
                 .Where(v => v != null);
 
             foreach (var vessel in controlledVesselIds)

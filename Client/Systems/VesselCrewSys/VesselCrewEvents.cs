@@ -20,13 +20,13 @@ namespace LunaClient.Systems.VesselCrewSys
                 var kerbalVessel = partAction.from.vessel;
                 var vessel = partAction.to.vessel;
 
-                LunaLog.Log($"EVA Boarding. Kerbal: {kerbalVessel.id} ({kerbalVessel.vesselName}) boarding: {vessel.id} ({vessel.vesselName})");
+                LunaLog.Log($"EVA Boarding. Kerbal: {kerbalVessel.vesselName} boarding: {vessel.vesselName}");
                 if (LockSystem.LockQuery.ControlLockBelongsToPlayer(kerbalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {
-                    VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVessel.id);
-                    LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalVessel.vesselName }, kerbalVessel.id);
+                    VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVessel);
+                    LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalVessel.vesselName }, kerbalVessel.id, kerbalVessel.persistentId);
                 }
-                VesselRemoveSystem.Singleton.AddToKillList(kerbalVessel.id, "Killing kerbal as it boarded a vessel");
+                VesselRemoveSystem.Singleton.AddToKillList(kerbalVessel, "Killing kerbal as it boarded a vessel");
 
                 if (!LockSystem.LockQuery.UpdateLockExists(vessel.id) || LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {

@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
+using LunaClient.Extensions;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
@@ -148,7 +149,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         var protoVessel = vesselProto.CreateProtoVessel();
                         keyVal.Value.Recycle(vesselProto);
 
-                        var existingVessel = FlightGlobals.FindVessel(vesselProto.VesselId);
+                        var existingVessel = FlightGlobals.fetch.FindVessel(vesselProto.VesselPersistentId, vesselProto.VesselId);
                         if (existingVessel == null)
                         {
                             LunaLog.Log($"[LMP]: Loading vessel {vesselProto.VesselId}");

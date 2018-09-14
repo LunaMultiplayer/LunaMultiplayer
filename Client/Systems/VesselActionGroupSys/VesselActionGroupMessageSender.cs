@@ -22,6 +22,7 @@ namespace LunaClient.Systems.VesselActionGroupSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselActionGroupMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
+            msgData.VesselPersistentId = vessel.persistentId;
             msgData.ActionGroupString = actionGrp.ToString();
             msgData.ActionGroup = (int)actionGrp;
             msgData.Value = value;

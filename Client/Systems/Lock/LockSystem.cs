@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
+using LunaClient.Extensions;
 using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
@@ -46,7 +47,7 @@ namespace LunaClient.Systems.Lock
 
         private void TriggerEvents()
         {
-            while(AcquiredLocks.TryDequeue(out var lockDef))
+            while (AcquiredLocks.TryDequeue(out var lockDef))
                 LockEvent.onLockAcquireUnityThread.Fire(lockDef);
 
             while (ReleasedLocks.TryDequeue(out var lockDef))
@@ -54,7 +55,7 @@ namespace LunaClient.Systems.Lock
         }
 
         #region Public methods
-        
+
         #region AcquireLocks
 
         /// <summary>
@@ -74,10 +75,10 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Aquire the control lock on the given vessel
         /// </summary>
-        public void AcquireControlLock(Guid vesselId, bool force = false)
+        public void AcquireControlLock(uint vesselPersistentId, Guid vesselId, bool force = false)
         {
             if (!LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+                AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId), force);
         }
 
         /// <summary>
@@ -106,35 +107,35 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Aquire the kerbal lock on the given vessel
         /// </summary>
-        public void AcquireKerbalLock(Guid vesselId, bool force = false)
+        public void AcquireKerbalLock(uint persistentVesselId, Guid vesselId, bool force = false)
         {
-            AcquireKerbalLock(FlightGlobals.FindVessel(vesselId), force);
+            AcquireKerbalLock(FlightGlobals.fetch.FindVessel(persistentVesselId, vesselId), force);
         }
 
         /// <summary>
         /// Aquire the update lock on the given vessel
         /// </summary>
-        public void AcquireUpdateLock(Guid vesselId, bool force = false)
+        public void AcquireUpdateLock(uint vesselPersistentId, Guid vesselId, bool force = false)
         {
             if (!LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+                AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId), force);
         }
 
         /// <summary>
         /// Aquire the unloaded update lock on the given vessel
         /// </summary>
-        public void AcquireUnloadedUpdateLock(Guid vesselId, bool force = false)
+        public void AcquireUnloadedUpdateLock(uint vesselPersistentId, Guid vesselId, bool force = false)
         {
             if (!LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+                AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId), force);
         }
 
         /// <summary>
         /// Aquire the spectator lock on the given vessel
         /// </summary>
-        public void AcquireSpectatorLock(Guid vesselId)
+        public void AcquireSpectatorLock(uint vesselPersistentId, Guid vesselId)
         {
-            AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+            AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
         }
 
         /// <summary>
@@ -175,9 +176,9 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Release the update lock on the given vessel
         /// </summary>
-        public void ReleaseUpdateLock(Guid vesselId)
+        public void ReleaseUpdateLock(Guid vesselId, uint vesselPersistentId)
         {
-            ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+            ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Release all the locks (unloaded update, update, control and kerbals) of a vessel
         /// </summary>
-        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, int msDelay = 0)
+        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, uint vesselPersistentId, int msDelay = 0)
         {
             TaskFactory.StartNew(() =>
             {
@@ -208,11 +209,11 @@ namespace LunaClient.Systems.Lock
                     Thread.Sleep(msDelay);
 
                 if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
                 if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+                    ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
                 if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
 
                 if (crewNames != null)
                 {
@@ -229,7 +230,7 @@ namespace LunaClient.Systems.Lock
         /// Release the specified control lock excepts the one for the vessel you give as parameter.
         /// </summary>
         public void ReleaseControlLocksExcept(Guid vesselId)
-        {            
+        {
             //Serialize to array as it's a concurrent collection
             var locksToRemove = LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Where(v => v.VesselId != vesselId).ToArray();

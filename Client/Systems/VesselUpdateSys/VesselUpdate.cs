@@ -1,5 +1,5 @@
-﻿using LunaClient.VesselUtilities;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaClient.Extensions;
+using LunaClient.VesselUtilities;
 using System;
 
 namespace LunaClient.Systems.VesselUpdateSys
@@ -13,6 +13,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public double GameTime;
         public Guid VesselId;
+        public uint VesselPersistentId;
         public string Name;
         public string Type;
         public double DistanceTraveled;
@@ -33,10 +34,10 @@ namespace LunaClient.Systems.VesselUpdateSys
         public float[] Com = new float[3];
 
         #endregion
-        
+
         public void ProcessVesselUpdate()
         {
-            var vessel = FlightGlobals.FindVessel(VesselId);
+            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null) return;
 
             var previousSituation = vessel.situation;
@@ -56,7 +57,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             if (previousStage != Stage)
                 VesselLoader.LoadVessel(vessel.protoVessel);
         }
-        
+
         private void UpdateVesselFields(Vessel vessel)
         {
             vessel.vesselName = Name;
@@ -64,7 +65,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.distanceTraveled = DistanceTraveled;
 
             vessel.protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
-            
+
             //Only change this value if vessel is loaded. When vessel is not loaded we reload it
             if (vessel.loaded)
             {
@@ -72,7 +73,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 vessel.Landed = Landed;
                 vessel.Splashed = Splashed;
             }
-            
+
             vessel.landedAt = LandedAt;
             vessel.displaylandedAt = DisplayLandedAt;
 

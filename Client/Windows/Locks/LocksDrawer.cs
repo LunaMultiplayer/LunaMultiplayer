@@ -38,7 +38,7 @@ namespace LunaClient.Windows.Locks
                     {
                         if (GUILayout.Button("Release", ButtonStyle))
                         {
-                            LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselLocks[i].VesselId);
+                            LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselLocks[i].VesselId, VesselLocks[i].VesselPersistentId);
                         }
                     }
                     GUILayout.EndHorizontal();

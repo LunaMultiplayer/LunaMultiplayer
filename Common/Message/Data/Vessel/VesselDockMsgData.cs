@@ -12,8 +12,11 @@ namespace LunaCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.Dock;
 
         public int SubspaceId;
+
         public Guid DominantVesselId;
+        public uint DominantVesselPersistentId;
         public Guid WeakVesselId;
+        public uint WeakVesselPersistentId;
 
         public int NumBytes;
         public byte[] FinalVesselData = new byte[0];
@@ -26,8 +29,10 @@ namespace LunaCommon.Message.Data.Vessel
 
             lidgrenMsg.Write(SubspaceId);
             GuidUtil.Serialize(DominantVesselId, lidgrenMsg);
+            lidgrenMsg.Write(DominantVesselPersistentId);
             GuidUtil.Serialize(WeakVesselId, lidgrenMsg);
-            
+            lidgrenMsg.Write(WeakVesselPersistentId);
+
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(FinalVesselData, 0, NumBytes);
         }
@@ -38,8 +43,9 @@ namespace LunaCommon.Message.Data.Vessel
 
             SubspaceId = lidgrenMsg.ReadInt32();
             DominantVesselId = GuidUtil.Deserialize(lidgrenMsg);
+            DominantVesselPersistentId = lidgrenMsg.ReadUInt32();
             WeakVesselId = GuidUtil.Deserialize(lidgrenMsg);
-
+            WeakVesselPersistentId = lidgrenMsg.ReadUInt32();
 
             NumBytes = lidgrenMsg.ReadInt32();
             if (FinalVesselData.Length < NumBytes)
@@ -51,7 +57,7 @@ namespace LunaCommon.Message.Data.Vessel
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(int) + 
-                GuidUtil.ByteSize * 2 + sizeof(int) + sizeof(byte) * NumBytes;
+                GuidUtil.ByteSize * 2 + sizeof(uint) * 2 + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

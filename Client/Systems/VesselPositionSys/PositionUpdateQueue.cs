@@ -9,6 +9,7 @@ namespace LunaClient.Systems.VesselPositionSys
         protected override void AssignFromMessage(VesselPositionUpdate value, VesselPositionMsgData msgData)
         {
             value.VesselId = msgData.VesselId;
+            value.VesselPersistentId = msgData.VesselPersistentId;
             value.SubspaceId = msgData.SubspaceId;
             value.BodyIndex = msgData.BodyIndex;
             value.HeightFromTerrain = msgData.HeightFromTerrain;

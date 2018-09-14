@@ -12,6 +12,7 @@ namespace LunaClient.Harmony
     [HarmonyPatch("BoardSeat")]
     public class KerbalEVA_BoardSeat
     {
+        private static uint KerbalVesselPersistentId;
         private static Guid KerbalVesselId;
         private static string KerbalName;
 
@@ -20,7 +21,7 @@ namespace LunaClient.Harmony
         {
             if (__instance.vessel != null)
             {
-
+                KerbalVesselPersistentId = __instance.vessel.persistentId;
                 KerbalVesselId = __instance.vessel.id;
                 KerbalName = __instance.vessel.vesselName;
             }
@@ -31,7 +32,7 @@ namespace LunaClient.Harmony
         {
             if (__result)
             {
-                ExternalSeatEvent.onExternalSeatBoard.Fire(seat, KerbalVesselId, KerbalName);
+                ExternalSeatEvent.onExternalSeatBoard.Fire(seat, KerbalVesselId, KerbalVesselPersistentId, KerbalName);
             }
         }
     }

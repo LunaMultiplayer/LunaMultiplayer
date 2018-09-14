@@ -23,6 +23,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public double GameTimeStamp { get; set; }
         public int SubspaceId { get; set; }
         public Guid VesselId { get; set; }
+        public uint VesselPersistentId { get; set; }
 
         #endregion
 
@@ -52,6 +53,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public VesselFlightStateUpdate(VesselFlightStateMsgData msgData)
         {
             VesselId = msgData.VesselId;
+            VesselPersistentId = msgData.VesselPersistentId;
             GameTimeStamp = msgData.GameTime;
             SubspaceId = msgData.SubspaceId;
 
@@ -61,6 +63,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public void CopyFrom(VesselFlightStateUpdate update)
         {
             VesselId = update.VesselId;
+            VesselPersistentId = update.VesselPersistentId;
             GameTimeStamp = update.GameTimeStamp;
             SubspaceId = update.SubspaceId;
 
@@ -221,7 +224,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
             else
             {
-                var vessel = FlightGlobals.FindVessel(VesselId);
+                var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
                 if (vessel == null) return;
 
                 CtrlState.CopyFrom(vessel.ctrlState);

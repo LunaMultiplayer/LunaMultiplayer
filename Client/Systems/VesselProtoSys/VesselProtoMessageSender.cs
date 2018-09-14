@@ -74,6 +74,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     msgData.GameTime = TimeSyncerSystem.UniversalTime;
                     msgData.ForceReload = forceReloadOnReceive;
                     msgData.VesselId = protoVessel.vesselID;
+                    msgData.VesselPersistentId = protoVessel.persistentId;
                     msgData.NumBytes = numBytes;
                     if (msgData.Data.Length < numBytes)
                         Array.Resize(ref msgData.Data, numBytes);
@@ -86,7 +87,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (protoVessel.vesselType == VesselType.Debris)
                     {
                         LunaLog.Log($"Serialization of debris vessel: {protoVessel.vesselID} name: {protoVessel.vesselName} failed. Adding to kill list");
-                        VesselRemoveSystem.Singleton.AddToKillList(protoVessel.vesselID, "Serialization of debris failed");
+                        VesselRemoveSystem.Singleton.AddToKillList(protoVessel, "Serialization of debris failed");
                     }
                 }
             }

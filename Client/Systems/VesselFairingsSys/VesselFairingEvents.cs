@@ -6,8 +6,8 @@ namespace LunaClient.Systems.VesselFairingsSys
     {
         public void FairingsDeployed(Part part)
         {
-            LunaLog.Log($"Detected fairings deployed! Part FlightID: {part.flightID}");
-            System.MessageSender.SendVesselFairingDeployed(FlightGlobals.ActiveVessel, part.flightID);
+            LunaLog.Log($"Detected fairings deployed! Part: {part.partName}");
+            System.MessageSender.SendVesselFairingDeployed(FlightGlobals.ActiveVessel, part.persistentId);
         }
     }
 }

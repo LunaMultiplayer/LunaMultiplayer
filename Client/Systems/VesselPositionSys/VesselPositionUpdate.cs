@@ -25,7 +25,7 @@ namespace LunaClient.Systems.VesselPositionSys
             get
             {
                 if (_vessel == null)
-                    _vessel = FlightGlobals.FindVessel(VesselId);
+                    _vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
                 return _vessel;
             }
         }
@@ -38,6 +38,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Message Fields
 
         public Guid VesselId { get; set; }
+        public uint VesselPersistentId { get; set; }
         public int BodyIndex { get; set; }
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
@@ -90,6 +91,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public VesselPositionUpdate(VesselPositionMsgData msgData)
         {
             VesselId = msgData.VesselId;
+            VesselPersistentId = msgData.VesselPersistentId;
             BodyIndex = msgData.BodyIndex;
             SubspaceId = msgData.SubspaceId;
             HeightFromTerrain = msgData.HeightFromTerrain;
@@ -108,6 +110,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public void CopyFrom(VesselPositionUpdate update)
         {
             VesselId = update.VesselId;
+            VesselPersistentId = update.VesselPersistentId;
             BodyIndex = update.BodyIndex;
             SubspaceId = update.SubspaceId;
             HeightFromTerrain = update.HeightFromTerrain;

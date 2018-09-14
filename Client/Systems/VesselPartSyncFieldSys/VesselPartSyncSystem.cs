@@ -41,11 +41,6 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleStringFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
             PartModuleEvent.onPartModuleObjectFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
 
-            GameEvents.onFlightReady.Add(VesselPartModuleSyncFieldEvents.FlightReady);
-            GameEvents.onVesselLoaded.Add(VesselPartModuleSyncFieldEvents.VesselLoaded);
-            GameEvents.onVesselPartCountChanged.Add(VesselPartModuleSyncFieldEvents.VesselPartCountChanged);
-            VesselUnloadEvent.onVesselUnloaded.Add(VesselPartModuleSyncFieldEvents.VesselUnloaded);
-
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncs));
         }
 
@@ -60,11 +55,6 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleQuaternionFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleQuaternionFieldChanged);
             PartModuleEvent.onPartModuleStringFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
             PartModuleEvent.onPartModuleObjectFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
-
-            GameEvents.onFlightReady.Remove(VesselPartModuleSyncFieldEvents.FlightReady);
-            GameEvents.onVesselLoaded.Remove(VesselPartModuleSyncFieldEvents.VesselLoaded);
-            GameEvents.onVesselPartCountChanged.Remove(VesselPartModuleSyncFieldEvents.VesselPartCountChanged);
-            VesselUnloadEvent.onVesselUnloaded.Remove(VesselPartModuleSyncFieldEvents.VesselUnloaded);
 
             VesselPartsSyncs.Clear();
         }

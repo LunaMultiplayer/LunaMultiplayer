@@ -1,5 +1,4 @@
 ﻿using KSP.UI.Screens.Flight;
-using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 
 namespace LunaClient.Extensions
@@ -18,15 +17,14 @@ namespace LunaClient.Extensions
                 if (partSnapshot.FindModule("ModuleDockingNode") != null)
                 {
                     //We are in a docking port part so remove it from our own vessel if we have it
-                    var vesselPart = VesselCommon.FindPartInVessel(vessel, partSnapshot.flightID);
-                    if (vesselPart != null)
+                    if (FlightGlobals.FindLoadedPart(partSnapshot.persistentId, out var vesselPart))
                     {
                         vesselPart.Die();
                     }
                 }
 
                 //Skip parts that already exists
-                if (VesselCommon.FindPartInVessel(vessel, partSnapshot.flightID) != null)
+                if (FlightGlobals.FindLoadedPart(partSnapshot.persistentId, out _))
                     continue;
 
                 var newPart = partSnapshot.Load(vessel, false);

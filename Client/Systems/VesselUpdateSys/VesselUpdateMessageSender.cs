@@ -22,6 +22,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselUpdateMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
+            msgData.VesselPersistentId = vessel.persistentId;
             msgData.Name = vessel.vesselName;
             msgData.Type = vessel.vesselType.ToString();
             msgData.DistanceTraveled = vessel.distanceTraveled;
