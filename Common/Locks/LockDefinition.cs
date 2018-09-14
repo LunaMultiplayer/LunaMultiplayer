@@ -83,6 +83,7 @@ namespace LunaCommon.Locks
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(KerbalName);
             GuidUtil.Serialize(VesselId, lidgrenMsg);
+            lidgrenMsg.Write(VesselPersistentId);
             lidgrenMsg.Write((int)Type);
         }
 
@@ -91,12 +92,13 @@ namespace LunaCommon.Locks
             PlayerName = lidgrenMsg.ReadString();
             KerbalName = lidgrenMsg.ReadString();
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
+            VesselPersistentId = lidgrenMsg.ReadUInt32();
             Type = (LockType)lidgrenMsg.ReadInt32();
         }
 
         public int GetByteCount()
         {
-            return PlayerName.GetByteCount() + KerbalName.GetByteCount() + GuidUtil.ByteSize + sizeof(LockType);
+            return PlayerName.GetByteCount() + KerbalName.GetByteCount() + GuidUtil.ByteSize + sizeof(LockType) + sizeof(uint);
         }
 
         public void CopyFrom(LockDefinition lockDefinition)
@@ -105,6 +107,7 @@ namespace LunaCommon.Locks
             Type = lockDefinition.Type;
             KerbalName = lockDefinition.KerbalName;
             VesselId = lockDefinition.VesselId;
+            VesselPersistentId = lockDefinition.VesselPersistentId;
         }
 
         #region Equatable
@@ -114,6 +117,7 @@ namespace LunaCommon.Locks
             if (other == null)
                 return false;
 
+            //Do not check equality in the VesselPersistentId field as it can change
             return PlayerName == other.PlayerName && VesselId == other.VesselId && Type == other.Type && KerbalName == other.KerbalName;
         }
 
