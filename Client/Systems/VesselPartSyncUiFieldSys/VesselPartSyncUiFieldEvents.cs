@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.ModuleStore;
-using UniLinq;
 
 namespace LunaClient.Systems.VesselPartSyncUiFieldSys
 {
@@ -39,14 +38,12 @@ namespace LunaClient.Systems.VesselPartSyncUiFieldSys
                     {
                         foreach (var field in module.Fields)
                         {
-                            if (moduleCustomization.Fields.Any(f => f.FieldName != field.name))
-                                continue;
-
                             if (field.uiControlFlight.GetType() != typeof(UI_Toggle) //bool
-                                || field.uiControlFlight.GetType() != typeof(UI_FloatRange) //float
-                                || field.uiControlFlight.GetType() != typeof(UI_Cycle)) //int
+                                && field.uiControlFlight.GetType() != typeof(UI_FloatRange) //float
+                                && field.uiControlFlight.GetType() != typeof(UI_Cycle)) //int
                                 continue;
 
+                            field.uiControlFlight.onFieldChanged -= OnFieldChanged;
                             field.uiControlFlight.onFieldChanged += OnFieldChanged;
                         }
                     }
