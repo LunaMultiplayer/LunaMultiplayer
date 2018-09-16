@@ -94,6 +94,7 @@
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
+    <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
@@ -134,7 +135,6 @@
     <Compile Include="Localization\Structures\CompatibleDialogText.cs" />
     <Compile Include="Localization\Structures\UpdateWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
-    <Compile Include="ModuleStore\Harmony\HarmonyMethod.cs" />
     <Compile Include="ModuleStore\Patching\FieldChangeTranspiler.cs" />
     <Compile Include="ModuleStore\Patching\PartModulePatcher.cs" />
     <Compile Include="ModuleStore\Patching\TestModule.cs" />
@@ -706,6 +706,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ModuleStore\Custom\" />
+    <Folder Include="ModuleStore\Harmony\" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>

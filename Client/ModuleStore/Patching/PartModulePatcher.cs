@@ -1,7 +1,6 @@
 ﻿using Harmony;
 using Harmony.ILCopying;
 using LunaClient.Base;
-using LunaClient.ModuleStore.Harmony;
 using LunaClient.ModuleStore.Structures;
 using System;
 using System.Collections.Generic;
@@ -76,33 +75,17 @@ namespace LunaClient.ModuleStore.Patching
             {
                 if (_customizationModule.Fields.Any())
                 {
-                    var patchMethodCalls = _customizationModule.Methods.Any(m => m.MethodName == partModuleMethod.Name);
                     try
                     {
-                        LunaLog.Log(patchMethodCalls
-                            ? $"Patching method {partModuleMethod.Name} for field changes and method call in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}"
-                            : $"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
+                        LunaLog.Log($"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
 
-                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, patchMethodCalls ? HarmonyCustomMethod.MethodPrefixMethod : null, null,
-                            BackupAndCallTranspilerMethod);
+                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, BackupAndCallTranspilerMethod);
                     }
                     catch
                     {
                         LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, patchMethodCalls ? HarmonyCustomMethod.MethodPrefixMethod : null, null,
-                            RestoreTranspilerMethod);
+                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, RestoreTranspilerMethod);
                     }
-                }
-                else if (_customizationModule.Methods.Any(m => m.MethodName == partModuleMethod.Name))
-                {
-                    if (partModuleMethod.GetParameters().Any())
-                    {
-                        LunaLog.LogError($"Method {partModuleMethod.Name} is not valid as it doesn't have a parameterless signature");
-                        continue;
-                    }
-
-                    LunaLog.Log($"Patching method {partModuleMethod.Name} for method call in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                    HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, HarmonyCustomMethod.MethodPrefixMethod);
                 }
             }
         }
