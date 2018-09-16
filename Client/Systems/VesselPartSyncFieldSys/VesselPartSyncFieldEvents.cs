@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Events;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
@@ -108,32 +107,5 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
         }
 
         #endregion
-
-        public void SubscribeToFieldChanges()
-        {
-            SubscribeToFieldChanges(FlightGlobals.ActiveVessel);
-        }
-
-        public void SubscribeToFieldChanges(Vessel vessel)
-        {
-            foreach (var part in vessel.parts)
-            {
-                foreach (var module in part.Modules)
-                {
-                    foreach (var field in module.Fields)
-                    {
-                        field.uiControlFlight.onFieldChanged += (fld, o) =>
-                        {
-                            var fieldType = fld.FieldInfo.FieldType;
-                            if (fieldType == typeof(float))
-                                PartModuleEvent.onPartModuleFloatFieldChanged.Fire(field.host as PartModule, field.name, (float)field.GetValue(field.host));
-                            else if (fieldType == typeof(bool))
-                                PartModuleEvent.onPartModuleBoolFieldChanged.Fire(field.host as PartModule, field.name, (bool)field.GetValue(field.host));
-                        };
-                    }
-                }
-                
-            }
-        }
     }
 }

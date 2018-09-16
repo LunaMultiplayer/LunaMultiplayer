@@ -8,8 +8,9 @@ using UnityEngine;
 namespace LunaClient.Systems.VesselPartSyncCallSys
 {
     /// <summary>
-    /// This class sends some parts of the vessel information to other players. We do it in another system as we don't want to send this information so often as
-    /// the vessel position system and also we want to send it more oftenly than the vessel proto.
+    /// This system sends the part module calls to the other players. 
+    /// An example would be selecting "Activate engine" action when you right click on an engine and press that part action
+    /// Another would be "Extend" in the retractable ladder part
     /// </summary>
     public class VesselPartSyncCallSystem : MessageSystem<VesselPartSyncCallSystem, VesselPartSyncCallMessageSender, VesselPartSyncCallMessageHandler>
     {

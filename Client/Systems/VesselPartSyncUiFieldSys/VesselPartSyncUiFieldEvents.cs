@@ -7,6 +7,23 @@ namespace LunaClient.Systems.VesselPartSyncUiFieldSys
 {
     public class VesselPartSyncUiFieldEvents : SubSystem<VesselPartSyncUiFieldSystem>
     {
+        private static bool CallIsValid(PartModule module)
+        {
+            var vessel = module.vessel;
+            if (vessel == null || !vessel.loaded || vessel.protoVessel == null)
+                return false;
+
+            var part = module.part;
+            if (part == null)
+                return false;
+
+            //The vessel is immortal so we are sure that it's not ours
+            if (float.IsPositiveInfinity(part.crashTolerance))
+                return false;
+
+            return true;
+        }
+
         public void SubscribeToFieldChanges()
         {
             SubscribeToFieldChanges(FlightGlobals.ActiveVessel);
@@ -39,7 +56,9 @@ namespace LunaClient.Systems.VesselPartSyncUiFieldSys
 
         private static void OnFieldChanged(BaseField baseField, object oldValue)
         {
-            //TODO: add some sort of buffering so it sneds the value after o,5s to avoid clogging in case a user changes it too often
+            if (!CallIsValid((PartModule)baseField.host)) return;
+
+            //TODO: add some sort of buffering so it sends the value after 500ms to avoid clogging in case a user changes it too often
 
             var fieldType = baseField.FieldInfo.FieldType;
 
