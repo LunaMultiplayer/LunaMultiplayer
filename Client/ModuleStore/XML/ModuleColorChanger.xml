@@ -6,7 +6,6 @@
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>ToggleEvent</MethodName>
         </MethodDefinition>

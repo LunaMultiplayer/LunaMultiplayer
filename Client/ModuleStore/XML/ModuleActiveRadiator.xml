@@ -3,9 +3,8 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
+            <!--TODO: Value changes often-->
             <FieldName>IsCooling</FieldName>
-            <!--This value can change a bit too often in some weird cases-->
-            <MaxIntervalInMs>250</MaxIntervalInMs>
         </FieldDefinition>
     </Fields>
     <Methods>

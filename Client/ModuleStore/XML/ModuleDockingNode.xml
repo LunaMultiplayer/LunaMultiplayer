@@ -6,11 +6,9 @@
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>DisableXFeed</MethodName>
         </MethodDefinition>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>EnableXFeed</MethodName>
         </MethodDefinition>

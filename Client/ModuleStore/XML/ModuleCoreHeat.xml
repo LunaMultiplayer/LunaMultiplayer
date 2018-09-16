@@ -4,10 +4,9 @@
         <FieldDefinition>
             <FieldName>CoreTempGoalAdjustment</FieldName>
         </FieldDefinition>
-        <!--This is the field that specifies the thermal energy of a rtg. We don't need it to send so often-->
         <FieldDefinition>
+            <!--TODO: Value changes often-->
             <FieldName>CoreThermalEnergy</FieldName>
-            <MaxIntervalInMs>60000</MaxIntervalInMs>
         </FieldDefinition>
     </Fields>
 </ModuleDefinition>

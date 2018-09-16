@@ -2,12 +2,12 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>animSwitch</FieldName>
+            <FieldName>stagingEnabled</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <MethodName>Toggle</MethodName>
+            <MethodName>ToggleStaging</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

@@ -2,18 +2,21 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>isOn</FieldName>
+            <FieldName>runningPrimary</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <FieldName>uiWriteLock</FieldName>
+            <FieldName>autoSwitch</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <MethodName>LightsOff</MethodName>
+            <MethodName>DisableAutoSwitch</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <MethodName>LightsOn</MethodName>
+            <MethodName>EnableAutoSwitch</MethodName>
+        </MethodDefinition>
+        <MethodDefinition>
+            <MethodName>ModeEvent</MethodName>
         </MethodDefinition>
     </Methods>
 </ModuleDefinition>

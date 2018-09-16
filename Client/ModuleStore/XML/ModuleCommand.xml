@@ -5,10 +5,6 @@
             <!--TODO: UIFIELD-->
             <FieldName>hibernation</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>hibernateOnWarp</FieldName>
-        </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>

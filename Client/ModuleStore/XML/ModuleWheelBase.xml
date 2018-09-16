@@ -1,20 +1,14 @@
 <?xml version="1.0"?>
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <!--<Fields>
-        --><!--Friction of the wheels. We don't really care about it--><!--
+    <Fields>
         <FieldDefinition>
-            <FieldName>frictionMultiplier</FieldName>
-            <Ignore>true</Ignore>
+            <FieldName>wheelType</FieldName>
         </FieldDefinition>
-        --><!--Auto friction. We don't really care about it--><!--
-        <FieldDefinition>
-            <FieldName>autoFriction</FieldName>
-            <Ignore>true</Ignore>
-        </FieldDefinition>
-        --><!--set for grounded wheels. We don't really care about it--><!--
         <FieldDefinition>
             <FieldName>isGrounded</FieldName>
-            <Ignore>true</Ignore>
         </FieldDefinition>
-    </Fields>-->
+        <FieldDefinition>
+            <FieldName>autoFriction</FieldName>
+        </FieldDefinition>
+    </Fields>
 </ModuleDefinition>

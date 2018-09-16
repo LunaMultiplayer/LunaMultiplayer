@@ -4,18 +4,12 @@
         <FieldDefinition>
             <FieldName>persistentState</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>automateSafeDeploy</FieldName>
-        </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>CutParachute</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Deploy</MethodName>
         </MethodDefinition>
     </Methods>

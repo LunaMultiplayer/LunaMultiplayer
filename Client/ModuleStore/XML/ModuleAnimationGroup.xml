@@ -7,11 +7,9 @@
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>DeployModule</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>RetractModule</MethodName>
         </MethodDefinition>
     </Methods>

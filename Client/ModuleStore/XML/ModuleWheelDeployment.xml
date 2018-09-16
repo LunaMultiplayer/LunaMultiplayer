@@ -2,11 +2,10 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>shieldedCanDeploy</FieldName>
+            <FieldName>stateString</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <FieldName>stateString</FieldName>
+            <FieldName>stateDisplayString</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>

@@ -1,25 +1,8 @@
 <?xml version="1.0"?>
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <!--<Fields>
-        --><!--Position of the suspension. We don't really care about it--><!--
-        <FieldDefinition>
-            <FieldName>suspensionPos</FieldName>
-            <Ignore>true</Ignore>
-        </FieldDefinition>
-        --><!--No idea--><!--
+    <Fields>
         <FieldDefinition>
             <FieldName>autoBoost</FieldName>
-            <Ignore>true</Ignore>
         </FieldDefinition>
-        --><!--Damper is tweakbale through SPH. Default won't be synced, but modified values are synced on every bump.--><!--
-        <FieldDefinition>
-            <FieldName>damperTweakable</FieldName>
-            <Ignore>true</Ignore>
-        </FieldDefinition>
-        --><!--Spring is tweakable through SPH. Default won't be synced, but modified values are synced on every bump.--><!--
-        <FieldDefinition>
-            <FieldName>springTweakable</FieldName>
-            <Ignore>true</Ignore>
-        </FieldDefinition>
-    </Fields>-->
+    </Fields>
 </ModuleDefinition>

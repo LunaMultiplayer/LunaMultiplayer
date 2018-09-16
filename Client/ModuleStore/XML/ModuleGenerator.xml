@@ -4,18 +4,16 @@
         <FieldDefinition>
             <FieldName>generatorIsActive</FieldName>
         </FieldDefinition>
-        <!--<FieldDefinition>
+        <FieldDefinition>
+            <!--TODO: Value changes often-->
             <FieldName>throttle</FieldName>
-            <MaxIntervalInMs>60000</MaxIntervalInMs>
-        </FieldDefinition>-->
+        </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Activate</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Shutdown</MethodName>
         </MethodDefinition>
     </Methods>

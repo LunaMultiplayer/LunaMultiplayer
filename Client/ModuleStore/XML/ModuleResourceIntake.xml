@@ -6,11 +6,9 @@
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>Activate</MethodName>
         </MethodDefinition>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>Deactivate</MethodName>
         </MethodDefinition>

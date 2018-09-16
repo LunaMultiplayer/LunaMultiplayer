@@ -2,26 +2,6 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>gimbalLock</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>gimbalLimiter</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>enableYaw</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>enablePitch</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>enableRoll</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
             <FieldName>gimbalActive</FieldName>
         </FieldDefinition>
     </Fields>

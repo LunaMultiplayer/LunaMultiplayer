@@ -13,14 +13,9 @@
         <FieldDefinition>
             <FieldName>animationIsDisabled</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>deployPercent</FieldName>
-        </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Toggle</MethodName>
         </MethodDefinition>
     </Methods>

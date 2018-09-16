@@ -7,7 +7,6 @@
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Toggle</MethodName>
         </MethodDefinition>
     </Methods>

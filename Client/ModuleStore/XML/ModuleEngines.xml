@@ -13,25 +13,19 @@
         <FieldDefinition>
             <FieldName>flameout</FieldName>
         </FieldDefinition>
-        <!--<FieldDefinition>
-            <FieldName>currentThrottle</FieldName>
-            <MaxIntervalInMs>60000</MaxIntervalInMs>
-        </FieldDefinition>-->
         <FieldDefinition>
-            <FieldName>manuallyOverridden</FieldName>
+            <!--TODO: Value changes often-->
+            <FieldName>currentThrottle</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>thrustPercentage</FieldName>
+            <FieldName>manuallyOverridden</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Activate</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Shutdown</MethodName>
         </MethodDefinition>
     </Methods>

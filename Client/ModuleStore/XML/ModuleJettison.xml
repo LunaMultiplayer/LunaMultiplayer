@@ -7,22 +7,12 @@
         <FieldDefinition>
             <FieldName>isJettisoned</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>shroudHideOverride</FieldName>
-        </FieldDefinition>
-        <!--<FieldDefinition>
-            <FieldName>throttle</FieldName>
-            <MaxIntervalInMs>60000</MaxIntervalInMs>
-        </FieldDefinition>-->
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Jettison</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>Shutdown</MethodName>
         </MethodDefinition>
     </Methods>

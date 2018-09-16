@@ -647,8 +647,15 @@
     <Content Include="ModuleStore\XML\ModuleAsteroidResource.xml" />
     <Content Include="ModuleStore\XML\ModuleAsteroid.xml" />
     <Content Include="ModuleStore\XML\ModuleAnimationGroup.xml" />
+    <Content Include="ModuleStore\XML\FXModuleThrottleEffects.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelDamage.xml" />
+    <Content Include="ModuleStore\XML\MultiModeEngine.xml" />
+    <Content Include="ModuleStore\XML\ModuleToggleCrossfeed.xml" />
+    <Content Include="ModuleStore\XML\ModuleStructuralNode.xml" />
+    <Content Include="ModuleStore\XML\ModuleStatusLight.xml" />
+    <Content Include="ModuleStore\XML\ModuleServiceModule.xml" />
+    <Content Include="ModuleStore\XML\SentinelModule.xml" />
     <Content Include="ModuleStore\XML\RetractableLadder.xml" />
-    <Content Include="ModuleStore\XML\ModuleRCS.xml" />
     <Content Include="ModuleStore\XML\ModulePhysicMaterial.xml" />
     <Content Include="ModuleStore\XML\ModulePartVariants.xml" />
     <Content Include="ModuleStore\XML\ModuleLight.xml" />
@@ -680,15 +687,12 @@
     <Content Include="ModuleStore\XML\ModuleCommand.xml" />
     <Content Include="ModuleStore\XML\ModuleParachute.xml" />
     <Content Include="ModuleStore\XML\ModuleEngines.xml" />
-    <Content Include="ModuleStore\XML\ModuleEvaChute.xml" />
     <Content Include="ModuleStore\XML\ModuleReactionWheel.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelBase.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelBrakes.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelDeployment.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelMotor.xml" />
-    <Content Include="ModuleStore\XML\ModuleWheelSteering.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelSuspension.xml" />
-    <Content Include="ModuleStore\XML\TweakScale.xml" />
     <Content Include="Resources\LMPButton.png" />
   </ItemGroup>
   <ItemGroup>

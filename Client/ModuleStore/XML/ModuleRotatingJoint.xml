@@ -8,10 +8,6 @@
             <FieldName>driveEngaged</FieldName>
         </FieldDefinition>
         <FieldDefinition>
-            <!--TODO: UIFIELD-->
-            <FieldName>torqueRatio</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
             <FieldName>savedMode</FieldName>
         </FieldDefinition>
         <FieldDefinition>
@@ -20,19 +16,15 @@
     </Fields>
     <Methods>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>EngageDrive</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>InvertDrive</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>LockDrive</MethodName>
         </MethodDefinition>
         <MethodDefinition>
-            <!--TODO: check if this is fine as is called twice-->
             <MethodName>NeutralDrive</MethodName>
         </MethodDefinition>
     </Methods>

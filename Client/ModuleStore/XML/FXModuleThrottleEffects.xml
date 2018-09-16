@@ -2,12 +2,7 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <FieldName>stateString</FieldName>
+            <FieldName>state</FieldName>
         </FieldDefinition>
     </Fields>
-    <Methods>
-        <MethodDefinition>
-            <MethodName>OnToggle</MethodName>
-        </MethodDefinition>
-    </Methods>
 </ModuleDefinition>

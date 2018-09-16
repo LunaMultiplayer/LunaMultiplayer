@@ -6,11 +6,9 @@
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>Extend</MethodName>
         </MethodDefinition>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>Retract</MethodName>
         </MethodDefinition>

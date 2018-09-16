@@ -2,16 +2,10 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
-            <!--TODO UIFIELD-->
-            <FieldName>ejectionForcePercent</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO UIFIELD-->
             <FieldName>isDecoupled</FieldName>
         </FieldDefinition>
     </Fields>
     <Methods>
-        <!--TODO: check if this is fine as is called twice-->
         <MethodDefinition>
             <MethodName>Decouple</MethodName>
         </MethodDefinition>
