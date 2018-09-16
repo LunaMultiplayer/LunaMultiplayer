@@ -98,7 +98,7 @@
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
-    <Compile Include="Harmony\DiscoverableObjectsUtil_SpawnAsteroid.cs" />
+    <Compile Include="Harmony\ScenarioDiscoverableObjects_UpdateAsteroids.cs" />
     <Compile Include="Harmony\FlightDriver_SetPause.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
