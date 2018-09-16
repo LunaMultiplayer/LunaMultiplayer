@@ -647,6 +647,7 @@
     <Content Include="ModuleStore\XML\ModuleAsteroidResource.xml" />
     <Content Include="ModuleStore\XML\ModuleAsteroid.xml" />
     <Content Include="ModuleStore\XML\ModuleAnimationGroup.xml" />
+    <Content Include="ModuleStore\XML\RetractableLadder.xml" />
     <Content Include="ModuleStore\XML\ModuleRCS.xml" />
     <Content Include="ModuleStore\XML\ModulePhysicMaterial.xml" />
     <Content Include="ModuleStore\XML\ModulePartVariants.xml" />
@@ -704,10 +705,7 @@
       <Name>LmpGlobal</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ModuleStore\Custom\" />
-    <Folder Include="ModuleStore\Harmony\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
