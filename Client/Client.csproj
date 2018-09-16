@@ -264,6 +264,12 @@
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncSystem.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncField.cs" />
     <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldQueue.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiField.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldEvents.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldMessageHandler.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldMessageSender.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldQueue.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldSystem.cs" />
     <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageSender.cs" />
     <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageHandler.cs" />
     <Compile Include="Systems\VesselPersistentSys\VesselPersistentEvents.cs" />
@@ -698,7 +704,9 @@
       <Name>LmpGlobal</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ModuleStore\Custom\" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>

@@ -28,6 +28,7 @@ namespace LunaCommon.Message.Client
             [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData),
             [(ushort)VesselMessageType.Sync] = typeof(VesselSyncMsgData),
             [(ushort)VesselMessageType.PartSyncField] = typeof(VesselPartSyncFieldMsgData),
+            [(ushort)VesselMessageType.PartSyncUiField] = typeof(VesselPartSyncUiFieldMsgData),
             [(ushort)VesselMessageType.PartSyncCall] = typeof(VesselPartSyncCallMsgData),
             [(ushort)VesselMessageType.ActionGroup] = typeof(VesselActionGroupMsgData),
             [(ushort)VesselMessageType.Fairing] = typeof(VesselFairingMsgData),

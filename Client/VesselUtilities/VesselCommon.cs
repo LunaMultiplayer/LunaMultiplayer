@@ -7,6 +7,7 @@ using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPartSyncCallSys;
 using LunaClient.Systems.VesselPartSyncFieldSys;
+using LunaClient.Systems.VesselPartSyncUiFieldSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -75,6 +76,7 @@ namespace LunaClient.VesselUtilities
             VesselResourceSystem.Singleton.RemoveVessel(vesselId);
             VesselProtoSystem.Singleton.RemoveVessel(vesselId);
             VesselPartSyncFieldSystem.Singleton.RemoveVessel(vesselId);
+            VesselPartSyncUiFieldSystem.Singleton.RemoveVessel(vesselId);
             VesselPartSyncCallSystem.Singleton.RemoveVessel(vesselId);
             VesselFairingsSystem.Singleton.RemoveVessel(vesselId);
         }

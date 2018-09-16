@@ -52,7 +52,11 @@ namespace Server.Message
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
                 case VesselMessageType.PartSyncField:
-                    VesselDataUpdater.WritePartSyncDataToFile(messageData);
+                    VesselDataUpdater.WritePartSyncFieldDataToFile(messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
+                    break;
+                case VesselMessageType.PartSyncUiField:
+                    VesselDataUpdater.WritePartSyncUiFieldDataToFile(messageData);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
                 case VesselMessageType.PartSyncCall:

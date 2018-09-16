@@ -11,9 +11,10 @@
         Resource = 6,
         Sync = 7,
         PartSyncField = 8,
-        PartSyncCall = 9,
-        ActionGroup = 10,
-        Fairing = 11,
-        Persistent = 12,
+        PartSyncUiField = 9,
+        PartSyncCall = 10,
+        ActionGroup = 11,
+        Fairing = 12,
+        Persistent = 13,
     }
 }

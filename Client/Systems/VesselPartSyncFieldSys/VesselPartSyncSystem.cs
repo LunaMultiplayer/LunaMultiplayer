@@ -8,8 +8,7 @@ using UnityEngine;
 namespace LunaClient.Systems.VesselPartSyncFieldSys
 {
     /// <summary>
-    /// This class sends some parts of the vessel information to other players. We do it in another system as we don't want to send this information so often as
-    /// the vessel position system and also we want to send it more oftenly than the vessel proto.
+    /// This class sends fields from a part module to the other players so their protovessels are updated
     /// </summary>
     public class VesselPartSyncFieldSystem : MessageSystem<VesselPartSyncFieldSystem, VesselPartSyncFieldMessageSender, VesselPartSyncFieldMessageHandler>
     {
@@ -42,6 +41,10 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleObjectFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
             PartModuleEvent.onPartModuleEnumFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
 
+            GameEvents.onFlightReady.Add(VesselPartModuleSyncFieldEvents.SubscribeToFieldChanges);
+            GameEvents.onVesselLoaded.Add(VesselPartModuleSyncFieldEvents.SubscribeToFieldChanges);
+
+
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncs));
         }
 
@@ -57,6 +60,9 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleStringFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
             PartModuleEvent.onPartModuleObjectFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
             PartModuleEvent.onPartModuleEnumFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
+
+            GameEvents.onFlightReady.Remove(VesselPartModuleSyncFieldEvents.SubscribeToFieldChanges);
+            GameEvents.onVesselLoaded.Remove(VesselPartModuleSyncFieldEvents.SubscribeToFieldChanges);
 
             VesselPartsSyncs.Clear();
         }

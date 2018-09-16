@@ -250,7 +250,7 @@ namespace Server.System
         /// We received a part module change from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
         /// </summary>
-        public static void WritePartSyncDataToFile(VesselBaseMsgData message)
+        public static void WritePartSyncFieldDataToFile(VesselBaseMsgData message)
         {
             if (!(message is VesselPartSyncFieldMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
@@ -262,7 +262,29 @@ namespace Server.System
                 {
                     if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
 
-                    var updatedText = UpdateProtoVesselFileWithNewPartSyncData(xmlData, msgData);
+                    var updatedText = UpdateProtoVesselFileWithNewPartSyncFieldData(xmlData, msgData);
+                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                }
+            });
+        }
+
+        /// <summary>
+        /// We received a part module change from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
+        /// </summary>
+        public static void WritePartSyncUiFieldDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselPartSyncUiFieldMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            //Sync part changes ALWAYS and ignore the rate they arrive
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
+                {
+                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+
+                    var updatedText = UpdateProtoVesselFileWithNewPartSyncUiFieldData(xmlData, msgData);
                     VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
                 }
             });
@@ -519,7 +541,7 @@ namespace Server.System
         /// <summary>
         /// Updates the proto vessel with the values we received about a part module change
         /// </summary>
-        private static string UpdateProtoVesselFileWithNewPartSyncData(string vesselData, VesselPartSyncFieldMsgData msgData)
+        private static string UpdateProtoVesselFileWithNewPartSyncFieldData(string vesselData, VesselPartSyncFieldMsgData msgData)
         {
             var document = new XmlDocument();
             document.LoadXml(vesselData);
@@ -562,6 +584,43 @@ namespace Server.System
                     case PartSyncFieldType.String:
                     case PartSyncFieldType.Enum:
                         fieldNode.InnerText = msgData.StrValue;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+            }
+
+            return document.ToIndentedString();
+        }
+
+        /// <summary>
+        /// Updates the proto vessel with the values we received about a part module change
+        /// </summary>
+        private static string UpdateProtoVesselFileWithNewPartSyncUiFieldData(string vesselData, VesselPartSyncUiFieldMsgData msgData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
+                         $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
+                         $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
+
+            var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
+
+            var fieldNode = document.SelectSingleNode(xpath);
+            if (fieldNode != null)
+            {
+                switch (msgData.FieldType)
+                {
+                    case PartSyncFieldType.Boolean:
+                        fieldNode.InnerText = msgData.BoolValue.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case PartSyncFieldType.Integer:
+                        fieldNode.InnerText = msgData.IntValue.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case PartSyncFieldType.Float:
+                        fieldNode.InnerText = msgData.FloatValue.ToString(CultureInfo.InvariantCulture);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
