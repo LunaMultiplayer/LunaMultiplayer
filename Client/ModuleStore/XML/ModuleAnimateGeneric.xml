@@ -8,6 +8,9 @@
             <FieldName>animSwitch</FieldName>
         </FieldDefinition>
         <FieldDefinition>
+            <FieldName>animTime</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
             <FieldName>animationIsDisabled</FieldName>
         </FieldDefinition>
         <FieldDefinition>

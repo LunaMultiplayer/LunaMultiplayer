@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using Harmony.ILCopying;
 using LunaClient.Base;
 using LunaClient.ModuleStore.Harmony;
 using LunaClient.ModuleStore.Structures;
@@ -126,6 +127,28 @@ namespace LunaClient.ModuleStore.Patching
 
             return FieldChangeTranspiler.Transpile();
 
+        }
+
+        /// <summary>
+        /// Checks if the given method has a IL instruction that SETS (therefore, it changes the value) a customized field
+        /// </summary>
+        private static IEnumerable<FieldInfo> GetCustomizedFieldsChangedByMethod(MethodBase partModuleMethod, ModuleDefinition definition)
+        {
+            var listOfFields = new HashSet<FieldInfo>();
+
+            var method = DynamicTools.CreateDynamicMethod(partModuleMethod, "read");
+            var instructions = MethodBodyReader.GetInstructions(method.GetILGenerator(), partModuleMethod);
+
+            //OpCodes.Stfld is the opcode for SETTING the value of a field
+            foreach (var instruction in instructions.Where(i => i.opcode == OpCodes.Stfld))
+            {
+                if (!(instruction.operand is FieldInfo operand)) continue;
+
+                if (definition.Fields.Any(f => f.FieldName == operand.Name))
+                    listOfFields.Add(operand);
+            }
+
+            return listOfFields;
         }
     }
 }
