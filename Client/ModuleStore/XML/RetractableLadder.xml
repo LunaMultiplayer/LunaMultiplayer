@@ -7,6 +7,9 @@
     </Fields>
     <Methods>
         <MethodDefinition>
+            <MethodName>Extend</MethodName>
+        </MethodDefinition>
+        <MethodDefinition>
             <MethodName>Retract</MethodName>
         </MethodDefinition>
     </Methods>

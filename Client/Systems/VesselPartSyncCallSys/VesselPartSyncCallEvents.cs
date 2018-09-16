@@ -1,6 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.ModuleStore;
-using UniLinq;
 
 namespace LunaClient.Systems.VesselPartSyncCallSys
 {
@@ -27,17 +25,6 @@ namespace LunaClient.Systems.VesselPartSyncCallSys
         {
             if (!CallIsValid(module))
                 return;
-
-            if (FieldModuleStore.InheritanceTypeChain.TryGetValue(module.moduleName, out var inheritChain))
-            {
-                foreach (var baseModuleName in inheritChain)
-                {
-                    if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(baseModuleName, out var customization))
-                    {
-                        var methodCustomization = customization.Methods.FirstOrDefault(m => m.MethodName == methodName);
-                    }
-                }
-            }
 
             LunaLog.Log($"Part sync method {methodName} in module {module.moduleName} from part {module.part.flightID} was called.");
             System.MessageSender.SendVesselPartSyncCallMsg(module.vessel, module.part, module.moduleName, methodName);
