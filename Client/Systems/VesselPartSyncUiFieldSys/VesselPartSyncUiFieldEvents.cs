@@ -63,11 +63,11 @@ namespace LunaClient.Systems.VesselPartSyncUiFieldSys
             var fieldType = baseField.FieldInfo.FieldType;
 
             if (fieldType == typeof(bool))
-                PartModuleEvent.onPartModuleBoolFieldChanged.Fire(baseField.host as PartModule, baseField.name, (bool)baseField.GetValue(baseField.host));
+                PartModuleEvent.onPartModuleBoolFieldChanged.Fire((PartModule)baseField.host, baseField.name, (bool)baseField.GetValue(baseField.host));
             else if (fieldType == typeof(int))
-                PartModuleEvent.onPartModuleIntFieldChanged.Fire(baseField.host as PartModule, baseField.name, (int)baseField.GetValue(baseField.host));
-            else if(fieldType == typeof(float))
-                PartModuleEvent.onPartModuleFloatFieldChanged.Fire(baseField.host as PartModule, baseField.name, (float)baseField.GetValue(baseField.host));
+                PartModuleEvent.onPartModuleIntFieldChanged.Fire((PartModule)baseField.host, baseField.name, (int)baseField.GetValue(baseField.host));
+            else if (fieldType == typeof(float))
+                PartModuleEvent.onPartModuleFloatFieldChanged.Fire((PartModule)baseField.host, baseField.name, (float)baseField.GetValue(baseField.host));
         }
     }
 }
