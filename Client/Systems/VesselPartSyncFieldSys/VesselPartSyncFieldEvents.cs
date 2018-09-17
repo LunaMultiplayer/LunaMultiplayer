@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
 {
@@ -14,12 +13,8 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
         private static Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>> LastSendTimeDictionary =
             new Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>>();
 
-        private const string Sample = "CallIsValid";
-
         private static bool CallIsValid(PartModule module, string fieldName)
         {
-            Profiler.BeginSample(Sample);
-            
             var vessel = module.vessel;
             if (vessel == null || !vessel.loaded || vessel.protoVessel == null)
                 return false;
@@ -32,21 +27,22 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             if (float.IsPositiveInfinity(part.crashTolerance))
                 return false;
 
-            if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(module.moduleName, out var customization))
+            foreach (var moduleName in FieldModuleStore.InheritanceTypeChain[module.moduleName])
             {
-                var fieldCust = customization.Fields.FirstOrDefault(f => f.FieldName == fieldName);
-                if (fieldCust != null)
+                if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(moduleName, out var customization))
                 {
-                    var timeToSend = LastSendTimeDictionary.GetOrAdd(module.vessel.id, () => new Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>())
-                        .GetOrAdd(module.part.flightID, () => new Dictionary<string, Dictionary<string, TimeToSend>>())
-                        .GetOrAdd(module.moduleName, () => new Dictionary<string, TimeToSend>())
-                        .GetOrAdd(fieldName, () => new TimeToSend(fieldCust.MaxIntervalInMs));
+                    var fieldCust = customization.Fields.FirstOrDefault(f => f.FieldName == fieldName);
+                    if (fieldCust != null)
+                    {
+                        var timeToSend = LastSendTimeDictionary.GetOrAdd(module.vessel.id, () => new Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>())
+                            .GetOrAdd(module.part.flightID, () => new Dictionary<string, Dictionary<string, TimeToSend>>())
+                            .GetOrAdd(moduleName, () => new Dictionary<string, TimeToSend>())
+                            .GetOrAdd(fieldName, () => new TimeToSend(fieldCust.MaxIntervalInMs));
 
-                    return timeToSend.ReadyToSend();
+                        return timeToSend.ReadyToSend();
+                    }
                 }
             }
-
-            Profiler.EndSample();
 
             return true;
         }
