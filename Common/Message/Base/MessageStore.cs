@@ -121,7 +121,7 @@ namespace LunaCommon.Message.Base
                 if (!MessageConstructorDictionary.TryGetValue(typeof(T), out var ctor))
                 {
                     ctor = typeof(T).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First();
-                    MessageDataConstructorDictionary.TryAdd(typeof(T), ctor);
+                    MessageConstructorDictionary.TryAdd(typeof(T), ctor);
                 }
 
                 return ctor.Invoke(null) as T;
@@ -140,7 +140,7 @@ namespace LunaCommon.Message.Base
                 if (!MessageConstructorDictionary.TryGetValue(type, out var ctor))
                 {
                     ctor = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First();
-                    MessageDataConstructorDictionary.TryAdd(type, ctor);
+                    MessageConstructorDictionary.TryAdd(type, ctor);
                 }
 
                 return ctor.Invoke(null) as IMessageBase;
