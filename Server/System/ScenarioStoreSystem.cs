@@ -1,6 +1,8 @@
 ﻿using LunaCommon.Xml;
 using Server.Context;
 using Server.Events;
+using Server.Settings.Structures;
+using Server.System.Scenario;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
@@ -34,13 +36,20 @@ namespace Server.System
         /// <summary>
         /// Load the stored scenarios into the dictionary
         /// </summary>
-        public static void LoadExistingScenarios()
+        public static void LoadExistingScenarios(bool createdFromScratch)
         {
             lock (BackupLock)
             {
                 foreach (var file in Directory.GetFiles(ScenariosFolder).Where(f => Path.GetExtension(f) == ".xml"))
                 {
                     CurrentScenariosInXmlFormat.TryAdd(Path.GetFileNameWithoutExtension(file), FileHandler.ReadFileText(file));
+                }
+
+                if (createdFromScratch)
+                {
+                    ScenarioDataUpdater.WriteScienceDataToFile(GameplaySettings.SettingsStore.StartingScience);
+                    ScenarioDataUpdater.WriteReputationDataToFile(GameplaySettings.SettingsStore.StartingReputation);
+                    ScenarioDataUpdater.WriteScienceDataToFile(GameplaySettings.SettingsStore.StartingFunds);
                 }
             }
         }

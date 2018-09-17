@@ -82,7 +82,8 @@ namespace Server.System
         /// <param name="path">Path to the file</param>
         /// <param name="data">Data to insert</param>
         /// <param name="numBytes">Number of bytes to write</param>
-        public static void CreateFile(string path, byte[] data, int numBytes)
+        /// <returns>True if the file was created</returns>
+        public static bool CreateFile(string path, byte[] data, int numBytes)
         {
             lock (GetLockSemaphore(path))
             {
@@ -94,20 +95,25 @@ namespace Server.System
                     {
                         fs.Write(data, 0, numBytes);
                     }
+
+                    return true;
                 }
+
+                return false;
             }
         }
-    
+
 
         /// <summary>
         /// Thread safe file creating method. It won't create the file if it already exists!
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <param name="text">Text to insert</param>
-        public static void CreateFile(string path, string text)
+        /// <returns>True if the file was created</returns>
+        public static bool CreateFile(string path, string text)
         {
             var content = Encoding.UTF8.GetBytes(text);
-            CreateFile(path, content, content.Length);
+            return CreateFile(path, content, content.Length);
         }
 
         /// <summary>
