@@ -151,7 +151,7 @@ namespace LunaClient.VesselUtilities
             if (HighLogic.CurrentGame?.flightState == null)
                 return false;
 
-            var reloadingOwnVessel = vesselProto.vesselID == FlightGlobals.ActiveVessel?.id;
+            var reloadingOwnVessel = vesselProto.vesselID == FlightGlobals.ActiveVessel?.id && HighLogic.LoadedSceneIsFlight;
 
             //In case the vessel exists, silently remove them from unity and recreate it again
             var existingVessel = FlightGlobals.fetch.FindVessel(vesselProto.persistentId, vesselProto.vesselID);
