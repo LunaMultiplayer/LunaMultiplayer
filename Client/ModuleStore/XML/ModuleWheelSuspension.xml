@@ -3,7 +3,7 @@
     <Fields>
         <FieldDefinition>
             <FieldName>autoBoost</FieldName>
-            <MaxIntervalInMs>1000</MaxIntervalInMs>
+            <MaxIntervalInMs>10000</MaxIntervalInMs>
         </FieldDefinition>
     </Fields>
 </ModuleDefinition>

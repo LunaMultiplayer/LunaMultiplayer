@@ -3,7 +3,9 @@
     <Fields>
         <!--Launch time of the panel. It afects the efficiency. An old solar panel produce less electricity-->
         <FieldDefinition>
+            <!--TODO: Value changes often-->
             <FieldName>launchUT</FieldName>
+            <MaxIntervalInMs>60000</MaxIntervalInMs>
         </FieldDefinition>
     </Fields>
 </ModuleDefinition>

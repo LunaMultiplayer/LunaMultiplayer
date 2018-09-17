@@ -16,7 +16,7 @@
         <FieldDefinition>
             <!--TODO: Value changes often-->
             <FieldName>currentThrottle</FieldName>
-            <MaxIntervalInMs>5000</MaxIntervalInMs>
+            <MaxIntervalInMs>10000</MaxIntervalInMs>
         </FieldDefinition>
         <FieldDefinition>
             <FieldName>manuallyOverridden</FieldName>

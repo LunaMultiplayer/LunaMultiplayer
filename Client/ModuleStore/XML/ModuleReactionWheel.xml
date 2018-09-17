@@ -4,6 +4,7 @@
         <FieldDefinition>
             <!--TODO: Value changes often-->
             <FieldName>stateString</FieldName>
+            <MaxIntervalInMs>10000</MaxIntervalInMs>
         </FieldDefinition>
     </Fields>
     <Methods>
