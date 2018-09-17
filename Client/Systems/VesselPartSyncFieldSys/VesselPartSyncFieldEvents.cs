@@ -1,12 +1,25 @@
 ﻿using LunaClient.Base;
+using LunaClient.Extensions;
+using LunaClient.ModuleStore;
+using System;
+using System.Collections.Generic;
+using UniLinq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
 {
     public class VesselPartSyncFieldEvents : SubSystem<VesselPartSyncFieldSystem>
     {
-        private static bool CallIsValid(PartModule module)
+        private static Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>> LastSendTimeDictionary =
+            new Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>>();
+
+        private const string Sample = "CallIsValid";
+
+        private static bool CallIsValid(PartModule module, string fieldName)
         {
+            Profiler.BeginSample(Sample);
+            
             var vessel = module.vessel;
             if (vessel == null || !vessel.loaded || vessel.protoVessel == null)
                 return false;
@@ -19,6 +32,22 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
             if (float.IsPositiveInfinity(part.crashTolerance))
                 return false;
 
+            if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(module.moduleName, out var customization))
+            {
+                var fieldCust = customization.Fields.FirstOrDefault(f => f.FieldName == fieldName);
+                if (fieldCust != null)
+                {
+                    var timeToSend = LastSendTimeDictionary.GetOrAdd(module.vessel.id, () => new Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>())
+                        .GetOrAdd(module.part.flightID, () => new Dictionary<string, Dictionary<string, TimeToSend>>())
+                        .GetOrAdd(module.moduleName, () => new Dictionary<string, TimeToSend>())
+                        .GetOrAdd(fieldName, () => new TimeToSend(fieldCust.MaxIntervalInMs));
+
+                    return timeToSend.ReadyToSend();
+                }
+            }
+
+            Profiler.EndSample();
+
             return true;
         }
 
@@ -26,7 +55,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleBoolFieldChanged(PartModule module, string fieldName, bool newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new BOOL value of {newValue}.");
@@ -35,7 +64,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleIntFieldChanged(PartModule module, string fieldName, int newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new INT value of {newValue}.");
@@ -44,7 +73,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleFloatFieldChanged(PartModule module, string fieldName, float newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new FLOAT value of {newValue}.");
@@ -53,7 +82,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleDoubleFieldChanged(PartModule module, string fieldName, double newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new DOUBLE value of {newValue}.");
@@ -62,7 +91,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleVectorFieldChanged(PartModule module, string fieldName, Vector3 newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new VECTOR value of {newValue}.");
@@ -71,7 +100,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleQuaternionFieldChanged(PartModule module, string fieldName, Quaternion newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new QUATERNION value of {newValue}.");
@@ -80,7 +109,7 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleStringFieldChanged(PartModule module, string fieldName, string newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new STRING value of {newValue}.");
@@ -89,17 +118,17 @@ namespace LunaClient.Systems.VesselPartSyncFieldSys
 
         public void PartModuleObjectFieldChanged(PartModule module, string fieldName, object newValue)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new OBJECT value of {newValue}.");
             LunaLog.LogWarning($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a field type that is not supported!");
             System.MessageSender.SendVesselPartSyncFieldObjectMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
-        
+
         public void PartModuleEnumFieldChanged(PartModule module, string fieldName, int newValue, string newValueStr)
         {
-            if (!CallIsValid(module))
+            if (!CallIsValid(module, fieldName))
                 return;
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new ENUM value of {newValueStr}.");

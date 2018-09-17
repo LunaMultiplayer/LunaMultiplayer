@@ -6,10 +6,35 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartSyncFieldSys
 {
+    public class TimeToSend
+    {
+        private readonly int _intervalInMs;
+        private DateTime _lastSendTime;
+
+        public TimeToSend(int interval)
+        {
+            _intervalInMs = interval;
+            _lastSendTime = DateTime.MinValue;
+        }
+
+        public bool ReadyToSend()
+        {
+            if (_intervalInMs <= 0) return true;
+            if (DateTime.UtcNow - _lastSendTime > TimeSpan.FromMilliseconds(_intervalInMs))
+            {
+                _lastSendTime = DateTime.UtcNow;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public class VesselPartSyncFieldMessageSender : SubSystem<VesselPartSyncFieldSystem>, IMessageSender
     {
         public void SendMessage(IMessageData msg)

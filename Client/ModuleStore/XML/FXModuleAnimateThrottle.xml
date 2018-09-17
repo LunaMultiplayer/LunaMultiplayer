@@ -5,6 +5,7 @@
         <FieldDefinition>
             <!--TODO: Value changes often-->
             <FieldName>animState</FieldName>
+            <MaxIntervalInMs>1000</MaxIntervalInMs>
         </FieldDefinition>
     </Fields>
 </ModuleDefinition>

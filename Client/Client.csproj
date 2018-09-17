@@ -88,6 +88,7 @@
     <Compile Include="Events\VesselUnloadEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
+    <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\FlightGlobalExtension.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />

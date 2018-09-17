@@ -2,6 +2,7 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <FieldDefinition>
+            <!--TODO: Value changes often-->
             <FieldName>stateString</FieldName>
         </FieldDefinition>
     </Fields>
