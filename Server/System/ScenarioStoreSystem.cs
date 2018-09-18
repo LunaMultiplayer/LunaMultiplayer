@@ -49,7 +49,7 @@ namespace Server.System
                 {
                     ScenarioDataUpdater.WriteScienceDataToFile(GameplaySettings.SettingsStore.StartingScience);
                     ScenarioDataUpdater.WriteReputationDataToFile(GameplaySettings.SettingsStore.StartingReputation);
-                    ScenarioDataUpdater.WriteScienceDataToFile(GameplaySettings.SettingsStore.StartingFunds);
+                    ScenarioDataUpdater.WriteFundsDataToFile(GameplaySettings.SettingsStore.StartingFunds);
                 }
             }
         }

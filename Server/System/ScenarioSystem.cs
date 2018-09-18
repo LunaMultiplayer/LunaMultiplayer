@@ -8,7 +8,6 @@ using Server.Properties;
 using Server.Server;
 using Server.Settings.Structures;
 using Server.System.Scenario;
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,18 +49,6 @@ namespace Server.System
                 FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioContractEvents.xml"), Resources.ScenarioContractEvents) &&
                 FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioUpgradeableFacilities.xml"), Resources.ScenarioUpgradeableFacilities) &&
                 FileHandler.CreateFile(Path.Combine(ScenarioPath, "StrategySystem.xml"), Resources.StrategySystem);
-
-                if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom && GameplaySettings.SettingsStore.StartingFunds > 0)
-                {
-                    ReplaceLineInFile(Path.Combine(ScenarioPath, "Funding.xml"),
-                        @"  <Parameter name=""funds"">25000</Parameter>", $@"  <Parameter name=""funds"">{GameplaySettings.SettingsStore.StartingFunds}</Parameter>");
-                }
-
-                if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom && GameplaySettings.SettingsStore.StartingReputation > 0)
-                {
-                    ReplaceLineInFile(Path.Combine(ScenarioPath, "Reputation.xml"),
-                        @"  <Parameter name=""rep"">0</Parameter>", $@"  <Parameter name=""rep"">{GameplaySettings.SettingsStore.StartingReputation}</Parameter>");
-                }
             }
             else
             {
@@ -76,18 +63,6 @@ namespace Server.System
             return scenarioFilesCreated;
         }
         
-        public static void ReplaceLineInFile(string path, string original, string updated)
-        {
-            var lines = FileHandler.ReadFileLines(path);
-            for (var i = 0; i < lines.Length; i++)
-            {
-                if (lines[i] == original)
-                    lines[i] = updated;
-            }
-
-            FileHandler.WriteToFile(path, string.Join(Environment.NewLine, lines));
-        }
-
         public static void SendScenarioModules(ClientStructure client)
         {
             var scenarioDataArray = ScenarioStoreSystem.CurrentScenariosInXmlFormat.Keys.Select(s =>
