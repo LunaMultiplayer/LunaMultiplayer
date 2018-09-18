@@ -43,14 +43,27 @@ indent_size = 2
 
 # Naming conventions
 
-dotnet_naming_rule.everything_pascal_case.symbols				= everything
-dotnet_naming_symbols.everything.applicable_kinds				= *
-dotnet_naming_symbols.everything.applicable_accessibilities	= *
+# Public methods, properties, fields etc must be PascalCase
 
-dotnet_naming_rule.everything_pascal_case.style    = pascal_style
-dotnet_naming_style.pascal_style.capitalization	= pascal_case
+dotnet_naming_rule.public_members_must_be_capitalized.symbols   = public_symbols
+dotnet_naming_symbols.public_symbols.applicable_kinds           = property,method,field,event,delegate,class,struct,interface,enum
+dotnet_naming_symbols.public_symbols.applicable_accessibilities = public
 
-dotnet_naming_rule.everything_pascal_case.severity = error
+dotnet_naming_rule.public_members_must_be_capitalized.style    = first_word_upper_case_style
+dotnet_naming_style.first_word_upper_case_style.capitalization = pascal_case
+
+dotnet_naming_rule.public_members_must_be_capitalized.severity = error
+
+# Local variables (declared inside a method) must be camelCase
+
+dotnet_naming_rule.private_local_fields_must_be_lower.symbols  = local_symbols
+dotnet_naming_symbols.local_symbols.applicable_kinds           = method,field
+dotnet_naming_symbols.local_symbols.applicable_accessibilities = local
+
+dotnet_naming_rule.private_local_fields_must_be_lower.style    = first_letter_lower_case_style
+dotnet_naming_style.first_letter_lower_case_style.capitalization = camel_case
+
+dotnet_naming_rule.private_local_fields_must_be_lower.severity = error
 
 ####################################################################################################################
 
