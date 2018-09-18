@@ -8,6 +8,7 @@ using Server.Log;
 using Server.Message.Base;
 using Server.Server;
 using Server.System;
+using Server.System.Vessel;
 using System;
 using System.Linq;
 using System.Text;
