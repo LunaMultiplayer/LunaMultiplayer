@@ -54,7 +54,7 @@ Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-in
 
 Check how many servers are up and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions
 
-| [Release servers](http://dagger.ole32.com:8701/) | [Nightly servers](http://dagger.ole32.com:8751) |
+| [Release servers](http://servers.lunamultiplayer.com:8701/) | [Nightly servers](http://servers.lunamultiplayer.com:8751) |
 | ------------------------------------------------------  | ------------------------------------------------------- |
 ---
 
