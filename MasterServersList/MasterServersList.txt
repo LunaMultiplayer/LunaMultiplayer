@@ -1,9 +1,9 @@
 #Here you specify the ips or hostnames of all the master servers followed by ":" and the port. 
 #Then each client will query them for the servers and each server will register against them
-#Dagger. List: http://dagger.chickenkiller.com:8701
-dagger.chickenkiller.com:8700
-#Dagger nightly. List: http://dagger.chickenkiller.com:8751
-dagger.chickenkiller.com:8750
+#Dagger. List: http://servers.lunamultiplayer.com:8701
+servers.lunamultiplayer.com:8700
+#Dagger nightly. List: http://servers.lunamultiplayer.com:8751
+servers.lunamultiplayer.com:8750
 #PictoCube (Alfred). List: http://pictocube.ddns.net:8701
 pictocube.ddns.net:8700
 #PictoCube (Alfred) nightly. List: http://pictocube.ddns.net:8711
