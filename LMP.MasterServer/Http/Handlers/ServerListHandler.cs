@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web.UI;
 using uhttpsharp;
 
-namespace LMP.MasterServer.Http
+namespace LMP.MasterServer.Http.Handlers
 {
     public class ServerListHandler : IHttpRequestHandler
     {

@@ -39,6 +39,10 @@ namespace MasterServer
 
         private static void Main(string[] args)
         {
+            //Uncomment this to properly debug the code
+            //EntryPoint.MainEntryPoint(new string[0]);
+            //while (true) { Thread.Sleep(100); }
+
             if (!File.Exists(DllPath))
             {
                 ConsoleLogger.Log(LogLevels.Error, $"Cannot find needed file {DllFileName}");
@@ -54,7 +58,7 @@ namespace MasterServer
                 eArgs.Cancel = true;
             };
 
-            CheckNewVersion(args.Any(a=> a.Contains("nightly")));
+            CheckNewVersion(args.Any(a => a.Contains("nightly")));
             StartMasterServerDll();
             QuitEvent.WaitOne();
         }

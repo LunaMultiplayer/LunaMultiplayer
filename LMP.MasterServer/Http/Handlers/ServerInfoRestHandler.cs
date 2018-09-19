@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using uhttpsharp;
 using uhttpsharp.Handlers;
 
-namespace LMP.MasterServer.Http
+namespace LMP.MasterServer.Http.Handlers
 {
-    public class ServerInfoRestController : IRestController<ServerInfo>
+    public class ServerInfoRestHandler : IRestController<ServerInfo>
     {
         public Task<IEnumerable<ServerInfo>> Get(IHttpRequest request)
         {

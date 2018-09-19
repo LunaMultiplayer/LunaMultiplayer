@@ -53,11 +53,12 @@
     <Compile Include="Geolocalization\Base\BaseGeolocalization.cs" />
     <Compile Include="Geolocalization\IpApi.cs" />
     <Compile Include="Geolocalization\IpLocate.cs" />
-    <Compile Include="Http\ExceptionHandler.cs" />
+    <Compile Include="Http\Handlers\HeadHandler.cs" />
+    <Compile Include="Http\Handlers\ExceptionHandler.cs" />
     <Compile Include="Http\HttpException.cs" />
     <Compile Include="Http\LunaHttpServer.cs" />
-    <Compile Include="Http\ServerInfoRestController.cs" />
-    <Compile Include="Http\ServerListHandler.cs" />
+    <Compile Include="Http\Handlers\ServerInfoRestHandler.cs" />
+    <Compile Include="Http\Handlers\ServerListHandler.cs" />
     <Compile Include="Lidgren\MasterServer.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

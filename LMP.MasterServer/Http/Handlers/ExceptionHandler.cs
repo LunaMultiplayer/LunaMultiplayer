@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using uhttpsharp;
 
-namespace LMP.MasterServer.Http
+namespace LMP.MasterServer.Http.Handlers
 {
     public class ExceptionHandler : IHttpRequestHandler
     {

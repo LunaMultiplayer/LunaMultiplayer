@@ -1,4 +1,5 @@
-﻿using LunaCommon;
+﻿using LMP.MasterServer.Http.Handlers;
+using LunaCommon;
 using System.Net;
 using System.Net.Sockets;
 using uhttpsharp;
@@ -19,11 +20,12 @@ namespace LMP.MasterServer.Http
             Server.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Any, Port)));
 
             Server.Use(new ExceptionHandler());
+            Server.Use(new HeadHandler());
             Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
             Server.Use(new FileHandler());
             Server.Use(new HttpRouter()
                 .With(string.Empty, new ServerListHandler())
-                .With("json", new RestHandler<ServerInfo>(new ServerInfoRestController(), JsonResponseProvider.Default)));
+                .With("json", new RestHandler<ServerInfo>(new ServerInfoRestHandler(), JsonResponseProvider.Default)));
 
             Server.Start();
         }
