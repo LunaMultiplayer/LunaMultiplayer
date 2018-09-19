@@ -54,9 +54,12 @@ Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-in
 
 Check how many servers are up and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions
 
-| [Release servers](http://servers.lunamultiplayer.com:8701/) | [Nightly servers](http://servers.lunamultiplayer.com:8751) |
-| ------------------------------------------------------  | ------------------------------------------------------- |
----
+| Master server | Release |Nightly |
+| ------------  | ------------------------------------------------------- |------------------------------------------------------- |
+Main | [Release servers](http://servers.lunamultiplayer.com:8701/) | [Nightly servers](http://servers.lunamultiplayer.com:8751/) |
+PictoCube | [Release servers](http://pictocube.ddns.net:8701/) | [Nightly servers](http://pictocube.ddns.net:8711/) |
+Tekbot | [Release servers](http://ms.lmp.dnsd.info:8701/) | [Nightly servers](http://ms.lmp.dnsd.info:8751/) |
+
 
 ### Status:
 
