@@ -47,6 +47,7 @@ namespace LmpClient.Systems.SettingsSys
                 {
                     Difficulty =
                     {
+                        AllowOtherLaunchSites = msgData.AllowOtherLaunchSites,
                         AllowStockVessels = msgData.AllowStockVessels,
                         AutoHireCrews = msgData.AutoHireCrews,
                         BypassEntryPurchaseAfterResearch = msgData.BypassEntryPurchaseAfterResearch,

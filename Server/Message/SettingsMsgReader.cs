@@ -40,6 +40,7 @@ namespace Server.Message
             {
                 msgData.EnableCommNet = GameplaySettings.SettingsStore.CommNetwork;
                 msgData.RespawnTimer = GameplaySettings.SettingsStore.RespawnTime;
+                msgData.AllowOtherLaunchSites = GameplaySettings.SettingsStore.AllowOtherLaunchSites;
                 msgData.AllowStockVessels = GameplaySettings.SettingsStore.AllowStockVessels;
                 msgData.AutoHireCrews = GameplaySettings.SettingsStore.AutoHireCrews;
                 msgData.BypassEntryPurchaseAfterResearch = GameplaySettings.SettingsStore.BypassEntryPurchaseAfterResearch;
