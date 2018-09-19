@@ -45,6 +45,7 @@ namespace LmpClient.Systems.SettingsSys
             {
                 SettingsSystem.ServerSettings.ServerParameters = new GameParameters
                 {
+                    preset = GameParameters.Preset.Custom,
                     Difficulty =
                     {
                         AllowOtherLaunchSites = msgData.AllowOtherLaunchSites,
