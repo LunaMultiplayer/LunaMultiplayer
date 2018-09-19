@@ -360,7 +360,8 @@ namespace LmpClient
 
             //Set difficulty
             HighLogic.CurrentGame.Parameters = SettingsSystem.ServerSettings.ServerParameters;
-            SetAdvancedAndCommNetParams(HighLogic.CurrentGame);
+            SetAdvancedParams(HighLogic.CurrentGame);
+            SetCommNetParams(HighLogic.CurrentGame);
 
             //Set universe time
             HighLogic.CurrentGame.flightState.universalTime = WarpSystem.Singleton.CurrentSubspaceTime;
@@ -382,51 +383,50 @@ namespace LmpClient
             LunaLog.Log("[LMP]: Started!");
         }
 
-        public void SetAdvancedAndCommNetParams(Game currentGame)
+        public void SetAdvancedParams(Game currentGame)
         {
-            if (SettingsSystem.ServerSettings.ServerCommNetParameters != null)
-            {
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().EnableKerbalExperience =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.EnableKerbalExperience;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ImmediateLevelUp =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.ImmediateLevelUp;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().AllowNegativeCurrency =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.AllowNegativeCurrency;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ActionGroupsAlways =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.ActionGroupsAlways;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().GKerbalLimits =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.GKerbalLimits;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().GPartLimits =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.GPartLimits;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().KerbalGToleranceMult =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.KerbalGToleranceMult;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().PressurePartLimits =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.PressurePartLimits;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().BuildingImpactDamageMult =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.BuildingImpactDamageMult;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().PartUpgradesInCareer =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.PartUpgradesInCareer;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().PartUpgradesInSandbox =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.PartUpgradesInSandbox;
-                currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ResourceTransferObeyCrossfeed =
-                    SettingsSystem.ServerSettings.ServerAdvancedParameters.ResourceTransferObeyCrossfeed;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().EnableKerbalExperience =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.EnableKerbalExperience;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ImmediateLevelUp =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.ImmediateLevelUp;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().AllowNegativeCurrency =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.AllowNegativeCurrency;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ActionGroupsAlways =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.ActionGroupsAlways;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().GKerbalLimits =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.GKerbalLimits;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().GPartLimits =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.GPartLimits;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().KerbalGToleranceMult =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.KerbalGToleranceMult;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().PressurePartLimits =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.PressurePartLimits;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().BuildingImpactDamageMult =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.BuildingImpactDamageMult;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().PartUpgradesInCareer =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.PartUpgradesInCareer;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().PartUpgradesInSandbox =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.PartUpgradesInSandbox;
+            currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ResourceTransferObeyCrossfeed =
+                SettingsSystem.ServerSettings.ServerAdvancedParameters.ResourceTransferObeyCrossfeed;
+        }
 
-                if (SettingsSystem.ServerSettings.ServerCommNetParameters != null)
-                {
-                    currentGame.Parameters.CustomParams<CommNetParams>().enableGroundStations =
-                        SettingsSystem.ServerSettings.ServerCommNetParameters.enableGroundStations;
-                    currentGame.Parameters.CustomParams<CommNetParams>().requireSignalForControl =
-                        SettingsSystem.ServerSettings.ServerCommNetParameters.requireSignalForControl;
-                    currentGame.Parameters.CustomParams<CommNetParams>().rangeModifier =
-                        SettingsSystem.ServerSettings.ServerCommNetParameters.rangeModifier;
-                    currentGame.Parameters.CustomParams<CommNetParams>().DSNModifier =
-                        SettingsSystem.ServerSettings.ServerCommNetParameters.DSNModifier;
-                    currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierVac =
-                        SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierVac;
-                    currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierAtm =
-                        SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierAtm;
-                }
-            }
+        public void SetCommNetParams(Game currentGame)
+        {
+            currentGame.Parameters.CustomParams<CommNetParams>().plasmaBlackout =
+                SettingsSystem.ServerSettings.ServerCommNetParameters.plasmaBlackout;
+            currentGame.Parameters.CustomParams<CommNetParams>().enableGroundStations =
+                SettingsSystem.ServerSettings.ServerCommNetParameters.enableGroundStations;
+            currentGame.Parameters.CustomParams<CommNetParams>().requireSignalForControl =
+                SettingsSystem.ServerSettings.ServerCommNetParameters.requireSignalForControl;
+            currentGame.Parameters.CustomParams<CommNetParams>().rangeModifier =
+                SettingsSystem.ServerSettings.ServerCommNetParameters.rangeModifier;
+            currentGame.Parameters.CustomParams<CommNetParams>().DSNModifier =
+                SettingsSystem.ServerSettings.ServerCommNetParameters.DSNModifier;
+            currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierVac =
+                SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierVac;
+            currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierAtm =
+                SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierAtm;
         }
 
         private static void HandleCommandLineArgs()
