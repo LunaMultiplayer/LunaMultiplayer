@@ -7,6 +7,9 @@
 #---------------------------------#
 
 version: $(smallversion).{build}
+
+# Do not build on tags (GitHub and BitBucket)
+skip_tags: true
 #Do not build if we change any of this files
 skip_commits:
   files:
