@@ -52,13 +52,13 @@ Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-in
 ---
 ### Servers:
 
-Check how many servers are up and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions
+You can check how many servers are up and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions through our [Master servers](../../wiki/Master-server)
 
-| Master server | Release |Nightly |
-| ------------  | ------------------------------------------------------- |------------------------------------------------------- |
-Main | [Release servers](http://servers.lunamultiplayer.com:8701/) | [Nightly servers](http://servers.lunamultiplayer.com:8751/) |
-PictoCube | [Release servers](http://pictocube.ddns.net:8701/) | [Nightly servers](http://pictocube.ddns.net:8711/) |
-Tekbot | [Release servers](http://ms.lmp.dnsd.info:8701/) | [Nightly servers](http://ms.lmp.dnsd.info:8751/) |
+| Master server | Release | Nightly |
+| ------------  | ------- |-------- |
+Main | [![Release servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://servers.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://servers.lunamultiplayer.com:8751) |
+PictoCube | [![Release servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://pictocube.ddns.net:8701) | [![Nightly servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://pictocube.ddns.net:8711) |
+Tekbot | [![Release servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://ms.lmp.dnsd.info:8701) | [![Nightly servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://ms.lmp.dnsd.info:8751) |
 
 ---
 ### Status:
