@@ -1,0 +1,99 @@
+pid = b2f2b785477c4f5a976155ccbc758cd6
+name = Ast. KMC-277
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 510414447878049.31
+lct = 510414447878049.31
+lastUT = -1
+root = 0
+lat = -0.058081715264396795
+lon = -6.2852192767787383
+alt = 13376597378.643753
+hgt = -1
+nrm = 0,1,0
+rot = -0.691991389,-0.324569941,-0.542521834,0.348528862
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14130162879.725849
+	ECC = 0.04415853272702909
+	INC = 0.11127012749861272
+	LPE = 288.99040960723613
+	LAN = 256.88817514659411
+	MNA = -0.36183789068628813
+	EPH = 510414465825296.94
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 510414447878049.31
+	lifetime = Infinity
+	refTime = Infinity
+	size = 1
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

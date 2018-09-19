@@ -1,0 +1,94 @@
+pid = dc261259c278444897eff757bee443f0
+name = Ast. DVF-413
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314390408167.47
+lct = 228314390408167.47
+lastUT = -1
+root = 0
+lat = -0.090597265877432664
+lon = 112.29344569037269
+alt = 13382864369.767738
+hgt = -1
+nrm = 0,1,0
+rot = -0.318979442,0.409314513,0.000997958123,0.85481745
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15519735545.950825
+	ECC = 0.12154639625977265
+	INC = 1.5752446230690813
+	LPE = 349.67879161917932
+	LAN = 242.39590973391626
+	MNA = 0.12727743847129891
+	EPH = 228314412904549.5
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 29
+	lastObservedTime = 228314390408167.47
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+}

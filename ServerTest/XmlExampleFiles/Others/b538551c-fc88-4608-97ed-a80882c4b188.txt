@@ -1,0 +1,96 @@
+pid = b538551cfc88460897eda80882c4b188
+name = Ast. OHU-798
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21603614.158025652
+lct = 21603614.158025652
+lastUT = -1
+root = 0
+lat = -0.55655726984013643
+lon = -58.193827938373843
+alt = 13505207967.176849
+hgt = -1
+nrm = 0,1,0
+rot = -0.62468791,0.641427338,-0.422895253,0.139626667
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13732951373.112497
+	ECC = 0.012663321668275372
+	INC = 1.0824977440261701
+	LPE = 312.87872633288896
+	LAN = 93.880872147871969
+	MNA = 0.66025251616838443
+	EPH = 25192495.06867633
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21603614.158025652
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,113 @@
+pid = 91c32e2ca7a4433ea40c2fbf6624c996
+name = Ast. YYZ-238
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 853487.30887443933
+lct = 853487.30887443933
+lastUT = -1
+root = 0
+lat = -1.4528147171480295
+lon = -82.452459935189481
+alt = 16326117752.817944
+hgt = -1
+nrm = 0,1,0
+rot = 0.385111332,0.254400462,-0.739004135,0.490757197
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15357405707.675816
+	ECC = 0.11586930817894274
+	INC = 2.2800024581516043
+	LPE = 182.04421878000204
+	LAN = 308.35536137014265
+	MNA = 0.02645581757546156
+	EPH = 7988333.3884007437
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 853487.30887443933
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	ModuleLifeSupportSystem
+	{
+		LastUpdateTime = 0
+	}
+	SnacksVesselModule
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+	ModuleStabilization
+	{
+	}
+	ModuleSwapConverterUpdate
+	{
+	}
+}

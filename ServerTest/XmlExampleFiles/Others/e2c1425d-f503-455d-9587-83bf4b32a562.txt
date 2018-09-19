@@ -1,0 +1,96 @@
+pid = e2c1425df503455d958783bf4b32a562
+name = Ast. KGT-440
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 510414447799887.94
+lct = 510414447799887.94
+lastUT = -1
+root = 0
+lat = -0.73824053525589706
+lon = 36.781148499286346
+alt = 13753276070.359432
+hgt = -1
+nrm = 0,1,0
+rot = 0.293648511,-0.353237748,0.516322076,0.722775996
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13900320474.316824
+	ECC = 0.024302037540543213
+	INC = 0.81709341313726924
+	LPE = 355.74991854245218
+	LAN = 318.73443520355204
+	MNA = 0.014390847161218599
+	EPH = 510414469708785.88
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 510414447799887.94
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

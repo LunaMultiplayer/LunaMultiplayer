@@ -1,0 +1,96 @@
+pid = 14d09b991db946d6ada5fd578067509b
+name = Ast. IVK-548
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 116988023.52163333
+lct = 116988023.52163333
+lastUT = -1
+root = 0
+lat = -0.55321082973938651
+lon = -51.076664340551012
+alt = 13699642052.629999
+hgt = -1
+nrm = 0,1,0
+rot = 0.0125767412,-0.448454887,-0.758098423,0.473304212
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 17398959516.9091
+	ECC = 0.21658788108532648
+	INC = 1.1219349771677796
+	LPE = 179.65180487273238
+	LAN = 29.402437101035787
+	MNA = 0.036969473366532488
+	EPH = 129677847.59395643
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 116988023.52163333
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

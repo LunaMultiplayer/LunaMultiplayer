@@ -1,0 +1,178 @@
+pid = 71a203c15c594c669efbcf241f2d7e8f
+name = Marsoc Station Core Relay
+type = Relay
+sit = ESCAPING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 0.15625
+lct = 228314486833699.47
+lastUT = 228314486833706.13
+root = 0
+lat = 0.069875179160699297
+lon = -75.27570698520114
+alt = 258837.36684766447
+hgt = -1
+nrm = -0.229258657,-0.290572703,0.928982258
+rot = -0.943197727,-0.142940953,-0.261437654,-0.146957099
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = -1
+ORBIT
+{
+	SMA = -209661.45183265849
+	ECC = 1.0722702593667928
+	INC = 58.201379302483858
+	LPE = 206.12006822244922
+	LAN = 156.57257248608107
+	MNA = 2.6137447147664301
+	EPH = 228314486833699.63
+	REF = 1
+}
+PART
+{
+	name = RelayAntenna5
+	cid = 4294070912
+	uid = 2117832826
+	mid = 2573949555
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1.00000072
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 1
+	srfN = srfAttach, -1
+	attN = bottom, -1
+	mass = 0.150000006
+	shielded = False
+	temp = 307.73237691737319
+	tempExt = 306.65527879288464
+	tempExtUnexp = 307.92960280852907
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Marsoc-Space-Command
+	rTrf = RelayAntenna5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDataTransmitter
+		isEnabled = True
+		xmitIncomplete = False
+		stagingEnabled = True
+		canComm = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			StartTransmissionAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTripLogger
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		Log
+		{
+			flight = 0
+			0 = Flight,Kerbin
+			0 = Suborbit,Kerbin
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = True, 228314486833692
+	Gear = False, 0
+	Light = True, 228314486833585
+	RCS = False, 0
+	SAS = True, 228314486833418
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	ModuleDynamicBatteryStorage
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = False
+	}
+}

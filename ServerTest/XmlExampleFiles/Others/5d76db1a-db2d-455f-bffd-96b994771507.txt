@@ -1,0 +1,96 @@
+pid = 5d76db1adb2d455fbffd96b994771507
+name = Ast. DEJ-429
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314448099854.69
+lct = 228314448099854.69
+lastUT = -1
+root = 0
+lat = 0.17921284399713636
+lon = -20.115040181564293
+alt = 14738549138.590721
+hgt = -1
+nrm = 0,1,0
+rot = -0.905287206,-0.0619029664,-0.412352085,0.0811713785
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15121649407.855833
+	ECC = 0.10507020277787342
+	INC = 0.3823971793906128
+	LPE = 119.59938246953089
+	LAN = 275.15042244384961
+	MNA = 0.32318599430327533
+	EPH = 228314472622788.91
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314448099854.69
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = 2fac11b5085d4acaab09b4b507f8e205
+name = Ast. FCI-067
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 70863079.819163576
+lct = 70863079.819163576
+lastUT = -1
+root = 0
+lat = 0.58516514718548029
+lon = 97.376979534472142
+alt = 14081750389.09424
+hgt = -1
+nrm = 0,1,0
+rot = -0.182009012,-0.172939166,0.889610827,0.381519854
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13851731427.208311
+	ECC = 0.036305946858284706
+	INC = 0.94135569922707696
+	LPE = 230.16393088475297
+	LAN = 71.511503441008017
+	MNA = -0.83769775602538665
+	EPH = 103044291.83667833
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 70863079.819163576
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = e2b15648dfe74150962a80e55b072eef
+name = Ast. ZQY-835
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314464688677.03
+lct = 228314464688677.03
+lastUT = -1
+root = 0
+lat = 1.4774281077951945
+lon = 7.3576872973758451
+alt = 14803378158.530025
+hgt = -1
+nrm = 0,1,0
+rot = 0.314788818,0.418572307,-0.776387811,0.35060966
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14433148722.372189
+	ECC = 0.061710721645513687
+	INC = 1.8649026895184704
+	LPE = 190.0241211516111
+	LAN = 62.20409530471909
+	MNA = -0.052797890956445222
+	EPH = 228314468312972.78
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314464688677.03
+	lifetime = Infinity
+	refTime = Infinity
+	size = 1
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

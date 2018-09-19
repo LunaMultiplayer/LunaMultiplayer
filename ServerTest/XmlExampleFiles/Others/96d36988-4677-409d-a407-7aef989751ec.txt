@@ -1,0 +1,96 @@
+pid = 96d369884677409da4077aef989751ec
+name = Ast. GWY-427
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 116923534.42874554
+lct = 116923534.42874554
+lastUT = -1
+root = 0
+lat = -1.4148813461728245
+lon = -138.43073955242093
+alt = 13420577484.553745
+hgt = -1
+nrm = 0,1,0
+rot = -0.874821246,0.316392183,-0.358166367,0.0793769658
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14178990214.346394
+	ECC = 0.042872502467945474
+	INC = 2.0153321636204606
+	LPE = 187.96997253122379
+	LAN = 233.26736439900719
+	MNA = -0.19150227846561685
+	EPH = 125503460.43901183
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 116923534.42874554
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

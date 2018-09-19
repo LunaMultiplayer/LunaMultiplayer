@@ -1,0 +1,835 @@
+pid = c734d720ecdc419f9bd3498d64565914
+name = Communication falcon
+type = Relay
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 584978.0626745075
+lct = 23256494.407920133
+lastUT = 23841472.470594641
+root = 0
+lat = 0.50863906148978499
+lon = 42.89781616618545
+alt = 257498.12465996621
+hgt = -1
+nrm = -0.261517346,0.891716838,-0.369391352
+rot = 0.650691926,0.722313881,-0.00870230049,0.234066337
+CoM = -4.47034836E-08,-0.468996465,8.64267349E-07
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0.2740002
+cHdg = 1.106
+cMod = 0
+ORBIT
+{
+	SMA = 851837.80351765489
+	ECC = 0.010909662387600936
+	INC = 1.0558971605985834
+	LPE = 279.21534828548209
+	LAN = 112.13451968017648
+	MNA = -2.2169840940618837
+	EPH = 23841472.470594641
+	REF = 1
+}
+PART
+{
+	name = dockingPort2
+	cid = 4294196542
+	uid = 1388794721
+	mid = 1550256162
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, -1
+	attN = bottom, 1
+	mass = 0.0500000007
+	shielded = False
+	temp = 216.64020504743419
+	tempExt = 216.99444520618209
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = dockingPort2 (Communication falcon)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Ready
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = rcsTankMini
+	cid = 4294162830
+	uid = 3931968131
+	mid = 1550256162
+	launchID = 1
+	parent = 0
+	position = 0,-0.1875,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, 0
+	attN = bottom, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 216.41236006481529
+	tempExt = 216.58250465097481
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = rcsTankMini
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	RESOURCE
+	{
+		name = MonoPropellant
+		amount = 75.472056194497043
+		maxAmount = 80
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = rcsTankMini
+	cid = 4294156214
+	uid = 913029181
+	mid = 1550256162
+	launchID = 1
+	parent = 1
+	position = 0,-0.5625,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, 1
+	attN = bottom, 3
+	mass = 0.0500000007
+	shielded = False
+	temp = 216.4090288580451
+	tempExt = 216.35214988241825
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = rcsTankMini
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	RESOURCE
+	{
+		name = MonoPropellant
+		amount = 75.472056194497043
+		maxAmount = 80
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = trussAdapter
+	cid = 4294196502
+	uid = 327911935
+	mid = 1550256162
+	launchID = 1
+	parent = 2
+	position = 0,-1.1608295440673828,0
+	rotation = -1,0,0,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = bottom, 2
+	attN = top, -1
+	mass = 0.25
+	shielded = False
+	temp = 216.40323095082491
+	tempExt = 216.3026544746331
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = trussAdapter
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+}
+PART
+{
+	name = structuralPanel1
+	cid = 4294138250
+	uid = 1850621158
+	mid = 1550256162
+	launchID = 1
+	parent = 3
+	position = -8.1956386566162109E-08,-0.30228805541992188,0.58754020929336548
+	rotation = -0.49999997,-0.50000006,0.49999997,0.50000006
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 6
+	sym = 8
+	sym = 10
+	srfN = srfAttach, 3
+	attN = top, -1
+	attN = bottom, -1
+	mass = 0.075000003
+	shielded = False
+	temp = 216.39561394834007
+	tempExt = 216.33328524859795
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = structuralPanel1
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293679460
+	uid = 3203272997
+	mid = 1550256162
+	launchID = 1
+	parent = 4
+	position = 0.027980484068393707,-0.25385856628417969,0.66020339727401733
+	rotation = 0.70710665,4.47034907E-08,-0.707106829,5.96046448E-08
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 7
+	sym = 9
+	sym = 11
+	srfN = srfAttach, 4
+	mass = 0.0500000007
+	shielded = False
+	temp = 216.40149552418993
+	tempExt = 216.27833165857874
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = structuralPanel1
+	cid = 4294133822
+	uid = 3159486713
+	mid = 1550256162
+	launchID = 1
+	parent = 3
+	position = -0.5875401496887207,-0.30228805541992188,-4.6566128730773926E-08
+	rotation = -0.707106709,-0.707106829,0,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 4
+	sym = 8
+	sym = 10
+	srfN = srfAttach, 3
+	attN = top, -1
+	attN = bottom, -1
+	mass = 0.075000003
+	shielded = False
+	temp = 216.37971691819112
+	tempExt = 216.22362103429148
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = structuralPanel1
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293679396
+	uid = 2801975792
+	mid = 1550256162
+	launchID = 1
+	parent = 6
+	position = -0.66020333766937256,-0.25385856628417969,0.027980517596006393
+	rotation = 1,0,-2.98023188E-08,2.98023188E-08
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 5
+	sym = 9
+	sym = 11
+	srfN = srfAttach, 6
+	mass = 0.0500000007
+	shielded = False
+	temp = 216.39811493168608
+	tempExt = 216.27810616617342
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = structuralPanel1
+	cid = 4294133790
+	uid = 2839013048
+	mid = 1550256162
+	launchID = 1
+	parent = 3
+	position = 1.3411045074462891E-07,-0.30228805541992188,-0.58754020929336548
+	rotation = -0.49999994,-0.50000006,-0.5,-0.50000006
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 4
+	sym = 6
+	sym = 10
+	srfN = srfAttach, 3
+	attN = top, -1
+	attN = bottom, -1
+	mass = 0.075000003
+	shielded = False
+	temp = 216.38062294591302
+	tempExt = 216.24136908842701
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = structuralPanel1
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293680302
+	uid = 1784305118
+	mid = 1550256162
+	launchID = 1
+	parent = 8
+	position = -0.027980443090200424,-0.25385856628417969,-0.66020339727401733
+	rotation = 0.707106829,1.49011612E-08,0.707106829,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 5
+	sym = 7
+	sym = 11
+	srfN = srfAttach, 8
+	mass = 0.0500000007
+	shielded = False
+	temp = 216.39801419775196
+	tempExt = 216.22055370312384
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = structuralPanel1
+	cid = 4294133758
+	uid = 4061312707
+	mid = 1550256162
+	launchID = 1
+	parent = 3
+	position = 0.5875401496887207,-0.30228805541992188,1.1734664440155029E-07
+	rotation = 0,0,-0.707106709,-0.707106829
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 4
+	sym = 6
+	sym = 8
+	srfN = srfAttach, 3
+	attN = top, -1
+	attN = bottom, -1
+	mass = 0.075000003
+	shielded = False
+	temp = 216.3828088392147
+	tempExt = 216.25359653555441
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = structuralPanel1
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293679332
+	uid = 2256788385
+	mid = 1550256162
+	launchID = 1
+	parent = 10
+	position = 0.66020333766937256,-0.25385856628417969,-0.027980444952845573
+	rotation = 2.98023188E-08,-2.98023188E-08,1,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 5
+	sym = 7
+	sym = 9
+	srfN = srfAttach, 10
+	mass = 0.0500000007
+	shielded = False
+	temp = 216.39852882184476
+	tempExt = 216.22862741249523
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 23256499.74792
+	Gear = False, 0
+	Light = False, 0
+	RCS = True, 23256490.2879202
+	SAS = True, 23256490.5079202
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+TARGET
+{
+	type = Vessel
+	vesselID = 9cc1b770-3c45-4194-b1d9-36e206e9981f
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = False
+	}
+}

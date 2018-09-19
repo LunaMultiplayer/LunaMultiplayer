@@ -1,0 +1,113 @@
+pid = 80b3195fcb79459c82733b3a1002c65a
+name = Ast. KBW-543
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 853487.30887443933
+lct = 853487.30887443933
+lastUT = -1
+root = 0
+lat = -0.14513110428919293
+lon = -57.593052374338285
+alt = 13832612881.350843
+hgt = -1
+nrm = 0,1,0
+rot = -0.475411087,-0.471108913,0.0740328282,0.739296854
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14594886638.272556
+	ECC = 0.069945750744217522
+	INC = 0.17280076514666898
+	LPE = 7.0597267083000919
+	LAN = 350.77325244675802
+	MNA = -0.24984740556163207
+	EPH = 22534340.483597029
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 853487.30887443933
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	ModuleLifeSupportSystem
+	{
+		LastUpdateTime = 0
+	}
+	SnacksVesselModule
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+	ModuleStabilization
+	{
+	}
+	ModuleSwapConverterUpdate
+	{
+	}
+}

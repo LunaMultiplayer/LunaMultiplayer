@@ -1,0 +1,96 @@
+pid = 98c82afbacde495a86fe69bbd52b7b3e
+name = Ast. GBI-004
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21729600.569146238
+lct = 21729600.569146238
+lastUT = -1
+root = 0
+lat = 0.8142006107965718
+lon = -29.986807705630749
+alt = 16293031320.544626
+hgt = -1
+nrm = 0,1,0
+rot = -0.33228001,0.122211136,-0.0662877709,0.932877541
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16782083444.977383
+	ECC = 0.19254714305017601
+	INC = 0.81521001332572751
+	LPE = 350.03500256337196
+	LAN = 350.86540149634067
+	MNA = -0.067457410946180282
+	EPH = 31583295.873790763
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21729600.569146238
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

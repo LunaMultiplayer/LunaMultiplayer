@@ -1,0 +1,96 @@
+pid = 5d6b4f5291c44728bc2ec6b5405fcb7c
+name = Ast. TVL-306
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314449459467.75
+lct = 228314449459467.75
+lastUT = -1
+root = 0
+lat = 0.56947628200840361
+lon = -78.486727841462113
+alt = 13982156823.024754
+hgt = -1
+nrm = 0,1,0
+rot = -0.43686834,0.504389048,0.587458074,0.457854569
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14162798772.071527
+	ECC = 0.037692403101591589
+	INC = 0.57205813895739488
+	LPE = 354.59360871140655
+	LAN = 202.29058909390437
+	MNA = -0.10304207222676101
+	EPH = 228314476017495.19
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314449459467.75
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

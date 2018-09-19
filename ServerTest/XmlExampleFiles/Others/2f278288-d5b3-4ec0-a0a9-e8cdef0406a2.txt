@@ -1,0 +1,91 @@
+pid = 2f278288d5b34ec0a0a9e8cdef0406a2
+name = Ast. YRD-694
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 130593270.37633863
+lct = 130593270.37633863
+lastUT = -1
+root = 0
+lat = 1.8005030339061783
+lon = -171.9370298922249
+alt = 14250150804.252653
+hgt = -1
+nrm = 0,1,0
+rot = -0.635724843,-0.726501524,-0.189832047,0.178922877
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14241353009.749695
+	ECC = 0.042726172783873861
+	INC = 1.85917115121221
+	LPE = 345.87257943205265
+	LAN = 191.3513881278202
+	MNA = 0.14380599943423841
+	EPH = 147415421.93161741
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 21
+	lastObservedTime = 21451210.137163553
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

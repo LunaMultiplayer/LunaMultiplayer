@@ -1,0 +1,99 @@
+pid = dcd8e73cae9e440fa69b3a7446e47fe0
+name = Ast. IKQ-265
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 1782440.9237731856
+lct = 1782440.9237731856
+lastUT = -1
+root = 0
+lat = -0.15854921387519014
+lon = -121.580108739834
+alt = 14195888582.793404
+hgt = -1
+nrm = 0,1,0
+rot = 0.676916718,0.0403530747,0.561911166,0.47372058
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14467757841.846161
+	ECC = 0.0694627577257175
+	INC = 0.16610098724588734
+	LPE = 346.05543163520991
+	LAN = 31.130816457265212
+	MNA = 0.47316589286190569
+	EPH = 15037971.649120217
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 1782440.9237731856
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

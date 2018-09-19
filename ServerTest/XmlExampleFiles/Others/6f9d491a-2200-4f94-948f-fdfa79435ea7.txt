@@ -1,0 +1,96 @@
+pid = 6f9d491a22004f94948ffdfa79435ea7
+name = Ast. OPQ-991
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 220339132157721.47
+lct = 220339132157721.47
+lastUT = -1
+root = 0
+lat = 0.88461134531758256
+lon = -41.736554754294971
+alt = 14322266574.239439
+hgt = -1
+nrm = 0,1,0
+rot = -0.770172477,0.483334988,0.225599468,0.349752039
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14331424648.385485
+	ECC = 0.0553430936916448
+	INC = 0.89208587404850026
+	LPE = 208.96214194746958
+	LAN = 5.6085823184496917
+	MNA = -0.27820762514779296
+	EPH = 220339144592114.31
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 220339132157721.47
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

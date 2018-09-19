@@ -1,0 +1,96 @@
+pid = 83f796435d964945a65dc5dd72790bfc
+name = Ast. DOQ-342
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314464688677.03
+lct = 228314464688677.03
+lastUT = -1
+root = 0
+lat = 0.43920345010130346
+lon = 103.7709053164988
+alt = 15407470940.660208
+hgt = -1
+nrm = 0,1,0
+rot = 0.705942512,-0.550589919,-0.166016296,0.413442075
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14624997182.325237
+	ECC = 0.071394268492632765
+	INC = 2.1633313284791011
+	LPE = 191.11116871946325
+	LAN = 199.29343109184381
+	MNA = -0.16107219512801335
+	EPH = 228314490064612
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314464688677.03
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

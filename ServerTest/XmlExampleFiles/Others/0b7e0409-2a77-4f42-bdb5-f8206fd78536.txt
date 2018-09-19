@@ -1,0 +1,96 @@
+pid = 0b7e04092a774f42bdb5f8206fd78536
+name = Ast. VIS-417
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 131409214.56644902
+lct = 131409214.56644902
+lastUT = -1
+root = 0
+lat = -1.3290286599653636
+lon = -112.53644389138809
+alt = 13763536056.665203
+hgt = -1
+nrm = 0,1,0
+rot = -0.222579882,-0.78805244,0.555814862,0.143183291
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13906962151.556078
+	ECC = 0.021478994046903212
+	INC = 1.3581942284794359
+	LPE = 167.46407940379788
+	LAN = 33.244985448118484
+	MNA = 0.20639526858395704
+	EPH = 157307550.45570236
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 131409214.56644902
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

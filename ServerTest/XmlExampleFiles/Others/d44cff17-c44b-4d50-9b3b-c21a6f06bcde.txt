@@ -1,0 +1,96 @@
+pid = d44cff17c44b4d509b3bc21a6f06bcde
+name = Ast. LML-926
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21603614.158025652
+lct = 21603614.158025652
+lastUT = -1
+root = 0
+lat = 1.9169740209533339
+lon = 161.57504413346317
+alt = 16864514776.349182
+hgt = -1
+nrm = 0,1,0
+rot = 0.394671232,0.532873988,-0.69178611,0.285852969
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16376673868.844484
+	ECC = 0.17086404067360098
+	INC = 2.2604533794575667
+	LPE = 7.1903936259786922
+	LAN = 42.573518503365165
+	MNA = -0.042770296613956628
+	EPH = 42597560.569411203
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21603614.158025652
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

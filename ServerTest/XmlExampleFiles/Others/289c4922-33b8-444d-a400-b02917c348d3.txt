@@ -1,0 +1,96 @@
+pid = 289c492233b8444da400b02917c348d3
+name = Ast. JRS-756
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 510414447797668.63
+lct = 510414447797668.63
+lastUT = -1
+root = 0
+lat = 0.47456347822372918
+lon = -123.2079119630618
+alt = 15983687684.121618
+hgt = -1
+nrm = 0,1,0
+rot = -0.760285974,0.225836456,-0.604070425,0.077859208
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15498828130.509075
+	ECC = 0.11995765088322063
+	INC = 0.62978306061976341
+	LPE = 11.267728228806282
+	LAN = 270.41227239295591
+	MNA = -0.073918852990493139
+	EPH = 510414477917293.69
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 510414447797668.63
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

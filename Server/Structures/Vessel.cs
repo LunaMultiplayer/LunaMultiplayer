@@ -20,13 +20,13 @@ namespace Server.Structures
         {
             Fields = cfgNode.GetAllValues().ToDictionary(k => k.Key, k => k.Value);
             Parts = cfgNode.GetNodes("PART").ToDictionary(n => uint.Parse(n.GetValue("uid")), n => new Part(n));
-            Orbit = cfgNode.GetNodes("ORBIT")[0].GetAllValues().ToDictionary(n => n.Key, n=> double.Parse(n.Value));
-            ActionGroups = cfgNode.GetNodes("ACTIONGROUPS")[0].GetAllValues().ToDictionary(n => n.Key, n => n.Value);
+            Orbit = cfgNode.GetNodes("ORBIT").First().GetAllValues().ToDictionary(n => n.Key, n=> double.TryParse(n.Value, out var obtVal) ? obtVal : 0);
+            ActionGroups = cfgNode.GetNodes("ACTIONGROUPS").First().GetAllValues().ToDictionary(n => n.Key, n => n.Value);
 
-            Discovery = cfgNode.GetNodes("DISCOVERY")[0];
-            FlightPlan = cfgNode.GetNodes("FLIGHTPLAN")[0];
-            CtrlState = cfgNode.GetNodes("CTRLSTATE")[0];
-            VesselModules = cfgNode.GetNodes("VESSELMODULES")[0];
+            Discovery = cfgNode.GetNodes("DISCOVERY").First();
+            FlightPlan = cfgNode.GetNodes("FLIGHTPLAN").First();
+            CtrlState = cfgNode.GetNodes("CTRLSTATE").First();
+            VesselModules = cfgNode.GetNodes("VESSELMODULES").First();
         }
     }
 }

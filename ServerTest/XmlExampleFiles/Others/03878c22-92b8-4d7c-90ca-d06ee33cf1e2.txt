@@ -1,0 +1,91 @@
+pid = 03878c2292b84d7c90cad06ee33cf1e2
+name = Ast. SJZ-704
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 131409214.56644902
+lct = 131409214.56644902
+lastUT = -1
+root = 0
+lat = -0.15262577820177911
+lon = -80.500954481625485
+alt = 13293029681.817814
+hgt = -1
+nrm = 0,1,0
+rot = -0.0360086039,0.395555675,-0.407959759,0.822075367
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14426447366.954338
+	ECC = 0.060652298518262253
+	INC = 0.66936823653757915
+	LPE = 187.9890966502096
+	LAN = 153.99821434913576
+	MNA = -0.24305473183398474
+	EPH = 151002569.694159
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 131409214.56644902
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

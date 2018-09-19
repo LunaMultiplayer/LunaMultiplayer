@@ -1,0 +1,96 @@
+pid = 0e9661345ad3409489443f786373063f
+name = Ast. XGJ-290
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 78704846.043742463
+lct = 78704846.043742463
+lastUT = -1
+root = 0
+lat = 0.14862379758649305
+lon = -30.104304095113278
+alt = 13387180212.08353
+hgt = -1
+nrm = 0,1,0
+rot = 0.260851026,-0.342546612,-0.681958914,0.591228068
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13754755419.138233
+	ECC = 0.010998742399990886
+	INC = 0.27085666876260434
+	LPE = 192.70514681737956
+	LAN = 250.54627663136083
+	MNA = -0.68880590498861116
+	EPH = 106934660.83177228
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 78704846.043742463
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

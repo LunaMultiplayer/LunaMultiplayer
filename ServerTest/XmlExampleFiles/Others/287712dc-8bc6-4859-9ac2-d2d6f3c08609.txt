@@ -1,0 +1,96 @@
+pid = 287712dc8bc648599ac2d2d6f3c08609
+name = Аст. ZRL-126
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 10475535.001774626
+lct = 10475535.001774626
+lastUT = -1
+root = 0
+lat = 0.21193346046656095
+lon = -141.28151961949789
+alt = 15805815991.964834
+hgt = -1
+nrm = 0,1,0
+rot = -0.505400956,-0.0773269162,-0.564182222,0.648296952
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14823374964.167936
+	ECC = 0.085570244533772488
+	INC = 2.0267331724870141
+	LPE = 196.33955704456048
+	LAN = 302.33113193013764
+	MNA = -0.23059604767004641
+	EPH = 26156110.776249334
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 10475535.001774626
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

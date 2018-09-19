@@ -1,0 +1,96 @@
+pid = e23fa14c903f4cd5b203cd612e8b8322
+name = Ast. XJV-605
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314486783394.41
+lct = 228314486783394.41
+lastUT = -1
+root = 0
+lat = 0.36669991585183404
+lon = 116.9325389478518
+alt = 13340264254.640728
+hgt = -1
+nrm = 0,1,0
+rot = -0.101723634,-0.161715582,-0.973579347,0.125074968
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13808499806.117901
+	ECC = 0.015031295560608787
+	INC = 1.3254472109845432
+	LPE = 10.572007026990976
+	LAN = 260.36954736177853
+	MNA = -0.12951005129343554
+	EPH = 228314514698464.13
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314486783394.41
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

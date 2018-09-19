@@ -1,0 +1,96 @@
+pid = 82c1f06e3ce14dd7ba6c639db6faa51c
+name = Ast. FJT-961
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 218980348.38930342
+lct = 218980348.38930342
+lastUT = -1
+root = 0
+lat = 1.0820196512798339
+lon = -120.00625753318887
+alt = 13953629594.932457
+hgt = -1
+nrm = 0,1,0
+rot = 0.289943606,0.783952892,0.0560869761,0.546081424
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14800316398.045141
+	ECC = 0.081556013351809564
+	INC = 1.1413071108697825
+	LPE = 6.2718122214336818
+	LAN = 132.16849278217171
+	MNA = -0.072613051570670648
+	EPH = 238104923.15544075
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 218980348.38930342
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

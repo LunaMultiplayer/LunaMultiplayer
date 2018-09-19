@@ -1,0 +1,96 @@
+pid = 6b50898df4304062b3514cfd521784ab
+name = Ast. AWQ-932
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314449459467.75
+lct = 228314449459467.75
+lastUT = -1
+root = 0
+lat = -0.45884491056587073
+lon = -128.98766265123518
+alt = 13672191468.320049
+hgt = -1
+nrm = 0,1,0
+rot = -0.0894835368,0.646953404,0.741300762,0.154651731
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13755060449.891157
+	ECC = 0.013251192050970761
+	INC = 0.62493158986645436
+	LPE = 143.91959725149928
+	LAN = 294.47669850550182
+	MNA = 0.73650066103249179
+	EPH = 228314474258699.19
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314449459467.75
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

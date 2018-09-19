@@ -1,0 +1,96 @@
+pid = ed29ba3d40384f098bd58e4e33c9414c
+name = Ast. ZAP-202
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 76828084.939016044
+lct = 76828084.939016044
+lastUT = -1
+root = 0
+lat = -0.37797873782722036
+lon = 12.392638324163746
+alt = 14551416475.989838
+hgt = -1
+nrm = 0,1,0
+rot = -0.641243279,-0.359699667,-0.499247849,0.458448172
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14196166762.118694
+	ECC = 0.043848772364826212
+	INC = 0.41007657617000925
+	LPE = 59.795275003403766
+	LAN = 68.617195277639894
+	MNA = 0.010848297088366795
+	EPH = 81533217.755747005
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 76828084.939016044
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

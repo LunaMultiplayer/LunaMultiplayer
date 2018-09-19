@@ -1,0 +1,96 @@
+pid = 61d264ef6afb41c29c9f5565c062f5d2
+name = Ast. GBY-885
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 7601061.5741021233
+lct = 7601061.5741021233
+lastUT = -1
+root = 0
+lat = 0.12536454992546994
+lon = -92.74203143686367
+alt = 13510899812.359781
+hgt = -1
+nrm = 0,1,0
+rot = -0.271818012,-0.132704094,-0.837435246,0.455199659
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13692177943.971388
+	ECC = 0.010345320581790388
+	INC = 0.1909352555764626
+	LPE = 166.07094512979029
+	LAN = 80.436377918872722
+	MNA = -1.0053045442213164
+	EPH = 18614816.513435915
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 7601061.5741021233
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

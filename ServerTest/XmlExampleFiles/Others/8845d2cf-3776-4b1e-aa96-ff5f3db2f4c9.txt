@@ -1,0 +1,96 @@
+pid = 8845d2cf37764b1eaa96ff5f3db2f4c9
+name = Аст. RHH-146
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 8022068.55251728
+lct = 8022068.55251728
+lastUT = -1
+root = 0
+lat = 0.94992509855293428
+lon = 72.987509341880084
+alt = 15714773022.157806
+hgt = -1
+nrm = 0,1,0
+rot = -0.106127724,-0.492261976,0.392453909,0.769671977
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15280248385.239178
+	ECC = 0.11665761259420898
+	INC = 1.6921513439240856
+	LPE = 153.17219940102362
+	LAN = 243.90169513299577
+	MNA = 0.32848360597150672
+	EPH = 33769885.948525041
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 8022068.55251728
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

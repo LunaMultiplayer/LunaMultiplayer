@@ -1,0 +1,96 @@
+pid = 7e62150e3ad54d57b6e41026a2a33776
+name = Ast. SUD-250
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 218254409.12952909
+lct = 218254409.12952909
+lastUT = -1
+root = 0
+lat = 0.77635745610155094
+lon = 1.3962277168667041
+alt = 15010484529.459906
+hgt = -1
+nrm = 0,1,0
+rot = 0.574069917,-0.335898221,-0.57535094,0.476012021
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14993631431.551237
+	ECC = 0.097787589299583977
+	INC = 0.9639385462741914
+	LPE = 160.05728453320683
+	LAN = 26.424044440708485
+	MNA = 0.29520623514789618
+	EPH = 221579688.65029126
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 218254409.12952909
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

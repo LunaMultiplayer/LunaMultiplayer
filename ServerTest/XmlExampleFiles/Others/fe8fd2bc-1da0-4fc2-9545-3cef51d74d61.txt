@@ -1,0 +1,96 @@
+pid = fe8fd2bc1da04fc295453cef51d74d61
+name = Ast. LAG-022
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 71462834.827937722
+lct = 71462834.827937722
+lastUT = -1
+root = 0
+lat = 0.16681626596377463
+lon = 30.174229432806872
+alt = 15668042590.767332
+hgt = -1
+nrm = 0,1,0
+rot = -0.287647992,-0.651130736,-0.352012128,0.607762277
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15531867973.722168
+	ECC = 0.11880697326012876
+	INC = 0.1855236950349122
+	LPE = 173.07579445344814
+	LAN = 118.48824242561955
+	MNA = -0.010647140853473009
+	EPH = 85665878.922511354
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 71462834.827937722
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

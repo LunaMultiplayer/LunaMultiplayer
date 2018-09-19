@@ -1,0 +1,96 @@
+pid = e770890a1ea54cc2a3c90e072332e5bf
+name = Ast. OXS-848
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 11796934.302160805
+lct = 11796934.302160805
+lastUT = -1
+root = 0
+lat = 0.19304974622406509
+lon = -128.02400458306971
+alt = 13447047028.249086
+hgt = -1
+nrm = 0,1,0
+rot = -0.411103815,0.65653491,-0.561734796,0.290533423
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15094782884.431978
+	ECC = 0.093843224696396638
+	INC = 0.92872402588195535
+	LPE = 358.94075672549559
+	LAN = 330.75830258099933
+	MNA = 0.011733381255993547
+	EPH = 22256664.15215151
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 11796934.302160805
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

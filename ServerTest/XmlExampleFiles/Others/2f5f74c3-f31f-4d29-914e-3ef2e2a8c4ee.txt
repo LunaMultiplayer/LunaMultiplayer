@@ -1,0 +1,96 @@
+pid = 2f5f74c3f31f4d29914e3ef2e2a8c4ee
+name = Ast. RHA-061
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 51558554.335901089
+lct = 51558554.335901089
+lastUT = -1
+root = 0
+lat = -0.65899791900472227
+lon = -77.056646706279054
+alt = 13232560591.794741
+hgt = -1
+nrm = 0,1,0
+rot = -0.687088668,-0.258384764,0.668100476,0.121606819
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13687600550.39554
+	ECC = 0.016204334828158421
+	INC = 0.69775231442545804
+	LPE = 221.06583007607608
+	LAN = 157.59191138695633
+	MNA = -0.86397401979343758
+	EPH = 77414687.272392213
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 51558554.335901089
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

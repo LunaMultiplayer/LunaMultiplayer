@@ -1,0 +1,96 @@
+pid = b3dc033108a14a52afda1afbaf621f65
+name = Ast. VYM-723
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228312163.89572021
+lct = 228312163.89572021
+lastUT = -1
+root = 0
+lat = -0.13349359877226546
+lon = 0.093977033254797962
+alt = 14643901394.221853
+hgt = -1
+nrm = 0,1,0
+rot = 0.457754046,-0.644570351,0.4115569,0.453443795
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14263348053.0933
+	ECC = 0.046830434812190305
+	INC = 0.34364904230120658
+	LPE = 38.114214277591387
+	LAN = 337.37214850592972
+	MNA = -0.31296997867233717
+	EPH = 252991865.18734303
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228312163.89572021
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

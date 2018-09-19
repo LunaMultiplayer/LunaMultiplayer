@@ -1,0 +1,96 @@
+pid = 6d932f18e436491b9bfe195eb677a922
+name = Ast. QSD-532
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 220339132157721.47
+lct = 220339132157721.47
+lastUT = -1
+root = 0
+lat = -1.3573368809928947
+lon = -4.6706172542302689
+alt = 14075071734.059818
+hgt = -1
+nrm = 0,1,0
+rot = -0.783422947,-0.427400678,-0.355779529,0.277485222
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14463119056.774977
+	ECC = 0.062345338354971185
+	INC = 1.4493352625967071
+	LPE = 205.02878396836252
+	LAN = 209.56897942341359
+	MNA = -0.31871957758475056
+	EPH = 220339149634749.53
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 220339132157721.47
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = 9230bb1c8fea434a97454e814d1da664
+name = Аст. PJW-297
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 10475535.001774626
+lct = 10475535.001774626
+lastUT = -1
+root = 0
+lat = -0.90802398599677603
+lon = -179.23973344635297
+alt = 13284954679.799423
+hgt = -1
+nrm = 0,1,0
+rot = -0.561742485,0.449634939,-0.152584642,0.677489281
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14138783058.007126
+	ECC = 0.049867044994443673
+	INC = 0.90880006555172854
+	LPE = 302.07962975670756
+	LAN = 2.7409979783758445
+	MNA = 0.64133485947091939
+	EPH = 31831952.504599415
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 10475535.001774626
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

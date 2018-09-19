@@ -1,0 +1,96 @@
+pid = afd300ec8755446782fa85351086b412
+name = Ast. JGH-922
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 220339132157721.47
+lct = 220339132157721.47
+lastUT = -1
+root = 0
+lat = 0.20264142703264826
+lon = -51.160370419913846
+alt = 13793919326.392002
+hgt = -1
+nrm = 0,1,0
+rot = 0.166349351,-0.384812117,0.637399375,0.646505713
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13868977940.805641
+	ECC = 0.026237566881884306
+	INC = 0.25301006403688248
+	LPE = 248.90334603262795
+	LAN = 326.82560958437159
+	MNA = -0.61502182487825297
+	EPH = 220339153333644.31
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 220339132157721.47
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

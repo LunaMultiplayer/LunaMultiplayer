@@ -1,0 +1,96 @@
+pid = 2c2d5fba240443c8a1ee32f876905ef2
+name = Ast. BYM-749
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314486783394.41
+lct = 228314486783394.41
+lastUT = -1
+root = 0
+lat = 0.017560717635257229
+lon = -149.13151787890925
+alt = 17483099562.527504
+hgt = -1
+nrm = 0,1,0
+rot = -0.543282092,-0.569173813,0.537644923,0.303024083
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15722064874.662764
+	ECC = 0.1384250723643107
+	INC = 0.15561585477296097
+	LPE = 167.58036932665794
+	LAN = 3.8843938845719777
+	MNA = 0.11392753537061644
+	EPH = 228314503369156.41
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314486783394.41
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

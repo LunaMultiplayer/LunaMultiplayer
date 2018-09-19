@@ -1,0 +1,96 @@
+pid = 860f771ccce9457da3a1f1f6f42b2dad
+name = Ast. TVF-915
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 78695970.240605727
+lct = 78695970.240605727
+lastUT = -1
+root = 0
+lat = 0.62282415954498038
+lon = -23.094804882453811
+alt = 13784692187.795647
+hgt = -1
+nrm = 0,1,0
+rot = 0.19619076,-0.160207331,0.946966827,0.197728723
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14038974678.323093
+	ECC = 0.030477706075260184
+	INC = 0.65777736377009433
+	LPE = 201.48754057754539
+	LAN = 288.11742639683484
+	MNA = -0.10054012715372886
+	EPH = 90587085.148116261
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 78695970.240605727
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

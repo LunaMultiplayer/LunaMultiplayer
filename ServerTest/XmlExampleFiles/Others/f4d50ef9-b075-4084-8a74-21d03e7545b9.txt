@@ -1,0 +1,96 @@
+pid = f4d50ef9b07540848a7421d03e7545b9
+name = Ast. KNY-965
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314478702857.34
+lct = 228314478702857.34
+lastUT = -1
+root = 0
+lat = 0.10831660120186323
+lon = 34.602594825631925
+alt = 13605325727.308468
+hgt = -1
+nrm = 0,1,0
+rot = -0.276672155,0.625810862,-0.689172029,0.238443255
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13700267691.579329
+	ECC = 0.012524687509651704
+	INC = 0.11415023154443617
+	LPE = 238.00073344715895
+	LAN = 228.7135901004591
+	MNA = 0.99510691612221447
+	EPH = 228314493774746.47
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314478702857.34
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

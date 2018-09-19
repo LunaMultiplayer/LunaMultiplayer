@@ -1,0 +1,99 @@
+pid = 3947b0075afa4cfc8d0afb5d0bc0c749
+name = Ast. IQA-583
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 510414447878049.31
+lct = 510414447878049.31
+lastUT = -1
+root = 0
+lat = 2.0063516097279308
+lon = 26.539384391284464
+alt = 14023067132.202248
+hgt = -1
+nrm = 0,1,0
+rot = 0.0113936057,-0.258896947,-0.67856288,0.68730998
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14558039996.512388
+	ECC = 0.066451231994418325
+	INC = 2.1078309091242264
+	LPE = 354.87751881887692
+	LAN = 186.10579229099315
+	MNA = 0.045540453079292977
+	EPH = 510414466358133.13
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 21
+	lastObservedTime = 7538395.2721771002
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	BetterBurnTimeData
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

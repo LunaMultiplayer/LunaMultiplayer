@@ -1,0 +1,96 @@
+pid = bed3f953ac1c4337a179d61045b4b009
+name = Ast. HZU-020
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 113328981.08954701
+lct = 113328981.08954701
+lastUT = -1
+root = 0
+lat = -0.7978636358847101
+lon = -167.44685066532998
+alt = 15165093773.742611
+hgt = -1
+nrm = 0,1,0
+rot = -0.68772316,-0.253556639,0.645309448,0.215224698
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14462319950.483978
+	ECC = 0.069721702984608849
+	INC = 1.1656560264362923
+	LPE = 152.65462014407089
+	LAN = 356.56119465375514
+	MNA = 0.35523906522281784
+	EPH = 119454795.60120872
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 113328981.08954701
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

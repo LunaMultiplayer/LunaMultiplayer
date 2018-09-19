@@ -1,0 +1,96 @@
+pid = eedb9d7a61a446cd96a8ac51e3c3f928
+name = Ast. IHM-654
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 131409214.56644902
+lct = 131409214.56644902
+lastUT = -1
+root = 0
+lat = -0.39592244643067964
+lon = -147.04519312339912
+alt = 13371448285.480093
+hgt = -1
+nrm = 0,1,0
+rot = 0.433758944,0.729029059,0.155069932,0.5062837
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13614658018.230295
+	ECC = 0.0065626931574194417
+	INC = 0.56667781104807535
+	LPE = 122.07555061675264
+	LAN = 56.313916421348893
+	MNA = 1.277319465966692
+	EPH = 139902484.9549675
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 131409214.56644902
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

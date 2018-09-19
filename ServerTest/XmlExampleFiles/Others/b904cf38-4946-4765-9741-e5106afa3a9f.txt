@@ -1,0 +1,96 @@
+pid = b904cf38494647659741e5106afa3a9f
+name = Ast. ZXE-339
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 220339132157721.47
+lct = 220339132157721.47
+lastUT = -1
+root = 0
+lat = -1.3378545097050003
+lon = -34.071626972499686
+alt = 14029060643.518766
+hgt = -1
+nrm = 0,1,0
+rot = 0.3632662,0.304060191,-0.132699326,0.870618165
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13963713890.641552
+	ECC = 0.034207943148019795
+	INC = 1.3563943348227889
+	LPE = 144.87716927461233
+	LAN = 191.21047630297878
+	MNA = 0.57894376239331236
+	EPH = 220339158261436.88
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 220339132157721.47
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

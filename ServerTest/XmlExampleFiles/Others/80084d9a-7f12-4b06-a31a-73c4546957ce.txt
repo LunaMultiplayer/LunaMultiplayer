@@ -1,0 +1,96 @@
+pid = 80084d9a7f124b06a31a73c4546957ce
+name = Ast. HAZ-714
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21493870.975455411
+lct = 21493870.975455411
+lastUT = -1
+root = 0
+lat = 0.031453331278397563
+lon = 41.504351390608036
+alt = 13331851535.543921
+hgt = -1
+nrm = 0,1,0
+rot = -0.252975225,-0.943868816,0.174136817,0.121620476
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13913341098.05501
+	ECC = 0.031388707004753165
+	INC = 0.98517894741058432
+	LPE = 134.0261124222782
+	LAN = 134.89288293172456
+	MNA = 0.78321422500854432
+	EPH = 31101971.802808903
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21493870.975455411
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = b21c4b3e94264344aa7c57aedbc7fead
+name = Ast. RZC-700
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21729302.66219376
+lct = 21729302.66219376
+lastUT = -1
+root = 0
+lat = 0.55040396371328426
+lon = -132.43792675291061
+alt = 13303842898.792166
+hgt = -1
+nrm = 0,1,0
+rot = -0.0570982732,0.926844418,0.0999059454,0.357376397
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13816092013.440552
+	ECC = 0.019872484271942589
+	INC = 1.0622407235178732
+	LPE = 173.34820135475783
+	LAN = 186.51986921232299
+	MNA = 0.10176843341544993
+	EPH = 50772173.178143635
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21729302.66219376
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

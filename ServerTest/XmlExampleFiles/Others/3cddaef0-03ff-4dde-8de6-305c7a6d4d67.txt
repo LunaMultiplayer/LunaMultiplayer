@@ -1,0 +1,96 @@
+pid = 3cddaef003ff4dde8de6305c7a6d4d67
+name = Ast. USZ-185
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314449465654.72
+lct = 228314449465654.72
+lastUT = -1
+root = 0
+lat = 0.3500854489838866
+lon = -144.56225948783415
+alt = 13631895691.117777
+hgt = -1
+nrm = 0,1,0
+rot = 0.529782951,0.152454376,-0.649650514,0.523490191
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13761939152.317791
+	ECC = 0.012868442870152139
+	INC = 1.0847292335277881
+	LPE = 22.703398260663278
+	LAN = 75.643261733448867
+	MNA = -0.42320824022144482
+	EPH = 228314454625399.94
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314449465654.72
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,91 @@
+pid = a65f617624ba4653bf01a654661edc54
+name = Ast. ZZF-240
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314486782449.84
+lct = 228314486782449.84
+lastUT = -1
+root = 0
+lat = 0.92455078878428965
+lon = 95.096593771674719
+alt = 14069851681.710403
+hgt = -1
+nrm = 0,1,0
+rot = 0.733057261,0.364666611,-0.0478034355,0.572153986
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14143406627.438375
+	ECC = 0.041378331848434799
+	INC = 0.92847098943343198
+	LPE = 206.24030547123209
+	LAN = 158.53735997748379
+	MNA = -0.19935941804768298
+	EPH = 228314489360253.16
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314486782449.84
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

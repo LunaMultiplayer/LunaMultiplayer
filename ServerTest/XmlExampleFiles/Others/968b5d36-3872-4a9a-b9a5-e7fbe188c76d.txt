@@ -1,0 +1,99 @@
+pid = 968b5d3638724a9ab9a5e7fbe188c76d
+name = Ast. EUP-710
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 510414447878049.31
+lct = 510414447878049.31
+lastUT = -1
+root = 0
+lat = -1.1509197332835399
+lon = -15.136127115423822
+alt = 18233120089.82048
+hgt = -1
+nrm = 0,1,0
+rot = -0.515803039,0.319615036,0.727079153,0.32116878
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16200250923.467028
+	ECC = 0.16233560109796225
+	INC = 2.4628780610004557
+	LPE = 2.882147927214346
+	LAN = 8.7265397883992932
+	MNA = -0.041098385556564657
+	EPH = 510414452659198.63
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 510414447878049.31
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

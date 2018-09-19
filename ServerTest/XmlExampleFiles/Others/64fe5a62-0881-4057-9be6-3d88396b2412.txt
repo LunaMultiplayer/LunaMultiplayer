@@ -1,0 +1,91 @@
+pid = 64fe5a62088140579be63d88396b2412
+name = Ast. HYK-891
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 136761398.6972957
+lct = 136761398.6972957
+lastUT = -1
+root = 0
+lat = -0.15077520486492901
+lon = -38.868019427496115
+alt = 14762105196.770315
+hgt = -1
+nrm = 0,1,0
+rot = 0.202334747,0.891380548,-0.32490027,0.242778063
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14337153365.122772
+	ECC = 0.052592199796986115
+	INC = 0.79633710810778635
+	LPE = 347.70910890705682
+	LAN = 338.05088346169453
+	MNA = 0.19966054092931437
+	EPH = 151310726.38389707
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 29
+	lastObservedTime = 228314390425286.44
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

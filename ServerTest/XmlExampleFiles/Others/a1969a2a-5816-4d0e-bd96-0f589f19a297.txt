@@ -1,0 +1,96 @@
+pid = a1969a2a58164d0ebd960f589f19a297
+name = Ast. WKM-778
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314478466904.94
+lct = 228314478466904.94
+lastUT = -1
+root = 0
+lat = -0.21814132484388435
+lon = -143.67777198263857
+alt = 13153898270.783045
+hgt = -1
+nrm = 0,1,0
+rot = -0.591731906,0.595155776,0.279150426,0.466602653
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13580012244.895344
+	ECC = 0.014374378994872721
+	INC = 0.26543566304140342
+	LPE = 337.74344346596325
+	LAN = 340.67724327959877
+	MNA = -1.37851169209341
+	EPH = 228314495638354.38
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314478466904.94
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

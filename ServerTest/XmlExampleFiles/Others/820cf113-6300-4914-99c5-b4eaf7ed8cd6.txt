@@ -1,0 +1,96 @@
+pid = 820cf1136300491499c5b4eaf7ed8cd6
+name = Ast. NIE-034
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 76537048.034975186
+lct = 76537048.034975186
+lastUT = -1
+root = 0
+lat = -1.3915208375141943
+lon = -120.33691533558026
+alt = 13525109323.646639
+hgt = -1
+nrm = 0,1,0
+rot = -0.196856499,0.448312521,-0.681302965,0.544141293
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13761496368.500092
+	ECC = 0.016166175160159266
+	INC = 1.5171724497272348
+	LPE = 196.05337244066271
+	LAN = 7.0488478257915972
+	MNA = -0.33625230442454213
+	EPH = 82916407.397223592
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 76537048.034975186
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = 8dcc575f131440ceb3eedd07f5e5e3eb
+name = Ast. VEU-225
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 130593270.37633863
+lct = 130593270.37633863
+lastUT = -1
+root = 0
+lat = -0.28957936454529831
+lon = -155.89095993053476
+alt = 15626338216.833471
+hgt = -1
+nrm = 0,1,0
+rot = 0.557284415,-0.481569648,0.301598758,0.605444372
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14815496228.980974
+	ECC = 0.089703415434117001
+	INC = 0.39517886314614165
+	LPE = 13.854168310272339
+	LAN = 84.714804317634389
+	MNA = -0.32036721733943208
+	EPH = 144616267.14325035
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 130593270.37633863
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

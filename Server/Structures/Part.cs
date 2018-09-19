@@ -17,9 +17,9 @@ namespace Server.Structures
             Fields = cfgNode.GetAllValues().ToDictionary(k => k.Key, k => k.Value);
             Modules = cfgNode.GetNodes("MODULE").ToDictionary(k => k.GetValue("name"), k => new Module(k));
 
-            Events = cfgNode.GetNodes("EVENTS")[0];
-            Actions = cfgNode.GetNodes("ACTIONS")[0];
-            Partdata = cfgNode.GetNodes("PARTDATA")[0];
+            Events = cfgNode.GetNodes("EVENTS").FirstOrDefault();
+            Actions = cfgNode.GetNodes("ACTIONS").FirstOrDefault();
+            Partdata = cfgNode.GetNodes("PARTDATA").FirstOrDefault();
         }
     }
 }

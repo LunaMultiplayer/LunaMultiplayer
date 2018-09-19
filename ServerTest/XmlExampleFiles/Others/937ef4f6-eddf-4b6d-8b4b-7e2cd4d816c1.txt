@@ -1,0 +1,96 @@
+pid = 937ef4f6eddf4b6d8b4b7e2cd4d816c1
+name = Аст. IRH-818
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 10475535.001774626
+lct = 10475535.001774626
+lastUT = -1
+root = 0
+lat = -0.89110884913273214
+lon = -41.129260181904328
+alt = 15350732771.612026
+hgt = -1
+nrm = 0,1,0
+rot = 0.279006571,-0.842906833,-0.273783922,0.369737566
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15112986005.194344
+	ECC = 0.10516902819507173
+	INC = 0.91375841521612111
+	LPE = 168.83387893070613
+	LAN = 125.6985962390994
+	MNA = 0.062587760576575169
+	EPH = 39855045.275514469
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 10475535.001774626
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

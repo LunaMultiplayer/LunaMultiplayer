@@ -1,0 +1,96 @@
+pid = 21f7666d1f014b049163c2990a92c650
+name = Ast. XWN-614
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 70863079.819163576
+lct = 70863079.819163576
+lastUT = -1
+root = 0
+lat = 0.071673228725449997
+lon = -14.357950599741697
+alt = 18267571475.494923
+hgt = -1
+nrm = 0,1,0
+rot = 0.56306088,-0.207959697,-0.262069643,0.755668283
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16194486801.625381
+	ECC = 0.16312900726345131
+	INC = 0.45791138657348079
+	LPE = 14.793004147000639
+	LAN = 187.213457593057
+	MNA = 0.1674612193293788
+	EPH = 102152236.98139308
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 70863079.819163576
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

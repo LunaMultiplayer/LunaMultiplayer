@@ -1,0 +1,161 @@
+pid = 63238932e2de4f9b8064827fd89c4136
+name = KEX Island
+type = Flag
+sit = LANDED
+landed = True
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = -200924987.66228724
+lct = 218977613.77015039
+lastUT = 18052626.107863165
+root = 0
+lat = 5.8689321680188371
+lon = -62.217260445348842
+alt = 469.39141536643729
+hgt = 0.394604415
+nrm = -0.0641021132,0.996587992,0.0519946218
+rot = 0.653189361,0.163201883,0.189932734,-0.714586914
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0.3319999
+cHdg = 3.144
+cMod = 0
+ORBIT
+{
+	SMA = 301010.90160539083
+	ECC = 0.99484267251738856
+	INC = 5.8689321680188451
+	LPE = 270.0000000006745
+	LAN = 201.01958294643913
+	MNA = 3.1415926534445862
+	EPH = 18052626.107863165
+	REF = 1
+}
+PART
+{
+	name = flag
+	cid = 4290324380
+	uid = 158307403
+	mid = 3592291521
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.00999999978
+	shielded = False
+	temp = 303.14514511142505
+	tempExt = 303.19275832353304
+	tempExtUnexp = 303.19276187276381
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/default
+	rTrf = flag (KEX Island)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = FlagSite
+		isEnabled = True
+		placedBy = Defield Kerman
+		PlaqueText = I found this by accident  :D
+		stagingEnabled = True
+		state = Placed
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}
