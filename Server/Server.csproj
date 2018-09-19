@@ -141,6 +141,7 @@
     <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
     <Compile Include="Settings\Structures\CraftSettings.cs" />
     <Compile Include="Settings\Structures\MasterServerSettings.cs" />
+    <Compile Include="Structures\MixedCollection.cs" />
     <Compile Include="Structures\Module.cs" />
     <Compile Include="Structures\Part.cs" />
     <Compile Include="Structures\Vessel.cs" />

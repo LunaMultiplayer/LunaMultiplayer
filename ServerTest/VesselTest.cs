@@ -1,6 +1,7 @@
 ﻿using LunaConfigNode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Server.Structures;
+using System;
 using System.IO;
 
 namespace ServerTest
@@ -13,12 +14,22 @@ namespace ServerTest
         [TestMethod]
         public void TestCreateVessel()
         {
+            var creationOk = true;
             foreach (var file in Directory.GetFiles(XmlExamplePath))
             {
                 var cfgNode = new ConfigNode(File.ReadAllText(file));
-                var vessel = new Vessel(cfgNode);
-                Assert.IsNotNull(vessel);
+                try
+                {
+                    var vessel = new Vessel(cfgNode);
+                }
+                catch (Exception)
+                {
+                    creationOk = false;
+                    break;
+                }
             }
+
+            Assert.IsTrue(creationOk);
         }
     }
 }

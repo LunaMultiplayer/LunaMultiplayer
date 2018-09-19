@@ -4,12 +4,14 @@ using System.Linq;
 
 namespace Server.Structures
 {
+
+
     public class Vessel
     {
-        public Dictionary<string, string> Fields;
-        public Dictionary<uint, Part> Parts;
-        public Dictionary<string, double> Orbit;
-        public Dictionary<string, string> ActionGroups;
+        public MixedCollection<string, string> Fields;
+        public MixedCollection<uint, Part> Parts;
+        public MixedCollection<string, double> Orbit;
+        public MixedCollection<string, string> ActionGroups;
 
         public readonly ConfigNode Discovery;
         public readonly ConfigNode FlightPlan;
@@ -18,10 +20,10 @@ namespace Server.Structures
 
         public Vessel(ConfigNode cfgNode)
         {
-            Fields = cfgNode.GetAllValues().ToDictionary(k => k.Key, k => k.Value);
-            Parts = cfgNode.GetNodes("PART").ToDictionary(n => uint.Parse(n.GetValue("uid")), n => new Part(n));
-            Orbit = cfgNode.GetNodes("ORBIT").First().GetAllValues().ToDictionary(n => n.Key, n=> double.TryParse(n.Value, out var obtVal) ? obtVal : 0);
-            ActionGroups = cfgNode.GetNodes("ACTIONGROUPS").First().GetAllValues().ToDictionary(n => n.Key, n => n.Value);
+            Fields = new MixedCollection<string, string>(cfgNode.GetAllValues());
+            Parts = new MixedCollection<uint, Part>(cfgNode.GetNodes("PART").Select(n=> new KeyValuePair<uint, Part>(uint.Parse(n.GetValue("uid")), new Part(n))));
+            Orbit = new MixedCollection<string, double>(cfgNode.GetNodes("ORBIT").First().GetAllValues().Select(n => new KeyValuePair<string, double>(n.Key, double.TryParse(n.Value, out var obtVal) ? obtVal : 0)));
+            ActionGroups = new MixedCollection<string, string>(cfgNode.GetNodes("ACTIONGROUPS").First().GetAllValues());
 
             Discovery = cfgNode.GetNodes("DISCOVERY").First();
             FlightPlan = cfgNode.GetNodes("FLIGHTPLAN").First();

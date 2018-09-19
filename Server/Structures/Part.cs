@@ -6,16 +6,16 @@ namespace Server.Structures
 {
     public class Part
     {
-        public Dictionary<string, string> Fields;
-        public Dictionary<string, Module> Modules;
+        public MixedCollection<string, string> Fields;
+        public MixedCollection<string, Module> Modules;
         public ConfigNode Events;
         public ConfigNode Actions;
         public ConfigNode Partdata;
 
         public Part(ConfigNode cfgNode)
         {
-            Fields = cfgNode.GetAllValues().ToDictionary(k => k.Key, k => k.Value);
-            Modules = cfgNode.GetNodes("MODULE").ToDictionary(k => k.GetValue("name"), k => new Module(k));
+            Fields = new MixedCollection<string, string>(cfgNode.GetAllValues());
+            Modules = new MixedCollection<string, Module>(cfgNode.GetNodes("MODULE").Select(m=> new KeyValuePair<string, Module>(m.GetValue("name"), new Module(m))));
 
             Events = cfgNode.GetNodes("EVENTS").FirstOrDefault();
             Actions = cfgNode.GetNodes("ACTIONS").FirstOrDefault();
