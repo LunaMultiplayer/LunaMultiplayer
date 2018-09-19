@@ -60,7 +60,7 @@ Main | [Release servers](http://servers.lunamultiplayer.com:8701/) | [Nightly se
 PictoCube | [Release servers](http://pictocube.ddns.net:8701/) | [Nightly servers](http://pictocube.ddns.net:8711/) |
 Tekbot | [Release servers](http://ms.lmp.dnsd.info:8701/) | [Nightly servers](http://ms.lmp.dnsd.info:8751/) |
 
-
+---
 ### Status:
 
 |   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |    Commits    |
