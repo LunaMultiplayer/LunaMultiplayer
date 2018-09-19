@@ -1,9 +1,9 @@
 ﻿using System;
-using LunaCommon.Enums;
-using LunaCommon.Message.Data.Admin;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Server;
-using LunaCommon.Message.Types;
+using LmpCommon.Enums;
+using LmpCommon.Message.Data.Admin;
+using LmpCommon.Message.Interface;
+using LmpCommon.Message.Server;
+using LmpCommon.Message.Types;
 using Server.Client;
 using Server.Command;
 using Server.Context;

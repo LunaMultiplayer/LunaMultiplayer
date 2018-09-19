@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ModWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>LunaMultiplayer -サーバーのMOD設定に適合していません。</Title>
+  <MandatoryModsNotFound>必須MODがありません:</MandatoryModsNotFound>
+  <MissingExpansions>拡張パックがありません:</MissingExpansions>
+  <MandatoryModsDifferentShaFound>必須MODのSHAが異なっています:</MandatoryModsDifferentShaFound>
+  <Link>リンク</Link>
+  <ForbiddenFilesFound>使用禁止MODがあります:</ForbiddenFilesFound>
+  <NonListedFilesFound>リストに記載がない使用禁止MODがあります:</NonListedFilesFound>
+  <MandatoryPartsNotFound>必須パーツがありません:</MandatoryPartsNotFound>
+  <ForbiddenPartsFound>使用禁止パーツがあります:</ForbiddenPartsFound>
+</ModWindowText>

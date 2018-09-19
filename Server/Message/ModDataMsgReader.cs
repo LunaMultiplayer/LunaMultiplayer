@@ -1,6 +1,6 @@
-﻿using LunaCommon.Message.Data;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Server;
+﻿using LmpCommon.Message.Data;
+using LmpCommon.Message.Interface;
+using LmpCommon.Message.Server;
 using Server.Client;
 using Server.Message.Base;
 using Server.Plugin;

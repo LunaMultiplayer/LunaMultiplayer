@@ -1,5 +1,5 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message;
+using LmpCommon.Message;
 using Server.Client;
 using Server.Server;
 using Server.Settings.Structures;

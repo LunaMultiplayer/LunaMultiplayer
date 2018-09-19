@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-16"?>
-<AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Adminitstracion</Title>
-  <Password>Password administración:</Password>
-  <ConfirmDialogTitle>Confirmación</ConfirmDialogTitle>
-  <BanText>¿Quieres realmente expulsar al usuario?</BanText>
-  <KickText>¿Quieres realmente banear al usuario?</KickText>
-  <Reason>Razón:</Reason>
-</AdminWindowText>

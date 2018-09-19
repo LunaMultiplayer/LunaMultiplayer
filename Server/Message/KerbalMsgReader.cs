@@ -1,7 +1,7 @@
 ﻿using System;
-using LunaCommon.Message.Data.Kerbal;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Types;
+using LmpCommon.Message.Data.Kerbal;
+using LmpCommon.Message.Interface;
+using LmpCommon.Message.Types;
 using Server.Client;
 using Server.Message.Base;
 using Server.System;

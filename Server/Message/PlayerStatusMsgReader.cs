@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using LunaCommon.Message.Data.PlayerStatus;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Server;
-using LunaCommon.Message.Types;
+using LmpCommon.Message.Data.PlayerStatus;
+using LmpCommon.Message.Interface;
+using LmpCommon.Message.Server;
+using LmpCommon.Message.Types;
 using Server.Client;
 using Server.Context;
 using Server.Message.Base;

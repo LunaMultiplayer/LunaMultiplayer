@@ -1,0 +1,720 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7AD735F5-A076-44D2-97EC-02ECAD827001}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>LmpClient</RootNamespace>
+    <AssemblyName>LmpClient</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <!-- Prevent default XML files copied to output -->
+    <AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;ENABLE_PROFILER</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <!-- Prevent default XML and PDB files copied to output -->
+    <AllowedReferenceRelatedFileExtensions>.none</AllowedReferenceRelatedFileExtensions>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\External\Dependencies\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Threading">
+      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\External\KSPLibraries\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\CachedConcurrentQueue.cs" />
+    <Compile Include="Base\FixedSizedConcurrentQueue.cs" />
+    <Compile Include="Base\HarmonyPatcher.cs" />
+    <Compile Include="Base\Interface\IInputHandler.cs" />
+    <Compile Include="Base\Interface\IMessageHandler.cs" />
+    <Compile Include="Base\Interface\IMessageSender.cs" />
+    <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="DebugDrawer.cs" />
+    <Compile Include="Events\ActionGroupEvent.cs" />
+    <Compile Include="Events\Base\LmpBaseEvent.cs" />
+    <Compile Include="Events\ExperimentEvent.cs" />
+    <Compile Include="Events\ExternalSeatEvent.cs" />
+    <Compile Include="Events\ImmortalEvent.cs" />
+    <Compile Include="Events\LabelEvent.cs" />
+    <Compile Include="Events\LockEvent.cs" />
+    <Compile Include="Events\ModApiEvent.cs" />
+    <Compile Include="Events\NetworkEvent.cs" />
+    <Compile Include="Events\PartModuleEvent.cs" />
+    <Compile Include="Events\RevertEvent.cs" />
+    <Compile Include="Events\SpectateEvent.cs" />
+    <Compile Include="Events\StrategyEvent.cs" />
+    <Compile Include="Events\VesselLoadEvent.cs" />
+    <Compile Include="Events\VesselReloadEvent.cs" />
+    <Compile Include="Events\VesselInitializeEvent.cs" />
+    <Compile Include="Events\VesselUnloadEvent.cs" />
+    <Compile Include="Events\WarpEvent.cs" />
+    <Compile Include="Extensions\CelestialBodyExtension.cs" />
+    <Compile Include="Extensions\DictionaryExtension.cs" />
+    <Compile Include="Extensions\FlightGlobalExtension.cs" />
+    <Compile Include="Extensions\OrbitExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Extensions\VesselExtension.cs" />
+    <Compile Include="Extensions\VesselPartCreator.cs" />
+    <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
+    <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
+    <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
+    <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
+    <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
+    <Compile Include="Harmony\ScenarioDiscoverableObjects_UpdateAsteroids.cs" />
+    <Compile Include="Harmony\FlightDriver_SetPause.cs" />
+    <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
+    <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
+    <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
+    <Compile Include="Harmony\KerbalEVA_OnDeboardSeat.cs" />
+    <Compile Include="Harmony\KerbalEVA_BoardSeat.cs" />
+    <Compile Include="Harmony\KerbalRoster_SackAvailable.cs" />
+    <Compile Include="Harmony\ModuleScienceExperiment_ResetExperiment.cs" />
+    <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
+    <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
+    <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
+    <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
+    <Compile Include="Harmony\ProtoCrewMember_Die.cs" />
+    <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
+    <Compile Include="Harmony\SpaceTracking_FlyVessel.cs" />
+    <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
+    <Compile Include="Harmony\Strategy_CanBeActivated.cs" />
+    <Compile Include="Harmony\Strategy_CanBeDeactivated.cs" />
+    <Compile Include="Harmony\Strategy_Deactivate.cs" />
+    <Compile Include="Harmony\Strategy_Activate.cs" />
+    <Compile Include="Harmony\TimeWarp_setMode.cs" />
+    <Compile Include="Harmony\TimeWarp_setRate.cs" />
+    <Compile Include="Harmony\OrbitRendererBase_OnUpdateCaption.cs" />
+    <Compile Include="Harmony\TrackingStationWidget_Update.cs" />
+    <Compile Include="Harmony\VesselLabels_ProcessLabel.cs" />
+    <Compile Include="Harmony\Vessel_Initialize.cs" />
+    <Compile Include="Harmony\Vessel_Load.cs" />
+    <Compile Include="Harmony\Vessel_Unload.cs" />
+    <Compile Include="Harmony\Vessel_CheckKill.cs" />
+    <Compile Include="Localization\Structures\AdminWindowText.cs" />
+    <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
+    <Compile Include="Localization\Structures\ButtonTooltips.cs" />
+    <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
+    <Compile Include="Localization\Structures\CompatibleDialogText.cs" />
+    <Compile Include="Localization\Structures\UpdateWindowText.cs" />
+    <Compile Include="LunaScreenMsg.cs" />
+    <Compile Include="ModuleStore\Patching\FieldChangeTranspiler.cs" />
+    <Compile Include="ModuleStore\Patching\PartModulePatcher.cs" />
+    <Compile Include="ModuleStore\Patching\TestModule.cs" />
+    <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />
+    <Compile Include="ModuleStore\Structures\MethodDefinition.cs" />
+    <Compile Include="ModuleStore\Structures\ModuleDefinition.cs" />
+    <Compile Include="ModuleStore\FieldModuleDefinition.cs" />
+    <Compile Include="ModuleStore\FieldModuleStore.cs" />
+    <Compile Include="Localization\LocalizationContainer.cs" />
+    <Compile Include="Localization\Structures\ChatWindowText.cs" />
+    <Compile Include="Localization\Structures\ConnectionWindowText.cs" />
+    <Compile Include="Localization\Structures\CraftLibraryWindowText.cs" />
+    <Compile Include="Localization\Structures\DisclaimerDialogText.cs" />
+    <Compile Include="Localization\Structures\InstallDialogText.cs" />
+    <Compile Include="Localization\Structures\ScreenText.cs" />
+    <Compile Include="Localization\Structures\ModWindowText.cs" />
+    <Compile Include="Localization\Structures\OptionsWindowText.cs" />
+    <Compile Include="Localization\Structures\ServerListWindowText.cs" />
+    <Compile Include="Localization\Structures\StatusWindowText.cs" />
+    <Compile Include="LunaLog.cs" />
+    <Compile Include="Base\MessageSystem.cs" />
+    <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
+    <Compile Include="Systems\Admin\AdminMessageSender.cs" />
+    <Compile Include="Systems\Admin\AdminSystem.cs" />
+    <Compile Include="Systems\ExternalSeat\ExternalSeatEvents.cs" />
+    <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
+    <Compile Include="Systems\FloatingOrigin\FloatingOriginEvents.cs" />
+    <Compile Include="Systems\FloatingOrigin\FloatingOriginSystem.cs" />
+    <Compile Include="Systems\Label\LabelEvents.cs" />
+    <Compile Include="Systems\Label\LabelSystem.cs" />
+    <Compile Include="Systems\SafetyBubble\SpawnPointLocation.cs" />
+    <Compile Include="Systems\SafetyBubble\SafetyBubbleEvents.cs" />
+    <Compile Include="Systems\SafetyBubble\SafetyBubbleSystem.cs" />
+    <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
+    <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />
+    <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />
+    <Compile Include="Systems\ShareAchievements\ShareAchievementsSystem.cs" />
+    <Compile Include="Systems\ShareCareer\ShareCareerSystem.cs" />
+    <Compile Include="Systems\ShareContracts\ShareContractsEvents.cs" />
+    <Compile Include="Systems\ShareContracts\ShareContractsMessageHandler.cs" />
+    <Compile Include="Systems\ShareContracts\ShareContractsMessageSender.cs" />
+    <Compile Include="Systems\ShareContracts\ShareContractsSystem.cs" />
+    <Compile Include="Systems\ShareFunds\ShareFundsEvents.cs" />
+    <Compile Include="Systems\ShareFunds\ShareFundsMessageHandler.cs" />
+    <Compile Include="Systems\ShareFunds\ShareFundsMessageSender.cs" />
+    <Compile Include="Systems\ShareFunds\ShareFundsSystem.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibraryMessageHandler.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibraryMessageSender.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibraryStructures.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibrarySystem.cs" />
+    <Compile Include="Systems\KscScene\KscSceneEvents.cs" />
+    <Compile Include="Systems\KscScene\KscSceneSystem.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotStructures.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotMessageHandler.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotMessageSender.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotSystem.cs" />
+    <Compile Include="Systems\ShareProgress\ShareProgressBaseSystem.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsEvents.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsMessageHandler.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsMessageSender.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsSystem.cs" />
+    <Compile Include="Systems\ShareReputation\ShareReputationEvents.cs" />
+    <Compile Include="Systems\ShareReputation\ShareReputationMessageHandler.cs" />
+    <Compile Include="Systems\ShareReputation\ShareReputationMessageSender.cs" />
+    <Compile Include="Systems\ShareReputation\ShareReputationSystem.cs" />
+    <Compile Include="Systems\ShareScienceSubject\ShareScienceSubjectEvents.cs" />
+    <Compile Include="Systems\ShareScienceSubject\ShareScienceSubjectMessageHandler.cs" />
+    <Compile Include="Systems\ShareScienceSubject\ShareScienceSubjectMessageSender.cs" />
+    <Compile Include="Systems\ShareScienceSubject\ShareScienceSubjectSystem.cs" />
+    <Compile Include="Systems\ShareScience\ShareScienceEvents.cs" />
+    <Compile Include="Systems\ShareScience\ShareScienceMessageHandler.cs" />
+    <Compile Include="Systems\ShareScience\ShareScienceMessageSender.cs" />
+    <Compile Include="Systems\ShareScience\ShareScienceSystem.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategyEvents.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategyMessageHandler.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategyMessageSender.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategySystem.cs" />
+    <Compile Include="Systems\ShareTechnology\ShareTechnologyEvents.cs" />
+    <Compile Include="Systems\ShareTechnology\ShareTechnologyMessageHandler.cs" />
+    <Compile Include="Systems\ShareTechnology\ShareTechnologyMessageSender.cs" />
+    <Compile Include="Systems\ShareTechnology\ShareTechnologySystem.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesEvents.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesMessageHandler.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesMessageSender.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesSystem.cs" />
+    <Compile Include="Systems\Status\StatusTexts.cs" />
+    <Compile Include="Systems\TimeSyncer\TimerSyncerEvents.cs" />
+    <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupEvents.cs" />
+    <Compile Include="Systems\VesselCrewSys\VesselCrewEvents.cs" />
+    <Compile Include="Systems\VesselCrewSys\VesselCrewSystem.cs" />
+    <Compile Include="Systems\Facility\FacilityEvents.cs" />
+    <Compile Include="Systems\Facility\FacilitySystem.cs" />
+    <Compile Include="Systems\Facility\FacilityMessageHandler.cs" />
+    <Compile Include="Systems\Facility\FacilityMessageSender.cs" />
+    <Compile Include="Systems\FlagPlant\FlagPlantEvents.cs" />
+    <Compile Include="Systems\FlagPlant\FlagPlantSystem.cs" />
+    <Compile Include="Systems\Flag\FlagEvents.cs" />
+    <Compile Include="Systems\Groups\GroupMessageHandler.cs" />
+    <Compile Include="Systems\Groups\GroupMessageSender.cs" />
+    <Compile Include="Systems\Groups\GroupSystem.cs" />
+    <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
+    <Compile Include="Systems\Lock\LockEvents.cs" />
+    <Compile Include="Systems\Ping\PingSystem.cs" />
+    <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
+    <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingEvents.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairing.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingQueue.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\FlightStateEvents.cs" />
+    <Compile Include="Extensions\FlightStateExtension.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\FlightStateQueue.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateUpdate.cs" />
+    <Compile Include="Systems\VesselImmortalSys\VesselImmortalEvents.cs" />
+    <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCall.cs" />
+    <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallEvents.cs" />
+    <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallMessageHandler.cs" />
+    <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallMessageSender.cs" />
+    <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallQueue.cs" />
+    <Compile Include="Systems\VesselPartSyncCallSys\VesselPartSyncCallSystem.cs" />
+    <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldEvents.cs" />
+    <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldMessageHandler.cs" />
+    <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldMessageSender.cs" />
+    <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncSystem.cs" />
+    <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncField.cs" />
+    <Compile Include="Systems\VesselPartSyncFieldSys\VesselPartSyncFieldQueue.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiField.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldEvents.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldMessageHandler.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldMessageSender.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldQueue.cs" />
+    <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldSystem.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageSender.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageHandler.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentEvents.cs" />
+    <Compile Include="Systems\VesselPersistentSys\VesselPersistentSystem.cs" />
+    <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VesselProtoUpdater.cs" />
+    <Compile Include="Systems\VesselPositionSys\PositionEvents.cs" />
+    <Compile Include="Systems\VesselPositionSys\PositionUpdateQueue.cs" />
+    <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VeselPositioner.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProto.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProtoQueue.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResourceMessageHandler.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResourceMessageSender.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResourceSystem.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResource.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResourceQueue.cs" />
+    <Compile Include="Systems\VesselSyncSys\VesselSyncMessageHandler.cs" />
+    <Compile Include="Systems\VesselSyncSys\VesselSyncMessageSender.cs" />
+    <Compile Include="Systems\VesselSyncSys\VesselSyncSystem.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroup.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupMessageHandler.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupMessageSender.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupQueue.cs" />
+    <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupSystem.cs" />
+    <Compile Include="Systems\VesselUpdateSys\VesselUpdate.cs" />
+    <Compile Include="Systems\VesselUpdateSys\VesselUpdateQueue.cs" />
+    <Compile Include="Utilities\UpdateHandler.cs" />
+    <Compile Include="Utilities\CompatibilityHandler.cs" />
+    <Compile Include="Utilities\CoroutineUtil.cs" />
+    <Compile Include="Utilities\Detourer.cs" />
+    <Compile Include="Utilities\Json.cs" />
+    <Compile Include="Utilities\VectorUtil.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
+    <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
+    <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
+    <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
+    <Compile Include="VesselUtilities\VesselSerializer.cs" />
+    <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
+    <Compile Include="Windows\Admin\AdminDrawer.cs" />
+    <Compile Include="Windows\Admin\AdminWindow.cs" />
+    <Compile Include="Windows\BannedParts\BannedPartsDrawer.cs" />
+    <Compile Include="Windows\BannedParts\BannedPartsWindow.cs" />
+    <Compile Include="Windows\Tools\ToolsUtils.cs" />
+    <Compile Include="Windows\Locks\VesselLockDisplay.cs" />
+    <Compile Include="Windows\Locks\LocksDrawer.cs" />
+    <Compile Include="Windows\Locks\LocksWindow.cs" />
+    <Compile Include="Windows\Screenshots\ScreenshotDrawer.cs" />
+    <Compile Include="Windows\Screenshots\ScreenshotWindow.cs" />
+    <Compile Include="Windows\Status\StatusTexts.cs" />
+    <Compile Include="Base\RoutineDefinition.cs" />
+    <Compile Include="Base\StyleLibrary.cs" />
+    <Compile Include="Base\SubSystem.cs" />
+    <Compile Include="Base\SystemBase.cs" />
+    <Compile Include="Base\Window.cs" />
+    <Compile Include="Base\SystemWindow.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Network\NetworkMain.cs" />
+    <Compile Include="Network\NetworkStatistics.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\Chat\ChatMessageHandler.cs" />
+    <Compile Include="Systems\Chat\ChatMessageSender.cs" />
+    <Compile Include="Systems\Chat\ChatSystem.cs" />
+    <Compile Include="Systems\PlayerColorSys\PlayerColorMessageHandler.cs" />
+    <Compile Include="Systems\PlayerColorSys\PlayerColorMessageSender.cs" />
+    <Compile Include="Systems\Flag\FlagMessageSender.cs" />
+    <Compile Include="Systems\Handshake\HandshakeMessageHandler.cs" />
+    <Compile Include="Systems\Handshake\HandshakeMessageSender.cs" />
+    <Compile Include="Systems\Handshake\HandshakeSystem.cs" />
+    <Compile Include="Systems\KerbalSys\KerbalMessageHandler.cs" />
+    <Compile Include="Systems\KerbalSys\KerbalMessageSender.cs" />
+    <Compile Include="Systems\KerbalSys\KerbalSystem.cs" />
+    <Compile Include="Systems\Lock\LockMessageSender.cs" />
+    <Compile Include="Systems\ModApi\ModApiMessageSender.cs" />
+    <Compile Include="Systems\Motd\MotdMessageHandler.cs" />
+    <Compile Include="Systems\Motd\MotdMessageSender.cs" />
+    <Compile Include="Systems\Motd\MotdSystem.cs" />
+    <Compile Include="Network\NetworkServerList.cs" />
+    <Compile Include="Network\NetworkSimpleMessageSender.cs" />
+    <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageHandler.cs" />
+    <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageSender.cs" />
+    <Compile Include="Systems\PlayerConnection\PlayerConnectionSystem.cs" />
+    <Compile Include="VesselUtilities\VesselCommon.cs" />
+    <Compile Include="Systems\VesselDockSys\VesselDockEvents.cs" />
+    <Compile Include="Systems\VesselDockSys\VesselDockSystem.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateMessageHandler.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateMessageSender.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateSystem.cs" />
+    <Compile Include="Systems\VesselImmortalSys\VesselImmortalSystem.cs" />
+    <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
+    <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
+    <Compile Include="VesselUtilities\VesselLoader.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProtoSystem.cs" />
+    <Compile Include="Systems\VesselRemoveSys\VesselRemoveEvents.cs" />
+    <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageHandler.cs" />
+    <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageSender.cs" />
+    <Compile Include="Systems\VesselRemoveSys\VesselRemoveSystem.cs" />
+    <Compile Include="Systems\Scenario\ScenarioMessageSender.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsServerStructure.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsMessageHandler.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsMessageSender.cs" />
+    <Compile Include="Systems\Status\StatusMessageSender.cs" />
+    <Compile Include="Systems\SystemsHandler.cs" />
+    <Compile Include="Systems\Scenario\ScenarioMessageHandler.cs" />
+    <Compile Include="Systems\Status\StatusMessageHandler.cs" />
+    <Compile Include="Systems\Warp\WarpEntryDisplay.cs" />
+    <Compile Include="Systems\Warp\WarpEvents.cs" />
+    <Compile Include="Systems\Warp\WarpMessageHandler.cs" />
+    <Compile Include="Systems\Warp\WarpMessageSender.cs" />
+    <Compile Include="Systems\Warp\WarpStructures.cs" />
+    <Compile Include="Utilities\ClockHandler.cs" />
+    <Compile Include="Utilities\CommonUtil.cs" />
+    <Compile Include="Utilities\ConfigNodeSerializer.cs" />
+    <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
+    <Compile Include="Base\Interface\ISystem.cs" />
+    <Compile Include="Base\System.cs" />
+    <Compile Include="Systems\PlayerColorSys\PlayerColorEvents.cs" />
+    <Compile Include="Utilities\DisclaimerDialog.cs" />
+    <Compile Include="Windows\Chat\ChatWindow.cs" />
+    <Compile Include="Windows\Chat\ChatDrawer.cs" />
+    <Compile Include="Windows\Connection\ConnectionDrawer.cs" />
+    <Compile Include="Windows\Connection\ConnectionWindow.cs" />
+    <Compile Include="Windows\CraftLibrary\CraftLibraryDrawer.cs" />
+    <Compile Include="Windows\CraftLibrary\CraftLibraryWindow.cs" />
+    <Compile Include="Systems\Flag\FlagMessageHandler.cs" />
+    <Compile Include="Systems\Flag\FlagStructures.cs" />
+    <Compile Include="Systems\Lock\LockMessageHandler.cs" />
+    <Compile Include="Systems\ModApi\ModApiMessageHandler.cs" />
+    <Compile Include="Systems\Mod\ModFileHandler.cs" />
+    <Compile Include="Systems\Scenario\ScenarioStructures.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsReadSaveHandler.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsStructures.cs" />
+    <Compile Include="Systems\ModApi\ModApiSystem.cs" />
+    <Compile Include="Systems\Flag\FlagSystem.cs" />
+    <Compile Include="Systems\Lock\LockSystem.cs" />
+    <Compile Include="MainSystem.cs" />
+    <Compile Include="Systems\Mod\ModSystem.cs" />
+    <Compile Include="Network\NetworkReceiver.cs" />
+    <Compile Include="Network\NetworkConnection.cs" />
+    <Compile Include="Network\NetworkSender.cs" />
+    <Compile Include="Systems\Network\NetworkSystem.cs" />
+    <Compile Include="Systems\PlayerColorSys\PlayerColorSystem.cs" />
+    <Compile Include="Systems\Status\StatusSystem.cs" />
+    <Compile Include="Systems\Scenario\ScenarioSystem.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsSystem.cs" />
+    <Compile Include="Systems\TimeSyncer\TimeSyncerSystem.cs" />
+    <Compile Include="Systems\Toolbar\ToolbarSystem.cs" />
+    <Compile Include="Utilities\UniverseConverter.cs" />
+    <Compile Include="Windows\ServerList\ServerListDrawer.cs" />
+    <Compile Include="Windows\ServerList\ServerListWindow.cs" />
+    <Compile Include="Windows\Systems\SystemsDrawer.cs" />
+    <Compile Include="Windows\Systems\SystemsWindow.cs" />
+    <Compile Include="Utilities\InstallChecker.cs" />
+    <Compile Include="Systems\Warp\WarpSystem.cs" />
+    <Compile Include="Windows\Debug\DebugDrawer.cs" />
+    <Compile Include="Windows\Debug\DebugWindow.cs" />
+    <Compile Include="Windows\Mod\ModDrawer.cs" />
+    <Compile Include="Windows\Mod\ModWindow.cs" />
+    <Compile Include="Windows\Options\OptionsDrawer.cs" />
+    <Compile Include="Windows\Options\OptionsWindow.cs" />
+    <Compile Include="Windows\Status\StatusDrawer.cs" />
+    <Compile Include="Windows\Status\StatusWindow.cs" />
+    <Compile Include="Windows\Tools\ToolsDrawer.cs" />
+    <Compile Include="Windows\Tools\ToolsWindow.cs" />
+    <Compile Include="Windows\Update\UpdateDrawer.cs" />
+    <Compile Include="Windows\Update\UpdateWindow.cs" />
+    <Compile Include="Windows\WindowUtil.cs" />
+    <Compile Include="Windows\WindowsHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Localization\XML\Danish\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Danish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Danish\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Danish\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Danish\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Danish\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Danish\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Danish\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Danish\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Danish\ModWindowText.xml" />
+    <Content Include="Localization\XML\Danish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Danish\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Danish\ScreenText.xml" />
+    <Content Include="Localization\XML\Danish\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Danish\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Danish\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Dutch\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Dutch\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Dutch\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Dutch\ModWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\ScreenText.xml" />
+    <Content Include="Localization\XML\Dutch\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\English\AdminWindowText.xml" />
+    <Content Include="Localization\XML\English\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\English\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\English\ChatWindowText.xml" />
+    <Content Include="Localization\XML\English\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\English\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\English\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\English\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\English\InstallDialogText.xml" />
+    <Content Include="Localization\XML\English\ModWindowText.xml" />
+    <Content Include="Localization\XML\English\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\English\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\English\ScreenText.xml" />
+    <Content Include="Localization\XML\English\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\English\StatusWindowText.xml" />
+    <Content Include="Localization\XML\English\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\French\AdminWindowText.xml" />
+    <Content Include="Localization\XML\French\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\French\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\French\ChatWindowText.xml" />
+    <Content Include="Localization\XML\French\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\French\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\French\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\French\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\French\InstallDialogText.xml" />
+    <Content Include="Localization\XML\French\ModWindowText.xml" />
+    <Content Include="Localization\XML\French\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\French\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\French\ScreenText.xml" />
+    <Content Include="Localization\XML\French\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\French\StatusWindowText.xml" />
+    <Content Include="Localization\XML\French\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\German\AdminWindowText.xml" />
+    <Content Include="Localization\XML\German\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\German\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\German\ChatWindowText.xml" />
+    <Content Include="Localization\XML\German\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\German\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\German\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\German\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\German\InstallDialogText.xml" />
+    <Content Include="Localization\XML\German\ModWindowText.xml" />
+    <Content Include="Localization\XML\German\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\German\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\German\ScreenText.xml" />
+    <Content Include="Localization\XML\German\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\German\StatusWindowText.xml" />
+    <Content Include="Localization\XML\German\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Italian\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Italian\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Italian\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Italian\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Italian\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Italian\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Italian\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Italian\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Italian\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Italian\ModWindowText.xml" />
+    <Content Include="Localization\XML\Italian\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Italian\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Italian\ScreenText.xml" />
+    <Content Include="Localization\XML\Italian\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Italian\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Italian\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Japanese\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Japanese\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Japanese\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Japanese\ModWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\ScreenText.xml" />
+    <Content Include="Localization\XML\Japanese\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Polish\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Polish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Polish\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Polish\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Polish\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Polish\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Polish\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Polish\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Polish\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Polish\ModWindowText.xml" />
+    <Content Include="Localization\XML\Polish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Polish\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Polish\ScreenText.xml" />
+    <Content Include="Localization\XML\Polish\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Polish\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Polish\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Russian\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Russian\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Russian\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Russian\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Russian\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Russian\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Russian\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Russian\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Russian\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Russian\ModWindowText.xml" />
+    <Content Include="Localization\XML\Russian\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Russian\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Russian\ScreenText.xml" />
+    <Content Include="Localization\XML\Russian\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Russian\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Russian\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\ModWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\ScreenText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Spanish\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Spanish\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Spanish\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Spanish\ModWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\ScreenText.xml" />
+    <Content Include="Localization\XML\Spanish\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\UpdateWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\AdminWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\ButtonTooltips.xml" />
+    <Content Include="Localization\XML\Swedish\ChatWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\CompatibleDialogText.xml" />
+    <Content Include="Localization\XML\Swedish\ConnectionWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\CraftLibraryWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\DisclaimerDialogText.xml" />
+    <Content Include="Localization\XML\Swedish\InstallDialogText.xml" />
+    <Content Include="Localization\XML\Swedish\ModWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\ScreenshotWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\ScreenText.xml" />
+    <Content Include="Localization\XML\Swedish\ServerListWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\StatusWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\UpdateWindowText.xml" />
+    <Content Include="ModuleStore\XML\ModuleColorChanger.xml" />
+    <Content Include="ModuleStore\XML\ModuleAnchoredDecoupler.xml" />
+    <Content Include="ModuleStore\XML\ModuleAnalysisResource.xml" />
+    <Content Include="ModuleStore\XML\ModuleActiveRadiator.xml" />
+    <Content Include="ModuleStore\XML\LaunchClamp.xml" />
+    <Content Include="ModuleStore\XML\KerbalEVA.xml" />
+    <Content Include="ModuleStore\XML\FXModuleAnimateThrottle.xml" />
+    <Content Include="ModuleStore\XML\ModuleAnimatorLandingGear.xml" />
+    <Content Include="ModuleStore\XML\ModuleAsteroidResource.xml" />
+    <Content Include="ModuleStore\XML\ModuleAsteroid.xml" />
+    <Content Include="ModuleStore\XML\ModuleAnimationGroup.xml" />
+    <Content Include="ModuleStore\XML\FXModuleThrottleEffects.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelDamage.xml" />
+    <Content Include="ModuleStore\XML\MultiModeEngine.xml" />
+    <Content Include="ModuleStore\XML\ModuleToggleCrossfeed.xml" />
+    <Content Include="ModuleStore\XML\ModuleStructuralNode.xml" />
+    <Content Include="ModuleStore\XML\ModuleStatusLight.xml" />
+    <Content Include="ModuleStore\XML\ModuleServiceModule.xml" />
+    <Content Include="ModuleStore\XML\SentinelModule.xml" />
+    <Content Include="ModuleStore\XML\RetractableLadder.xml" />
+    <Content Include="ModuleStore\XML\ModulePhysicMaterial.xml" />
+    <Content Include="ModuleStore\XML\ModulePartVariants.xml" />
+    <Content Include="ModuleStore\XML\ModuleLight.xml" />
+    <Content Include="ModuleStore\XML\ModuleDecouple.xml" />
+    <Content Include="ModuleStore\XML\ModuleDataTransmitter.xml" />
+    <Content Include="ModuleStore\XML\ModuleEffectTest.xml" />
+    <Content Include="ModuleStore\XML\ModuleDockingNode.xml" />
+    <Content Include="ModuleStore\XML\ModuleDisplaceTweak.xml" />
+    <Content Include="ModuleStore\XML\ModuleControlSurface.xml" />
+    <Content Include="ModuleStore\XML\ModuleSampleCollector.xml" />
+    <Content Include="ModuleStore\XML\ModuleSampleContainer.xml" />
+    <Content Include="ModuleStore\XML\ModuleScienceLab.xml" />
+    <Content Include="ModuleStore\XML\ModuleScienceExperiment.xml" />
+    <Content Include="ModuleStore\XML\ModuleSAS.xml" />
+    <Content Include="ModuleStore\XML\ModuleResourceIntake.xml" />
+    <Content Include="ModuleStore\XML\ModuleRotatingJoint.xml" />
+    <Content Include="ModuleStore\XML\ModuleJettison.xml" />
+    <Content Include="ModuleStore\XML\ModuleGrappleNode.xml" />
+    <Content Include="ModuleStore\XML\ModuleGimbal.xml" />
+    <Content Include="ModuleStore\XML\ModuleGenerator.xml" />
+    <Content Include="ModuleStore\XML\ModuleEnviroSensor.xml" />
+    <Content Include="ModuleStore\XML\PartModule.xml" />
+    <Content Include="ModuleStore\XML\ModuleAnimateGeneric.xml" />
+    <Content Include="ModuleStore\XML\ModuleAsteroidDrill.xml" />
+    <Content Include="ModuleStore\XML\ModuleCoreHeat.xml" />
+    <Content Include="ModuleStore\XML\ModuleDeployablePart.xml" />
+    <Content Include="ModuleStore\XML\ModuleDeployableSolarPanel.xml" />
+    <Content Include="ModuleStore\XML\BaseConverter.xml" />
+    <Content Include="ModuleStore\XML\ModuleCommand.xml" />
+    <Content Include="ModuleStore\XML\ModuleParachute.xml" />
+    <Content Include="ModuleStore\XML\ModuleEngines.xml" />
+    <Content Include="ModuleStore\XML\ModuleReactionWheel.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelBase.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelBrakes.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelDeployment.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelMotor.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelSuspension.xml" />
+    <Content Include="Resources\LMPButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
+      <Name>Lidgren.Network</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LmpCommon\LmpCommon.csproj">
+      <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
+      <Name>LmpCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
+      <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
+      <Name>LmpGlobal</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent Condition="'$(OS)' != 'Unix'">xcopy /Y "$(SolutionDir)External\Dependencies\*.dll" "$(TargetDir)"</PreBuildEvent>
+  </PropertyGroup>
+</Project>

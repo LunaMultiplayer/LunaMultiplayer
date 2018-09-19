@@ -1,7 +1,7 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Enums;
-using LunaCommon.Message.Data.PlayerConnection;
-using LunaCommon.Message.Server;
+using LmpCommon.Enums;
+using LmpCommon.Message.Data.PlayerConnection;
+using LmpCommon.Message.Server;
 using Server.Context;
 using Server.Log;
 using Server.Plugin;

@@ -1,0 +1,44 @@
+﻿using LmpClient.Base;
+using LmpClient.Base.Interface;
+using LmpClient.Network;
+using LmpClient.Systems.SettingsSys;
+using LmpClient.Systems.TimeSyncer;
+using LmpCommon.Message.Client;
+using LmpCommon.Message.Data.Warp;
+using LmpCommon.Message.Interface;
+
+namespace LmpClient.Systems.Warp
+{
+    public class WarpMessageSender : SubSystem<WarpSystem>, IMessageSender
+    {
+        public void SendMessage(IMessageData msg)
+        {
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<WarpCliMsg>(msg)));
+        }
+
+        /// <summary>
+        /// Sends the EXISTING subspace that we jumped into
+        /// </summary>
+        public void SendChangeSubspaceMsg(int subspaceId)
+        {
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<WarpChangeSubspaceMsgData>();
+            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.Subspace = subspaceId;
+
+            SendMessage(msgData);
+        }
+
+        /// <summary>
+        /// Sends the new subspace that we jumped into
+        /// </summary>
+        public void SendNewSubspace()
+        {
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<WarpNewSubspaceMsgData>();
+            msgData.ServerTimeDifference = TimeSyncerSystem.UniversalTime - TimeSyncerSystem.ServerClockSec;
+            msgData.PlayerCreator = SettingsSystem.CurrentSettings.PlayerName;
+            //we don't send the SubspaceKey as it will be given by the server except when warping that we set it to -1
+
+            SendMessage(msgData);
+        }
+    }
+}

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-16"?>
-<AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Administration</Title>
-  <Password>Server Admin Passwort:</Password>
-  <ConfirmDialogTitle>Bestätigung</ConfirmDialogTitle>
-  <BanText>Möchtest du diesen Spieler wirklich bannen?</BanText>
-  <KickText>Möchtest du diesen Spieler wirklich kicken?</KickText>
-  <Reason>Grund:</Reason>
-</AdminWindowText>

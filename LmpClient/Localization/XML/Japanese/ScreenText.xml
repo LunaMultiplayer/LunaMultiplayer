@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CraftUploaded>機体をアップロードしました！</CraftUploaded>
+  <CraftSaved>機体をセーブしました！</CraftSaved>
+  <ModFileGenerated>LMPModControl.xmlがKSPのインストールフォルダに生成されました。</ModFileGenerated>
+  <Disconected>通信が切断されました！</Disconected>
+  <Spectating>この機体は他のプレイヤーがが操縦中です:</Spectating>
+  <SafetyBubble>注意！セーフティバブルの中にいる間は、あなたの機体は他のプレイヤーから見えません！</SafetyBubble>
+  <CannotRecover>回収できません！他のプレイヤーの機体です。</CannotRecover>
+  <CannotTerminate>破棄できません！他のプレイヤーの機体です。</CannotTerminate>
+  <SpectatingRemoved>眺めていた機体が回収されました。</SpectatingRemoved>
+  <WarpDisabled>時間を加速できません！サーバーによって制限されています。</WarpDisabled>
+  <WaitingSubspace>時間を加速できません！サブスペースIDの順番待ちです。</WaitingSubspace>
+  <ScreenshotInterval>スクリーンショットの間隔が $1 秒でした。このスクリーンショットはアップロードされません。</ScreenshotInterval>
+  <CraftLibraryInterval>クラフトライブラリへのアクセス間隔が $1 秒でした。この操作は無効です。</CraftLibraryInterval>
+  <ScreenshotTaken>スクリーンショットをアップロードしました！</ScreenshotTaken>
+  <ImageSaved>画像は GameData/LunaMultiplayer/Screenshots に保存されました</ImageSaved>
+  <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
+  <SackingKerbalsNotAllowed>This server does not allow firing kerbals</SackingKerbalsNotAllowed>
+  <CannotLoadGames>LMP does not allow loading savegames</CannotLoadGames>
+  <KerbalNotYours>Another player is using this kerbal</KerbalNotYours>
+  <UnsafeToSync>Cannot sync while in unstable orbit as you might crash! You can turn off this check in settings</UnsafeToSync>
+</ScreenText>

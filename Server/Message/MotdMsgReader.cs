@@ -1,7 +1,7 @@
 ﻿using System;
-using LunaCommon.Message.Data.Motd;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Server;
+using LmpCommon.Message.Data.Motd;
+using LmpCommon.Message.Interface;
+using LmpCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Message.Base;

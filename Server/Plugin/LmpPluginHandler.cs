@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using LunaCommon.Message.Interface;
+using LmpCommon.Message.Interface;
 using Server.Client;
 using Server.Log;
 using Server.System;

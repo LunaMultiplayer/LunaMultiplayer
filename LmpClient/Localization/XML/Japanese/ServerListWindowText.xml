@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Server list</Title>
+  <NoServers>サーバーが見つかりません！</NoServers>
+  <Ping>Ping</Ping>
+  <Players>接続人数</Players>
+  <MaxPlayers>最大人数</MaxPlayers>
+  <Mode>ゲームモード</Mode>
+  <WarpMode>時間加速設定</WarpMode>
+  <Terrain>地形のディテール</Terrain>
+  <Cheats>チート設定</Cheats>
+  <Name>サーバー名</Name>
+  <Description>説明</Description>
+  <Website>URL</Website>
+  <ServerDetailTitle>サーバーに接続</ServerDetailTitle>
+  <Password>パスワード</Password>
+  <Connect>接続</Connect>
+</ServerListWindowText>

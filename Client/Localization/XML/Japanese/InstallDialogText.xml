@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-16"?>
-<InstallDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>インストールに誤りがあります</Title>
-  <IncorrectInstall>LunaMultiPlayerが正しくインストールされていません。</IncorrectInstall>
-  <CurrentLoc>現在のファイル位置:</CurrentLoc>
-  <CorrectLoc>正しいファイル位置:</CorrectLoc>
-</InstallDialogText>

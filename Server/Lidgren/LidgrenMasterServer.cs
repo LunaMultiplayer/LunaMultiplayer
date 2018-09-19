@@ -1,7 +1,7 @@
-﻿using LunaCommon;
-using LunaCommon.Message.Data.MasterServer;
-using LunaCommon.Message.MasterServer;
-using LunaCommon.Time;
+﻿using LmpCommon;
+using LmpCommon.Message.Data.MasterServer;
+using LmpCommon.Message.MasterServer;
+using LmpCommon.Time;
 using Server.Context;
 using Server.Log;
 using Server.Settings.Structures;

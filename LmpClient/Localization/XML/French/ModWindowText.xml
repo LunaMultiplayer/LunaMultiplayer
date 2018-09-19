@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ModWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>LunaMultiplayer - Échec de la validation des mods</Title>
+  <MandatoryModsNotFound>Mods obligatoires non détectés :</MandatoryModsNotFound>
+  <MissingExpansions>Expansions manquantes :</MissingExpansions>
+  <MandatoryModsDifferentShaFound>Mods obligatoires avec SHA différent détectés :</MandatoryModsDifferentShaFound>
+  <Link>Lien</Link>
+  <ForbiddenFilesFound>Mods interdits détectés :</ForbiddenFilesFound>
+  <NonListedFilesFound>Mods non listés et interdits détectés :</NonListedFilesFound>
+  <MandatoryPartsNotFound>Pièces obligatoires non détectées :</MandatoryPartsNotFound>
+  <ForbiddenPartsFound>Pièces interdites détectées :</ForbiddenPartsFound>
+</ModWindowText>

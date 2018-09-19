@@ -1,5 +1,5 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Xml;
+using LmpCommon.Xml;
 using System;
 
 namespace Server.Settings.Definition

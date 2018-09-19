@@ -19,4 +19,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("0.13.50-compiled")]
 
 [assembly: System.CLSCompliant(true)]
-[assembly: InternalsVisibleTo("LMP.Tests")]
+[assembly: InternalsVisibleTo("LmpCommonTest")]

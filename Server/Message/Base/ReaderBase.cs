@@ -1,4 +1,4 @@
-﻿using LunaCommon.Message.Interface;
+﻿using LmpCommon.Message.Interface;
 using Server.Client;
 
 namespace Server.Message.Base

@@ -1,7 +1,7 @@
-﻿using LunaCommon;
-using LunaCommon.Message.Data.Groups;
-using LunaCommon.Message.Server;
-using LunaCommon.Xml;
+﻿using LmpCommon;
+using LmpCommon.Message.Data.Groups;
+using LmpCommon.Message.Server;
+using LmpCommon.Xml;
 using Server.Context;
 using Server.Server;
 using System.Collections.Concurrent;

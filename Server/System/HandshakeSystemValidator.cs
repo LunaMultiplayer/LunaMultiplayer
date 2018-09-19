@@ -1,4 +1,4 @@
-﻿using LunaCommon.Enums;
+﻿using LmpCommon.Enums;
 using Server.Client;
 using Server.Command.Command;
 using Server.Settings.Structures;

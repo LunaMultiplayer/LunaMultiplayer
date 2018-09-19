@@ -1,5 +1,5 @@
-﻿using LunaCommon;
-using LunaUpdater.Github;
+﻿using LmpCommon;
+using LmpUpdater.Github;
 using Server.Context;
 using Server.Log;
 using System;

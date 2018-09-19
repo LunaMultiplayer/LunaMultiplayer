@@ -1,6 +1,6 @@
-﻿using LunaCommon.Message.Data.Screenshot;
-using LunaCommon.Message.Server;
-using LunaCommon.Time;
+﻿using LmpCommon.Message.Data.Screenshot;
+using LmpCommon.Message.Server;
+using LmpCommon.Time;
 using Server.Client;
 using Server.Context;
 using Server.Log;

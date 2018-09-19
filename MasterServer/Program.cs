@@ -1,6 +1,6 @@
-﻿using LunaUpdater;
-using LunaUpdater.Appveyor;
-using LunaUpdater.Github;
+﻿using LmpUpdater;
+using LmpUpdater.Appveyor;
+using LmpUpdater.Github;
 using System;
 using System.IO;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace MasterServer
 #else
         private const bool DebugVersion = false;
 #endif
-        private const string DllFileName = "LMP.MasterServer.dll";
+        private const string DllFileName = "LmpMasterServer.dll";
 
         private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
         private static readonly string DllPath = Path.Combine(Directory.GetCurrentDirectory(), DllFileName);
@@ -68,7 +68,7 @@ namespace MasterServer
         /// </summary>
         private static void StartMasterServerDll()
         {
-            LmpDomain = AppDomain.CreateDomain("LMP.MasterServer", null, DomainSetup);
+            LmpDomain = AppDomain.CreateDomain("LmpMasterServer", null, DomainSetup);
             LmpDomain.SetData("Arguments", Arguments);
             LmpDomain.SetData("Stop", false);
 
@@ -79,7 +79,7 @@ namespace MasterServer
                 AppDomain.CurrentDomain.Load(File.ReadAllBytes(uhttpSharpPath));
 
                 var assembly = AppDomain.CurrentDomain.Load(File.ReadAllBytes(DllPath));
-                var entryPoint = assembly.GetType("LMP.MasterServer.EntryPoint");
+                var entryPoint = assembly.GetType("LmpMasterServer.EntryPoint");
 
                 entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new[] { AppDomain.CurrentDomain.GetData("Arguments") });
 

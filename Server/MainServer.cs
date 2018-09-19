@@ -1,5 +1,5 @@
-﻿using LunaCommon;
-using LunaCommon.Time;
+﻿using LmpCommon;
+using LmpCommon.Time;
 using Server.Client;
 using Server.Command;
 using Server.Context;

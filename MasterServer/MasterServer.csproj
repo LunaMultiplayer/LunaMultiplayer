@@ -80,13 +80,9 @@
     <Content Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LMP.MasterServer\LMP.MasterServer.csproj">
-      <Project>{13549ede-d540-47ba-86bc-731bb7dd7bfb}</Project>
-      <Name>LMP.MasterServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LunaUpdater\LunaUpdater.csproj">
+    <ProjectReference Include="..\LmpUpdater\LmpUpdater.csproj">
       <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>
-      <Name>LunaUpdater</Name>
+      <Name>LmpUpdater</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-16"?>
+<DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Text>
+Luna Multi Player (LMP) は以下の個人情報を、マスターサーバー及び接続先のサーバーと共有します。
+a) 接続時のプレイヤー名
+b) プレイヤートークン (プレイヤー認証用のランダムに生成された文字列)
+c) 接続時のIPアドレス
+
+LMPは、マスターサーバー及び接続先のサーバー以外とは接続しません。
+LMPを使用するには、これらの情報共有について同意する必要があります。
+
+詳細はKSPアドオン規約を参照下さい。
+    </Text>
+  <Title>LunaMultiPlayerの免責事項</Title>
+  <Accept>同意する</Accept>
+  <Decline>同意しない</Decline>
+</DisclaimerDialogText>

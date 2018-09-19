@@ -1,4 +1,4 @@
-﻿using LunaCommon.Time;
+﻿using LmpCommon.Time;
 using Server.Context;
 using Server.Settings.Structures;
 using Server.System;

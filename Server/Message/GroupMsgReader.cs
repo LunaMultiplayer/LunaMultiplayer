@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using LunaCommon.Message.Data.Groups;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Server;
-using LunaCommon.Message.Types;
+using LmpCommon.Message.Data.Groups;
+using LmpCommon.Message.Interface;
+using LmpCommon.Message.Server;
+using LmpCommon.Message.Types;
 using Server.Client;
 using Server.Context;
 using Server.Message.Base;

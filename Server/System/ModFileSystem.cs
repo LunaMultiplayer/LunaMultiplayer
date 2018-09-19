@@ -1,5 +1,5 @@
-﻿using LunaCommon.ModFile.Structure;
-using LunaCommon.Xml;
+﻿using LmpCommon.ModFile.Structure;
+using LmpCommon.Xml;
 using Server.Context;
 using Server.Log;
 using System;
@@ -12,7 +12,7 @@ namespace Server.System
 
         public static void GenerateNewModFile()
         {
-            FileHandler.WriteToFile(ServerContext.ModFilePath, LunaCommon.Properties.Resources.LMPModControl);
+            FileHandler.WriteToFile(ServerContext.ModFilePath, LmpCommon.Properties.Resources.LMPModControl);
         }
 
         public static void LoadModFile()
@@ -24,7 +24,7 @@ namespace Server.System
             catch (Exception)
             {
                 LunaLog.Error("Cannot read LMPModControl file. Will load the default one. Please regenerate it");
-                ModControl = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LunaCommon.Properties.Resources.LMPModControl);
+                ModControl = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LmpCommon.Properties.Resources.LMPModControl);
             }
         }
     }

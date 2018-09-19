@@ -141,6 +141,9 @@
     <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
     <Compile Include="Settings\Structures\CraftSettings.cs" />
     <Compile Include="Settings\Structures\MasterServerSettings.cs" />
+    <Compile Include="Structures\Module.cs" />
+    <Compile Include="Structures\Part.cs" />
+    <Compile Include="Structures\Vessel.cs" />
     <Compile Include="System\BackupSystem.cs" />
     <Compile Include="System\CraftLibrarySystem.cs" />
     <Compile Include="System\HandshakeSystem.cs" />
@@ -232,17 +235,17 @@
     <Compile Include="Web\Handlers\ServerInformationRestController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LunaUpdater\LunaUpdater.csproj">
+    <ProjectReference Include="..\LmpCommon\LmpCommon.csproj">
+      <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
+      <Name>LmpCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LmpUpdater\LmpUpdater.csproj">
       <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>
-      <Name>LunaUpdater</Name>
+      <Name>LmpUpdater</Name>
     </ProjectReference>
     <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj">
       <Project>{3d681959-4da3-4a71-a68b-704d6411d5ea}</Project>

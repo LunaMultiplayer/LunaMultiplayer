@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Luna Multiplayer Mod")]
@@ -16,3 +17,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.13.50")]
 [assembly: AssemblyFileVersion("0.13.50")]
 [assembly: AssemblyInformationalVersion("0.13.50-compiled")]
+
+[assembly: InternalsVisibleTo("ServerTest")]

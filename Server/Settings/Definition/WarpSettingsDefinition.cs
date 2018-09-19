@@ -1,5 +1,5 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Xml;
+﻿using LmpCommon.Enums;
+using LmpCommon.Xml;
 using System;
 
 namespace Server.Settings.Definition

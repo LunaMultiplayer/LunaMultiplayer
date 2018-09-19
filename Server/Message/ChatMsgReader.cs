@@ -1,6 +1,6 @@
-﻿using LunaCommon.Message.Data.Chat;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Server;
+﻿using LmpCommon.Message.Data.Chat;
+using LmpCommon.Message.Interface;
+using LmpCommon.Message.Server;
 using Server.Client;
 using Server.Log;
 using Server.Message.Base;
