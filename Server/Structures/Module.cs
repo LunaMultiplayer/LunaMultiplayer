@@ -12,7 +12,7 @@ namespace Server.Structures
 
         public Module(ConfigNode cfgNode)
         {
-            Fields = new MixedCollection<string, string>(cfgNode.GetAllValues().Select(n => new MutableKeyValue<string, string>(n.Key, n.Value)));
+            Fields = new MixedCollection<string, string>(cfgNode.GetAllValues());
 
             Events = cfgNode.GetNodes("EVENTS")[0];
             Actions = cfgNode.GetNodes("ACTIONS")[0];
