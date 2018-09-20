@@ -56,9 +56,9 @@ You can check how many servers are up and running either in [Release](../../wiki
 
 | Master server | Release | Nightly |
 | ------------  | ------- |-------- |
-[Dagger](https://github.com/gavazquez) | [![Release servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://servers.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://servers.lunamultiplayer.com:8751) |
-[PictoCube](https://github.com/Alfred-PictoCube) | [![Release servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://pictocube.ddns.net:8701) | [![Nightly servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://pictocube.ddns.net:8711) |
-Tekbot | [![Release servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://ms.lmp.dnsd.info:8701) | [![Nightly servers](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=status)](http://ms.lmp.dnsd.info:8751) |
+[Dagger](https://github.com/gavazquez) | [![Release servers](https://img.shields.io/uptimerobot/status/m781000509-099821b206842d6699a879ec.svg?label=status)](http://servers.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/uptimerobot/status/m781000514-d57617b849e3980c0a53478e.svg?label=status)](http://servers.lunamultiplayer.com:8751) |
+[PictoCube](https://github.com/Alfred-PictoCube) | [![Release servers](https://img.shields.io/uptimerobot/status/m781000524-16ff87faa78c5551d59943da.svg?label=status)](http://pictocube.ddns.net:8701) | [![Nightly servers](https://img.shields.io/uptimerobot/status/m781000525-20a7f5de2fa7556ebd1ed41f.svg?label=status)](http://pictocube.ddns.net:8711) |
+Tekbot | [![Release servers](https://img.shields.io/uptimerobot/status/m781000527-3db22417d8d1f2b4dc15f3d9.svg?label=status)](http://ms.lmp.dnsd.info:8701) | [![Nightly servers](https://img.shields.io/uptimerobot/status/m781000529-c1db3d7812e30e9f8c397237.svg?label=status)](http://ms.lmp.dnsd.info:8751) |
 
 ---
 ### Status:
