@@ -149,12 +149,9 @@ namespace Server.Structures
                 }
                 else
                 {
-                    for (var i = 0; i < _list.Count; i++)
+                    foreach (var keyVal in _list.Where(k=> k.Key.Equals(key)))
                     {
-                        if (_list[i].Key.Equals(key))
-                        {
-                            _list[i].Value = value;
-                        }
+                        keyVal.Value = value;
                     }
                 }
             }
