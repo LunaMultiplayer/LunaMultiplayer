@@ -1,5 +1,4 @@
 ﻿using LunaConfigNode;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Server.Structures
@@ -20,10 +19,10 @@ namespace Server.Structures
 
         public Vessel(ConfigNode cfgNode)
         {
-            Fields = new MixedCollection<string, string>(cfgNode.GetAllValues());
-            Parts = new MixedCollection<uint, Part>(cfgNode.GetNodes("PART").Select(n=> new KeyValuePair<uint, Part>(uint.Parse(n.GetValue("uid")), new Part(n))));
-            Orbit = new MixedCollection<string, double>(cfgNode.GetNodes("ORBIT").First().GetAllValues().Select(n => new KeyValuePair<string, double>(n.Key, double.TryParse(n.Value, out var obtVal) ? obtVal : 0)));
-            ActionGroups = new MixedCollection<string, string>(cfgNode.GetNodes("ACTIONGROUPS").First().GetAllValues());
+            Fields = new MixedCollection<string, string>(cfgNode.GetAllValues().Select(n=> new MutableKeyValue<string, string>(n.Key, n.Value)));
+            Parts = new MixedCollection<uint, Part>(cfgNode.GetNodes("PART").Select(n=> new MutableKeyValue<uint, Part>(uint.Parse(n.GetValue("uid")), new Part(n))));
+            Orbit = new MixedCollection<string, double>(cfgNode.GetNodes("ORBIT").First().GetAllValues().Select(n => new MutableKeyValue<string, double>(n.Key, double.TryParse(n.Value, out var obtVal) ? obtVal : 0)));
+            ActionGroups = new MixedCollection<string, string>(cfgNode.GetNodes("ACTIONGROUPS").First().GetAllValues().Select(n => new MutableKeyValue<string, string>(n.Key, n.Value)));
 
             Discovery = cfgNode.GetNodes("DISCOVERY").First();
             FlightPlan = cfgNode.GetNodes("FLIGHTPLAN").First();
