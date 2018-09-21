@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using LmpCommon.Xml;
+using LmpCommonTest.Extension;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using LmpCommon.Xml;
 
 namespace LmpCommonTest
 {
@@ -9,25 +10,25 @@ namespace LmpCommonTest
     {
         private static readonly string XmlExamplePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "XmlExampleFiles");
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestConvertEvaToXml()
         {
             SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "EVA.txt"));
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestConvertVesselToXml()
         {
             SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "Vessel.txt"));
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestConvertBigVesselToXml()
         {
             SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "BigVessel.txt"));
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestSeveralVesselsToXml()
         {
             foreach (var file in Directory.GetFiles(Path.Combine(XmlExamplePath, "Others")))
@@ -40,9 +41,9 @@ namespace LmpCommonTest
         {
             if (!File.Exists(filePath)) return;
 
-            var configNode = File.ReadAllText(filePath);
+            var configNode = File.ReadAllText(filePath).ToUnixString();
             var xml = ConfigNodeXmlParser.ConvertToXml(configNode);
-            var backToConfigNode = ConfigNodeXmlParser.ConvertToConfigNode(xml);
+            var backToConfigNode = ConfigNodeXmlParser.ConvertToConfigNode(xml).ToUnixString();
 
             Assert.IsTrue(configNode.Equals(backToConfigNode), $"Error serializing config node. File: {Path.GetFileName(filePath)}");
         }
