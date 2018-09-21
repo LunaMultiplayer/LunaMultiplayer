@@ -44,8 +44,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LunaConfigNode, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\LunaConfigNode.1.3.0\lib\net35\LunaConfigNode.dll</HintPath>
+    <Reference Include="LunaConfigNode, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\LunaConfigNode.1.6.4\lib\net35\LunaConfigNode.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
@@ -141,7 +141,6 @@
     <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
     <Compile Include="Settings\Structures\CraftSettings.cs" />
     <Compile Include="Settings\Structures\MasterServerSettings.cs" />
-    <Compile Include="Structures\Module.cs" />
     <Compile Include="Structures\Part.cs" />
     <Compile Include="Structures\Vessel.cs" />
     <Compile Include="System\BackupSystem.cs" />

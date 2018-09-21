@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LunaConfigNode, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\LunaConfigNode.1.1.1\lib\net35\LunaConfigNode.dll</HintPath>
+    <Reference Include="LunaConfigNode, Version=1.6.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\LunaConfigNode.1.6.4\lib\net35\LunaConfigNode.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
@@ -45,6 +45,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="FileHandlerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VesselTest.cs" />
