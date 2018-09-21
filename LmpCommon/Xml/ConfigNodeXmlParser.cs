@@ -65,7 +65,7 @@ namespace LmpCommon.Xml
                                 if (xmlReader.Name == ValueNode)
                                 {
                                     var valueName = xmlReader.GetAttribute(AttributeName);
-                                    writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + valueName + " = " + xmlReader.ReadString());
+                                    writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + valueName + " = " + xmlReader.ReadString().Trim());
                                 }
                                 else
                                 {
