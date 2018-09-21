@@ -1,9 +1,8 @@
-﻿using LmpCommon.Xml;
+﻿using LunaConfigNode;
 using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -18,10 +17,10 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("Reputation", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("Reputation", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("Reputation", out var xmlData)) return;
 
                     var updatedText = UpdateScenarioWithReputationData(xmlData, reputationPoints);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("Reputation", updatedText, xmlData);
+                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("Reputation", updatedText, xmlData);
                 }
             });
         }

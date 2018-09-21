@@ -1,9 +1,8 @@
-﻿using LmpCommon.Xml;
+﻿using LunaConfigNode;
 using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -18,10 +17,10 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("ScenarioUpgradeableFacilities", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ScenarioUpgradeableFacilities", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ScenarioUpgradeableFacilities", out var xmlData)) return;
 
                     var updatedText = UpdateScenarioWithLevelData(xmlData, facilityId, level);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ScenarioUpgradeableFacilities", updatedText, xmlData);
+                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ScenarioUpgradeableFacilities", updatedText, xmlData);
                 }
             });
         }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Server.Structures;
+using Server.System.Vessel.Classes;
 using ServerTest.Extension;
 using System.IO;
 

@@ -1,9 +1,8 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
-using LmpCommon.Xml;
+using LunaConfigNode;
 using Server.Utilities;
 using System.Threading.Tasks;
 using System.Xml;
-using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -18,10 +17,10 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ResearchAndDevelopment", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var xmlData)) return;
 
                     var updatedText = UpdateScenarioWithScienceSubject(xmlData, scienceSubject);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ResearchAndDevelopment", updatedText, xmlData);
+                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ResearchAndDevelopment", updatedText, xmlData);
                 }
             });
         }

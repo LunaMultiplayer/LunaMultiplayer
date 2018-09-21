@@ -32,7 +32,7 @@ namespace Server.System.Vessel
             {
                 lock (Semaphore.GetOrAdd(vesselId, new object()))
                 {
-                    var vessel = new Structures.Vessel(vesselDataInConfigNodeFormat);
+                    var vessel = new Classes.Vessel(vesselDataInConfigNodeFormat);
 
                     if (GeneralSettings.SettingsStore.ModControl)
                     {

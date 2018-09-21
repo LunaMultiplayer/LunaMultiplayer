@@ -141,8 +141,8 @@
     <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
     <Compile Include="Settings\Structures\CraftSettings.cs" />
     <Compile Include="Settings\Structures\MasterServerSettings.cs" />
-    <Compile Include="Structures\Part.cs" />
-    <Compile Include="Structures\Vessel.cs" />
+    <Compile Include="System\Vessel\Classes\Part.cs" />
+    <Compile Include="System\Vessel\Classes\Vessel.cs" />
     <Compile Include="System\BackupSystem.cs" />
     <Compile Include="System\CraftLibrarySystem.cs" />
     <Compile Include="System\HandshakeSystem.cs" />
@@ -287,7 +287,9 @@
     <None Include="Resources\Kerbals\Bob Kerman.txt" />
     <None Include="Resources\Kerbals\Bill Kerman.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Structures\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(OS)' != 'Unix'">
     <PostBuildEvent>del "$(TargetDir)LiteDB.xml"</PostBuildEvent>

@@ -3,7 +3,7 @@ using LunaConfigNode.CfgNode;
 using System.Linq;
 using System.Text;
 
-namespace Server.Structures
+namespace Server.System.Vessel.Classes
 {
     public class Vessel
     {

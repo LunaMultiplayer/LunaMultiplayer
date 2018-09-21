@@ -1,4 +1,4 @@
-﻿using Server.Structures;
+﻿using Server.System.Vessel.Classes;
 using System;
 using System.Globalization;
 

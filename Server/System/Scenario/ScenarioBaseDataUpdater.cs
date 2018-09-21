@@ -1,9 +1,8 @@
-﻿using LmpCommon.Xml;
+﻿using LunaConfigNode;
 using System.Collections.Concurrent;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -28,7 +27,7 @@ namespace Server.System.Scenario
                 lock (Semaphore.GetOrAdd(scenarioModule, new object()))
                 {
                     var scenarioAsXml = XmlConverter.ConvertToXml(scenarioDataInConfigNodeFormat);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.AddOrUpdate(scenarioModule, scenarioAsXml, (key, existingVal) => scenarioAsXml);
+                    ScenarioStoreSystem.CurrentScenarios.AddOrUpdate(scenarioModule, scenarioAsXml, (key, existingVal) => scenarioAsXml);
                 }
             });
         }

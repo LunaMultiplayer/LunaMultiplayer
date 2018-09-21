@@ -1,9 +1,8 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
-using LmpCommon.Xml;
+using LunaConfigNode;
 using Server.Utilities;
 using System.Threading.Tasks;
 using System.Xml;
-using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -18,10 +17,10 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("ProgressTracking", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ProgressTracking", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ProgressTracking", out var xmlData)) return;
 
                     var updatedText = UpdateScenarioWithAchievementData(xmlData, techMsg.Achievements);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ProgressTracking", updatedText, xmlData);
+                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ProgressTracking", updatedText, xmlData);
                 }
             });
         }

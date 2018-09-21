@@ -47,8 +47,8 @@ namespace Server.Context
                 FileHandler.FolderCreate(KerbalSystem.KerbalsPath);
                 KerbalSystem.GenerateDefaultKerbals();
             }
-            if (!FileHandler.FolderExists(ScenarioSystem.ScenarioPath))
-                FileHandler.FolderCreate(ScenarioSystem.ScenarioPath);
+            if (!FileHandler.FolderExists(ScenarioSystem.ScenariosPath))
+                FileHandler.FolderCreate(ScenarioSystem.ScenariosPath);
             if (!FileHandler.FolderExists(VesselStoreSystem.VesselsPath))
                 FileHandler.FolderCreate(VesselStoreSystem.VesselsPath);
         }

@@ -1,12 +1,10 @@
-﻿using LmpCommon.Xml;
-using Server.Context;
+﻿using LunaConfigNode;
 using Server.Events;
 using Server.Settings.Structures;
 using Server.System.Scenario;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using LunaConfigNode;
 
 // ReSharper disable InconsistentlySynchronizedField
 
@@ -17,9 +15,7 @@ namespace Server.System
     /// </summary>
     public static class ScenarioStoreSystem
     {
-        public static string ScenariosFolder = Path.Combine(ServerContext.UniverseDirectory, "Scenarios");
-
-        public static ConcurrentDictionary<string, string> CurrentScenariosInXmlFormat = new ConcurrentDictionary<string, string>();
+        public static ConcurrentDictionary<string, string> CurrentScenarios = new ConcurrentDictionary<string, string>();
 
         private static readonly object BackupLock = new object();
 
@@ -30,7 +26,7 @@ namespace Server.System
         /// </summary>
         public static string GetScenarioInConfigNodeFormat(string scenarioName)
         {
-            return CurrentScenariosInXmlFormat.TryGetValue(scenarioName, out var scenarioInXmlFormat) ?
+            return CurrentScenarios.TryGetValue(scenarioName, out var scenarioInXmlFormat) ?
                 XmlConverter.ConvertToConfigNode(scenarioInXmlFormat) : null;
         }
 
@@ -39,11 +35,12 @@ namespace Server.System
         /// </summary>
         public static void LoadExistingScenarios(bool createdFromScratch)
         {
+            ChangeExistingScenarioFormats();
             lock (BackupLock)
             {
-                foreach (var file in Directory.GetFiles(ScenariosFolder).Where(f => Path.GetExtension(f) == ".xml"))
+                foreach (var file in Directory.GetFiles(ScenarioSystem.ScenariosPath).Where(f => Path.GetExtension(f) == ScenarioSystem.ScenarioFileFormat))
                 {
-                    CurrentScenariosInXmlFormat.TryAdd(Path.GetFileNameWithoutExtension(file), FileHandler.ReadFileText(file));
+                    CurrentScenarios.TryAdd(Path.GetFileNameWithoutExtension(file), FileHandler.ReadFileText(file));
                 }
 
                 if (createdFromScratch)
@@ -56,16 +53,33 @@ namespace Server.System
         }
 
         /// <summary>
+        /// Transform OLD Xml scenarios into the new format
+        /// TODO: Remove this for next version
+        /// </summary>
+        public static void ChangeExistingScenarioFormats()
+        {
+            lock (BackupLock)
+            {
+                foreach (var file in Directory.GetFiles(ScenarioSystem.ScenariosPath).Where(f => Path.GetExtension(f) == ".xml"))
+                {
+                    var vesselAsCfgNode = XmlConverter.ConvertToConfigNode(FileHandler.ReadFileText(file));
+                    FileHandler.WriteToFile(file.Replace(".xml", ".txt"), vesselAsCfgNode);
+                    //FileHandler.FileDelete(file);
+                }
+            }
+        }
+
+        /// <summary>
         /// Actually performs the backup of the scenarios to file
         /// </summary>
         public static void BackupScenarios()
         {
             lock (BackupLock)
             {
-                var scenariosInXml = CurrentScenariosInXmlFormat.ToArray();
+                var scenariosInXml = CurrentScenarios.ToArray();
                 foreach (var scenario in scenariosInXml)
                 {
-                    FileHandler.WriteToFile(Path.Combine(ScenariosFolder, $"{scenario.Key}.xml"), scenario.Value);
+                    FileHandler.WriteToFile(Path.Combine(ScenarioSystem.ScenariosPath, $"{scenario.Key}{ScenarioSystem.ScenarioFileFormat}"), scenario.Value);
                 }
             }
         }

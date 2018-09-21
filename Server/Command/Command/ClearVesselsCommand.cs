@@ -5,8 +5,8 @@ using Server.Command.Common;
 using Server.Context;
 using Server.Log;
 using Server.Server;
-using Server.Structures;
 using Server.System;
+using Server.System.Vessel.Classes;
 using System;
 using System.Linq;
 

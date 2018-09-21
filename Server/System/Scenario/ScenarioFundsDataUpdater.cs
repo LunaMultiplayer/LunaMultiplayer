@@ -1,9 +1,8 @@
-﻿using LmpCommon.Xml;
+﻿using LunaConfigNode;
 using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -18,10 +17,10 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("Funding", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("Funding", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("Funding", out var xmlData)) return;
 
                     var updatedText = UpdateScenarioWithFundsData(xmlData, funds);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("Funding", updatedText, xmlData);
+                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("Funding", updatedText, xmlData);
                 }
             });
         }

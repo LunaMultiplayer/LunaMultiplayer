@@ -1,4 +1,4 @@
-﻿using LmpCommon.Xml;
+﻿using LunaConfigNode;
 using Server.Context;
 using Server.Events;
 using System;
@@ -6,19 +6,18 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LunaConfigNode;
 
 namespace Server.System
 {
     /// <summary>
-    /// Here we keep a copy of all the player vessels in <see cref="Structures.Vessel"/> format and we also save them to files at a specified rate
+    /// Here we keep a copy of all the player vessels in <see cref="Vessel"/> format and we also save them to files at a specified rate
     /// </summary>
     public static class VesselStoreSystem
     {
         public const string VesselFileFormat = ".txt";
         public static string VesselsPath = Path.Combine(ServerContext.UniverseDirectory, "Vessels");
 
-        public static ConcurrentDictionary<Guid, Structures.Vessel> CurrentVessels = new ConcurrentDictionary<Guid, Structures.Vessel>();
+        public static ConcurrentDictionary<Guid, Vessel.Classes.Vessel> CurrentVessels = new ConcurrentDictionary<Guid, Vessel.Classes.Vessel>();
 
         private static readonly object BackupLock = new object();
 
@@ -63,7 +62,7 @@ namespace Server.System
                 {
                     if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
                     {
-                        CurrentVessels.TryAdd(vesselId, new Structures.Vessel(FileHandler.ReadFileText(file)));
+                        CurrentVessels.TryAdd(vesselId, new Vessel.Classes.Vessel(FileHandler.ReadFileText(file)));
                     }
                 }
             }

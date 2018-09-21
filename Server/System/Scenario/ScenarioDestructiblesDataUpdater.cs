@@ -1,9 +1,8 @@
-﻿using LmpCommon.Xml;
+﻿using LunaConfigNode;
 using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
-using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -18,10 +17,10 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("ScenarioDestructibles", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ScenarioDestructibles", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ScenarioDestructibles", out var xmlData)) return;
 
                     var updatedText = UpdateScenarioWithRepairDestroyedData(xmlData, facilityId, intact);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ScenarioDestructibles", updatedText, xmlData);
+                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ScenarioDestructibles", updatedText, xmlData);
                 }
             });
         }

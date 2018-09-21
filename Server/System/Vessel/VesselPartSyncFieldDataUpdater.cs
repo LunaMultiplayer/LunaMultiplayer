@@ -37,7 +37,7 @@ namespace Server.System.Vessel
         /// <summary>
         /// Updates the proto vessel with the values we received about a part module change
         /// </summary>
-        private static void UpdateProtoVesselFileWithNewPartSyncFieldData(Structures.Vessel vessel, VesselPartSyncFieldMsgData msgData)
+        private static void UpdateProtoVesselFileWithNewPartSyncFieldData(Classes.Vessel vessel, VesselPartSyncFieldMsgData msgData)
         {
             var part = vessel.GetPart(msgData.PartFlightId);
             if (part != null)
