@@ -25,7 +25,6 @@ namespace ServerTest
         {
             foreach (var file in Directory.GetFiles(XmlExamplePath))
             {
-
                 var originalFile = File.ReadAllText(file).ToUnixString();
                 var vessel = new Vessel(File.ReadAllText(file));
                 var vesselBackToText = vessel.ToString().ToUnixString();
@@ -37,7 +36,7 @@ namespace ServerTest
         [TestMethod]
         public void TestEditVessel()
         {
-            var vessel = new Vessel(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "XmlExampleFiles", "Others", "99969baa-2618-49fa-a197-2c0c995ad3e0.txt")));
+            var vessel = new Vessel(File.ReadAllText(Path.Combine(XmlExamplePath, "99969baa-2618-49fa-a197-2c0c995ad3e0.txt")));
             
             vessel.GetPart(1985344313).GetSingleModule("ModuleProceduralFairing").Values.Update("fsm", "st_flight_deployed");
             var extraNodes = vessel.GetPart(1985344313).GetSingleModule("ModuleProceduralFairing").Nodes;
