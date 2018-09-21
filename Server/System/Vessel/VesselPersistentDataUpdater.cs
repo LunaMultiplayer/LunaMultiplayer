@@ -1,9 +1,6 @@
 ﻿using LmpCommon.Message.Data.Vessel;
-using LmpCommon.Xml;
-using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -28,35 +25,19 @@ namespace Server.System.Vessel
             {
                 lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                 {
-                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+                    if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
 
-                    var updatedText = UpdateProtoVesselFileWithNewPersistentIdData(xmlData, msgData);
-                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                    if (msgData.PartPersistentChange)
+                    {
+                        var part = vessel.GetPart(msgData.From);
+                        part?.Fields.Update("persistentId", msgData.To.ToString(CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        vessel.Fields.Update("persistentId", msgData.To.ToString(CultureInfo.InvariantCulture));
+                    }
                 }
             });
-        }
-
-        /// <summary>
-        /// Updates the proto vessel with the values we received about a new persistent id of a vessel/part
-        /// </summary>
-        private static string UpdateProtoVesselFileWithNewPersistentIdData(string vesselData, VesselPersistentMsgData msgData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            if (msgData.PartPersistentChange)
-            {
-                var query = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='persistentId' and text()=""{msgData.From}""]";
-                var node = document.SelectSingleNode(query);
-                if (node != null) node.InnerText = msgData.To.ToString(CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                var node = document.SelectSingleNode($@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='persistentId' and text()=""{msgData.From}""]");
-                if (node != null) node.InnerText = msgData.To.ToString(CultureInfo.InvariantCulture);
-            }
-
-            return document.ToIndentedString();
         }
     }
 }

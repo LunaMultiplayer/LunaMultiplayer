@@ -152,7 +152,7 @@ namespace Server.Message
         {
             var msgData = (VesselSyncMsgData) message;
 
-            var allVessels = VesselStoreSystem.CurrentVesselsInXmlFormat.Keys.ToList();
+            var allVessels = VesselStoreSystem.CurrentVessels.Keys.ToList();
             for (var i = 0; i < msgData.VesselsCount; i++)
             {
                 allVessels.Remove(msgData.VesselIds[i]);

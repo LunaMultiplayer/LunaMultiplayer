@@ -1,9 +1,6 @@
 ﻿using LmpCommon.Message.Data.Vessel;
-using LmpCommon.Xml;
-using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -28,26 +25,11 @@ namespace Server.System.Vessel
             {
                 lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                 {
-                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+                    if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
 
-                    var updatedText = UpdateProtoVesselWithNewUpdateData(xmlData, msgData);
-                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                    vessel.ActionGroups.Update(msgData.ActionGroupString, msgData.Value.ToString(CultureInfo.InvariantCulture));
                 }
             });
-        }
-
-        /// <summary>
-        /// Updates the proto vessel with the values we received of an action group value
-        /// </summary>
-        private static string UpdateProtoVesselWithNewUpdateData(string vesselData, VesselActionGroupMsgData msgData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ACTIONGROUPS']/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.ActionGroupString}']");
-            if (node != null) node.InnerText = $"{msgData.Value.ToString(CultureInfo.InvariantCulture)}, 0";
-
-            return document.ToIndentedString();
         }
     }
 }

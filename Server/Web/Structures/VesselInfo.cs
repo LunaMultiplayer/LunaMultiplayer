@@ -1,7 +1,6 @@
-﻿using LmpCommon.Xml;
+﻿using Server.Structures;
 using System;
 using System.Globalization;
-using System.Xml;
 
 namespace Server.Web.Structures
 {
@@ -25,58 +24,36 @@ namespace Server.Web.Structures
         public double Epoch { get; set; }
         public int ReferenceBody { get; set; }
 
-        public VesselInfo(string xml)
+        public VesselInfo(Vessel vessel)
         {
-            var document = new XmlDocument();
-            document.LoadXml(xml);
+            Id = Guid.Parse(vessel.Fields.GetSingle("pid").Value);
+            Name = vessel.Fields.GetSingle("name").Value;
+            Type = vessel.Fields.GetSingle("type").Value;
 
-            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='pid']");
-            if (node != null) Id = Guid.Parse(node.InnerText);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='name']");
-            if (node != null) Name = node.InnerText;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='type']");
-            if (node != null) Type = node.InnerText;
-            
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='distanceTraveled']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var dist)) DistanceTravelled = dist;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='sit']");
-            if (node != null) Situation = node.InnerText;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='lat']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var lat)) Lat = lat;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='lon']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var lon)) Lon = lon;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='alt']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var alt)) Alt = alt;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='SMA']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var sma)) SemiMajorAxis = sma;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='ECC']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var ecc)) Eccentricity = ecc;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='INC']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var inc)) Inclination = inc;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='LPE']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var lpe)) ArgumentOfPeriapsis = lpe;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='LAN']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var lan)) LongitudeOfAscendingNode = lan;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='MNA']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var mna)) MeanAnomaly = mna;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='EPH']");
-            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var eph)) Epoch = eph;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='REF']");
-            if (node != null && int.TryParse(node.InnerText, out var refBody)) ReferenceBody = refBody;
+            if (double.TryParse(vessel.Fields.GetSingle("distanceTraveled").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var dist))
+                DistanceTravelled = dist;
+            if (double.TryParse(vessel.Fields.GetSingle("lat").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var lat))
+                Lat = dist;
+            if (double.TryParse(vessel.Fields.GetSingle("lon").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var lon))
+                Lon = lon;
+            if (double.TryParse(vessel.Fields.GetSingle("distanceTraveled").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var alt))
+                Alt = alt;
+            if (double.TryParse(vessel.Orbit.GetSingle("SMA").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var sma))
+                SemiMajorAxis = sma;
+            if (double.TryParse(vessel.Orbit.GetSingle("ECC").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var ecc))
+                Eccentricity = ecc;
+            if (double.TryParse(vessel.Orbit.GetSingle("INC").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var inc))
+                Inclination = inc;
+            if (double.TryParse(vessel.Orbit.GetSingle("LPE").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var lpe))
+                ArgumentOfPeriapsis = lpe;
+            if (double.TryParse(vessel.Orbit.GetSingle("LAN").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var lan))
+                LongitudeOfAscendingNode = lan;
+            if (double.TryParse(vessel.Orbit.GetSingle("MNA").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var mna))
+                MeanAnomaly = mna;
+            if (double.TryParse(vessel.Orbit.GetSingle("EPH").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var eph))
+                Epoch = eph;
+            if (int.TryParse(vessel.Orbit.GetSingle("REF").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var refBody))
+                ReferenceBody = refBody;
         }
     }
 }

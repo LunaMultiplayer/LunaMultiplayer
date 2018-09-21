@@ -1,6 +1,5 @@
 ﻿using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Server;
-using LmpCommon.Xml;
 using Server.Command.Command.Base;
 using Server.Context;
 using Server.Log;
@@ -8,7 +7,6 @@ using Server.Server;
 using Server.Settings.Structures;
 using Server.System;
 using System;
-using System.Xml;
 
 namespace Server.Command.Command
 {
@@ -38,10 +36,13 @@ namespace Server.Command.Command
         {
             var removalCount = 0;
 
-            var vesselList = VesselStoreSystem.CurrentVesselsInXmlFormat.ToArray();
+            var vesselList = VesselStoreSystem.CurrentVessels.ToArray();
             foreach (var vesselKeyVal in vesselList)
             {
-                if (IsVesselLandedAtKsc(vesselKeyVal.Value))
+                if (vesselKeyVal.Value.Fields.GetSingle("landed").Value == "True" &&
+                    vesselKeyVal.Value.Fields.GetSingle("landedAt").Value.ToLower().Contains("ksc") ||
+                    vesselKeyVal.Value.Fields.GetSingle("landedAt").Value.ToLower().Contains("runway") ||
+                    vesselKeyVal.Value.Fields.GetSingle("landedAt").Value.ToLower().Contains("launchpad"))
                 {
                     LunaLog.Normal($"Removing vessel: {vesselKeyVal.Key} from KSC");
 
@@ -59,22 +60,6 @@ namespace Server.Command.Command
 
             if (removalCount > 0)
                 LunaLog.Normal($"Nuked {removalCount} vessels around the KSC");
-        }
-        
-        private static bool IsVesselLandedAtKsc(string vesselData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var landed = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='landed']");
-            if (landed?.InnerText == "True")
-            {
-                var landedAtNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='landedAt']");
-                if (landedAtNode != null)
-                    return landedAtNode.InnerText.ToLower().Contains("ksc") || landedAtNode.InnerText.ToLower().Contains("runway") || landedAtNode.InnerText.ToLower().Contains("launchpad");
-            }
-            
-            return false;
         }
     }
 }

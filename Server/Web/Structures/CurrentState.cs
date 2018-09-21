@@ -17,7 +17,7 @@ namespace Server.Web.Structures
             CurrentVessels.Clear();
             Subspaces.Clear();
             CurrentPlayers.AddRange(ServerContext.Clients.Values.Select(v => v.PlayerName));
-            CurrentVessels.AddRange(VesselStoreSystem.CurrentVesselsInXmlFormat.Values.Select(v => new VesselInfo(v)));
+            CurrentVessels.AddRange(VesselStoreSystem.CurrentVessels.Values.Select(v => new VesselInfo(v)));
             Subspaces.AddRange(WarpContext.Subspaces.Values);
         }
     }

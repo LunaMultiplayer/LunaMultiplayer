@@ -10,43 +10,44 @@ using System.Threading.Tasks;
 namespace Server.System
 {
     /// <summary>
-    /// Here we keep a copy of all the player vessels in XML format and we also save them to files at a specified rate
+    /// Here we keep a copy of all the player vessels in <see cref="Structures.Vessel"/> format and we also save them to files at a specified rate
     /// </summary>
     public static class VesselStoreSystem
     {
+        public const string VesselFileFormat = ".txt";
         public static string VesselsPath = Path.Combine(ServerContext.UniverseDirectory, "Vessels");
 
-        public static ConcurrentDictionary<Guid, string> CurrentVesselsInXmlFormat = new ConcurrentDictionary<Guid, string>();
+        public static ConcurrentDictionary<Guid, Structures.Vessel> CurrentVessels = new ConcurrentDictionary<Guid, Structures.Vessel>();
 
         private static readonly object BackupLock = new object();
 
         static VesselStoreSystem() => ExitEvent.ServerClosing += BackupVessels;
 
-        public static bool VesselExists(Guid vesselId) => CurrentVesselsInXmlFormat.ContainsKey(vesselId);
+        public static bool VesselExists(Guid vesselId) => CurrentVessels.ContainsKey(vesselId);
 
         /// <summary>
         /// Removes a vessel from the store
         /// </summary>
         public static void RemoveVessel(Guid vesselId)
         {
-            CurrentVesselsInXmlFormat.TryRemove(vesselId, out _);
+            CurrentVessels.TryRemove(vesselId, out _);
 
             Task.Run(() =>
             {
                 lock (BackupLock)
                 {
-                    FileHandler.FileDelete(Path.Combine(VesselsPath, $"{vesselId}.xml"));
+                    FileHandler.FileDelete(Path.Combine(VesselsPath, $"{vesselId}{VesselFileFormat}"));
                 }
             });
         }
 
         /// <summary>
-        /// Returns a XML vessel in the standard KSP format
+        /// Returns a vessel in the standard KSP format
         /// </summary>
         public static string GetVesselInConfigNodeFormat(Guid vesselId)
         {
-            return CurrentVesselsInXmlFormat.TryGetValue(vesselId, out var vesselInXmlFormat) ?
-                ConfigNodeXmlParser.ConvertToConfigNode(vesselInXmlFormat) : null;
+            return CurrentVessels.TryGetValue(vesselId, out var vessel) ?
+                vessel.ToString() : null;
         }
 
         /// <summary>
@@ -54,14 +55,35 @@ namespace Server.System
         /// </summary>
         public static void LoadExistingVessels()
         {
+            ChangeExistingVesselFormats();
+            lock (BackupLock)
+            {
+                foreach (var file in Directory.GetFiles(VesselsPath).Where(f => Path.GetExtension(f) == VesselFileFormat))
+                {
+                    if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
+                    {
+                        CurrentVessels.TryAdd(vesselId, new Structures.Vessel(FileHandler.ReadFileText(file)));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Transform OLD Xml vessels into the new format
+        /// TODO: Remove this for next version
+        /// </summary>
+        public static void ChangeExistingVesselFormats()
+        {
             lock (BackupLock)
             {
                 foreach (var file in Directory.GetFiles(VesselsPath).Where(f => Path.GetExtension(f) == ".xml"))
                 {
                     if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
                     {
-                        CurrentVesselsInXmlFormat.TryAdd(vesselId, FileHandler.ReadFileText(file));
+                        var vesselAsCfgNode = ConfigNodeXmlParser.ConvertToConfigNode(FileHandler.ReadFileText(file));
+                        FileHandler.WriteToFile(file.Replace(".xml", ".txt"), vesselAsCfgNode);
                     }
+                    FileHandler.FileDelete(file);
                 }
             }
         }
@@ -73,10 +95,10 @@ namespace Server.System
         {
             lock (BackupLock)
             {
-                var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
-                foreach (var vessel in vesselsInXml)
+                var vesselsInCfgNode = CurrentVessels.ToArray();
+                foreach (var vessel in vesselsInCfgNode)
                 {
-                    FileHandler.WriteToFile(Path.Combine(VesselsPath, $"{vessel.Key}.xml"), vessel.Value);
+                    FileHandler.WriteToFile(Path.Combine(VesselsPath, $"{vessel.Key}{VesselFileFormat}"), vessel.Value.ToString());
                 }
             }
         }

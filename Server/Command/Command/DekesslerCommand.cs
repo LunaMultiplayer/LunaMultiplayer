@@ -1,6 +1,5 @@
 ﻿using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Server;
-using LmpCommon.Xml;
 using Server.Command.Command.Base;
 using Server.Context;
 using Server.Log;
@@ -8,7 +7,6 @@ using Server.Server;
 using Server.Settings.Structures;
 using Server.System;
 using System;
-using System.Xml;
 
 namespace Server.Command.Command
 {
@@ -38,10 +36,10 @@ namespace Server.Command.Command
         {
             var removalCount = 0;
 
-            var vesselList = VesselStoreSystem.CurrentVesselsInXmlFormat.ToArray();
+            var vesselList = VesselStoreSystem.CurrentVessels.ToArray();
             foreach (var vesselKeyVal in vesselList)
             {
-                if (IsVesselDebris(vesselKeyVal.Key, vesselKeyVal.Value))
+                if (vesselKeyVal.Value.Fields.GetSingle("type").Value == "debris")
                 {
                     LunaLog.Normal($"Removing debris vessel: {vesselKeyVal.Key}");
 
@@ -59,24 +57,6 @@ namespace Server.Command.Command
 
             if (removalCount > 0)
                 LunaLog.Normal($"Removed {removalCount} debris");
-        }
-
-        private static bool IsVesselDebris(Guid vesselId, string vesselData)
-        {
-            try
-            {
-                var document = new XmlDocument();
-                document.LoadXml(vesselData);
-
-                var typeNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='type']");
-                if (typeNode != null) return typeNode.InnerText.ToLower().Contains("debris");
-            }
-            catch (Exception e)
-            {
-                LunaLog.Error($"Error while checking if vessel {vesselId} is debris. Details {e}");
-            }
-
-            return false;
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿using LmpCommon.Message.Data.Vessel;
-using LmpCommon.Xml;
-using Server.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -41,83 +38,35 @@ namespace Server.System.Vessel
 
                 Task.Run(() =>
                 {
-                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
-
                     lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                     {
-                        var updatedText = UpdateProtoVesselWithNewUpdateData(xmlData, msgData);
-                        VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                        if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
+
+                        vessel.Fields.Update("name", msgData.Name);
+                        vessel.Fields.Update("type", msgData.Type);
+                        vessel.Fields.Update("distanceTraveled", msgData.DistanceTraveled.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("sit", msgData.Situation);
+                        vessel.Fields.Update("landed", msgData.Landed.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("landedAt", msgData.LandedAt);
+                        vessel.Fields.Update("displaylandedAt", msgData.DisplayLandedAt);
+                        vessel.Fields.Update("splashed", msgData.Splashed.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("met", msgData.MissionTime.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("lct", msgData.LaunchTime.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("lastUT", msgData.LastUt.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("prst", msgData.Persistent.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("ref", msgData.RefTransformId.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("cln", msgData.AutoClean.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("clnRsn", msgData.AutoCleanReason);
+                        vessel.Fields.Update("ctrl", msgData.WasControllable.ToString(CultureInfo.InvariantCulture));
+                        vessel.Fields.Update("stg", msgData.Stage.ToString(CultureInfo.InvariantCulture));
+
+                        //NEVER! patch the CoM in the protovessel as then it will be drawn with incorrect CommNet lines!
+                        //vessel.Fields.Update("CoM", $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
+                        //                                $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
+                        //                                $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}");
                     }
                 });
             }
-        }
-        
-        /// <summary>
-        /// Updates the proto vessel with the values we received with values of a vessel
-        /// </summary>
-        private static string UpdateProtoVesselWithNewUpdateData(string vesselData, VesselUpdateMsgData msgData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='name']");
-            if (node != null) node.InnerText = msgData.Name;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='type']");
-            if (node != null) node.InnerText = msgData.Type;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='distanceTraveled']");
-            if (node != null) node.InnerText = msgData.DistanceTraveled.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='sit']");
-            if (node != null) node.InnerText = msgData.Situation;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='landed']");
-            if (node != null) node.InnerText = msgData.Landed.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='landedAt']");
-            if (node != null) node.InnerText = msgData.LandedAt;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='displaylandedAt']");
-            if (node != null) node.InnerText = msgData.DisplayLandedAt;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='splashed']");
-            if (node != null) node.InnerText = msgData.Splashed.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='met']");
-            if (node != null) node.InnerText = msgData.MissionTime.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='lct']");
-            if (node != null) node.InnerText = msgData.LaunchTime.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='lastUT']");
-            if (node != null) node.InnerText = msgData.LastUt.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='prst']");
-            if (node != null) node.InnerText = msgData.Persistent.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='ref']");
-            if (node != null) node.InnerText = msgData.RefTransformId.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='cln']");
-            if (node != null) node.InnerText = msgData.AutoClean.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='clnRsn']");
-            if (node != null) node.InnerText = msgData.AutoCleanReason;
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='ctrl']");
-            if (node != null) node.InnerText = msgData.WasControllable.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='stg']");
-            if (node != null) node.InnerText = msgData.Stage.ToString(CultureInfo.InvariantCulture);
-
-            //NEVER! patch the CoM in the protovessel as then it will be drawn with incorrect CommNet lines!
-            //node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='CoM']");
-            //if (node != null) node.InnerText = $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
-            //                                $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
-            //                                $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}";
-
-            return document.ToIndentedString();
         }
     }
 }

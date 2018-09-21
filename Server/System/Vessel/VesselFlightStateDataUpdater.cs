@@ -1,11 +1,8 @@
 ﻿using LmpCommon.Message.Data.Vessel;
-using LmpCommon.Xml;
-using Server.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -43,45 +40,18 @@ namespace Server.System.Vessel
                 {
                     lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                     {
-                        if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+                        if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
 
-                        var updatedText = UpdateProtoVesselWithNewFlightStateData(xmlData, msgData);
-                        VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                        vessel.CtrlState.UpdateValue("pitch", msgData.Pitch.ToString(CultureInfo.InvariantCulture));
+                        vessel.CtrlState.UpdateValue("yaw", msgData.Yaw.ToString(CultureInfo.InvariantCulture));
+                        vessel.CtrlState.UpdateValue("roll", msgData.Roll.ToString(CultureInfo.InvariantCulture));
+                        vessel.CtrlState.UpdateValue("trimPitch", msgData.PitchTrim.ToString(CultureInfo.InvariantCulture));
+                        vessel.CtrlState.UpdateValue("trimYaw", msgData.YawTrim.ToString(CultureInfo.InvariantCulture));
+                        vessel.CtrlState.UpdateValue("trimRoll", msgData.RollTrim.ToString(CultureInfo.InvariantCulture));
+                        vessel.CtrlState.UpdateValue("mainThrottle", msgData.MainThrottle.ToString(CultureInfo.InvariantCulture));
                     }
                 });
             }
-        }
-
-        /// <summary>
-        /// Updates the proto vessel with the values we received about a flight state of a vessel
-        /// </summary>
-        private static string UpdateProtoVesselWithNewFlightStateData(string vesselData, VesselFlightStateMsgData msgData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='pitch']");
-            if (node != null) node.InnerText = msgData.Pitch.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='yaw']");
-            if (node != null) node.InnerText = msgData.Yaw.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='roll']");
-            if (node != null) node.InnerText = msgData.Roll.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='trimPitch']");
-            if (node != null) node.InnerText = msgData.PitchTrim.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='trimYaw']");
-            if (node != null) node.InnerText = msgData.YawTrim.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='trimRoll']");
-            if (node != null) node.InnerText = msgData.RollTrim.ToString(CultureInfo.InvariantCulture);
-
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='mainThrottle']");
-            if (node != null) node.InnerText = msgData.MainThrottle.ToString(CultureInfo.InvariantCulture);
-
-            return document.ToIndentedString();
         }
     }
 }

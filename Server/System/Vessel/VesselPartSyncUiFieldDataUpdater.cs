@@ -1,11 +1,8 @@
 ﻿using LmpCommon.Enums;
 using LmpCommon.Message.Data.Vessel;
-using LmpCommon.Xml;
-using Server.Utilities;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -30,10 +27,9 @@ namespace Server.System.Vessel
             {
                 lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                 {
-                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+                    if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
 
-                    var updatedText = UpdateProtoVesselFileWithNewPartSyncUiFieldData(xmlData, msgData);
-                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                    UpdateProtoVesselFileWithNewPartSyncUiFieldData(vessel, msgData);
                 }
             });
         }
@@ -41,38 +37,30 @@ namespace Server.System.Vessel
         /// <summary>
         /// Updates the proto vessel with the values we received about a part module change
         /// </summary>
-        private static string UpdateProtoVesselFileWithNewPartSyncUiFieldData(string vesselData, VesselPartSyncUiFieldMsgData msgData)
+        private static void UpdateProtoVesselFileWithNewPartSyncUiFieldData(Structures.Vessel vessel, VesselPartSyncUiFieldMsgData msgData)
         {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
-                         $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
-                         $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
-
-            var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
-
-            var fieldNode = document.SelectSingleNode(xpath);
-            if (fieldNode != null)
+            var part = vessel.GetPart(msgData.PartFlightId);
+            if (part != null)
             {
-                switch (msgData.FieldType)
+                var module = part.GetSingleModule(msgData.ModuleName);
+                if (module != null)
                 {
-                    case PartSyncFieldType.Boolean:
-                        fieldNode.InnerText = msgData.BoolValue.ToString(CultureInfo.InvariantCulture);
-                        break;
-                    case PartSyncFieldType.Integer:
-                        fieldNode.InnerText = msgData.IntValue.ToString(CultureInfo.InvariantCulture);
-                        break;
-                    case PartSyncFieldType.Float:
-                        fieldNode.InnerText = msgData.FloatValue.ToString(CultureInfo.InvariantCulture);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    switch (msgData.FieldType)
+                    {
+                        case PartSyncFieldType.Boolean:
+                            module.UpdateValue(msgData.FieldName, msgData.BoolValue.ToString(CultureInfo.InvariantCulture));
+                            break;
+                        case PartSyncFieldType.Integer:
+                            module.UpdateValue(msgData.FieldName, msgData.IntValue.ToString(CultureInfo.InvariantCulture));
+                            break;
+                        case PartSyncFieldType.Float:
+                            module.UpdateValue(msgData.FieldName, msgData.FloatValue.ToString(CultureInfo.InvariantCulture));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
-
             }
-
-            return document.ToIndentedString();
         }
     }
 }

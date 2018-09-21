@@ -1,8 +1,5 @@
 ﻿using LmpCommon.Message.Data.Vessel;
-using LmpCommon.Xml;
-using Server.Utilities;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -28,42 +25,17 @@ namespace Server.System.Vessel
             {
                 lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                 {
-                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
-
-                    var updatedText = UpdateProtoVesselFileWithNewFairingData(xmlData, msgData);
-                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                    if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
+                    
+                    var part = vessel.GetPart(msgData.PartFlightId);
+                    var module = part?.GetSingleModule("ModuleProceduralFairing");
+                    if (module != null)
+                    {
+                        module.Values.Update("fsm", "st_flight_deployed");
+                        module.Nodes.Remove("XSECTION");
+                    }
                 }
             });
-        }
-
-        /// <summary>
-        /// Updates the proto vessel with the values we received about a fairing change of a vessel
-        /// </summary>
-        private static string UpdateProtoVesselFileWithNewFairingData(string vesselData, VesselFairingMsgData msgData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
-                         $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
-                         @"[@name='name' and text()=""ModuleProceduralFairing""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
-
-            var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='fsm']";
-
-            var fieldNode = document.SelectSingleNode(xpath);
-            if (fieldNode != null) fieldNode.InnerText = "st_flight_deployed";
-
-            var moduleNode = fieldNode.ParentNode;
-            var fairingsSections = document.SelectNodes($"{module}/{ConfigNodeXmlParser.ParentNode}[@name='XSECTION']");
-            if (moduleNode != null && fairingsSections != null)
-            {
-                for (var i = 0; i < fairingsSections.Count; i++)
-                {
-                    moduleNode.RemoveChild(fairingsSections[i]);
-                }
-            }
-
-            return document.ToIndentedString();
         }
     }
 }

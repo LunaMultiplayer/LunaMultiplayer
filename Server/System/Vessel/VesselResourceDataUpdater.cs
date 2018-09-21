@@ -1,11 +1,8 @@
 ﻿using LmpCommon.Message.Data.Vessel;
-using LmpCommon.Xml;
-using Server.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -44,39 +41,24 @@ namespace Server.System.Vessel
                 {
                     lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                     {
-                        if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+                        if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
 
-                        var updatedText = UpdateProtoVesselFileWithNewResourceData(xmlData, msgData);
-                        VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                        foreach (var resource in msgData.Resources)
+                        {
+                            var part = vessel.GetPart(resource.PartFlightId);
+                            if (part != null)
+                            {
+                                var resourceNode = part.Resources.GetSingle(resource.ResourceName).Value;
+                                if (resourceNode != null)
+                                {
+                                    resourceNode.UpdateValue("amount", resource.Amount.ToString(CultureInfo.InvariantCulture));
+                                    resourceNode.UpdateValue("flowState", resource.FlowState.ToString(CultureInfo.InvariantCulture));
+                                }
+                            }
+                        }
                     }
                 });
             }
-        }
-
-        /// <summary>
-        /// Updates the proto vessel with the values we received about the resources of a vessel
-        /// </summary>
-        private static string UpdateProtoVesselFileWithNewResourceData(string vesselData, VesselResourceMsgData msgData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            foreach (var resourceInfo in msgData.Resources)
-            {
-                var xpath = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{resourceInfo.PartFlightId}""]/" +
-                            $"following-sibling::RESOURCE/{ConfigNodeXmlParser.ValueNode}" +
-                            $@"[@name='name' and text()=""{resourceInfo.ResourceName}""]/parent::RESOURCE";
-
-                var resourceNode = document.SelectSingleNode(xpath);
-
-                var amountNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ParentNode}[@name='RESOURCE']/{ConfigNodeXmlParser.ValueNode}[@name='amount']");
-                if (amountNode != null) amountNode.InnerText = resourceInfo.Amount.ToString(CultureInfo.InvariantCulture);
-
-                var flowNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ParentNode}[@name='RESOURCE']/{ConfigNodeXmlParser.ValueNode}[@name='flowState']");
-                if (flowNode != null) flowNode.InnerText = resourceInfo.FlowState.ToString(CultureInfo.InvariantCulture);
-            }
-
-            return document.ToIndentedString();
         }
     }
 }

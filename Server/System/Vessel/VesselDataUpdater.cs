@@ -1,12 +1,9 @@
-﻿using LmpCommon.Xml;
-using Server.Log;
+﻿using Server.Log;
 using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Vessel
 {
@@ -35,36 +32,22 @@ namespace Server.System.Vessel
             {
                 lock (Semaphore.GetOrAdd(vesselId, new object()))
                 {
-                    var vesselAsXml = ConfigNodeXmlParser.ConvertToXml(vesselDataInConfigNodeFormat);
+                    var vessel = new Structures.Vessel(vesselDataInConfigNodeFormat);
 
                     if (GeneralSettings.SettingsStore.ModControl)
                     {
-                        var vesselParts = GetPartNames(vesselAsXml);
-                        if (vesselParts != null)
+                        var vesselParts = vessel.Parts.GetAllValues().Select(p=> p.Fields.GetSingle("name").Value);
+                        var bannedParts = vesselParts.Except(ModFileSystem.ModControl.AllowedParts);
+                        if (bannedParts.Any())
                         {
-                            var bannedParts = vesselParts.Except(ModFileSystem.ModControl.AllowedParts);
-                            if (bannedParts.Any())
-                            {
-                                LunaLog.Warning($"Received a vessel with BANNED parts! {vesselId}");
-                                return;
-                            }
+                            LunaLog.Warning($"Received a vessel with BANNED parts! {vesselId}");
+                            return;
                         }
                     }
 
-                    VesselStoreSystem.CurrentVesselsInXmlFormat.AddOrUpdate(vesselId, vesselAsXml, (key, existingVal) => vesselAsXml);
+                    VesselStoreSystem.CurrentVessels.AddOrUpdate(vesselId, vessel, (key, existingVal) => vessel);
                 }
             });
-        }
-
-        private static IEnumerable<string> GetPartNames(string vesselData)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var xpath = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='name']";
-            var parts = document.SelectNodes(xpath);
-
-            return parts?.Cast<XmlNode>().Select(n => n.InnerText).Distinct();
         }
     }
 }
