@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LunaConfigNode;
 
 namespace Server.System
 {
@@ -80,7 +81,7 @@ namespace Server.System
                 {
                     if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
                     {
-                        var vesselAsCfgNode = ConfigNodeXmlParser.ConvertToConfigNode(FileHandler.ReadFileText(file));
+                        var vesselAsCfgNode = XmlConverter.ConvertToConfigNode(FileHandler.ReadFileText(file));
                         FileHandler.WriteToFile(file.Replace(".xml", ".txt"), vesselAsCfgNode);
                     }
                     FileHandler.FileDelete(file);

@@ -6,6 +6,7 @@ using Server.System.Scenario;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using LunaConfigNode;
 
 // ReSharper disable InconsistentlySynchronizedField
 
@@ -30,7 +31,7 @@ namespace Server.System
         public static string GetScenarioInConfigNodeFormat(string scenarioName)
         {
             return CurrentScenariosInXmlFormat.TryGetValue(scenarioName, out var scenarioInXmlFormat) ?
-                ConfigNodeXmlParser.ConvertToConfigNode(scenarioInXmlFormat) : null;
+                XmlConverter.ConvertToConfigNode(scenarioInXmlFormat) : null;
         }
 
         /// <summary>

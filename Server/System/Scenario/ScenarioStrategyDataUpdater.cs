@@ -3,6 +3,7 @@ using LmpCommon.Xml;
 using Server.Utilities;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -33,15 +34,15 @@ namespace Server.System.Scenario
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
-            var strategiesList = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='STRATEGIES']");
+            var strategiesList = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='STRATEGIES']");
             if (strategiesList != null)
             {
                 var receivedStrategy = DeserializeAndImportNode(strategy.Data, strategy.NumBytes, document);
                 if (receivedStrategy != null)
                 {
-                    var existingStrategy = strategiesList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='STRATEGY']/" +
-                                                                           $@"{ConfigNodeXmlParser.ValueNode}[@name='name' and text()=""{strategy.Name}""]/" +
-                                                                           $"parent::{ConfigNodeXmlParser.ParentNode}[@name='STRATEGY']");
+                    var existingStrategy = strategiesList.SelectSingleNode($"{XmlConverter.ParentNode}[@name='STRATEGY']/" +
+                                                                           $@"{XmlConverter.ValueNode}[@name='name' and text()=""{strategy.Name}""]/" +
+                                                                           $"parent::{XmlConverter.ParentNode}[@name='STRATEGY']");
                     if (existingStrategy != null)
                     {
                         //Replace the existing stragegy value with the received one
@@ -49,7 +50,7 @@ namespace Server.System.Scenario
                     }
                     else
                     {
-                        var newStrategyNode = ConfigNodeXmlParser.CreateXmlNode("STRATEGY", document);
+                        var newStrategyNode = XmlConverter.CreateXmlNode("STRATEGY", document);
                         newStrategyNode.InnerXml = receivedStrategy.InnerXml;
                         strategiesList.AppendChild(newStrategyNode);
                     }

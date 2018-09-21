@@ -311,7 +311,6 @@
     <Compile Include="Time\TimeRetrieverNist.cs" />
     <Compile Include="Time\TimeRetrieverNtp.cs" />
     <Compile Include="Time\TimeUtil.cs" />
-    <Compile Include="Xml\ConfigNodeXmlParser.cs" />
     <Compile Include="Xml\LunaXmlSerializer.cs" />
     <Compile Include="Xml\XmlCommentAttribute.cs" />
   </ItemGroup>

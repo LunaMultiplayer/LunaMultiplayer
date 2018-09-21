@@ -3,6 +3,7 @@ using LmpCommon.Xml;
 using Server.Utilities;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -34,16 +35,16 @@ namespace Server.System.Scenario
             document.LoadXml(scenarioData);
 
             var receivedScienceSubjectXmlNode = DeserializeAndImportNode(scienceSubject.Data, scienceSubject.NumBytes, document)?
-                .SelectSingleNode($"/{ConfigNodeXmlParser.ParentNode}[@name='Science']");
+                .SelectSingleNode($"/{XmlConverter.ParentNode}[@name='Science']");
 
             if (receivedScienceSubjectXmlNode == null) return document.ToIndentedString();
 
-            var parentNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
+            var parentNode = document.SelectSingleNode($"/{XmlConverter.StartElement}");
             if (parentNode != null)
             {
-                var existingNode = parentNode.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Science']" +
-                                                                   $@"/{ConfigNodeXmlParser.ValueNode}[@name='id' and text()=""{scienceSubject.Id}""]" +
-                                                                   $"/parent::{ConfigNodeXmlParser.ParentNode}[@name='Science']");
+                var existingNode = parentNode.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Science']" +
+                                                                   $@"/{XmlConverter.ValueNode}[@name='id' and text()=""{scienceSubject.Id}""]" +
+                                                                   $"/parent::{XmlConverter.ParentNode}[@name='Science']");
 
                 if (existingNode != null)
                 {

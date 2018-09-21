@@ -3,6 +3,7 @@ using LmpCommon.Xml;
 using Server.Utilities;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -33,7 +34,7 @@ namespace Server.System.Scenario
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
-            var progressList = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Progress']");
+            var progressList = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Progress']");
             if (progressList != null)
             {
                 foreach (var achievement in achievements)
@@ -41,7 +42,7 @@ namespace Server.System.Scenario
                     var receivedAchievementXmlNode = DeserializeAndImportNode(achievement.Data, achievement.NumBytes, document);
                     if (receivedAchievementXmlNode == null) continue;
 
-                    var existingAchievement = progressList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='{achievement.Id}']");
+                    var existingAchievement = progressList.SelectSingleNode($"{XmlConverter.ParentNode}[@name='{achievement.Id}']");
                     if (existingAchievement != null)
                     {                        
                         //Replace the existing contract values with the received one
@@ -49,7 +50,7 @@ namespace Server.System.Scenario
                     }
                     else
                     {
-                        var newAchievement = ConfigNodeXmlParser.CreateXmlNode(achievement.Id, document);
+                        var newAchievement = XmlConverter.CreateXmlNode(achievement.Id, document);
                         newAchievement.InnerXml = receivedAchievementXmlNode.InnerXml;
 
                         progressList.AppendChild(newAchievement);

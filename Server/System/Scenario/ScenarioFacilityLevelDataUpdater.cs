@@ -3,6 +3,7 @@ using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -33,9 +34,9 @@ namespace Server.System.Scenario
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
-            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/" +
-                                                 $"{ConfigNodeXmlParser.ParentNode}[@name='{facilityId}']/" +
-                                                 $"{ConfigNodeXmlParser.ValueNode}[@name='lvl']");
+            var node = document.SelectSingleNode($"/{XmlConverter.StartElement}/" +
+                                                 $"{XmlConverter.ParentNode}[@name='{facilityId}']/" +
+                                                 $"{XmlConverter.ValueNode}[@name='lvl']");
 
             //Valid levels in the scenario file are 0, 0.5 and 1. So for this we divide the arrived level by 2
             if (node != null) node.InnerText = (level/2f).ToString(CultureInfo.InvariantCulture);

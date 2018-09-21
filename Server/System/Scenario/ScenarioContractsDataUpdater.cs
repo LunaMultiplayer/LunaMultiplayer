@@ -3,6 +3,7 @@ using LmpCommon.Xml;
 using Server.Utilities;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -33,7 +34,7 @@ namespace Server.System.Scenario
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
-            var contractsList = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CONTRACTS']");
+            var contractsList = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='CONTRACTS']");
             if (contractsList != null)
             {
                 foreach (var contract in contracts)
@@ -41,9 +42,9 @@ namespace Server.System.Scenario
                     var receivedContract = DeserializeAndImportNode(contract.Data, contract.NumBytes, document);
                     if (receivedContract == null) continue;
 
-                    var existingContract = contractsList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']/" +
-                                                                          $@"{ConfigNodeXmlParser.ValueNode}[@name='guid' and text()=""{contract.ContractGuid}""]/" +
-                                                                          $"parent::{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']");
+                    var existingContract = contractsList.SelectSingleNode($"{XmlConverter.ParentNode}[@name='CONTRACT']/" +
+                                                                          $@"{XmlConverter.ValueNode}[@name='guid' and text()=""{contract.ContractGuid}""]/" +
+                                                                          $"parent::{XmlConverter.ParentNode}[@name='CONTRACT']");
                     if (existingContract != null)
                     {
                         //Replace the existing contract values with the received one
@@ -51,7 +52,7 @@ namespace Server.System.Scenario
                     }
                     else
                     {
-                        var newContractNode = ConfigNodeXmlParser.CreateXmlNode("CONTRACT", document);
+                        var newContractNode = XmlConverter.CreateXmlNode("CONTRACT", document);
                         newContractNode.InnerXml = receivedContract.InnerXml;
                         contractsList.AppendChild(newContractNode);
                     }

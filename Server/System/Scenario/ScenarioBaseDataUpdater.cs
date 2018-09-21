@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -26,7 +27,7 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd(scenarioModule, new object()))
                 {
-                    var scenarioAsXml = ConfigNodeXmlParser.ConvertToXml(scenarioDataInConfigNodeFormat);
+                    var scenarioAsXml = XmlConverter.ConvertToXml(scenarioDataInConfigNodeFormat);
                     ScenarioStoreSystem.CurrentScenariosInXmlFormat.AddOrUpdate(scenarioModule, scenarioAsXml, (key, existingVal) => scenarioAsXml);
                 }
             });
@@ -35,8 +36,8 @@ namespace Server.System.Scenario
         private static XmlNode DeserializeAndImportNode(byte[] data, int numBytes, XmlDocument docToImportTo)
         {
             var auxDoc = new XmlDocument();
-            auxDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(data, 0, numBytes)));
-            var newXmlNode = auxDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
+            auxDoc.LoadXml(XmlConverter.ConvertToXml(Encoding.UTF8.GetString(data, 0, numBytes)));
+            var newXmlNode = auxDoc.SelectSingleNode($"/{XmlConverter.StartElement}");
 
             return newXmlNode == null ? null : docToImportTo.ImportNode(newXmlNode, true);
         }

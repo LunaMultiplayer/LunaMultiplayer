@@ -3,6 +3,7 @@ using LmpCommon.Xml;
 using Server.Utilities;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -33,12 +34,12 @@ namespace Server.System.Scenario
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
-            var techNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Tech']" +
-                                                    $@"/{ConfigNodeXmlParser.ValueNode}[@name='id' and text()=""{techId}""]" +
-                                                    $"/parent::{ConfigNodeXmlParser.ParentNode}[@name='Tech']");
+            var techNode = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Tech']" +
+                                                    $@"/{XmlConverter.ValueNode}[@name='id' and text()=""{techId}""]" +
+                                                    $"/parent::{XmlConverter.ParentNode}[@name='Tech']");
             if (techNode != null)
             {
-                var newPart = ConfigNodeXmlParser.CreateXmlParameter("part", document);
+                var newPart = XmlConverter.CreateXmlParameter("part", document);
                 newPart.InnerXml = partName;
 
                 techNode.AppendChild(newPart);

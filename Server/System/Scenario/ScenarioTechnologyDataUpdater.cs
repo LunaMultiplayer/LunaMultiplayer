@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -38,26 +39,26 @@ namespace Server.System.Scenario
             var configNodeData = Encoding.UTF8.GetString(techNode.Data, 0, techNode.NumBytes);
 
             var newNodeDoc = new XmlDocument();
-            newNodeDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(configNodeData));
+            newNodeDoc.LoadXml(XmlConverter.ConvertToXml(configNodeData));
 
-            var parentNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
+            var parentNode = document.SelectSingleNode($"/{XmlConverter.StartElement}");
             if (parentNode != null)
             {
-                var newTechXmlNode = newNodeDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Tech']");
+                var newTechXmlNode = newNodeDoc.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Tech']");
                 if (newTechXmlNode != null)
                 {
-                    var existingNode = parentNode.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Tech']" +
-                                                                   $@"/{ConfigNodeXmlParser.ValueNode}[@name='id' and text()=""{techNode.Id}""]" +
-                                                                   $"/parent::{ConfigNodeXmlParser.ParentNode}[@name='Tech']");
+                    var existingNode = parentNode.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Tech']" +
+                                                                   $@"/{XmlConverter.ValueNode}[@name='id' and text()=""{techNode.Id}""]" +
+                                                                   $"/parent::{XmlConverter.ParentNode}[@name='Tech']");
 
                     if (existingNode != null)
                     {
-                        var parts = newTechXmlNode.SelectNodes($"{ConfigNodeXmlParser.ValueNode}[@name='part']");
+                        var parts = newTechXmlNode.SelectNodes($"{XmlConverter.ValueNode}[@name='part']");
                         if (parts != null)
                         {
                             foreach (var part in parts.Cast<XmlNode>())
                             {
-                                var existingPart = existingNode.SelectSingleNode($@"{ConfigNodeXmlParser.ValueNode}[@name='part' and text()=""{part.InnerText}""]");
+                                var existingPart = existingNode.SelectSingleNode($@"{XmlConverter.ValueNode}[@name='part' and text()=""{part.InnerText}""]");
                                 if (existingPart == null)
                                 {
                                     var importNode = document.ImportNode(part, true);

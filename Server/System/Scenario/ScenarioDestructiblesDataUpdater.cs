@@ -3,6 +3,7 @@ using Server.Utilities;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Xml;
+using LunaConfigNode;
 
 namespace Server.System.Scenario
 {
@@ -33,9 +34,9 @@ namespace Server.System.Scenario
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
-            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/" +
-                                                 $"{ConfigNodeXmlParser.ParentNode}[@name='{facilityId}']/" +
-                                                 $"{ConfigNodeXmlParser.ValueNode}[@name='intact']");
+            var node = document.SelectSingleNode($"/{XmlConverter.StartElement}/" +
+                                                 $"{XmlConverter.ParentNode}[@name='{facilityId}']/" +
+                                                 $"{XmlConverter.ValueNode}[@name='intact']");
 
             if (node != null) node.InnerText = intact.ToString(CultureInfo.InvariantCulture);
 
