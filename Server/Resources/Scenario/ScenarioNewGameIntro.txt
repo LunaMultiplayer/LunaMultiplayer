@@ -1,0 +1,5 @@
+name = ScenarioNewGameIntro
+scene = 7, 8, 5, 6
+kscComplete = True
+editorComplete = True
+tsComplete = True

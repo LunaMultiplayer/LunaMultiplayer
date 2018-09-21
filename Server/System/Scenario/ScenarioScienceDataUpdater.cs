@@ -1,8 +1,5 @@
-﻿using LunaConfigNode;
-using Server.Utilities;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Scenario
 {
@@ -17,26 +14,11 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
 
-                    var updatedText = UpdateScenarioWithScienceData(xmlData, sciencePoints);
-                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ResearchAndDevelopment", updatedText, xmlData);
+                    scenario.UpdateValue("sci", sciencePoints.ToString(CultureInfo.InvariantCulture));
                 }
             });
-        }
-
-        /// <summary>
-        /// Patches the scenario file with science data
-        /// </summary>
-        private static string UpdateScenarioWithScienceData(string scenarioData, float sciencePoints)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(scenarioData);
-
-            var node = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ValueNode}[@name='sci']");
-            if (node != null) node.InnerText = sciencePoints.ToString(CultureInfo.InvariantCulture);
-
-            return document.ToIndentedString();
         }
     }
 }

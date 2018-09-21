@@ -125,57 +125,57 @@
     <value>..\Resources\Kerbals\Bob Kerman.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="CommNetScenario" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\CommNetScenario.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\commnetscenario.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ContractSystem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ContractSystem.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\contractsystem.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Funding" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\Funding.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\funding.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Jebediah_Kerman" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Kerbals\Jebediah Kerman.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="PartUpgradeManager" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\PartUpgradeManager.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\partupgrademanager.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ProgressTracking" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ProgressTracking.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\progresstracking.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Reputation" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\Reputation.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\reputation.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ResearchAndDevelopment" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ResearchAndDevelopment.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\researchanddevelopment.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ResourceScenario" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ResourceScenario.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\resourcescenario.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ScenarioAchievements" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ScenarioAchievements.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\scenarioachievements.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ScenarioContractEvents" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ScenarioContractEvents.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\scenariocontractevents.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ScenarioDestructibles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ScenarioDestructibles.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\scenariodestructibles.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ScenarioNewGameIntro" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ScenarioNewGameIntro.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
+    <value>..\resources\scenario\scenarionewgameintro.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ScenarioUpgradeableFacilities" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\ScenarioUpgradeableFacilities.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\scenarioupgradeablefacilities.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="SentinelScenario" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\SentinelScenario.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\sentinelscenario.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="StrategySystem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\StrategySystem.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\strategysystem.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Valentina_Kerman" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Kerbals\Valentina Kerman.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="VesselRecovery" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Scenario\VesselRecovery.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\resources\scenario\vesselrecovery.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

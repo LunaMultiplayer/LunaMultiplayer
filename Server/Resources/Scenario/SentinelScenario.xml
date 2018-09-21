@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-16"?>
-<LMPConfigNodeToXML>
-  <Parameter name="name">SentinelScenario</Parameter>
-  <Parameter name="scene">7, 8, 5</Parameter>
-  <Parameter name="NextSpawnTime">26612.162481160907</Parameter>
-</LMPConfigNodeToXML>

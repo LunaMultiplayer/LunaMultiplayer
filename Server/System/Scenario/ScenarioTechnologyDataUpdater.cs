@@ -1,10 +1,8 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode;
-using Server.Utilities;
+using LunaConfigNode.CfgNode;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Scenario
 {
@@ -16,65 +14,22 @@ namespace Server.System.Scenario
         public static void WriteTechnologyDataToFile(ShareProgressTechnologyMsgData techMsg)
         {
             Task.Run(() =>
-            {
+            {                
+                //TODO: Fix this so it uses a replace
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
 
-                    var updatedText = UpdateScenarioWithTechnologyData(xmlData, techMsg.TechNode);
-                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ResearchAndDevelopment", updatedText, xmlData);
+                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(techMsg.TechNode.Data, 0, techMsg.TechNode.NumBytes)) { Name = "Tech" };
+                    if (receivedNode.IsEmpty()) return;
+
+                    var techNodes = scenario.GetNodes("Tech").Select(v => v.Value);
+                    var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == techMsg.TechNode.Id);
+                    if (specificTechNode != null) return; //The science node already exists so quit
+
+                    scenario.AddNode(receivedNode);
                 }
             });
-        }
-
-        /// <summary>
-        /// Patches the scenario file with reputation data
-        /// </summary>
-        private static string UpdateScenarioWithTechnologyData(string scenarioData, TechNodeInfo techNode)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(scenarioData);
-
-            var configNodeData = Encoding.UTF8.GetString(techNode.Data, 0, techNode.NumBytes);
-
-            var newNodeDoc = new XmlDocument();
-            newNodeDoc.LoadXml(XmlConverter.ConvertToXml(configNodeData));
-
-            var parentNode = document.SelectSingleNode($"/{XmlConverter.StartElement}");
-            if (parentNode != null)
-            {
-                var newTechXmlNode = newNodeDoc.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Tech']");
-                if (newTechXmlNode != null)
-                {
-                    var existingNode = parentNode.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Tech']" +
-                                                                   $@"/{XmlConverter.ValueNode}[@name='id' and text()=""{techNode.Id}""]" +
-                                                                   $"/parent::{XmlConverter.ParentNode}[@name='Tech']");
-
-                    if (existingNode != null)
-                    {
-                        var parts = newTechXmlNode.SelectNodes($"{XmlConverter.ValueNode}[@name='part']");
-                        if (parts != null)
-                        {
-                            foreach (var part in parts.Cast<XmlNode>())
-                            {
-                                var existingPart = existingNode.SelectSingleNode($@"{XmlConverter.ValueNode}[@name='part' and text()=""{part.InnerText}""]");
-                                if (existingPart == null)
-                                {
-                                    var importNode = document.ImportNode(part, true);
-                                    existingNode.AppendChild(importNode);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var importNode = document.ImportNode(newTechXmlNode, true);
-                        parentNode.AppendChild(importNode);
-                    }
-                }
-            }
-
-            return document.ToIndentedString();
         }
     }
 }

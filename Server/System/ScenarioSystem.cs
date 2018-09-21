@@ -22,43 +22,43 @@ namespace Server.System
         public static bool GenerateDefaultScenarios()
         {
             var scenarioFilesCreated =
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "CommNetScenario.xml"), Resources.CommNetScenario) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "PartUpgradeManager.xml"), Resources.PartUpgradeManager) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ProgressTracking.xml"), Resources.ProgressTracking) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ResourceScenario.xml"), Resources.ResourceScenario) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioAchievements.xml"), Resources.ScenarioAchievements) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioDestructibles.xml"), Resources.ScenarioDestructibles) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "SentinelScenario.xml"), Resources.SentinelScenario) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "VesselRecovery.xml"), Resources.VesselRecovery) &&
-            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioNewGameIntro.xml"), Resources.ScenarioNewGameIntro);
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "CommNetScenario.txt"), Resources.CommNetScenario) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "PartUpgradeManager.txt"), Resources.PartUpgradeManager) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ProgressTracking.txt"), Resources.ProgressTracking) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ResourceScenario.txt"), Resources.ResourceScenario) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioAchievements.txt"), Resources.ScenarioAchievements) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioDestructibles.txt"), Resources.ScenarioDestructibles) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "SentinelScenario.txt"), Resources.SentinelScenario) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "VesselRecovery.txt"), Resources.VesselRecovery) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioNewGameIntro.txt"), Resources.ScenarioNewGameIntro);
 
             if (GeneralSettings.SettingsStore.GameMode != GameMode.Sandbox)
             {
-                scenarioFilesCreated &= FileHandler.CreateFile(Path.Combine(ScenariosPath, "ResearchAndDevelopment.xml"), Resources.ResearchAndDevelopment);
+                scenarioFilesCreated &= FileHandler.CreateFile(Path.Combine(ScenariosPath, "ResearchAndDevelopment.txt"), Resources.ResearchAndDevelopment);
             }
             else
             {
-                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ResearchAndDevelopment.xml"));
+                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ResearchAndDevelopment.txt"));
             }
 
             if (GeneralSettings.SettingsStore.GameMode == GameMode.Career)
             {
                 scenarioFilesCreated &=
-                FileHandler.CreateFile(Path.Combine(ScenariosPath, "ContractSystem.xml"), Resources.ContractSystem) &&
-                FileHandler.CreateFile(Path.Combine(ScenariosPath, "Funding.xml"), Resources.Funding) &&
-                FileHandler.CreateFile(Path.Combine(ScenariosPath, "Reputation.xml"), Resources.Reputation) &&
-                FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioContractEvents.xml"), Resources.ScenarioContractEvents) &&
-                FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioUpgradeableFacilities.xml"), Resources.ScenarioUpgradeableFacilities) &&
-                FileHandler.CreateFile(Path.Combine(ScenariosPath, "StrategySystem.xml"), Resources.StrategySystem);
+                FileHandler.CreateFile(Path.Combine(ScenariosPath, "ContractSystem.txt"), Resources.ContractSystem) &&
+                FileHandler.CreateFile(Path.Combine(ScenariosPath, "Funding.txt"), Resources.Funding) &&
+                FileHandler.CreateFile(Path.Combine(ScenariosPath, "Reputation.txt"), Resources.Reputation) &&
+                FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioContractEvents.txt"), Resources.ScenarioContractEvents) &&
+                FileHandler.CreateFile(Path.Combine(ScenariosPath, "ScenarioUpgradeableFacilities.txt"), Resources.ScenarioUpgradeableFacilities) &&
+                FileHandler.CreateFile(Path.Combine(ScenariosPath, "StrategySystem.txt"), Resources.StrategySystem);
             }
             else
             {
-                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ContractSystem.xml"));
-                FileHandler.FileDelete(Path.Combine(ScenariosPath, "Funding.xml"));
-                FileHandler.FileDelete(Path.Combine(ScenariosPath, "Reputation.xml"));
-                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ScenarioContractEvents.xml"));
-                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ScenarioUpgradeableFacilities.xml"));
-                FileHandler.FileDelete(Path.Combine(ScenariosPath, "StrategySystem.xml"));
+                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ContractSystem.txt"));
+                FileHandler.FileDelete(Path.Combine(ScenariosPath, "Funding.txt"));
+                FileHandler.FileDelete(Path.Combine(ScenariosPath, "Reputation.txt"));
+                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ScenarioContractEvents.txt"));
+                FileHandler.FileDelete(Path.Combine(ScenariosPath, "ScenarioUpgradeableFacilities.txt"));
+                FileHandler.FileDelete(Path.Combine(ScenariosPath, "StrategySystem.txt"));
             }
 
             return scenarioFilesCreated;

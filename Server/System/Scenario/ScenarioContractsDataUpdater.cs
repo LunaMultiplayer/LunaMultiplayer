@@ -1,64 +1,44 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode;
-using Server.Utilities;
+using LunaConfigNode.CfgNode;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Scenario
 {
     public partial class ScenarioDataUpdater
     {
         /// <summary>
-        /// We received a technology message so update the scenario file accordingly
+        /// We received a contract message so update the scenario file accordingly
         /// </summary>
-        public static void WriteContractDataToFile(ShareProgressContractsMsgData techMsg)
+        public static void WriteContractDataToFile(ShareProgressContractsMsgData contractsMsg)
         {
             Task.Run(() =>
             {
+                //TODO: Fix this so it uses a replace
                 lock (Semaphore.GetOrAdd("ContractSystem", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
 
-                    var updatedText = UpdateScenarioWithContractData(xmlData, techMsg.Contracts);
-                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ContractSystem", updatedText, xmlData);
+                    var scenariosParentNode = scenario.GetNode("CONTRACTS")?.Value;
+                    if (scenariosParentNode == null) return;
+
+                    var existingContracts = scenariosParentNode.GetNodes("CONTRACT").Select(c=> c.Value).ToArray();
+                    if (existingContracts.Any())
+                    {
+                        foreach (var contract in contractsMsg.Contracts.Select(v => new ConfigNode(Encoding.UTF8.GetString(v.Data, 0, v.NumBytes)) { Name = "CONTRACT" }))
+                        {
+                            var specificContractNode = existingContracts.FirstOrDefault(n => n.GetValue("guid").Value == contract.GetValue("guid").Value);
+                            if (specificContractNode != null)
+                            {
+                                scenariosParentNode.RemoveNode(specificContractNode);
+                            }
+
+                            scenariosParentNode.AddNode(contract);
+                        }
+                    }
                 }
             });
-        }
-
-        /// <summary>
-        /// Patches the scenario file with reputation data
-        /// </summary>
-        private static string UpdateScenarioWithContractData(string scenarioData, ContractInfo[] contracts)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(scenarioData);
-
-            var contractsList = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='CONTRACTS']");
-            if (contractsList != null)
-            {
-                foreach (var contract in contracts)
-                {
-                    var receivedContract = DeserializeAndImportNode(contract.Data, contract.NumBytes, document);
-                    if (receivedContract == null) continue;
-
-                    var existingContract = contractsList.SelectSingleNode($"{XmlConverter.ParentNode}[@name='CONTRACT']/" +
-                                                                          $@"{XmlConverter.ValueNode}[@name='guid' and text()=""{contract.ContractGuid}""]/" +
-                                                                          $"parent::{XmlConverter.ParentNode}[@name='CONTRACT']");
-                    if (existingContract != null)
-                    {
-                        //Replace the existing contract values with the received one
-                        existingContract.InnerXml = receivedContract.InnerXml;
-                    }
-                    else
-                    {
-                        var newContractNode = XmlConverter.CreateXmlNode("CONTRACT", document);
-                        newContractNode.InnerXml = receivedContract.InnerXml;
-                        contractsList.AppendChild(newContractNode);
-                    }
-                }
-            }
-
-            return document.ToIndentedString();
         }
     }
 }

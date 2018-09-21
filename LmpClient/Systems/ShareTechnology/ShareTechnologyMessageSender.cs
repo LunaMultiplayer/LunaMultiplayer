@@ -41,14 +41,13 @@ namespace LmpClient.Systems.ShareTechnology
             var configNode = new ConfigNode();
             try
             {
-                var parentNode = configNode.AddNode("Tech");
-                parentNode.AddValue("id", techNode.techID);
-                parentNode.AddValue("state", techNode.state);
-                parentNode.AddValue("cost", techNode.scienceCost);
+                configNode.AddValue("id", techNode.techID);
+                configNode.AddValue("state", techNode.state);
+                configNode.AddValue("cost", techNode.scienceCost);
 
                 foreach (var part in techNode.partsPurchased)
                 {
-                    parentNode.AddValue("part", part.name);
+                    configNode.AddValue("part", part.name);
                 }
             }
             catch (Exception e)

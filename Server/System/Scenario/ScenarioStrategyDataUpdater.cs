@@ -1,8 +1,8 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode;
-using Server.Utilities;
+using LunaConfigNode.CfgNode;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Scenario
 {
@@ -14,49 +14,29 @@ namespace Server.System.Scenario
         public static void WriteStrategyDataToFile(StrategyInfo strategy)
         {
             Task.Run(() =>
-            {
+            {                
+                //TODO: Fix this so it uses a replace
                 lock (Semaphore.GetOrAdd("StrategySystem", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("StrategySystem", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("StrategySystem", out var scenario)) return;
 
-                    var updatedText = UpdateScenarioWithStrategyData(xmlData, strategy);
-                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("StrategySystem", updatedText, xmlData);
+                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(strategy.Data, 0, strategy.NumBytes)) { Name = "STRATEGY" };
+                    if (receivedNode.IsEmpty()) return;
+
+                    var strategiesNode = scenario.GetNode("STRATEGIES").Value;
+                    if (strategiesNode != null)
+                    {
+                        var strategiesList = strategiesNode.GetNodes("STRATEGY").Select(v => v.Value);
+                        var specificstrategyNode = strategiesList.FirstOrDefault(n => n.GetValue("name").Value == strategy.Name);
+                        if (specificstrategyNode != null)
+                        {
+                            strategiesNode.RemoveNode(specificstrategyNode);
+                        }
+
+                        strategiesNode.AddNode(receivedNode);
+                    }
                 }
             });
-        }
-
-        /// <summary>
-        /// Patches the scenario file with strategy data
-        /// </summary>
-        private static string UpdateScenarioWithStrategyData(string scenarioData, StrategyInfo strategy)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(scenarioData);
-
-            var strategiesList = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='STRATEGIES']");
-            if (strategiesList != null)
-            {
-                var receivedStrategy = DeserializeAndImportNode(strategy.Data, strategy.NumBytes, document);
-                if (receivedStrategy != null)
-                {
-                    var existingStrategy = strategiesList.SelectSingleNode($"{XmlConverter.ParentNode}[@name='STRATEGY']/" +
-                                                                           $@"{XmlConverter.ValueNode}[@name='name' and text()=""{strategy.Name}""]/" +
-                                                                           $"parent::{XmlConverter.ParentNode}[@name='STRATEGY']");
-                    if (existingStrategy != null)
-                    {
-                        //Replace the existing stragegy value with the received one
-                        existingStrategy.InnerXml = receivedStrategy.InnerXml;
-                    }
-                    else
-                    {
-                        var newStrategyNode = XmlConverter.CreateXmlNode("STRATEGY", document);
-                        newStrategyNode.InnerXml = receivedStrategy.InnerXml;
-                        strategiesList.AppendChild(newStrategyNode);
-                    }
-                }
-            }
-
-            return document.ToIndentedString();
         }
     }
 }

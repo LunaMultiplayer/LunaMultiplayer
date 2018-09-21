@@ -1,0 +1,198 @@
+name = ScenarioDestructibles
+scene = 5, 7, 6, 8
+SpaceCenter/Administration/Facility/mainBuilding
+{
+	intact = True
+}
+SpaceCenter/AstronautComplex/Facility/building
+{
+	intact = True
+}
+SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_cylTank
+{
+	intact = True
+}
+SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_launchPad
+{
+	intact = True
+}
+SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_sphereTank
+{
+	intact = True
+}
+SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_waterTower
+{
+	intact = True
+}
+SpaceCenter/LaunchPad/Facility/LaunchPadMedium/KSCFlagPoleLaunchPad
+{
+	intact = True
+}
+SpaceCenter/MissionControl/Facility/building
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/ksp_pad_cylTank
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/SmallLab
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/CentralBuilding
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/MainBuilding
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/CornerLab
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/WindTunnel
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/Observatory
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/SideLab
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_SE
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_NE
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_NW
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_SW
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/End09
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/End27
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/Section1
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/Section2
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/Section3
+{
+	intact = True
+}
+SpaceCenter/Runway/Facility/Section4
+{
+	intact = True
+}
+SpaceCenter/SpaceplaneHangar/Facility/Tank
+{
+	intact = True
+}
+SpaceCenter/SpaceplaneHangar/Facility/ksp_pad_cylTank
+{
+	intact = True
+}
+SpaceCenter/SpaceplaneHangar/Facility/ksp_pad_waterTower
+{
+	intact = True
+}
+SpaceCenter/SpaceplaneHangar/Facility/mainBuilding
+{
+	intact = True
+}
+SpaceCenter/TrackingStation/Facility/dish_array/dish_south
+{
+	intact = True
+}
+SpaceCenter/TrackingStation/Facility/dish_array/dish_north
+{
+	intact = True
+}
+SpaceCenter/TrackingStation/Facility/dish_array/dish_east
+{
+	intact = True
+}
+SpaceCenter/TrackingStation/Facility/MainBuilding
+{
+	intact = True
+}
+SpaceCenter/VehicleAssemblyBuilding/Facility/ksp_pad_cylTank
+{
+	intact = True
+}
+SpaceCenter/VehicleAssemblyBuilding/Facility/Tank
+{
+	intact = True
+}
+SpaceCenter/VehicleAssemblyBuilding/Facility/mainBuilding
+{
+	intact = True
+}
+SpaceCenter/VehicleAssemblyBuilding/Facility/PodMemorial
+{
+	intact = True
+}
+SpaceCenter/FlagPole/Facility
+{
+	intact = True
+}
+SpaceCenter/VehicleAssemblyBuilding/Facility/VAB2
+{
+	intact = True
+}
+SpaceCenter/TrackingStation/Facility/building
+{
+	intact = True
+}
+SpaceCenter/TrackingStation/Facility/OuterDish
+{
+	intact = True
+}
+SpaceCenter/SpaceplaneHangar/Facility/Building
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/mainBuilding
+{
+	intact = True
+}
+SpaceCenter/ResearchAndDevelopment/Facility/ForeverAlone
+{
+	intact = True
+}
+SpaceCenter/MissionControl/Facility/mainBuilding
+{
+	intact = True
+}
+SpaceCenter/LaunchPad/Facility/Flag
+{
+	intact = True
+}
+SpaceCenter/AstronautComplex/Facility/mainBuilding
+{
+	intact = True
+}
+SpaceCenter/Administration/Facility/Building
+{
+	intact = True
+}

@@ -44,8 +44,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LunaConfigNode, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\LunaConfigNode.1.7.0\lib\net35\LunaConfigNode.dll</HintPath>
+    <Reference Include="LunaConfigNode, Version=1.7.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\LunaConfigNode.1.7.7\lib\net35\LunaConfigNode.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
@@ -261,26 +261,26 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Scenario\CommNetScenario.txt" />
+    <Content Include="Resources\Scenario\ContractSystem.txt" />
+    <Content Include="Resources\Scenario\Funding.txt" />
+    <Content Include="Resources\Scenario\PartUpgradeManager.txt" />
+    <Content Include="Resources\Scenario\ProgressTracking.txt" />
+    <Content Include="Resources\Scenario\Reputation.txt" />
+    <Content Include="Resources\Scenario\ResearchAndDevelopment.txt" />
+    <Content Include="Resources\Scenario\ResourceScenario.txt" />
+    <Content Include="Resources\Scenario\ScenarioAchievements.txt" />
+    <Content Include="Resources\Scenario\ScenarioContractEvents.txt" />
+    <Content Include="Resources\Scenario\ScenarioDestructibles.txt" />
+    <Content Include="Resources\Scenario\ScenarioNewGameIntro.txt" />
+    <Content Include="Resources\Scenario\ScenarioUpgradeableFacilities.txt" />
+    <Content Include="Resources\Scenario\SentinelScenario.txt" />
+    <Content Include="Resources\Scenario\StrategySystem.txt" />
+    <Content Include="Resources\Scenario\VesselRecovery.txt" />
     <None Include="favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="icon.ico" />
-    <Content Include="Resources\Scenario\ScenarioNewGameIntro.xml" />
-    <Content Include="Resources\Scenario\CommNetScenario.xml" />
-    <Content Include="Resources\Scenario\ContractSystem.xml" />
-    <Content Include="Resources\Scenario\Funding.xml" />
-    <Content Include="Resources\Scenario\PartUpgradeManager.xml" />
-    <Content Include="Resources\Scenario\ProgressTracking.xml" />
-    <Content Include="Resources\Scenario\Reputation.xml" />
-    <Content Include="Resources\Scenario\ResearchAndDevelopment.xml" />
-    <Content Include="Resources\Scenario\ResourceScenario.xml" />
-    <Content Include="Resources\Scenario\ScenarioAchievements.xml" />
-    <Content Include="Resources\Scenario\ScenarioContractEvents.xml" />
-    <Content Include="Resources\Scenario\ScenarioDestructibles.xml" />
-    <Content Include="Resources\Scenario\ScenarioUpgradeableFacilities.xml" />
-    <Content Include="Resources\Scenario\SentinelScenario.xml" />
-    <Content Include="Resources\Scenario\StrategySystem.xml" />
-    <Content Include="Resources\Scenario\VesselRecovery.xml" />
     <None Include="packages.config" />
     <None Include="Resources\Kerbals\Valentina Kerman.txt" />
     <None Include="Resources\Kerbals\Jebediah Kerman.txt" />

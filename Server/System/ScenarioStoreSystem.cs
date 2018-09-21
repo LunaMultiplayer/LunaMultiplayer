@@ -1,4 +1,5 @@
 ﻿using LunaConfigNode;
+using LunaConfigNode.CfgNode;
 using Server.Events;
 using Server.Settings.Structures;
 using Server.System.Scenario;
@@ -11,23 +12,23 @@ using System.Linq;
 namespace Server.System
 {
     /// <summary>
-    /// Here we keep a copy of all the scnarios modules in XML format and we also save them to files at a specified rate
+    /// Here we keep a copy of all the scnarios modules in ConfigNode format and we also save them to files at a specified rate
     /// </summary>
     public static class ScenarioStoreSystem
     {
-        public static ConcurrentDictionary<string, string> CurrentScenarios = new ConcurrentDictionary<string, string>();
+        public static ConcurrentDictionary<string, ConfigNode> CurrentScenarios = new ConcurrentDictionary<string, ConfigNode>();
 
         private static readonly object BackupLock = new object();
 
         static ScenarioStoreSystem() => ExitEvent.ServerClosing += BackupScenarios;
 
         /// <summary>
-        /// Returns a XML scenario in the standard KSP format
+        /// Returns a scenario in the standard KSP format
         /// </summary>
         public static string GetScenarioInConfigNodeFormat(string scenarioName)
         {
-            return CurrentScenarios.TryGetValue(scenarioName, out var scenarioInXmlFormat) ?
-                XmlConverter.ConvertToConfigNode(scenarioInXmlFormat) : null;
+            return CurrentScenarios.TryGetValue(scenarioName, out var scenario) ?
+                scenario.ToString() : null;
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace Server.System
             {
                 foreach (var file in Directory.GetFiles(ScenarioSystem.ScenariosPath).Where(f => Path.GetExtension(f) == ScenarioSystem.ScenarioFileFormat))
                 {
-                    CurrentScenarios.TryAdd(Path.GetFileNameWithoutExtension(file), FileHandler.ReadFileText(file));
+                    CurrentScenarios.TryAdd(Path.GetFileNameWithoutExtension(file), new ConfigNode(File.ReadAllText(file)));
                 }
 
                 if (createdFromScratch)
@@ -64,7 +65,7 @@ namespace Server.System
                 {
                     var vesselAsCfgNode = XmlConverter.ConvertToConfigNode(FileHandler.ReadFileText(file));
                     FileHandler.WriteToFile(file.Replace(".xml", ".txt"), vesselAsCfgNode);
-                    //FileHandler.FileDelete(file);
+                    FileHandler.FileDelete(file);
                 }
             }
         }
@@ -79,7 +80,7 @@ namespace Server.System
                 var scenariosInXml = CurrentScenarios.ToArray();
                 foreach (var scenario in scenariosInXml)
                 {
-                    FileHandler.WriteToFile(Path.Combine(ScenarioSystem.ScenariosPath, $"{scenario.Key}{ScenarioSystem.ScenarioFileFormat}"), scenario.Value);
+                    FileHandler.WriteToFile(Path.Combine(ScenarioSystem.ScenariosPath, $"{scenario.Key}{ScenarioSystem.ScenarioFileFormat}"), scenario.Value.ToString());
                 }
             }
         }

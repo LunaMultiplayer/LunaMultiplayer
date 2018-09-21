@@ -43,7 +43,7 @@ namespace LmpClient.Systems.ShareScienceSubject
             var configNode = new ConfigNode();
             try
             {
-                subject.Save(configNode.AddNode("Science"));
+                subject.Save(configNode);
             }
             catch (Exception e)
             {

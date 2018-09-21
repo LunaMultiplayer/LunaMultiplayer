@@ -1,8 +1,8 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode;
-using Server.Utilities;
+using LunaConfigNode.CfgNode;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Scenario
 {
@@ -15,48 +15,26 @@ namespace Server.System.Scenario
         {
             Task.Run(() =>
             {
+                //TODO: Check if this works
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
 
-                    var updatedText = UpdateScenarioWithScienceSubject(xmlData, scienceSubject);
-                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ResearchAndDevelopment", updatedText, xmlData);
+                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(scienceSubject.Data, 0, scienceSubject.NumBytes)) { Parent = scenario };
+                    if (receivedNode.IsEmpty()) return;
+
+                    var techNodes = scenario.GetNodes("Science").Select(v => v.Value);
+                    var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == receivedNode.GetValue("id").Value);
+                    if (specificTechNode != null)
+                    {
+                        specificTechNode.Values.Initialize(receivedNode.Values.GetAll());
+                    }
+                    else
+                    {
+                        scenario.CreateOrReplaceNode(receivedNode);
+                    }
                 }
             });
-        }
-
-        /// <summary>
-        /// Patches the scenario file with science subject data
-        /// </summary>
-        private static string UpdateScenarioWithScienceSubject(string scenarioData, ScienceSubjectInfo scienceSubject)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(scenarioData);
-
-            var receivedScienceSubjectXmlNode = DeserializeAndImportNode(scienceSubject.Data, scienceSubject.NumBytes, document)?
-                .SelectSingleNode($"/{XmlConverter.ParentNode}[@name='Science']");
-
-            if (receivedScienceSubjectXmlNode == null) return document.ToIndentedString();
-
-            var parentNode = document.SelectSingleNode($"/{XmlConverter.StartElement}");
-            if (parentNode != null)
-            {
-                var existingNode = parentNode.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Science']" +
-                                                                   $@"/{XmlConverter.ValueNode}[@name='id' and text()=""{scienceSubject.Id}""]" +
-                                                                   $"/parent::{XmlConverter.ParentNode}[@name='Science']");
-
-                if (existingNode != null)
-                {
-                    existingNode.InnerXml = receivedScienceSubjectXmlNode.InnerXml;
-                }
-                else
-                {
-                    var importNode = document.ImportNode(receivedScienceSubjectXmlNode, true);
-                    parentNode.AppendChild(importNode);
-                }
-            }
-
-            return document.ToIndentedString();
         }
     }
 }

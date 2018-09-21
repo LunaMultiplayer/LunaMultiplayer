@@ -1,8 +1,6 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode;
-using Server.Utilities;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Server.System.Scenario
 {
@@ -17,34 +15,16 @@ namespace Server.System.Scenario
             {
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
 
-                    var updatedText = UpdateScenarioWithPartPurchaseData(xmlData, partPurchaseMsg.TechId, partPurchaseMsg.PartName);
-                    ScenarioStoreSystem.CurrentScenarios.TryUpdate("ResearchAndDevelopment", updatedText, xmlData);
+                    var techNodes = scenario.GetNodes("Tech").Select(v => v.Value);
+                    var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == partPurchaseMsg.TechId);
+                    if (specificTechNode != null)
+                    {
+                        specificTechNode.CreateValue("part", partPurchaseMsg.PartName);
+                    }
                 }
             });
-        }
-
-        /// <summary>
-        /// Patches the scenario file with part purchase data
-        /// </summary>
-        private static string UpdateScenarioWithPartPurchaseData(string scenarioData, string techId, string partName)
-        {
-            var document = new XmlDocument();
-            document.LoadXml(scenarioData);
-
-            var techNode = document.SelectSingleNode($"/{XmlConverter.StartElement}/{XmlConverter.ParentNode}[@name='Tech']" +
-                                                    $@"/{XmlConverter.ValueNode}[@name='id' and text()=""{techId}""]" +
-                                                    $"/parent::{XmlConverter.ParentNode}[@name='Tech']");
-            if (techNode != null)
-            {
-                var newPart = XmlConverter.CreateXmlParameter("part", document);
-                newPart.InnerXml = partName;
-
-                techNode.AppendChild(newPart);
-            }
-
-            return document.ToIndentedString();
         }
     }
 }
