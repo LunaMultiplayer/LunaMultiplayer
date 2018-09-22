@@ -27,8 +27,10 @@ namespace Server.System.Scenario
                         {
                             progressNodeHeader.ReplaceNode(specificNode.Value, receivedNode);
                         }
-
-                        progressNodeHeader.AddNode(receivedNode);
+                        else
+                        {
+                            progressNodeHeader.AddNode(receivedNode);
+                        }
                     }
                 }
             });

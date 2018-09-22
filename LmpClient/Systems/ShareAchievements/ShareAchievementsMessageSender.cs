@@ -1,4 +1,5 @@
-﻿using LmpClient.Base;
+﻿using Harmony;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Utilities;
@@ -18,15 +19,29 @@ namespace LmpClient.Systems.ShareAchievements
 
         public void SendAchievementsMessage(ProgressNode achievement)
         {
-            var configNode = ConvertAchievementToConfigNode(achievement);
-            if (configNode == null) return;
+            //We only send the ProgressNodes that are CelestialBodySubtree
+            var foundNode = ProgressTracking.Instance.FindNode(achievement.Id);
+            if (foundNode == null)
+            {
+                var body = new Traverse(achievement).Field<CelestialBody>("body")?.Value?.name;
+                if (body != null)
+                {
+                    foundNode = ProgressTracking.Instance.FindNode(body);
+                }
+            }
 
-            //Build the packet and send it.
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressAchievementsMsgData>();
-            msgData.Id = achievement.Id;
-            msgData.Data = ConfigNodeSerializer.Serialize(configNode);
-            msgData.NumBytes = msgData.Data.Length;
-            System.MessageSender.SendMessage(msgData);
+            if (foundNode != null)
+            {
+                var configNode = ConvertAchievementToConfigNode(foundNode);
+                if (configNode == null) return;
+
+                //Build the packet and send it.
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressAchievementsMsgData>();
+                msgData.Id = foundNode.Id;
+                msgData.Data = ConfigNodeSerializer.Serialize(configNode);
+                msgData.NumBytes = msgData.Data.Length;
+                System.MessageSender.SendMessage(msgData);
+            }
         }
 
         private static ConfigNode ConvertAchievementToConfigNode(ProgressNode achievement)
