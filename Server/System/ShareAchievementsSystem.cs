@@ -11,12 +11,7 @@ namespace Server.System
     {
         public static void AchievementsReceived(ClientStructure client, ShareProgressAchievementsMsgData data)
         {
-            LunaLog.Debug("Achievements data received:");
-
-            foreach (var item in data.Achievements)
-            {
-                LunaLog.Debug(item.Id);
-            }
+            LunaLog.Debug($"Achievements data received: {data.Id}");
 
             //send the achievements update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);

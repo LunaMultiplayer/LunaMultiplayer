@@ -6,7 +6,6 @@ using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using System;
-using System.Collections.Generic;
 
 namespace LmpClient.Systems.ShareAchievements
 {
@@ -17,41 +16,22 @@ namespace LmpClient.Systems.ShareAchievements
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ShareProgressCliMsg>(msg)));
         }
 
-        public void SendAchievementsMessage(ProgressNode[] achievements)
+        public void SendAchievementsMessage(ProgressNode achievement)
         {
-            //Convert the achievements to AchievementInfo's.
-            var achievementInfos = new List<AchievementInfo>();
-            foreach (var achievement in achievements)
-            {
-                var configNode = ConvertAchievementToConfigNode(achievement);
-                if (configNode == null) break;
-
-                var data = ConfigNodeSerializer.Serialize(configNode);
-                var numBytes = data.Length;
-
-                achievementInfos.Add(new AchievementInfo
-                {
-                    Id = achievement.Id,
-                    Data = data,
-                    NumBytes = numBytes
-                });
-            }
+            var configNode = ConvertAchievementToConfigNode(achievement);
+            if (configNode == null) return;
 
             //Build the packet and send it.
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressAchievementsMsgData>();
-            msgData.Achievements = achievementInfos.ToArray();
-            msgData.AchievementsCount = msgData.Achievements.Length;
+            msgData.Id = achievement.Id;
+            msgData.Data = ConfigNodeSerializer.Serialize(configNode);
+            msgData.NumBytes = msgData.Data.Length;
             System.MessageSender.SendMessage(msgData);
-        }
-
-        public void SendAchievementsMessage(ProgressNode achievement)
-        {
-            SendAchievementsMessage(new[] { achievement });
         }
 
         private static ConfigNode ConvertAchievementToConfigNode(ProgressNode achievement)
         {
-            var configNode = new ConfigNode();
+            var configNode = new ConfigNode(achievement.Id);
             try
             {
                 achievement.Save(configNode);

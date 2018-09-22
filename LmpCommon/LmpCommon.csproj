@@ -204,7 +204,6 @@
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ContractInfo.cs" />
-    <Compile Include="Message\Data\ShareProgress\AchievementInfo.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressBaseMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressContractsMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressFundsMsgData.cs" />

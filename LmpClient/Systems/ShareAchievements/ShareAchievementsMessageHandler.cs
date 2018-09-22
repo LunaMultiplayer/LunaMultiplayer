@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Systems.ShareCareer;
 using LmpClient.Systems.ShareFunds;
 using LmpClient.Systems.ShareReputation;
 using LmpClient.Systems.ShareScience;
@@ -9,7 +10,6 @@ using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using LmpClient.Systems.ShareCareer;
 
 namespace LmpClient.Systems.ShareAchievements
 {
@@ -24,65 +24,52 @@ namespace LmpClient.Systems.ShareAchievements
 
             if (msgData is ShareProgressAchievementsMsgData data)
             {
-                var achievementInfos = CopyAchievements(data.Achievements); //create a deep copy of the achievements array so it will not change in the future.
+                var incomingAchievement = ConvertByteArrayToAchievement(data.Data, data.NumBytes, data.Id);
 
-                LunaLog.Log($"Queue AchievementsUpdate");
+                LunaLog.Log("Queue AchievementsUpdate");
                 ShareCareerSystem.Singleton.QueueAction(() =>
                 {
-                    AchievementUpdate(achievementInfos);
+                    AchievementUpdate(incomingAchievement);
                 });
             }
         }
 
-        private static AchievementInfo[] CopyAchievements(AchievementInfo[] achievements)
-        {
-            var newAchievements = new AchievementInfo[achievements.Length];
-            for (var i = 0; i < achievements.Length; i++)
-            {
-                newAchievements[i] = new AchievementInfo(achievements[i]);
-            }
 
-            return newAchievements;
-        }
-
-        private static void AchievementUpdate(AchievementInfo[] achievementInfos)
+        private static void AchievementUpdate(ProgressNode incomingAchievement)
         {
+            if (incomingAchievement == null) return;
+
             System.StartIgnoringEvents();
             ShareFundsSystem.Singleton.StartIgnoringEvents();
             ShareScienceSystem.Singleton.StartIgnoringEvents();
             ShareReputationSystem.Singleton.StartIgnoringEvents();
 
-            foreach (var mInfo in achievementInfos)
+            var achievementIndex = -1;
+            for (var i = 0; i < ProgressTracking.Instance.achievementTree.Count; i++)
             {
-                var incomingAchievement = ConvertByteArrayToAchievement(mInfo.Data, mInfo.NumBytes, mInfo.Id);
-                if (incomingAchievement == null) continue;
-
-                var achievementIndex = -1;
-                for (var i = 0; i < ProgressTracking.Instance.achievementTree.Count; i++)
-                {
-                    if (ProgressTracking.Instance.achievementTree[i].Id != incomingAchievement.Id) continue;
-                    achievementIndex = i;
-                    break;
-                }
-
-                if (achievementIndex != -1)
-                {
-                    //found the same achievement in the achievementTree
-                    if (!ProgressTracking.Instance.achievementTree[achievementIndex].IsReached && incomingAchievement.IsReached)
-                        ProgressTracking.Instance.achievementTree[achievementIndex].Reach();
-
-                    if (!ProgressTracking.Instance.achievementTree[achievementIndex].IsComplete && incomingAchievement.IsComplete)
-                        ProgressTracking.Instance.achievementTree[achievementIndex].Complete();
-
-                    LunaLog.Log($"Achievement was updated: {incomingAchievement.Id}");
-                }
-                else
-                {
-                    //didn't found the same achievement in the achievmentTree
-                    ProgressTracking.Instance.achievementTree.AddNode(incomingAchievement);
-                    LunaLog.Log($"Achievement was added: {incomingAchievement.Id}");
-                }
+                if (ProgressTracking.Instance.achievementTree[i].Id != incomingAchievement.Id) continue;
+                achievementIndex = i;
+                break;
             }
+
+            if (achievementIndex != -1)
+            {
+                //found the same achievement in the achievementTree
+                if (!ProgressTracking.Instance.achievementTree[achievementIndex].IsReached && incomingAchievement.IsReached)
+                    ProgressTracking.Instance.achievementTree[achievementIndex].Reach();
+
+                if (!ProgressTracking.Instance.achievementTree[achievementIndex].IsComplete && incomingAchievement.IsComplete)
+                    ProgressTracking.Instance.achievementTree[achievementIndex].Complete();
+
+                LunaLog.Log($"Achievement was updated: {incomingAchievement.Id}");
+            }
+            else
+            {
+                //didn't found the same achievement in the achievmentTree
+                ProgressTracking.Instance.achievementTree.AddNode(incomingAchievement);
+                LunaLog.Log($"Achievement was added: {incomingAchievement.Id}");
+            }
+
 
             //Listen to the events again.
             //Restore funds, science and reputation in case the achievement action changed some of that.

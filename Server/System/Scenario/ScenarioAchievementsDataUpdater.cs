@@ -1,6 +1,5 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,14 +18,17 @@ namespace Server.System.Scenario
                 {
                     if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ProgressTracking", out var scenario)) return;
 
-                    var progressNode = scenario.GetNode("Progress").Value;
-                    if (progressNode != null)
+                    var progressNodeHeader = scenario.GetNode("Progress").Value;
+                    if (progressNodeHeader != null)
                     {
-                        foreach (var achievement in achievementMsg.Achievements.Select(v=> new ConfigNode(Encoding.UTF8.GetString(v.Data, 0, v.NumBytes))))
+                        var specificNode = progressNodeHeader.GetNode(achievementMsg.Id);
+                        var receivedNode = new ConfigNode(Encoding.UTF8.GetString(achievementMsg.Data, 0, achievementMsg.NumBytes)) { Name = achievementMsg.Id };
+                        if (specificNode != null)
                         {
-                            achievement.Parent = progressNode;
-                            progressNode.AddNode(progressNode);
+                            progressNodeHeader.ReplaceNode(specificNode.Value, receivedNode);
                         }
+
+                        progressNodeHeader.AddNode(receivedNode);
                     }
                 }
             });
