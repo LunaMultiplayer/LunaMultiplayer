@@ -14,8 +14,7 @@ namespace Server.System.Scenario
         public static void WriteStrategyDataToFile(StrategyInfo strategy)
         {
             Task.Run(() =>
-            {                
-                //TODO: Fix this so it uses a replace
+            {
                 lock (Semaphore.GetOrAdd("StrategySystem", new object()))
                 {
                     if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("StrategySystem", out var scenario)) return;
@@ -30,7 +29,7 @@ namespace Server.System.Scenario
                         var specificstrategyNode = strategiesList.FirstOrDefault(n => n.GetValue("name").Value == strategy.Name);
                         if (specificstrategyNode != null)
                         {
-                            strategiesNode.RemoveNode(specificstrategyNode);
+                            strategiesNode.ReplaceNode(specificstrategyNode, receivedNode);
                         }
 
                         strategiesNode.AddNode(receivedNode);

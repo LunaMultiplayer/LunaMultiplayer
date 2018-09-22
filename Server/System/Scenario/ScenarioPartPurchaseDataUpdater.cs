@@ -1,4 +1,5 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
+using LunaConfigNode.CfgNode;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace Server.System.Scenario
                     var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == partPurchaseMsg.TechId);
                     if (specificTechNode != null)
                     {
-                        specificTechNode.CreateValue("part", partPurchaseMsg.PartName);
+                        specificTechNode.CreateValue(new CfgNodeValue<string, string>("part", partPurchaseMsg.PartName));
                     }
                 }
             });

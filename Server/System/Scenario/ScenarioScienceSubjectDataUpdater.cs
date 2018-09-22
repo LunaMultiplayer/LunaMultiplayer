@@ -15,7 +15,6 @@ namespace Server.System.Scenario
         {
             Task.Run(() =>
             {
-                //TODO: Check if this works
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {
                     if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
@@ -27,11 +26,11 @@ namespace Server.System.Scenario
                     var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == receivedNode.GetValue("id").Value);
                     if (specificTechNode != null)
                     {
-                        specificTechNode.Values.Initialize(receivedNode.Values.GetAll());
+                        scenario.ReplaceNode(specificTechNode, receivedNode);
                     }
                     else
                     {
-                        scenario.CreateOrReplaceNode(receivedNode);
+                        scenario.AddNode(receivedNode);
                     }
                 }
             });

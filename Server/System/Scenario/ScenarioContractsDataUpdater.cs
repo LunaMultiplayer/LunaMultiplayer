@@ -15,7 +15,6 @@ namespace Server.System.Scenario
         {
             Task.Run(() =>
             {
-                //TODO: Fix this so it uses a replace
                 lock (Semaphore.GetOrAdd("ContractSystem", new object()))
                 {
                     if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
@@ -31,10 +30,12 @@ namespace Server.System.Scenario
                             var specificContractNode = existingContracts.FirstOrDefault(n => n.GetValue("guid").Value == contract.GetValue("guid").Value);
                             if (specificContractNode != null)
                             {
-                                scenariosParentNode.RemoveNode(specificContractNode);
+                                scenariosParentNode.ReplaceNode(specificContractNode, contract);
                             }
-
-                            scenariosParentNode.AddNode(contract);
+                            else
+                            {
+                                scenariosParentNode.AddNode(contract);
+                            }
                         }
                     }
                 }

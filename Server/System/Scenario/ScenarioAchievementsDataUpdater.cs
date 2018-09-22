@@ -25,7 +25,7 @@ namespace Server.System.Scenario
                         foreach (var achievement in achievementMsg.Achievements.Select(v=> new ConfigNode(Encoding.UTF8.GetString(v.Data, 0, v.NumBytes))))
                         {
                             achievement.Parent = progressNode;
-                            progressNode.CreateOrReplaceNode(progressNode);
+                            progressNode.AddNode(progressNode);
                         }
                     }
                 }
