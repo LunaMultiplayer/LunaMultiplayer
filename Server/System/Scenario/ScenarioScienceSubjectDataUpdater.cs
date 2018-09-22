@@ -19,7 +19,7 @@ namespace Server.System.Scenario
                 {
                     if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
 
-                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(scienceSubject.Data, 0, scienceSubject.NumBytes)) { Parent = scenario };
+                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(scienceSubject.Data, 0, scienceSubject.NumBytes)) { Parent = scenario , Name = "Science" };
                     if (receivedNode.IsEmpty()) return;
 
                     var techNodes = scenario.GetNodes("Science").Select(v => v.Value);

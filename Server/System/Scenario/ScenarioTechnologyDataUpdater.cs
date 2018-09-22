@@ -14,8 +14,7 @@ namespace Server.System.Scenario
         public static void WriteTechnologyDataToFile(ShareProgressTechnologyMsgData techMsg)
         {
             Task.Run(() =>
-            {                
-                //TODO: Fix this so it uses a replace
+            {
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {
                     if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;

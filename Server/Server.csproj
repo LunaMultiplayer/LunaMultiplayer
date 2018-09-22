@@ -44,8 +44,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LunaConfigNode, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\LunaConfigNode.1.8.0\lib\net35\LunaConfigNode.dll</HintPath>
+    <Reference Include="LunaConfigNode, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\LunaConfigNode.1.8.1\lib\net35\LunaConfigNode.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
