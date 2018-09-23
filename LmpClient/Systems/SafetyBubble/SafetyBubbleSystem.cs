@@ -52,7 +52,7 @@ namespace LmpClient.Systems.SafetyBubble
             if (vessel == null)
                 return false;
 
-            if (vessel.situation >= Vessel.Situations.FLYING)
+            if (vessel.situation > Vessel.Situations.FLYING)
                 return false;
 
             if (SettingsSystem.ServerSettings.SafetyBubbleDistance <= 0)
