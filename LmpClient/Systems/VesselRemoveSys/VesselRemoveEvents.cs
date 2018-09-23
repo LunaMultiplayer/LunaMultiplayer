@@ -66,6 +66,9 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             //Vessel is recovered so remove the locks
             LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c => c.name), recoveredVessel.vesselID, recoveredVessel.persistentId);
+
+            //We consider this vessel removed but we let KSP do the remove of the vessel
+            System.RemovedVessels.TryAdd(recoveredVessel.vesselID, DateTime.Now);
         }
 
         /// <summary>
@@ -86,6 +89,9 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             //Vessel is terminated so remove locks            
             LockSystem.Singleton.ReleaseAllVesselLocks(terminatedVessel.GetVesselCrew().Select(c => c.name), terminatedVessel.vesselID, terminatedVessel.persistentId);
+            
+            //We consider this vessel removed but we let KSP do the remove of the vessel
+            System.RemovedVessels.TryAdd(terminatedVessel.vesselID, DateTime.Now);
         }
 
         /// <summary>
@@ -110,6 +116,9 @@ namespace LmpClient.Systems.VesselRemoveSys
                 LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
                 RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Available);
                 System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel);
+
+                //We consider this vessel removed but we let KSP do the remove of the vessel
+                System.RemovedVessels.TryAdd(FlightGlobals.ActiveVessel.id, DateTime.Now);
             }
         }
 
@@ -142,6 +151,9 @@ namespace LmpClient.Systems.VesselRemoveSys
                 }
 
                 System.MessageSender.SendVesselRemove(vesselToRemove);
+
+                //We consider this vessel removed but we let KSP do the remove of the vessel
+                System.RemovedVessels.TryAdd(vesselToRemove.id, DateTime.Now);
             }
         }
     }

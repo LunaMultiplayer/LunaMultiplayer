@@ -33,7 +33,7 @@ namespace LmpClient.Systems.VesselRemoveSys
 
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
         private static ConcurrentQueue<VesselRemoveEntry> VesselsToRemove { get; set; } = new ConcurrentQueue<VesselRemoveEntry>();
-        private static ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
+        public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
         #endregion
 

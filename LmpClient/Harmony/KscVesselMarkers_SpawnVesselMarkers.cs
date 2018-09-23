@@ -1,8 +1,10 @@
 ﻿using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Systems.Lock;
+using LmpClient.Systems.VesselRemoveSys;
 using LmpCommon.Enums;
 using System.Collections.Generic;
+
 // ReSharper disable All
 
 namespace LmpClient.Harmony
@@ -28,7 +30,7 @@ namespace LmpClient.Harmony
             foreach (var marker in markers)
             {
                 var vessel = Traverse.Create(marker).Field("v").GetValue<Vessel>();
-                if (LockSystem.LockQuery.ControlLockExists(vessel.id))
+                if (LockSystem.LockQuery.ControlLockExists(vessel.id) || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
                     MarkersToRemove.Add(marker);
             }
 
