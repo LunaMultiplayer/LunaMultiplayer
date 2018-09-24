@@ -6,6 +6,7 @@
         </FieldDefinition>
         <FieldDefinition>
             <FieldName>isGrounded</FieldName>
+            <MaxIntervalInMs>60000</MaxIntervalInMs>
         </FieldDefinition>
         <FieldDefinition>
             <FieldName>autoFriction</FieldName>
