@@ -113,7 +113,7 @@ namespace LmpClient.Windows.Debug
                         ourVessel.mainBody.GetLatLonAltOrbital(ourVessel.orbit.pos, out lat, out lon, out alt);
                         StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
 
-                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(ourVessel, false)}");
+                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(ourVessel)}");
 
                         _positionText = StringBuilder.ToString();
                         StringBuilder.Length = 0;

@@ -47,7 +47,7 @@ namespace LmpClient.Systems.SafetyBubble
         /// <summary>
         /// Returns whether the given vessel is in a starting safety bubble or not.
         /// </summary>
-        public bool IsInSafetyBubble(Vessel vessel, bool useLatLonAltFromProto = true)
+        public bool IsInSafetyBubble(Vessel vessel)
         {
             if (vessel == null)
                 return false;
@@ -57,10 +57,6 @@ namespace LmpClient.Systems.SafetyBubble
 
             if (SettingsSystem.ServerSettings.SafetyBubbleDistance <= 0)
                 return false;
-
-            if (useLatLonAltFromProto)
-                //Use the protovessel values as the normal vessel values can be affected by the position system and the situation of the vessel
-                return IsInSafetyBubble(vessel.protoVessel.latitude, vessel.protoVessel.longitude, vessel.protoVessel.altitude, vessel.mainBody);
 
             return IsInSafetyBubble(vessel.latitude, vessel.longitude, vessel.altitude, vessel.mainBody);
         }
