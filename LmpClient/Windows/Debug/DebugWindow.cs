@@ -154,6 +154,7 @@ namespace LmpClient.Windows.Debug
                         var ourVessel = FlightGlobals.ActiveVessel;
 
                         StringBuilder.AppendLine($"Id: {ourVessel.id}");
+                        StringBuilder.AppendLine($"Persistent Id: {ourVessel.persistentId}");
                         StringBuilder.AppendLine($"Mode: {ourVessel.orbitDriver.updateMode}");
                         StringBuilder.AppendLine($"Semi major axis: {ourVessel.orbit.semiMajorAxis}");
                         StringBuilder.AppendLine($"Eccentricity: {ourVessel.orbit.eccentricity}");
@@ -186,6 +187,7 @@ namespace LmpClient.Windows.Debug
                             if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
                             {
                                 StringBuilder.AppendLine($"Id: {vessel.id}");
+                                StringBuilder.AppendLine($"Persistent Id: {vessel.persistentId}");
                                 StringBuilder.AppendLine($"Mode: {vessel.orbitDriver.updateMode}");
                                 StringBuilder.AppendLine($"Semi major axis: {vessel.orbit.semiMajorAxis}");
                                 StringBuilder.AppendLine($"Eccentricity: {vessel.orbit.eccentricity}");
