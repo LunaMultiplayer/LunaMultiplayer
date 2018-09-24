@@ -40,6 +40,9 @@ namespace LmpClient.Systems.VesselUpdateSys
             var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null) return;
 
+            if (!VesselCommon.DoVesselChecks(vessel.id))
+                return;
+
             var previousSituation = vessel.situation;
             var previousStage = vessel.currentStage;
 

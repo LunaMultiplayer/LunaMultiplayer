@@ -5,6 +5,7 @@ using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.VesselSwitcherSys;
 using LmpClient.Systems.Warp;
+using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Time;
 using System;
@@ -16,25 +17,61 @@ namespace LmpClient.Systems.VesselDockSys
 {
     public class VesselDockEvents : SubSystem<VesselDockSystem>
     {
+        private static bool ownDominantVessel;
         private static Guid _dominantVesselId;
         private static Guid _weakVesselId;
         private static uint _dominantVesselPersistentId;
         private static uint _weakVesselPersistentId;
-
+        
         /// <summary>
-        /// Called when 2 parts couple
+        /// Called just before the docking sequence starts
         /// </summary>
-        public void OnPartCouple(GameEvents.FromToAction<Part, Part> partAction)
+        public void OnVesselDocking(uint vessel1PersistentId, uint vessel2PersistentId)
         {
-            if (VesselCommon.IsSpectating || partAction.from.vessel.isEVA || partAction.to.vessel.isEVA) return;
+            if (!FlightGlobals.PersistentVesselIds.TryGetValue(vessel1PersistentId, out var vessel1) ||
+                !FlightGlobals.PersistentVesselIds.TryGetValue(vessel1PersistentId, out var vessel2))
+                return;
 
-            var dominantVessel = Vessel.GetDominantVessel(partAction.from.vessel, partAction.to.vessel);
+            if (vessel1.isEVA || vessel2.isEVA) return;
+
+            var dominantVessel = Vessel.GetDominantVessel(vessel1, vessel2);
             _dominantVesselId = dominantVessel.id;
             _dominantVesselPersistentId = dominantVessel.persistentId;
 
-            var weakVessel = partAction.from.vessel.persistentId == _dominantVesselPersistentId ? partAction.to.vessel : partAction.from.vessel;
+            var weakVessel = vessel1PersistentId == _dominantVesselPersistentId ? vessel2 : vessel1;
             _weakVesselId = weakVessel.id;
             _weakVesselPersistentId = weakVessel.persistentId;
+
+            ownDominantVessel = FlightGlobals.ActiveVessel == dominantVessel;
+        }
+
+        public void OnDockingComplete(GameEvents.FromToAction<Part, Part> data)
+        {
+            if (ownDominantVessel)
+            {
+                LunaLog.Log($"[LMP]: Docking finished! We own the dominant vessel {_dominantVesselId}");
+                JumpIfVesselOwnerIsInFuture(_weakVesselId);
+                var vesselToKill = FlightGlobals.fetch.FindVessel(_weakVesselPersistentId, _weakVesselId);
+                if (vesselToKill != null)
+                {
+                    VesselRemoveSystem.Singleton.AddToKillList(vesselToKill, "Killing weak vessel during a docking");
+                }
+
+                System.MessageSender.SendDockInformation(_weakVesselId, _weakVesselPersistentId, FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace);
+            }
+            else
+            {
+                LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {_dominantVesselId}");
+                JumpIfVesselOwnerIsInFuture(_dominantVesselId);
+                var vesselToKill = FlightGlobals.fetch.FindVessel(_weakVesselPersistentId, _weakVesselId);
+                if (vesselToKill != null)
+                {
+                    VesselRemoveSystem.Singleton.AddToKillList(vesselToKill, "Killing weak vessel during a docking");
+                }
+
+                CoroutineUtil.StartDelayedRoutine("OnDockingComplete", () => System.MessageSender.SendDockInformation(_weakVesselId, _weakVesselPersistentId,
+                            FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace), 3);
+            }
         }
 
         /// <summary>

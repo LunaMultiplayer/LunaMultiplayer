@@ -136,7 +136,7 @@ namespace LmpClient.Systems.VesselPositionSys
         public void ApplyInterpolatedVesselUpdate()
         {
             if (Body == null) return;
-
+            
             if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
                 if (Target == null) //This is the case of first iteration

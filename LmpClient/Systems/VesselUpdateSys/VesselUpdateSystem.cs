@@ -15,6 +15,11 @@ namespace LmpClient.Systems.VesselUpdateSys
     {
         #region Fields & properties
 
+        public bool VesselUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && HighLogic.LoadedScene == GameScenes.FLIGHT &&
+                                              FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
+                                              FlightGlobals.ActiveVessel.state != Vessel.State.DEAD &&
+                                              FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
+
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
         private List<Vessel> AbandonedVesselsToUpdate { get; } = new List<Vessel>();
 
@@ -64,7 +69,7 @@ namespace LmpClient.Systems.VesselUpdateSys
 
         private void SendVesselUpdates()
         {
-            if (!VesselCommon.IsSpectating)
+            if (!VesselCommon.IsSpectating && VesselUpdateSystemReady)
             {
                 MessageSender.SendVesselUpdate(FlightGlobals.ActiveVessel);
             }

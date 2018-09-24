@@ -25,6 +25,9 @@ namespace LmpClient.Systems.VesselActionGroupSys
             var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null) return;
 
+            if (!VesselCommon.DoVesselChecks(VesselId))
+                return;
+
             //Ignore SAS if we are spectating as it will fight with the FI
             if (ActionGroup == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
                 return;

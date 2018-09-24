@@ -11,8 +11,8 @@ namespace LmpClient.Systems.VesselDockSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onPartCouple.Add(VesselDockEvents.OnPartCouple);
-            GameEvents.onVesselWasModified.Add(VesselDockEvents.OnVesselWasModified);
+            GameEvents.onVesselDocking.Add(VesselDockEvents.OnVesselDocking);
+            GameEvents.onDockingComplete.Add(VesselDockEvents.OnDockingComplete);
 
             GameEvents.onVesselsUndocking.Add(VesselDockEvents.UndockingComplete);
         }
@@ -20,8 +20,8 @@ namespace LmpClient.Systems.VesselDockSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onPartCouple.Remove(VesselDockEvents.OnPartCouple);
-            GameEvents.onVesselWasModified.Remove(VesselDockEvents.OnVesselWasModified);
+            GameEvents.onVesselDocking.Remove(VesselDockEvents.OnVesselDocking);
+            GameEvents.onDockingComplete.Remove(VesselDockEvents.OnDockingComplete);
 
             GameEvents.onVesselsUndocking.Remove(VesselDockEvents.UndockingComplete);
         }

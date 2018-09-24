@@ -24,7 +24,10 @@ namespace LmpClient.Systems.VesselResourceSys
         {
             var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null) return;
-            
+
+            if (!VesselCommon.DoVesselChecks(vessel.id))
+                return;
+
             UpdateVesselFields(vessel);
         }
         

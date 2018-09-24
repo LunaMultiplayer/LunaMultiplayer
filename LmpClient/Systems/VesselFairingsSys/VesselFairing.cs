@@ -22,6 +22,9 @@ namespace LmpClient.Systems.VesselFairingsSys
 
         public void ProcessFairing()
         {
+            if (!VesselCommon.DoVesselChecks(VesselId))
+                return;
+
             if (FlightGlobals.FindUnloadedPart(PartPersistentId, out var protoPart))
             {
                 ProcessFairingChange(protoPart);

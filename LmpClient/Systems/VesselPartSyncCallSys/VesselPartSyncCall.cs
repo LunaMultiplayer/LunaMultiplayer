@@ -28,6 +28,9 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
             var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
             if (vessel == null || !vessel.loaded) return;
 
+            if (!VesselCommon.DoVesselChecks(VesselId))
+                return;
+
             var part = VesselCommon.FindProtoPartInProtovessel(PartPersistentId, vessel.protoVessel, PartFlightId);
             if (part != null)
             {
