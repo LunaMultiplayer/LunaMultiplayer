@@ -21,7 +21,7 @@ namespace LmpClient.Systems.ExternalSeat
             VesselRemoveSystem.Singleton.AddToKillList(kerbalVesselId, "Killing kerbal as it boarded a external seat");
             LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalVesselId);
 
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(seat.vessel, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(seat.vessel);
         }
 
         public void ExternalSeatUnboard(Vessel unboardedVessel, KerbalEVA kerbal)
@@ -32,8 +32,8 @@ namespace LmpClient.Systems.ExternalSeat
 
             LunaLog.Log("Crew-unboard from an external seat detected!");
             
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(unboardedVessel, false);
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(kerbal.vessel, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(unboardedVessel);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(kerbal.vessel);
         }
     }
 }

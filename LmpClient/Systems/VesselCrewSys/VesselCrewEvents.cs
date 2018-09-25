@@ -30,7 +30,7 @@ namespace LmpClient.Systems.VesselCrewSys
 
                 if (!LockSystem.LockQuery.UpdateLockExists(vessel.id) || LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {
-                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
                 }
             }
         }
@@ -40,7 +40,7 @@ namespace LmpClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace LmpClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel);
             //Do not send the kerbal as his orbit is not ready. It will be handled by the VesselLockEvents.OnVesselChange
         }
     }

@@ -33,33 +33,33 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             foreach (var vessel in vessels)
             {
-                SendVesselMessage(vessel, false);
+                SendVesselMessage(vessel);
             }
         }
 
-        public void SendVesselMessage(Vessel vessel, bool forceReloadOnReceive)
+        public void SendVesselMessage(Vessel vessel)
         {
             if (vessel == null || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
                 return;
 
             vessel.protoVessel = vessel.BackupVessel();
-            SendVesselMessage(vessel.protoVessel, forceReloadOnReceive);
+            SendVesselMessage(vessel.protoVessel);
         }
 
         #region Private methods
 
-        private void SendVesselMessage(ProtoVessel protoVessel, bool forceReloadOnReceive)
+        private void SendVesselMessage(ProtoVessel protoVessel)
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
             //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
             //TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
-            PrepareAndSendProtoVessel(protoVessel, forceReloadOnReceive);
+            PrepareAndSendProtoVessel(protoVessel);
         }
 
         /// <summary>
         /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
         /// </summary>
-        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool forceReloadOnReceive)
+        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
         {
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
@@ -72,7 +72,6 @@ namespace LmpClient.Systems.VesselProtoSys
                 {
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
                     msgData.GameTime = TimeSyncerSystem.UniversalTime;
-                    msgData.ForceReload = forceReloadOnReceive;
                     msgData.VesselId = protoVessel.vesselID;
                     msgData.NumBytes = numBytes;
                     if (msgData.Data.Length < numBytes)

@@ -1,11 +1,9 @@
 ﻿using LmpClient.Base;
+using LmpClient.Events;
 using LmpClient.Systems.Lock;
-using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.Warp;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace LmpClient.Systems.Asteroid
 {
@@ -13,10 +11,8 @@ namespace LmpClient.Systems.Asteroid
     {
         #region Fields
 
-        public List<Guid> ServerAsteroids { get; } = new List<Guid>();
-        public Dictionary<Guid, string> ServerAsteroidTrackStatus { get; } = new Dictionary<Guid, string>();
-
-        public bool AsteroidSystemReady => Enabled && Time.timeSinceLevelLoad > 5f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
+        public AsteroidEvents AsteroidEvents { get; } = new AsteroidEvents();
+        public bool AsteroidSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT;
 
         #endregion
 
@@ -28,15 +24,17 @@ namespace LmpClient.Systems.Asteroid
         {
             base.OnEnabled();
             
+            TrackingEvent.onStartTrackingAsteroid.Add(AsteroidEvents.StartTrackingAsteroid);
+            TrackingEvent.onStopTrackingAsteroid.Add(AsteroidEvents.StopTrackingAsteroid);
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetAsteroidLock));
-            SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsStatus));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            ServerAsteroids.Clear();
-            ServerAsteroidTrackStatus.Clear();
+
+            TrackingEvent.onStartTrackingAsteroid.Remove(AsteroidEvents.StartTrackingAsteroid);
+            TrackingEvent.onStopTrackingAsteroid.Remove(AsteroidEvents.StopTrackingAsteroid);
         }
 
         #endregion
@@ -53,50 +51,10 @@ namespace LmpClient.Systems.Asteroid
             if (!LockSystem.LockQuery.AsteroidLockExists() && WarpSystem.Singleton.CurrentSubspace == 0)
                 LockSystem.Singleton.AcquireAsteroidLock();
         }
-        
-        /// <summary>
-        /// This routine handles the asteroid track status between clients
-        /// </summary>
-        private void CheckAsteroidsStatus()
-        {
-            if (!Enabled || !AsteroidSystemReady) return;
-
-            //Check for changes to tracking
-            foreach (var asteroid in GetCurrentAsteroids().Where(asteroid => asteroid.state != Vessel.State.DEAD))
-            {
-                if (!ServerAsteroidTrackStatus.ContainsKey(asteroid.id))
-                {
-                    ServerAsteroidTrackStatus.Add(asteroid.id, asteroid.DiscoveryInfo.trackingStatus.Value);
-                }
-                else
-                {
-                    if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id])
-                    {
-                        LunaLog.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
-                        ServerAsteroidTrackStatus[asteroid.id] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, false);
-                    }
-                }
-            }
-        }
 
         #endregion
 
         #region Public methods
-
-        /// <summary>
-        /// Registers the server asteroid - Prevents LMP from deleting it.
-        /// </summary>
-        /// <param name="asteroidId">Asteroid to register</param>
-        public void RegisterServerAsteroid(Guid asteroidId)
-        {
-            if (!ServerAsteroids.Contains(asteroidId))
-                ServerAsteroids.Add(asteroidId);
-
-            //This will ignore Status changes so we don't resend the asteroid.
-            if (ServerAsteroidTrackStatus.ContainsKey(asteroidId))
-                ServerAsteroidTrackStatus.Remove(asteroidId);
-        }
 
         public bool VesselIsAsteroid(Vessel vessel)
         {

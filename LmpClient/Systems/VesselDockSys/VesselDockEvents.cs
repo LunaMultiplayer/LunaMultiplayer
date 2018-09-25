@@ -49,7 +49,7 @@ namespace LmpClient.Systems.VesselDockSys
             if (_ownDominantVessel)
             {
                 System.MessageSender.SendDockInformation(CurrentDockEvent.WeakVesselId, FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace);
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
             }
             else
             {
@@ -77,8 +77,8 @@ namespace LmpClient.Systems.VesselDockSys
 
             LunaLog.Log("Undock detected!");
 
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, true);
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2, true);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2);
 
             //Release the locks of the vessel we are not in
             var crewToReleaseLocks = FlightGlobals.ActiveVessel == vessel1

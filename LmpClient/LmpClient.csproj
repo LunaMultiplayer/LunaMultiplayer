@@ -82,6 +82,7 @@
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
+    <Compile Include="Events\TrackingEvent.cs" />
     <Compile Include="Events\VesselLoadEvent.cs" />
     <Compile Include="Events\VesselReloadEvent.cs" />
     <Compile Include="Events\VesselInitializeEvent.cs" />
@@ -95,6 +96,8 @@
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
+    <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />
+    <Compile Include="Harmony\SpaceTracking_StartTrackingObject.cs" />
     <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
@@ -160,6 +163,7 @@
     <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
     <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Admin\AdminSystem.cs" />
+    <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
     <Compile Include="Systems\ExternalSeat\ExternalSeatEvents.cs" />
     <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
     <Compile Include="Systems\FloatingOrigin\FloatingOriginEvents.cs" />

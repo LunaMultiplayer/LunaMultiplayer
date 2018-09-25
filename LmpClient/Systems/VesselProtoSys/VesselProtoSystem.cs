@@ -110,12 +110,12 @@ namespace LmpClient.Systems.VesselProtoSys
                 if (ProtoSystemReady)
                 {
                     if (FlightGlobals.ActiveVessel.parts.Count != FlightGlobals.ActiveVessel.protoVessel.protoPartSnapshots.Count)
-                        MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+                        MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
 
                     foreach (var vessel in VesselCommon.GetSecondaryVessels())
                     {
                         if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count)
-                            MessageSender.SendVesselMessage(vessel, false);
+                            MessageSender.SendVesselMessage(vessel);
                     }
                 }
             }

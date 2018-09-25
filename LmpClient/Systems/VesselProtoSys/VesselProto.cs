@@ -10,7 +10,6 @@ namespace LmpClient.Systems.VesselProtoSys
         public Guid VesselId;
         public byte[] RawData = new byte[0];
         public int NumBytes;
-        public bool ForceReload;
         public double GameTime;
 
         public Vessel LoadVessel()

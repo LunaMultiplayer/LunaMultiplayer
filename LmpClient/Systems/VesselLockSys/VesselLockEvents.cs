@@ -41,7 +41,7 @@ namespace LmpClient.Systems.VesselLockSys
                 if (vessel.isEVA)
                 {
                     //Send the vessel that we are switching to if it's a newly created EVA
-                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
                 }
             }
         }

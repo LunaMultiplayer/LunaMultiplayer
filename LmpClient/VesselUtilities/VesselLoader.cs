@@ -30,7 +30,6 @@ namespace LmpClient.VesselUtilities
                 if (ProtoVesselValidationsPassed(vesselProto))
                 {
                     CurrentlyLoadingVesselId = vesselProto.vesselID;
-                    RegisterServerAsteriodIfVesselIsAsteroid(vesselProto);
                     FixProtoVesselFlags(vesselProto);
                     GetLatestProtoVesselPosition(vesselProto);
 
@@ -121,26 +120,6 @@ namespace LmpClient.VesselUtilities
                     part.flagURL = "Squad/Flags/default";
                 }
             }
-        }
-
-        /// <summary>
-        /// Registers an asteroid
-        /// </summary>
-        private static void RegisterServerAsteriodIfVesselIsAsteroid(ProtoVessel possibleAsteroid)
-        {
-            //Register asteroids from other players
-            if (ProtoVesselIsAsteroid(possibleAsteroid))
-                AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID);
-        }
-
-        /// <summary>
-        /// Checks if vessel is an asteroid
-        /// </summary>
-        private static bool ProtoVesselIsAsteroid(ProtoVessel possibleAsteroid)
-        {
-            return possibleAsteroid.vesselType == VesselType.SpaceObject &&
-                   possibleAsteroid.protoPartSnapshots?.Count == 1 &&
-                   possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid";
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace LmpClient.Systems.VesselProtoSys
                 return;
             }
 
-            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace LmpClient.Systems.VesselProtoSys
             if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
             {
                 //We delay it a bit because we must wait until the vessel is named correctly and so on.
-                CoroutineUtil.StartDelayedRoutine("VesselInitialized", ()=> System.MessageSender.SendVesselMessage(vessel, false), 0.5f);
+                CoroutineUtil.StartDelayedRoutine("VesselInitialized", ()=> System.MessageSender.SendVesselMessage(vessel), 0.5f);
                 LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
                 LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
             }
@@ -70,7 +70,7 @@ namespace LmpClient.Systems.VesselProtoSys
             if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT && !VesselCommon.IsSpectating)
             {
                 //When quitting flight send the vessel one last time
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
             }
         }
 
@@ -107,7 +107,7 @@ namespace LmpClient.Systems.VesselProtoSys
             {
                 LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
                 LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
             }
 
             if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
@@ -118,7 +118,7 @@ namespace LmpClient.Systems.VesselProtoSys
 
                 QueuedVessels.Add(vessel.id);
                 CoroutineUtil.StartDelayedRoutine("QueueVesselMessageAsPartsChanged", () => QueueNewVesselChange(vessel), 0.5f);
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
             }
         }
 
@@ -126,7 +126,7 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (vessel == null) return;
             QueuedVessels.Remove(vessel.id);
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
         }
         
         /// <summary>
@@ -141,7 +141,7 @@ namespace LmpClient.Systems.VesselProtoSys
                 if (subject != null)
                 {
                     LunaLog.Log("Detected a experiment transmission. Sending vessel definition to the server");
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
 
                     ShareScienceSubjectSystem.Singleton.MessageSender.SendScienceSubjectMessage(subject);
                 }
@@ -161,7 +161,7 @@ namespace LmpClient.Systems.VesselProtoSys
                 {
                     LunaLog.Log("Detected a experiment stored. Sending vessel definition to the server");
                     //We need to FORCE the clients to reload this vessel. Otherwise they won't get an updated protomodule
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
 
                     ShareScienceSubjectSystem.Singleton.MessageSender.SendScienceSubjectMessage(subject);
                 }
@@ -177,7 +177,7 @@ namespace LmpClient.Systems.VesselProtoSys
             {
                 LunaLog.Log("Detected a experiment reset. Sending vessel definition to the server");
                 //We need to FORCE the clients to reload this vessel. Otherwise they won't get an updated protomodule
-                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
             }
         }
     }

@@ -10,7 +10,6 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
-            value.ForceReload = msgData.ForceReload;
             value.NumBytes = msgData.NumBytes;
 
             if (value.RawData.Length < msgData.NumBytes)
