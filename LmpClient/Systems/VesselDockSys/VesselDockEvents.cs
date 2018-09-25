@@ -16,8 +16,7 @@ namespace LmpClient.Systems.VesselDockSys
     public class VesselDockEvents : SubSystem<VesselDockSystem>
     {
         private static bool _ownDominantVessel;
-
-
+        
         /// <summary>
         /// Called just before the docking sequence starts
         /// </summary>

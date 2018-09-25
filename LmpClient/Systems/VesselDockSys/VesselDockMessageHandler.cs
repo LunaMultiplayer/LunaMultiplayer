@@ -1,7 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Extensions;
-using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
@@ -31,36 +30,27 @@ namespace LmpClient.Systems.VesselDockSys
                 return;
             }
 
+            var dominantProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData, msgData.NumBytes);
+            VesselLoader.LoadVessel(dominantProto);
+
+            WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
+
             if (FlightGlobals.ActiveVessel?.id == msgData.WeakVesselId)
             {
                 LunaLog.Log($"Docking NOT detected. We DON'T OWN the dominant vessel. Switching to {msgData.DominantVesselId}");
-                WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
-
-                VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel, "Killing weak (active) vessel during a docking that was not detected");
-
-                var dominantVessel = FlightGlobals.fetch.LmpFindVessel(msgData.DominantVesselId);
-                if (dominantVessel != null)
+                if (dominantProto.vesselRef != null)
                 {
-                    dominantVessel.Load();
-                    dominantVessel.GoOffRails();
-                    FlightGlobals.ForceSetActiveVessel(dominantVessel);
+                    dominantProto.vesselRef.Load();
+                    dominantProto.vesselRef.GoOffRails();
+                    FlightGlobals.ForceSetActiveVessel(dominantProto.vesselRef);
                 }
-                else 
-                    HighLogic.LoadScene(GameScenes.SPACECENTER);
             }
             else if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId)
             {
-
                 LunaLog.Log("Docking NOT detected. We OWN the dominant vessel");
-                WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
-
-                VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.fetch.LmpFindVessel(msgData.WeakVesselId), "Weak vessel in a docking");
-
-                var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData, msgData.NumBytes);
-                VesselLoader.LoadVessel(newProto);
-
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
             }
+
+            VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.fetch.LmpFindVessel(msgData.WeakVesselId), "Killing weak (active) vessel during a docking that was not detected");
         }
     }
 }
