@@ -13,9 +13,9 @@ namespace LmpClient.Harmony
     public class SpaceTracking_StartTrackingObject
     {
         [HarmonyPostfix]
-        private static void PostfixStartTrackingObject(Vessel asteroid)
+        private static void PostfixStartTrackingObject(Vessel v)
         {
-            TrackingEvent.onStartTrackingAsteroid.Fire(asteroid);
+            TrackingEvent.onStartTrackingAsteroid.Fire(v);
         }
     }
 }
