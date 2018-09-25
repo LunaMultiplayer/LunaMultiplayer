@@ -2,7 +2,6 @@
 using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.VesselFlightStateSys;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.VesselUtilities;
 using LmpCommon.Locks;
@@ -126,10 +125,7 @@ namespace LmpClient.Systems.VesselLockSys
             switch (lockDefinition.Type)
             {
                 case LockType.Control:
-                    //Someone stopped controlling a vessel so remove it from the flight state system
-                    VesselFlightStateSystem.Singleton.RemoveVessel(lockDefinition.VesselId);
-
-                    if (FlightGlobals.ActiveVessel?.id == lockDefinition.VesselId)
+                    if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == lockDefinition.VesselId)
                     {
                         LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselId);
                     }
