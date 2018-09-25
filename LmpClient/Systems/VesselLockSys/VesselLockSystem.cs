@@ -117,8 +117,9 @@ namespace LmpClient.Systems.VesselLockSys
             LockSystem.Singleton.ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
 
-            if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null && HighLogic.CurrentGame.Parameters.Flight != null)
+            if (HighLogic.CurrentGame?.Parameters?.Flight != null)
                 HighLogic.CurrentGame.Parameters.Flight.CanEVA = true;
+
             SpectateEvent.onFinishedSpectating.Fire();
         }
 
