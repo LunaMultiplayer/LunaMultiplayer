@@ -13,7 +13,7 @@ namespace LmpClient.VesselUtilities
 {
     public class VesselLoader
     {
-        public static Guid CurrentlyLoadingVesselId;
+        public static Guid CurrentlyLoadingVesselId { get; private set; }
 
         /// <summary>
         /// Invoke this private method to rebuild the vessel lists that appear on the tracking station

@@ -2,6 +2,7 @@
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareScienceSubject;
+using LmpClient.Systems.VesselDockSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
@@ -80,6 +81,14 @@ namespace LmpClient.Systems.VesselProtoSys
         public void VesselPartCountChanged(Vessel vessel)
         {
             if (vessel == null) return;
+
+            //The vessel is being created by the loader
+            if (VesselLoader.CurrentlyLoadingVesselId == vessel.id)
+                return;
+            
+            //When a vessel docks it's part count changes but we must not relay it as it's handled by the vessel dock system
+            if (CurrentDockEvent.DominantVesselId == vessel.id || CurrentUndockEvent.UndockingVesselId == vessel.id)
+                return;
 
             //This event is called when the vessel is being created and we don't want to send protos of vessels we don't own or while our vessel is not 100% loaded (FlightReady)
             if (vessel.vesselSpawning) return;

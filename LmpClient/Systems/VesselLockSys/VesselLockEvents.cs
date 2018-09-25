@@ -38,8 +38,11 @@ namespace LmpClient.Systems.VesselLockSys
             {
                 LockSystem.Singleton.AcquireControlLock(vessel.id);
 
-                //Send the vessel that we switched to. It might be a kerbal going eva for example and the other players won't have it
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+                if (vessel.isEVA)
+                {
+                    //Send the vessel that we are switching to if it's a newly created EVA
+                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
+                }
             }
         }
 

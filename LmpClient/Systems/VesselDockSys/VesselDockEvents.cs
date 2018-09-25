@@ -59,7 +59,15 @@ namespace LmpClient.Systems.VesselDockSys
 
             VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(CurrentDockEvent.WeakVesselId, false);
         }
-        
+
+        /// <summary>
+        /// Event called just when the undocking starts
+        /// </summary>
+        public void UndockingStart(Part undockingPart)
+        {
+            CurrentUndockEvent.UndockingVesselId = undockingPart.vessel.id;
+        }
+
         /// <summary>
         /// Event called after the undocking is completed and we have the 2 final vessels
         /// </summary>
@@ -81,6 +89,7 @@ namespace LmpClient.Systems.VesselDockSys
             LockSystem.Singleton.ReleaseAllVesselLocks(crewToReleaseLocks, vesselToRelease.id);
 
             LunaLog.Log($"Undocking finished. Vessels: {vessel1.id} and {vessel2.id}");
+            CurrentDockEvent.Reset();
         }
 
         #region Private
@@ -130,5 +139,6 @@ namespace LmpClient.Systems.VesselDockSys
         }
 
         #endregion
+
     }
 }

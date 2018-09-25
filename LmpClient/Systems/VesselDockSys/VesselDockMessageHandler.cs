@@ -51,6 +51,7 @@ namespace LmpClient.Systems.VesselDockSys
             }
 
             VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.fetch.LmpFindVessel(msgData.WeakVesselId), "Killing weak (active) vessel during a docking that was not detected");
+            CurrentDockEvent.Reset();
         }
     }
 }

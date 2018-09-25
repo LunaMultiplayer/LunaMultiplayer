@@ -7,5 +7,12 @@ namespace LmpClient.Systems.VesselDockSys
         public static DateTime DockingTime;
         public static Guid DominantVesselId;
         public static Guid WeakVesselId;
+
+        public static void Reset()
+        {
+            DockingTime = DateTime.MinValue;
+            DominantVesselId = Guid.Empty;
+            WeakVesselId = Guid.Empty;
+        }
     }
 }
