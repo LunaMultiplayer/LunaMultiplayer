@@ -133,7 +133,7 @@ namespace LmpClient.Systems.VesselProtoSys
         /// </summary>
         private void CheckVesselsToLoad()
         {
-            if (HighLogic.LoadedScene < GameScenes.SPACECENTER || SettingsSys.SettingsSystem.CurrentSettings.Debug1) return;
+            if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
 
             try
             {

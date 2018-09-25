@@ -13,7 +13,7 @@ namespace LmpClient.Harmony
     public class ShipConstruct_LoadShip
     {
         [HarmonyPrefix]
-        private static void PrefixLoadShip(ConfigNode root, ref uint persistentID)
+        private static void PrefixLoadShip(ref ConfigNode root, ref uint persistentID)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
 
