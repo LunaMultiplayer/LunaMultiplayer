@@ -52,7 +52,7 @@ Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-in
 ---
 ### Servers:
 
-You can check how many servers are up and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions through our [master servers](../../wiki/Master-server)
+You can check [how many servers are up](../../wiki/Master-server-status) and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions through our [master servers](../../wiki/Master-server)
 
 | Master server | Release | Nightly |
 | ------------  | ------- |-------- |
