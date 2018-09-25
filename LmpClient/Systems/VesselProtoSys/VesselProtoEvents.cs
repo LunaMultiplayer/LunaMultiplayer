@@ -77,6 +77,7 @@ namespace LmpClient.Systems.VesselProtoSys
         /// <summary>
         /// Triggered when the vessel parts change.
         /// CAUTION!: When staging this method can be called a lot of times!
+        /// Also, this method is called when docking/undocking and when reloading a vessel
         /// </summary>
         public void VesselPartCountChanged(Vessel vessel)
         {
@@ -160,7 +161,6 @@ namespace LmpClient.Systems.VesselProtoSys
                 if (subject != null)
                 {
                     LunaLog.Log("Detected a experiment stored. Sending vessel definition to the server");
-                    //We need to FORCE the clients to reload this vessel. Otherwise they won't get an updated protomodule
                     System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
 
                     ShareScienceSubjectSystem.Singleton.MessageSender.SendScienceSubjectMessage(subject);
@@ -176,7 +176,6 @@ namespace LmpClient.Systems.VesselProtoSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log("Detected a experiment reset. Sending vessel definition to the server");
-                //We need to FORCE the clients to reload this vessel. Otherwise they won't get an updated protomodule
                 System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
             }
         }

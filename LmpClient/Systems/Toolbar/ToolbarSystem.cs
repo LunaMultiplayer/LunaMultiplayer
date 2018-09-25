@@ -7,6 +7,7 @@ namespace LmpClient.Systems.Toolbar
     {
         #region Constructor
 
+        /// <inheritdoc />
         /// <summary>
         /// This system must be ALWAYS enabled so we set it as enabled on the constructor
         /// </summary>

@@ -45,7 +45,6 @@ namespace LmpClient.Systems.VesselCrewSys
 
         /// <summary>
         /// The vessel has changed as it has less crew now so send the definition.
-        /// Also send the definition of the EVA
         /// </summary>
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {

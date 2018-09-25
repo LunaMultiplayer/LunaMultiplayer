@@ -1,6 +1,5 @@
 ﻿using LmpClient.Base;
 using LmpClient.Network;
-using LmpClient.Systems.FloatingOrigin;
 using LmpClient.Systems.SafetyBubble;
 using LmpClient.Systems.TimeSyncer;
 using LmpClient.Systems.VesselPositionSys;
@@ -28,7 +27,6 @@ namespace LmpClient.Windows.Debug
 
         private static bool _displayFast;
         private static string _vectorText;
-        private static string _floatingOriginText;
         private static string _positionText;
         private static string _orbitText;
         private static string _orbitVesselsText;
@@ -40,7 +38,6 @@ namespace LmpClient.Windows.Debug
 
         private static bool _displayVectors;
         private static bool _displayPositions;
-        private static bool _displayFloatingOrigin;
         private static bool _displayOrbit;
         private static bool _displayVesselsOrbit;
         private static bool _displaySubspace;
@@ -122,30 +119,6 @@ namespace LmpClient.Windows.Debug
                         _positionText = "You have to be in flight";
                     }
                 }
-
-                if (_displayFloatingOrigin)
-                {
-                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
-                    {
-                        var ourVessel = FlightGlobals.ActiveVessel;
-
-                        StringBuilder.AppendLine($"Pos: {FloatingOriginSystem.Offset}");
-                        StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetLatLonAlt[0]},{FloatingOriginSystem.OffsetLatLonAlt[1]},{FloatingOriginSystem.OffsetLatLonAlt[2]}");
-                        StringBuilder.AppendLine($"Distance: {(FloatingOriginSystem.Offset - ourVessel.vesselTransform.position).magnitude}");
-                        StringBuilder.AppendLine($"Non Krakensbane Pos: {FloatingOriginSystem.OffsetNonKrakensbane}");
-                        StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[0]}," +
-                                                 $"{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[1]},{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[2]}");
-                        StringBuilder.AppendLine($"Distance: {(FloatingOriginSystem.OffsetNonKrakensbane - ourVessel.vesselTransform.position).magnitude}");
-
-                        _floatingOriginText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
-                    }
-                    else
-                    {
-                        _floatingOriginText = "You have to be in flight";
-                    }
-                }
-
                 if (_displayOrbit)
                 {
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.orbitDriver?.orbit != null)

@@ -166,8 +166,6 @@
     <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
     <Compile Include="Systems\ExternalSeat\ExternalSeatEvents.cs" />
     <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
-    <Compile Include="Systems\FloatingOrigin\FloatingOriginEvents.cs" />
-    <Compile Include="Systems\FloatingOrigin\FloatingOriginSystem.cs" />
     <Compile Include="Systems\Label\LabelEvents.cs" />
     <Compile Include="Systems\Label\LabelSystem.cs" />
     <Compile Include="Systems\SafetyBubble\SpawnPointLocation.cs" />
