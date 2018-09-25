@@ -176,36 +176,29 @@ namespace LmpClient.Windows.Debug
 
                 if (_displayVesselsOrbit)
                 {
-                    if (HighLogic.LoadedScene >= GameScenes.FLIGHT && FlightGlobals.ready)
+                    foreach (var vessel in FlightGlobals.Vessels)
                     {
-                        foreach (var vessel in FlightGlobals.Vessels)
+                        if (vessel == null) continue;
+
+                        if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
                         {
-                            if(vessel == null) continue;
-
-                            if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
-                            {
-                                StringBuilder.AppendLine($"Id: {vessel.id}");
-                                StringBuilder.AppendLine($"Mode: {vessel.orbitDriver.updateMode}");
-                                StringBuilder.AppendLine($"Semi major axis: {vessel.orbit.semiMajorAxis}");
-                                StringBuilder.AppendLine($"Eccentricity: {vessel.orbit.eccentricity}");
-                                StringBuilder.AppendLine($"Inclination: {vessel.orbit.inclination}");
-                                StringBuilder.AppendLine($"LAN: {vessel.orbit.LAN}");
-                                StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbit.argumentOfPeriapsis}");
-                                StringBuilder.AppendLine($"Mean anomaly: {vessel.orbit.meanAnomaly}");
-                                StringBuilder.AppendLine($"Mean anomaly at Epoch: {vessel.orbit.meanAnomalyAtEpoch}");
-                                StringBuilder.AppendLine($"Epoch: {vessel.orbit.epoch}");
-                                StringBuilder.AppendLine($"ObT: {vessel.orbit.ObT}");
-                                StringBuilder.AppendLine($"Obt Speed : {vessel.orbit.GetRelativeVel()}, |v|: {vessel.orbit.GetRelativeVel().magnitude}");
-                                StringBuilder.AppendLine();
-                            }
-
-                            _orbitVesselsText = StringBuilder.ToString();
-                            StringBuilder.Length = 0;
+                            StringBuilder.AppendLine($"Id: {vessel.id}");
+                            StringBuilder.AppendLine($"Mode: {vessel.orbitDriver.updateMode}");
+                            StringBuilder.AppendLine($"Semi major axis: {vessel.orbit.semiMajorAxis}");
+                            StringBuilder.AppendLine($"Eccentricity: {vessel.orbit.eccentricity}");
+                            StringBuilder.AppendLine($"Inclination: {vessel.orbit.inclination}");
+                            StringBuilder.AppendLine($"LAN: {vessel.orbit.LAN}");
+                            StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbit.argumentOfPeriapsis}");
+                            StringBuilder.AppendLine($"Mean anomaly: {vessel.orbit.meanAnomaly}");
+                            StringBuilder.AppendLine($"Mean anomaly at Epoch: {vessel.orbit.meanAnomalyAtEpoch}");
+                            StringBuilder.AppendLine($"Epoch: {vessel.orbit.epoch}");
+                            StringBuilder.AppendLine($"ObT: {vessel.orbit.ObT}");
+                            StringBuilder.AppendLine($"Obt Speed : {vessel.orbit.GetRelativeVel()}, |v|: {vessel.orbit.GetRelativeVel().magnitude}");
+                            StringBuilder.AppendLine();
                         }
-                    }
-                    else
-                    {
-                        _orbitVesselsText = "You have to be in flight";
+
+                        _orbitVesselsText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
                     }
                 }
 
