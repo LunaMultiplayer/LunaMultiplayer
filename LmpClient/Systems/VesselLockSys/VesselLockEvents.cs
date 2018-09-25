@@ -68,6 +68,15 @@ namespace LmpClient.Systems.VesselLockSys
                 InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
                 VesselLockSystem.Singleton.StopSpectating();
             }
+            if (data >= GameScenes.FLIGHT)
+            {
+                //If we are going to flight scene or tracking station try to get as many unloaded update locks as possible
+                foreach (var vessel in FlightGlobals.Vessels)
+                {
+                    if (LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
+                        LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id);
+                }
+            }
         }
 
         /// <summary>
@@ -105,6 +114,8 @@ namespace LmpClient.Systems.VesselLockSys
                     LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                     LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
                     break;
+                case LockType.UnloadedUpdate:
+
             }
         }
 
@@ -127,6 +138,8 @@ namespace LmpClient.Systems.VesselLockSys
                     break;
                 case LockType.UnloadedUpdate:
                 case LockType.Update:
+                    if (HighLogic.LoadedScene <= GameScenes.FLIGHT) return;
+
                     var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
                     if (vessel != null)
                     {
