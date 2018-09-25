@@ -101,6 +101,7 @@ namespace LmpClient.Systems.VesselLockSys
             if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
                 LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
 
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.Kerbal);
             LockSystem.Singleton.ReleasePlayerLocks(LockType.Update);
             LockSystem.Singleton.ReleasePlayerLocks(LockType.UnloadedUpdate);
 
