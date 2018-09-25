@@ -12,17 +12,17 @@
         <MethodDefinition>
             <MethodName>EnableXFeed</MethodName>
         </MethodDefinition>
-        <!--TODO: this can be messy-->
+        <!--TODO: this can be messy--><!--
         <MethodDefinition>
             <MethodName>Decouple</MethodName>
         </MethodDefinition>
-        <!--TODO: this can be messy-->
+        --><!--TODO: this can be messy--><!--
         <MethodDefinition>
             <MethodName>Undock</MethodName>
         </MethodDefinition>
-        <!--TODO: this can be messy-->
+        --><!--TODO: this can be messy--><!--
         <MethodDefinition>
             <MethodName>UndockSameVessel</MethodName>
-        </MethodDefinition>
+        </MethodDefinition>-->
     </Methods>
 </ModuleDefinition>

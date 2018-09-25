@@ -4,10 +4,10 @@
         <FieldDefinition>
             <FieldName>wheelType</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
+        <!--<FieldDefinition>
             <FieldName>isGrounded</FieldName>
             <MaxIntervalInMs>60000</MaxIntervalInMs>
-        </FieldDefinition>
+        </FieldDefinition>-->
         <FieldDefinition>
             <FieldName>autoFriction</FieldName>
         </FieldDefinition>
