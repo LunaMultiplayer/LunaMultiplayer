@@ -4,10 +4,10 @@
         <FieldDefinition>
             <FieldName>CoreTempGoalAdjustment</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: Value changes often-->
+        <!--Value changes too often-->
+        <!--<FieldDefinition>
             <FieldName>CoreThermalEnergy</FieldName>
             <MaxIntervalInMs>60000</MaxIntervalInMs>
-        </FieldDefinition>
+        </FieldDefinition>-->
     </Fields>
 </ModuleDefinition>

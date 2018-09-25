@@ -2,10 +2,10 @@
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
         <!--Launch time of the panel. It afects the efficiency. An old solar panel produce less electricity-->
-        <FieldDefinition>
-            <!--TODO: Value changes often-->
+        <!--Value changes often-->
+        <!--<FieldDefinition>
             <FieldName>launchUT</FieldName>
             <MaxIntervalInMs>60000</MaxIntervalInMs>
-        </FieldDefinition>
+        </FieldDefinition>-->
     </Fields>
 </ModuleDefinition>

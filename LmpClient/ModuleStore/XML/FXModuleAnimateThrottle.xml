@@ -2,10 +2,10 @@
 <!--This defines the effects of the engines-->
 <ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <Fields>
-        <FieldDefinition>
-            <!--TODO: Value changes often-->
+        <!--Value changes too often-->
+        <!--<FieldDefinition>
             <FieldName>animState</FieldName>
             <MaxIntervalInMs>10000</MaxIntervalInMs>
-        </FieldDefinition>
+        </FieldDefinition>-->
     </Fields>
 </ModuleDefinition>

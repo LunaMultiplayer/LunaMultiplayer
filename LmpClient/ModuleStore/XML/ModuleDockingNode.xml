@@ -12,16 +12,16 @@
         <MethodDefinition>
             <MethodName>EnableXFeed</MethodName>
         </MethodDefinition>
-        <!--TODO: this can be messy--><!--
-        <MethodDefinition>
+        <!--This can be messy-->
+        <!--<MethodDefinition>
             <MethodName>Decouple</MethodName>
-        </MethodDefinition>
-        --><!--TODO: this can be messy--><!--
-        <MethodDefinition>
+        </MethodDefinition>-->
+        <!--This can be messy-->
+        <!--<MethodDefinition>
             <MethodName>Undock</MethodName>
-        </MethodDefinition>
-        --><!--TODO: this can be messy--><!--
-        <MethodDefinition>
+        </MethodDefinition>-->
+        <!--This can be messy-->
+        <!--<MethodDefinition>
             <MethodName>UndockSameVessel</MethodName>
         </MethodDefinition>-->
     </Methods>

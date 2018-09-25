@@ -4,11 +4,11 @@
         <FieldDefinition>
             <FieldName>generatorIsActive</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: Value changes often-->
+        <!--Value changes too often-->
+        <!--<FieldDefinition>
             <FieldName>throttle</FieldName>
             <MaxIntervalInMs>10000</MaxIntervalInMs>
-        </FieldDefinition>
+        </FieldDefinition>-->
     </Fields>
     <Methods>
         <MethodDefinition>

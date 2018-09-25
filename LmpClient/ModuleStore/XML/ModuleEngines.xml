@@ -13,11 +13,11 @@
         <FieldDefinition>
             <FieldName>flameout</FieldName>
         </FieldDefinition>
-        <FieldDefinition>
-            <!--TODO: Value changes often-->
+        <!--Value changes too often-->
+        <!--<FieldDefinition>
             <FieldName>currentThrottle</FieldName>
             <MaxIntervalInMs>10000</MaxIntervalInMs>
-        </FieldDefinition>
+        </FieldDefinition>-->
         <FieldDefinition>
             <FieldName>manuallyOverridden</FieldName>
         </FieldDefinition>
