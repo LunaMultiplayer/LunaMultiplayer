@@ -22,14 +22,9 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// </summary>
         public void SendVesselRemove(Vessel vessel, bool keepVesselInRemoveList = true)
         {
-            LunaLog.Log($"[LMP]: Removing {vessel.id}-{vessel.persistentId} from the server");
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselRemoveMsgData>();
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
-            msgData.VesselId = vessel.id;
-            msgData.VesselPersistentId = vessel.persistentId;
-            msgData.AddToKillList = keepVesselInRemoveList;
+            if (vessel == null) return;
 
-            SendMessage(msgData);
+            SendVesselRemove(vessel.id, vessel.persistentId, keepVesselInRemoveList);
         }
 
         /// <summary>

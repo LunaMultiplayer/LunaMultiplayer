@@ -1,9 +1,7 @@
 ﻿using LmpClient.Base;
-using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
-using LmpClient.Systems.VesselSwitcherSys;
 using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
@@ -17,110 +15,54 @@ namespace LmpClient.Systems.VesselDockSys
 {
     public class VesselDockEvents : SubSystem<VesselDockSystem>
     {
-        private static bool ownDominantVessel;
-        private static Guid _dominantVesselId;
-        private static Guid _weakVesselId;
-        private static uint _dominantVesselPersistentId;
-        private static uint _weakVesselPersistentId;
-        
+        private static bool _ownDominantVessel;
+
+
         /// <summary>
         /// Called just before the docking sequence starts
         /// </summary>
         public void OnVesselDocking(uint vessel1PersistentId, uint vessel2PersistentId)
         {
             if (!FlightGlobals.PersistentVesselIds.TryGetValue(vessel1PersistentId, out var vessel1) ||
-                !FlightGlobals.PersistentVesselIds.TryGetValue(vessel1PersistentId, out var vessel2))
+                !FlightGlobals.PersistentVesselIds.TryGetValue(vessel2PersistentId, out var vessel2))
                 return;
 
             if (vessel1.isEVA || vessel2.isEVA) return;
 
+            CurrentDockEvent.DockingTime = LunaNetworkTime.UtcNow;
+
             var dominantVessel = Vessel.GetDominantVessel(vessel1, vessel2);
-            _dominantVesselId = dominantVessel.id;
-            _dominantVesselPersistentId = dominantVessel.persistentId;
+            CurrentDockEvent.DominantVesselId = dominantVessel.id;
+            CurrentDockEvent.DominantVesselPersistentId = dominantVessel.persistentId;
 
-            var weakVessel = vessel1PersistentId == _dominantVesselPersistentId ? vessel2 : vessel1;
-            _weakVesselId = weakVessel.id;
-            _weakVesselPersistentId = weakVessel.persistentId;
+            var weakVessel = vessel1PersistentId == CurrentDockEvent.DominantVesselPersistentId ? vessel2 : vessel1;
+            CurrentDockEvent.WeakVesselId = weakVessel.id;
+            CurrentDockEvent.WeakVesselPersistentId = weakVessel.persistentId;
 
-            ownDominantVessel = FlightGlobals.ActiveVessel == dominantVessel;
+            _ownDominantVessel = FlightGlobals.ActiveVessel == dominantVessel;
         }
 
         public void OnDockingComplete(GameEvents.FromToAction<Part, Part> data)
         {
-            if (ownDominantVessel)
-            {
-                LunaLog.Log($"[LMP]: Docking finished! We own the dominant vessel {_dominantVesselId}");
-                JumpIfVesselOwnerIsInFuture(_weakVesselId);
-                var vesselToKill = FlightGlobals.fetch.FindVessel(_weakVesselPersistentId, _weakVesselId);
-                if (vesselToKill != null)
-                {
-                    VesselRemoveSystem.Singleton.AddToKillList(vesselToKill, "Killing weak vessel during a docking");
-                }
+            LunaLog.Log(_ownDominantVessel ? $"[LMP]: Docking finished! We own the dominant vessel {CurrentDockEvent.DominantVesselId}" :
+                $"[LMP]: Docking finished! We DON'T own the dominant vessel {CurrentDockEvent.DominantVesselId}");
 
-                System.MessageSender.SendDockInformation(_weakVesselId, _weakVesselPersistentId, FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace);
+            JumpIfVesselOwnerIsInFuture(CurrentDockEvent.DominantVesselId);
+
+            if (_ownDominantVessel)
+            {
+                System.MessageSender.SendDockInformation(CurrentDockEvent.WeakVesselId, CurrentDockEvent.WeakVesselPersistentId, FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
             }
             else
             {
-                LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {_dominantVesselId}");
-                JumpIfVesselOwnerIsInFuture(_dominantVesselId);
-                var vesselToKill = FlightGlobals.fetch.FindVessel(_weakVesselPersistentId, _weakVesselId);
-                if (vesselToKill != null)
-                {
-                    VesselRemoveSystem.Singleton.AddToKillList(vesselToKill, "Killing weak vessel during a docking");
-                }
-
-                CoroutineUtil.StartDelayedRoutine("OnDockingComplete", () => System.MessageSender.SendDockInformation(_weakVesselId, _weakVesselPersistentId,
+                CoroutineUtil.StartDelayedRoutine("OnDockingComplete", () => System.MessageSender.SendDockInformation(CurrentDockEvent.WeakVesselId, CurrentDockEvent.WeakVesselPersistentId,
                             FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace), 3);
             }
+
+            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(CurrentDockEvent.WeakVesselId, CurrentDockEvent.WeakVesselPersistentId, false);
         }
-
-        /// <summary>
-        /// This event is called AFTER all the docking event is over, so the final 
-        /// vessel is merged and we can safely remove the minor vessel
-        /// </summary>
-        public void OnVesselWasModified(Vessel vesselModified)
-        {
-            if (vesselModified.id == _dominantVesselId)
-            {
-                var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
-
-                if (_dominantVesselId == FlightGlobals.ActiveVessel?.id)
-                {
-                    JumpIfVesselOwnerIsInFuture(_weakVesselId);
-
-                    LunaLog.Log($"[LMP]: Docking detected! We own the dominant vessel {_dominantVesselId}");
-                    var vesselToKill = FlightGlobals.fetch.FindVessel(_weakVesselPersistentId, _weakVesselId);
-                    if (vesselToKill != null)
-                    {
-                        VesselRemoveSystem.Singleton.AddToKillList(vesselToKill, "Killing weak vessel during a docking");
-                    }
-
-                    System.MessageSender.SendDockInformation(_weakVesselId, _weakVesselPersistentId, FlightGlobals.ActiveVessel, currentSubspaceId);
-                }
-                else if (_weakVesselId == FlightGlobals.ActiveVessel?.id)
-                {
-                    JumpIfVesselOwnerIsInFuture(_dominantVesselId);
-
-                    LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {_dominantVesselId}");
-                    var vesselToKill = FlightGlobals.fetch.FindVessel(_weakVesselPersistentId, _weakVesselId);
-                    if (vesselToKill != null)
-                    {
-                        VesselRemoveSystem.Singleton.AddToKillList(vesselToKill, "Killing weak (active) vessel during a docking");
-                    }
-
-                    //Switch to the dominant vessel, but before that save the dominant vessel proto.
-                    //We save it as in case the dominant player didn't detected the dock he will send us a
-                    //NOT docked protovessel and that would remove the weak vessel because we are going to be an
-                    //spectator...
-                    VesselSwitcherSystem.Singleton.SwitchToVessel(FlightGlobals.fetch.FindVessel(_dominantVesselPersistentId, _dominantVesselId));
-                    MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(_weakVesselId, _weakVesselPersistentId, _dominantVesselPersistentId));
-                }
-            }
-
-            _dominantVesselId = Guid.Empty;
-            _weakVesselId = Guid.Empty;
-        }
-
+        
         /// <summary>
         /// Event called after the undocking is completed and we have the 2 final vessels
         /// </summary>

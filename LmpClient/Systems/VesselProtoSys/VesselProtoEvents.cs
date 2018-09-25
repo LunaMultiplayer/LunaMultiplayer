@@ -66,7 +66,7 @@ namespace LmpClient.Systems.VesselProtoSys
         /// </summary>
         internal void OnSceneRequested(GameScenes requestedScene)
         {
-            if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT)
+            if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT && !VesselCommon.IsSpectating)
             {
                 //When quitting flight send the vessel one last time
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
@@ -83,6 +83,9 @@ namespace LmpClient.Systems.VesselProtoSys
 
             //This event is called when the vessel is being created and we don't want to send protos of vessels we don't own or while our vessel is not 100% loaded (FlightReady)
             if (vessel.vesselSpawning) return;
+
+            //Vessel is scheduled to be killed so ignore this
+            if (VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id)) return;
 
             //We are spectating and the vessel has been modified so trigger a reload
             if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id && vessel.protoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)

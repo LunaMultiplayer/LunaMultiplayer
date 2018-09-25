@@ -241,6 +241,7 @@
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
     <Compile Include="Systems\Lock\LockEvents.cs" />
     <Compile Include="Systems\Ping\PingSystem.cs" />
+    <Compile Include="Systems\VesselDockSys\CurrentDockEvent.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingEvents.cs" />

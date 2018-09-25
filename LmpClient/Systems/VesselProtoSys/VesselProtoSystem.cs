@@ -20,9 +20,7 @@ namespace LmpClient.Systems.VesselProtoSys
         #region Fields & properties
 
         public ConcurrentDictionary<Guid, VesselProtoQueue> VesselProtos { get; } = new ConcurrentDictionary<Guid, VesselProtoQueue>();
-
-        public static Guid CurrentlyUpdatingVesselId { get; set; } = Guid.Empty;
-
+        
         public bool ProtoSystemReady => Enabled && FlightGlobals.ready && HighLogic.LoadedScene == GameScenes.FLIGHT && 
             FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating;
 
