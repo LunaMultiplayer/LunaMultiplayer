@@ -9,7 +9,6 @@ namespace LmpClient.Systems.VesselFlightStateSys
         protected override void AssignFromMessage(VesselFlightStateUpdate value, VesselFlightStateMsgData msgData)
         {
             value.VesselId = msgData.VesselId;
-            value.VesselPersistentId = msgData.VesselPersistentId;
             value.GameTimeStamp = msgData.GameTime;
             value.SubspaceId = msgData.SubspaceId;
 

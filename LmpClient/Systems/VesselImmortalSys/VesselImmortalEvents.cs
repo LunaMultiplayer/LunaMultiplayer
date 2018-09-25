@@ -46,7 +46,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         {
             if(lockDefinition.Type < LockType.Update) return;
 
-            var vessel = FlightGlobals.fetch.FindVessel(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
+            var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
 
             System.SetVesselImmortalState(vessel, lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName);
         }

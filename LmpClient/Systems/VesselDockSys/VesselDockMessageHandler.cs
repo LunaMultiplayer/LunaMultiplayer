@@ -38,7 +38,7 @@ namespace LmpClient.Systems.VesselDockSys
 
                 VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel, "Killing weak (active) vessel during a docking that was not detected");
 
-                var dominantVessel = FlightGlobals.fetch.FindVessel(msgData.DominantVesselPersistentId, msgData.DominantVesselId);
+                var dominantVessel = FlightGlobals.fetch.LmpFindVessel(msgData.DominantVesselId);
                 if (dominantVessel != null)
                 {
                     dominantVessel.Load();
@@ -54,7 +54,7 @@ namespace LmpClient.Systems.VesselDockSys
                 LunaLog.Log("Docking NOT detected. We OWN the dominant vessel");
                 WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
 
-                VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.fetch.FindVessel(msgData.WeakVesselPersistentId, msgData.WeakVesselId), "Weak vessel in a docking");
+                VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.fetch.LmpFindVessel(msgData.WeakVesselId), "Weak vessel in a docking");
 
                 var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData, msgData.NumBytes);
                 VesselLoader.LoadVessel(newProto);

@@ -11,7 +11,6 @@ namespace LmpCommon.Message.Data.Vessel
         internal VesselPartSyncUiFieldMsgData() { }
 
         public uint PartFlightId;
-        public uint PartPersistentId;
         public string ModuleName;
         public string FieldName;
 
@@ -30,7 +29,6 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PartFlightId);
-            lidgrenMsg.Write(PartPersistentId);
             lidgrenMsg.Write(ModuleName);
             lidgrenMsg.Write(FieldName);
 
@@ -57,7 +55,6 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
 
             PartFlightId = lidgrenMsg.ReadUInt32();
-            PartPersistentId = lidgrenMsg.ReadUInt32();
             ModuleName = lidgrenMsg.ReadString();
             FieldName = lidgrenMsg.ReadString();
 
@@ -81,7 +78,7 @@ namespace LmpCommon.Message.Data.Vessel
 
         internal override int InternalGetMessageSize()
         {
-            var msgSize = base.InternalGetMessageSize() + sizeof(uint) * 2 + ModuleName.GetByteCount() + FieldName.GetByteCount();
+            var msgSize = base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + FieldName.GetByteCount();
 
             switch (FieldType)
             {

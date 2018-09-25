@@ -15,15 +15,14 @@ namespace LmpClient.Systems.VesselFairingsSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselFairingDeployed(Vessel vessel, uint partPersistentId)
+        public void SendVesselFairingDeployed(Vessel vessel, uint partFlightId)
         {
             if (vessel == null) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFairingMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
-            msgData.VesselPersistentId = vessel.persistentId;
-            msgData.PartPersistentId = partPersistentId;
+            msgData.PartFlightId = partFlightId;
 
             SendMessage(msgData);
         }

@@ -85,9 +85,9 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// <summary>
         /// Add a vessel so it will be killed later
         /// </summary>
-        public void AddToKillList(uint vesselPersistentId, Guid vesselId, string reason)
+        public void AddToKillList(Guid vesselId, string reason)
         {
-            var vesselToKill = FlightGlobals.fetch.FindVessel(vesselPersistentId, vesselId);
+            var vesselToKill = FlightGlobals.fetch.LmpFindVessel(vesselId);
             if (vesselToKill != null)
             {
                 AddToKillList(vesselToKill, reason);
@@ -99,7 +99,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// </summary>
         public void AddToKillList(ProtoVessel protoVessel, string reason)
         {
-            AddToKillList(protoVessel.persistentId, protoVessel.vesselID, reason);
+            AddToKillList(protoVessel.vesselID, reason);
         }
 
         /// <summary>
@@ -123,9 +123,9 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// <summary>
         /// Kills a vessel.
         /// </summary>
-        public void KillVessel(uint vesselPersistentId, Guid vesselId, string reason)
+        public void KillVessel(Guid vesselId, string reason)
         {
-            KillVessel(FlightGlobals.fetch.FindVessel(vesselPersistentId, vesselId), reason);
+            KillVessel(FlightGlobals.fetch.LmpFindVessel(vesselId), reason);
         }
 
         /// <summary>

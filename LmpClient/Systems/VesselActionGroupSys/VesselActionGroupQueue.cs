@@ -9,7 +9,6 @@ namespace LmpClient.Systems.VesselActionGroupSys
         {
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
-            value.VesselPersistentId = msgData.VesselPersistentId;
             value.ActionGroup = (KSPActionGroup)msgData.ActionGroup;
             value.Value = msgData.Value;
         }

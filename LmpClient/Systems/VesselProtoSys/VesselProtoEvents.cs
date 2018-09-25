@@ -56,8 +56,8 @@ namespace LmpClient.Systems.VesselProtoSys
             {
                 //We delay it a bit because we must wait until the vessel is named correctly and so on.
                 CoroutineUtil.StartDelayedRoutine("VesselInitialized", ()=> System.MessageSender.SendVesselMessage(vessel, false), 0.5f);
-                LockSystem.Singleton.AcquireUpdateLock(vessel.persistentId, vessel.id, true);
-                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.persistentId, vessel.id, true);
+                LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
+                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
             }
         }
 
@@ -96,8 +96,8 @@ namespace LmpClient.Systems.VesselProtoSys
 
             if (!LockSystem.LockQuery.UpdateLockExists(vessel.id))
             {
-                LockSystem.Singleton.AcquireUpdateLock(vessel.persistentId, vessel.id, true);
-                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.persistentId, vessel.id, true);
+                LockSystem.Singleton.AcquireUpdateLock(vessel.id, true);
+                LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, true);
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, false);
             }
 

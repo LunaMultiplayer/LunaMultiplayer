@@ -98,7 +98,7 @@ namespace LmpClient.Systems.VesselLockSys
 
             var currentSpectatorLock = LockSystem.LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName);
             if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
-                LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.persistentId, FlightGlobals.ActiveVessel.id);
+                LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
 
             VesselCommon.IsSpectating = true;
             VesselCommon.SpectatingVesselId = spectatingVesselId;

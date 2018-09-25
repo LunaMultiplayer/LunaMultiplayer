@@ -196,26 +196,5 @@ namespace LmpCommon.Locks
             SpectatorLocks.Clear();
             UnloadedUpdateLocks.Clear();
         }
-
-        /// <summary>
-        /// Updates the persistentId in the dictionaries
-        /// </summary>
-        public void UpdatePersistentId(uint oldPersistentId, uint newPersistentId)
-        {
-            UpdatePersistentIdInDictionary(UpdateLocks.Values, oldPersistentId, newPersistentId);
-            UpdatePersistentIdInDictionary(KerbalLocks.Values, oldPersistentId, newPersistentId);
-            UpdatePersistentIdInDictionary(ControlLocks.Values, oldPersistentId, newPersistentId);
-            UpdatePersistentIdInDictionary(SpectatorLocks.Values, oldPersistentId, newPersistentId);
-            UpdatePersistentIdInDictionary(UnloadedUpdateLocks.Values, oldPersistentId, newPersistentId);
-        }
-
-        private void UpdatePersistentIdInDictionary(IEnumerable<LockDefinition> locks, uint oldPersistentId, uint newPersistentId)
-        {
-            foreach (var lockDefinition in locks)
-            {
-                if (lockDefinition.VesselPersistentId == oldPersistentId)
-                    lockDefinition.VesselPersistentId = newPersistentId;
-            }
-        }
     }
 }

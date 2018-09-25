@@ -38,7 +38,7 @@ namespace LmpClient.Windows.Locks
                     {
                         if (GUILayout.Button("Release", ButtonStyle))
                         {
-                            LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselLocks[i].VesselId, VesselLocks[i].VesselPersistentId);
+                            LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselLocks[i].VesselId);
                         }
                     }
                     GUILayout.EndHorizontal();

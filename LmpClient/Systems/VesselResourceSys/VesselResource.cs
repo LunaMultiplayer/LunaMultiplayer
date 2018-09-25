@@ -14,7 +14,6 @@ namespace LmpClient.Systems.VesselResourceSys
 
         public double GameTime;
         public Guid VesselId;
-        public uint VesselPersistentId;
         public int ResourcesCount;
         public VesselResourceInfo[] Resources = new VesselResourceInfo[0];
 
@@ -22,7 +21,7 @@ namespace LmpClient.Systems.VesselResourceSys
 
         public void ProcessVesselResource()
         {
-            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
+            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
             if (vessel == null) return;
 
             if (!VesselCommon.DoVesselChecks(vessel.id))
@@ -37,7 +36,7 @@ namespace LmpClient.Systems.VesselResourceSys
 
             for (var i = 0; i < ResourcesCount; i++)
             {
-                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(Resources[i].PartPersistentId, vessel.protoVessel, Resources[i].PartFlightId);
+                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, Resources[i].PartFlightId);
                 var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, Resources[i].ResourceName);
                 if (resourceSnapshot != null)
                 {

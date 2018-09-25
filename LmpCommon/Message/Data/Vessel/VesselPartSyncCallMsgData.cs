@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Vessel
         internal VesselPartSyncCallMsgData() { }
 
         public uint PartFlightId;
-        public uint PartPersistentId;
         public string ModuleName;
         public string MethodName;
 
@@ -22,7 +21,6 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PartFlightId);
-            lidgrenMsg.Write(PartPersistentId);
             lidgrenMsg.Write(ModuleName);
             lidgrenMsg.Write(MethodName);
         }
@@ -32,14 +30,13 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
 
             PartFlightId = lidgrenMsg.ReadUInt32();
-            PartPersistentId = lidgrenMsg.ReadUInt32();
             ModuleName = lidgrenMsg.ReadString();
             MethodName = lidgrenMsg.ReadString();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(uint) * 2 + ModuleName.GetByteCount() + MethodName.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + MethodName.GetByteCount();
         }
     }
 }

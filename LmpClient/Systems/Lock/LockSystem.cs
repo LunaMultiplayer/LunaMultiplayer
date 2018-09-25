@@ -75,10 +75,10 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Aquire the control lock on the given vessel
         /// </summary>
-        public void AcquireControlLock(uint vesselPersistentId, Guid vesselId, bool force = false)
+        public void AcquireControlLock(Guid vesselId, bool force = false)
         {
             if (!LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId), force);
+                AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
         }
 
         /// <summary>
@@ -107,35 +107,35 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Aquire the kerbal lock on the given vessel
         /// </summary>
-        public void AcquireKerbalLock(uint persistentVesselId, Guid vesselId, bool force = false)
+        public void AcquireKerbalLock(Guid vesselId, bool force = false)
         {
-            AcquireKerbalLock(FlightGlobals.fetch.FindVessel(persistentVesselId, vesselId), force);
+            AcquireKerbalLock(FlightGlobals.fetch.LmpFindVessel(vesselId), force);
         }
 
         /// <summary>
         /// Aquire the update lock on the given vessel
         /// </summary>
-        public void AcquireUpdateLock(uint vesselPersistentId, Guid vesselId, bool force = false)
+        public void AcquireUpdateLock(Guid vesselId, bool force = false)
         {
             if (!LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId), force);
+                AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
         }
 
         /// <summary>
         /// Aquire the unloaded update lock on the given vessel
         /// </summary>
-        public void AcquireUnloadedUpdateLock(uint vesselPersistentId, Guid vesselId, bool force = false)
+        public void AcquireUnloadedUpdateLock(Guid vesselId, bool force = false)
         {
             if (!LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId), force);
+                AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
         }
 
         /// <summary>
         /// Aquire the spectator lock on the given vessel
         /// </summary>
-        public void AcquireSpectatorLock(uint vesselPersistentId, Guid vesselId)
+        public void AcquireSpectatorLock(Guid vesselId)
         {
-            AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
+            AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName, vesselId));
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace LmpClient.Systems.Lock
         /// </summary>
         public void ReleaseUpdateLock(Guid vesselId, uint vesselPersistentId)
         {
-            ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
+            ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Release all the locks (unloaded update, update, control and kerbals) of a vessel
         /// </summary>
-        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, uint vesselPersistentId, int msDelay = 0)
+        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, int msDelay = 0)
         {
             TaskFactory.StartNew(() =>
             {
@@ -209,11 +209,11 @@ namespace LmpClient.Systems.Lock
                     Thread.Sleep(msDelay);
 
                 if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
+                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
                 if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
+                    ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
                 if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId, vesselPersistentId));
+                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
 
                 if (crewNames != null)
                 {

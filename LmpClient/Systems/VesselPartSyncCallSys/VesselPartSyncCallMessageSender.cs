@@ -20,9 +20,7 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncCallMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
-            msgData.VesselPersistentId = vessel.persistentId;
             msgData.PartFlightId = part.flightID;
-            msgData.PartPersistentId = part.persistentId;
             msgData.ModuleName = moduleName;
             msgData.MethodName = methodName;
 

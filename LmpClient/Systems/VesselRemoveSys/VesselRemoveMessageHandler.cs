@@ -19,11 +19,11 @@ namespace LmpClient.Systems.VesselRemoveSys
                 return;
 
             if (msgData.AddToKillList)
-                System.AddToKillList(msgData.VesselPersistentId, msgData.VesselId, "Received a vessel remove message from server");
+                System.AddToKillList(msgData.VesselId, "Received a vessel remove message from server");
 
             //Do a simple kill and accept future updates of that vessel instead of just ignoring them
             if (!msgData.AddToKillList)
-                System.KillVessel(msgData.VesselPersistentId, msgData.VesselId, "Received a fast vessel kill message from server");
+                System.KillVessel(msgData.VesselId, "Received a fast vessel kill message from server");
         }
     }
 }

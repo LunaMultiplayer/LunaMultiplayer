@@ -23,11 +23,6 @@ namespace LmpCommon.Locks
         public Guid VesselId { get; internal set; } = Guid.Empty;
 
         /// <summary>
-        /// Vessel persistent id assigned to the lock. Can be Guid.Empty for an asteroid lock
-        /// </summary>
-        public uint VesselPersistentId { get; internal set; } = 0;
-
-        /// <summary>
         /// The type of the lock. It should never be null
         /// </summary>
         public LockType Type { get; internal set; }
@@ -51,12 +46,11 @@ namespace LmpCommon.Locks
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public LockDefinition(LockType type, string playerName, Guid vesselId, uint persistentId)
+        public LockDefinition(LockType type, string playerName, Guid vesselId)
         {
             Type = type;
             PlayerName = playerName;
             VesselId = vesselId;
-            VesselPersistentId = persistentId;
         }
 
         /// <summary>
@@ -83,7 +77,6 @@ namespace LmpCommon.Locks
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(KerbalName);
             GuidUtil.Serialize(VesselId, lidgrenMsg);
-            lidgrenMsg.Write(VesselPersistentId);
             lidgrenMsg.Write((int)Type);
         }
 
@@ -92,7 +85,6 @@ namespace LmpCommon.Locks
             PlayerName = lidgrenMsg.ReadString();
             KerbalName = lidgrenMsg.ReadString();
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
-            VesselPersistentId = lidgrenMsg.ReadUInt32();
             Type = (LockType)lidgrenMsg.ReadInt32();
         }
 
@@ -107,7 +99,6 @@ namespace LmpCommon.Locks
             Type = lockDefinition.Type;
             KerbalName = lockDefinition.KerbalName;
             VesselId = lockDefinition.VesselId;
-            VesselPersistentId = lockDefinition.VesselPersistentId;
         }
 
         #region Equatable

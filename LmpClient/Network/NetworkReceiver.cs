@@ -33,7 +33,6 @@ using LmpClient.Systems.VesselFlightStateSys;
 using LmpClient.Systems.VesselPartSyncCallSys;
 using LmpClient.Systems.VesselPartSyncFieldSys;
 using LmpClient.Systems.VesselPartSyncUiFieldSys;
-using LmpClient.Systems.VesselPersistentSys;
 using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
@@ -197,9 +196,6 @@ namespace LmpClient.Network
                             break;
                         case VesselMessageType.Fairing:
                             VesselFairingsSystem.Singleton.EnqueueMessage(msg);
-                            break;
-                        case VesselMessageType.Persistent:
-                            VesselPersistentSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;

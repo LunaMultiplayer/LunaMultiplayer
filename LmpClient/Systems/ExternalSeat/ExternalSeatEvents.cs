@@ -17,9 +17,9 @@ namespace LmpClient.Systems.ExternalSeat
 
             LunaLog.Log("Crew-board to an external seat detected!");
             
-            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVesselId, kerbalVesselPersistentId);
-            VesselRemoveSystem.Singleton.AddToKillList(kerbalVesselPersistentId, kerbalVesselId, "Killing kerbal as it boarded a external seat");
-            LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalVesselId, kerbalVesselPersistentId);
+            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVesselId);
+            VesselRemoveSystem.Singleton.AddToKillList(kerbalVesselId, "Killing kerbal as it boarded a external seat");
+            LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalVesselId);
 
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(seat.vessel, false);
         }

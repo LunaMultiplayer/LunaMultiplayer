@@ -14,7 +14,6 @@ namespace LmpClient.Systems.VesselActionGroupSys
 
         public double GameTime;
         public Guid VesselId;
-        public uint VesselPersistentId;
         public KSPActionGroup ActionGroup;
         public bool Value;
 
@@ -22,7 +21,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
         
         public void ProcessActionGroup()
         {
-            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
+            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
             if (vessel == null) return;
 
             if (!VesselCommon.DoVesselChecks(VesselId))

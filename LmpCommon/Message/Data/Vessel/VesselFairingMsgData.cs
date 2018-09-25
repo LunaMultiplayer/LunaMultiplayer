@@ -10,7 +10,6 @@ namespace LmpCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.Fairing;
 
         public uint PartFlightId;
-        public uint PartPersistentId;
 
         public override string ClassName { get; } = nameof(VesselFairingMsgData);
 
@@ -19,7 +18,6 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PartFlightId);
-            lidgrenMsg.Write(PartPersistentId);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -27,7 +25,6 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
 
             PartFlightId = lidgrenMsg.ReadUInt32();
-            PartPersistentId = lidgrenMsg.ReadUInt32();
         }
 
         internal override int InternalGetMessageSize()

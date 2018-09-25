@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselCrewSys
                 if (LockSystem.LockQuery.ControlLockBelongsToPlayer(kerbalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVessel);
-                    LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalVessel.vesselName }, kerbalVessel.id, kerbalVessel.persistentId);
+                    LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalVessel.vesselName }, kerbalVessel.id);
                 }
                 VesselRemoveSystem.Singleton.AddToKillList(kerbalVessel, "Killing kerbal as it boarded a vessel");
 

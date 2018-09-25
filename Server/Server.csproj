@@ -200,7 +200,6 @@
     <Compile Include="System\VesselStoreSystem.cs" />
     <Compile Include="System\Vessel\VesselPartSyncUiFieldDataUpdater.cs" />
     <Compile Include="System\Vessel\VesselActionGroupDataUpdater.cs" />
-    <Compile Include="System\Vessel\VesselPersistentDataUpdater.cs" />
     <Compile Include="System\Vessel\VesselResourceDataUpdater.cs" />
     <Compile Include="System\Vessel\VesselPartSyncFieldDataUpdater.cs" />
     <Compile Include="System\Vessel\VesselUpdateDataUpdater.cs" />

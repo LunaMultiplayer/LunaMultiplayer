@@ -15,10 +15,8 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
 
         public double GameTime;
         public Guid VesselId;
-        public uint VesselPersistentId;
 
         public uint PartFlightId;
-        public uint PartPersistentId;
         public string ModuleName;
         public string FieldName;
 
@@ -36,13 +34,13 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
 
         public void ProcessPartMethodSync()
         {
-            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
+            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
             if (vessel == null) return;
 
             if (!VesselCommon.DoVesselChecks(VesselId))
                 return;
 
-            var part = VesselCommon.FindProtoPartInProtovessel(PartPersistentId, vessel.protoVessel, PartFlightId);
+            var part = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
             if (part != null)
             {
                 var module = VesselCommon.FindProtoPartModuleInProtoPart(part, ModuleName);

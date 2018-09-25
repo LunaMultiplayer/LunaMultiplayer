@@ -11,7 +11,6 @@ namespace LmpClient.Systems.VesselFairingsSys
             value.VesselId = msgData.VesselId;
 
             value.PartFlightId = msgData.PartFlightId;
-            value.PartPersistentId = msgData.PartPersistentId;
         }
     }
 }

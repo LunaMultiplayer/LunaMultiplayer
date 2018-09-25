@@ -59,7 +59,7 @@ namespace LmpClient.Systems.PlayerColorSys
         public void UpdateVesselColors(string playerName)
         {
             var controlledVesselIds = LockSystem.LockQuery.GetAllControlLocks(playerName)
-                .Select(l => FlightGlobals.fetch.FindVessel(l.VesselPersistentId, l.VesselId))
+                .Select(l => FlightGlobals.fetch.LmpFindVessel(l.VesselId))
                 .Where(v => v != null);
 
             foreach (var vessel in controlledVesselIds)

@@ -33,11 +33,9 @@ namespace LmpClient.Systems.VesselDockSys
 
             var dominantVessel = Vessel.GetDominantVessel(vessel1, vessel2);
             CurrentDockEvent.DominantVesselId = dominantVessel.id;
-            CurrentDockEvent.DominantVesselPersistentId = dominantVessel.persistentId;
 
-            var weakVessel = vessel1PersistentId == CurrentDockEvent.DominantVesselPersistentId ? vessel2 : vessel1;
+            var weakVessel = dominantVessel == vessel1 ? vessel2 : vessel1;
             CurrentDockEvent.WeakVesselId = weakVessel.id;
-            CurrentDockEvent.WeakVesselPersistentId = weakVessel.persistentId;
 
             _ownDominantVessel = FlightGlobals.ActiveVessel == dominantVessel;
         }
@@ -51,16 +49,16 @@ namespace LmpClient.Systems.VesselDockSys
 
             if (_ownDominantVessel)
             {
-                System.MessageSender.SendDockInformation(CurrentDockEvent.WeakVesselId, CurrentDockEvent.WeakVesselPersistentId, FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace);
+                System.MessageSender.SendDockInformation(CurrentDockEvent.WeakVesselId, FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace);
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
             }
             else
             {
-                CoroutineUtil.StartDelayedRoutine("OnDockingComplete", () => System.MessageSender.SendDockInformation(CurrentDockEvent.WeakVesselId, CurrentDockEvent.WeakVesselPersistentId,
+                CoroutineUtil.StartDelayedRoutine("OnDockingComplete", () => System.MessageSender.SendDockInformation(CurrentDockEvent.WeakVesselId,
                             FlightGlobals.ActiveVessel, WarpSystem.Singleton.CurrentSubspace), 3);
             }
 
-            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(CurrentDockEvent.WeakVesselId, CurrentDockEvent.WeakVesselPersistentId, false);
+            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(CurrentDockEvent.WeakVesselId, false);
         }
         
         /// <summary>
@@ -81,7 +79,7 @@ namespace LmpClient.Systems.VesselDockSys
                 : vessel1.GetVesselCrew().Select(c => c.name);
 
             var vesselToRelease = FlightGlobals.ActiveVessel == vessel1 ? vessel2 : vessel1;
-            LockSystem.Singleton.ReleaseAllVesselLocks(crewToReleaseLocks, vesselToRelease.id, vesselToRelease.persistentId);
+            LockSystem.Singleton.ReleaseAllVesselLocks(crewToReleaseLocks, vesselToRelease.id);
 
             LunaLog.Log($"Undocking finished. Vessels: {vessel1.id} and {vessel2.id}");
         }
@@ -128,7 +126,7 @@ namespace LmpClient.Systems.VesselDockSys
                 FlightGlobals.ActiveVessel.BackupVessel();
                 LunaLog.Log($"[LMP]: Sending dock info to the server! Final dominant vessel parts {FlightGlobals.ActiveVessel.protoVessel.protoPartSnapshots.Count}");
 
-                System.MessageSender.SendDockInformation(weakId, weakPersistantId, FlightGlobals.ActiveVessel, currentSubspaceId, FlightGlobals.ActiveVessel.protoVessel);
+                System.MessageSender.SendDockInformation(weakId, FlightGlobals.ActiveVessel, currentSubspaceId, FlightGlobals.ActiveVessel.protoVessel);
             }
         }
 

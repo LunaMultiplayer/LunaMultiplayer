@@ -60,12 +60,12 @@ namespace LmpClient.Systems.VesselRemoveSys
             }
 
             _recoveringTerminatingVesselId = recoveredVessel.vesselID;
-            LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}-{recoveredVessel.persistentId}, Name: {recoveredVessel.vesselName} from the server: Recovered");
+            LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
 
-            System.MessageSender.SendVesselRemove(recoveredVessel.vesselID, recoveredVessel.persistentId);
+            System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
             //Vessel is recovered so remove the locks
-            LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c => c.name), recoveredVessel.vesselID, recoveredVessel.persistentId);
+            LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c => c.name), recoveredVessel.vesselID);
 
             //We consider this vessel removed but we let KSP do the remove of the vessel
             System.RemovedVessels.TryAdd(recoveredVessel.vesselID, DateTime.Now);
@@ -83,12 +83,12 @@ namespace LmpClient.Systems.VesselRemoveSys
             }
 
             _recoveringTerminatingVesselId = terminatedVessel.vesselID;
-            LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}-{terminatedVessel.persistentId}, Name: {terminatedVessel.vesselName} from the server: Terminated");
+            LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
 
-            System.MessageSender.SendVesselRemove(terminatedVessel.vesselID, terminatedVessel.persistentId);
+            System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 
             //Vessel is terminated so remove locks            
-            LockSystem.Singleton.ReleaseAllVesselLocks(terminatedVessel.GetVesselCrew().Select(c => c.name), terminatedVessel.vesselID, terminatedVessel.persistentId);
+            LockSystem.Singleton.ReleaseAllVesselLocks(terminatedVessel.GetVesselCrew().Select(c => c.name), terminatedVessel.vesselID);
             
             //We consider this vessel removed but we let KSP do the remove of the vessel
             System.RemovedVessels.TryAdd(terminatedVessel.vesselID, DateTime.Now);

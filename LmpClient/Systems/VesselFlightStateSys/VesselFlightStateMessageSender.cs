@@ -26,7 +26,6 @@ namespace LmpClient.Systems.VesselFlightStateSys
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
 
             msgData.VesselId = FlightGlobals.ActiveVessel.id;
-            msgData.VesselPersistentId = FlightGlobals.ActiveVessel.persistentId;
             msgData.GearDown = flightState.gearDown;
             msgData.GearUp = flightState.gearUp;
             msgData.Headlight = flightState.headlight;

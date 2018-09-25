@@ -7,7 +7,5 @@ namespace LmpClient.Systems.VesselDockSys
         public static DateTime DockingTime;
         public static Guid DominantVesselId;
         public static Guid WeakVesselId;
-        public static uint DominantVesselPersistentId;
-        public static uint WeakVesselPersistentId;
     }
 }

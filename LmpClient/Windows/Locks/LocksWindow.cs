@@ -54,7 +54,6 @@ namespace LmpClient.Windows.Locks
                         VesselLocks.Add(new VesselLockDisplay
                         {
                             VesselId = FlightGlobals.Vessels[i].id,
-                            VesselPersistentId = FlightGlobals.Vessels[i].persistentId,
                             Loaded = FlightGlobals.Vessels[i].loaded,
                             Packed = FlightGlobals.Vessels[i].packed,
                             VesselName = FlightGlobals.Vessels[i].name,

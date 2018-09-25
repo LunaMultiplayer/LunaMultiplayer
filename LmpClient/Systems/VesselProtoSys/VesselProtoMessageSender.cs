@@ -74,7 +74,6 @@ namespace LmpClient.Systems.VesselProtoSys
                     msgData.GameTime = TimeSyncerSystem.UniversalTime;
                     msgData.ForceReload = forceReloadOnReceive;
                     msgData.VesselId = protoVessel.vesselID;
-                    msgData.VesselPersistentId = protoVessel.persistentId;
                     msgData.NumBytes = numBytes;
                     if (msgData.Data.Length < numBytes)
                         Array.Resize(ref msgData.Data, numBytes);

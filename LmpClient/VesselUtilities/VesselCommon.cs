@@ -203,17 +203,17 @@ namespace LmpClient.VesselUtilities
         /// <summary>
         /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
         /// </summary>
-        public static ProtoPartSnapshot FindProtoPartInProtovessel(uint partPersistentId, ProtoVessel protoVessel, uint partFlightId)
+        public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, uint partFlightId)
         {
-            if (FlightGlobals.FindUnloadedPart(partPersistentId, out var existingProtoPart))
-            {
-                return existingProtoPart;
-            }
+            //if (FlightGlobals.FindUnloadedPart(partPersistentId, out var existingProtoPart))
+            //{
+            //    return existingProtoPart;
+            //}
 
-            if (FlightGlobals.FindLoadedPart(partPersistentId, out var existingPart))
-            {
-                return existingPart.protoPartSnapshot;
-            }
+            //if (FlightGlobals.FindLoadedPart(partPersistentId, out var existingPart))
+            //{
+            //    return existingPart.protoPartSnapshot;
+            //}
 
             if (protoVessel == null) return null;
 

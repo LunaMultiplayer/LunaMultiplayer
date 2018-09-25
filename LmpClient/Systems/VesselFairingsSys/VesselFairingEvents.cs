@@ -7,7 +7,7 @@ namespace LmpClient.Systems.VesselFairingsSys
         public void FairingsDeployed(Part part)
         {
             LunaLog.Log($"Detected fairings deployed! Part: {part.partName}");
-            System.MessageSender.SendVesselFairingDeployed(FlightGlobals.ActiveVessel, part.persistentId);
+            System.MessageSender.SendVesselFairingDeployed(FlightGlobals.ActiveVessel, part.flightID);
         }
     }
 }

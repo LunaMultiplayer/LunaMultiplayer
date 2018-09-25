@@ -9,7 +9,6 @@ namespace LmpClient.Systems.VesselResourceSys
         {
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
-            value.VesselPersistentId = msgData.VesselPersistentId;
 
             value.ResourcesCount = msgData.ResourcesCount;
             if (value.Resources.Length < msgData.ResourcesCount)
@@ -23,7 +22,6 @@ namespace LmpClient.Systems.VesselResourceSys
                 value.Resources[i].Amount = msgData.Resources[i].Amount;
                 value.Resources[i].FlowState = msgData.Resources[i].FlowState;
                 value.Resources[i].PartFlightId = msgData.Resources[i].PartFlightId;
-                value.Resources[i].PartPersistentId = msgData.Resources[i].PartPersistentId;
                 value.Resources[i].ResourceName = msgData.Resources[i].ResourceName.Clone() as string;
             }
         }

@@ -27,7 +27,7 @@ namespace LmpClient.Systems.PlayerColorSys
         public void OnLockAcquire(LockDefinition lockDefinition)
         {
             if (lockDefinition.Type == LockType.Control)
-                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
+                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace LmpClient.Systems.PlayerColorSys
         public void OnLockRelease(LockDefinition lockDefinition)
         {
             if (lockDefinition.Type == LockType.Control)
-                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselPersistentId, lockDefinition.VesselId);
+                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
         }
         
         /// <summary>
@@ -53,9 +53,9 @@ namespace LmpClient.Systems.PlayerColorSys
         /// <summary>
         /// Find the vessel using the lock name
         /// </summary>
-        private static void UpdateVesselColorsFromLockVesselId(uint vesselPersistentId, Guid vesselId)
+        private static void UpdateVesselColorsFromLockVesselId(Guid vesselId)
         {
-            var vessel = FlightGlobals.fetch.FindVessel(vesselPersistentId, vesselId);
+            var vessel = FlightGlobals.fetch.LmpFindVessel(vesselId);
             if (vessel != null)
             {
                 System.SetVesselOrbitColor(vessel);

@@ -17,39 +17,37 @@ namespace LmpClient.Systems.VesselDockSys
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg)));
         }
 
-        public void SendDockInformation(Guid weakVesselId, uint weakVesselPersistentId, Vessel dominantVessel, int subspaceId)
+        public void SendDockInformation(Guid weakVesselId, Vessel dominantVessel, int subspaceId)
         {
             var vesselBytes = VesselSerializer.SerializeVessel(dominantVessel.BackupVessel());
             if (vesselBytes.Length > 0)
             {
-                CreateAndSendDockMessage(weakVesselId, weakVesselPersistentId, dominantVessel.id, dominantVessel.persistentId, subspaceId, vesselBytes);
+                CreateAndSendDockMessage(weakVesselId, dominantVessel.id, subspaceId, vesselBytes);
             }
         }
 
-        public void SendDockInformation(Guid weakVesselId, uint weakVesselPersistentId, Vessel dominantVessel, int subspaceId, ProtoVessel finalDominantVesselProto)
+        public void SendDockInformation(Guid weakVesselId, Vessel dominantVessel, int subspaceId, ProtoVessel finalDominantVesselProto)
         {
             if (finalDominantVesselProto != null)
             {
                 var vesselBytes = VesselSerializer.SerializeVessel(finalDominantVesselProto);
                 if (vesselBytes.Length > 0)
                 {
-                    CreateAndSendDockMessage(weakVesselId, weakVesselPersistentId, dominantVessel.id, dominantVessel.persistentId, subspaceId, vesselBytes);
+                    CreateAndSendDockMessage(weakVesselId, dominantVessel.id, subspaceId, vesselBytes);
                 }
             }
             else
             {
-                SendDockInformation(weakVesselId, weakVesselPersistentId, dominantVessel, subspaceId);
+                SendDockInformation(weakVesselId, dominantVessel, subspaceId);
             }
         }
 
-        private void CreateAndSendDockMessage(Guid weakVesselId, uint weakPersistentId, Guid dominantVesselId, uint dominantPersistentId, int subspaceId, byte[] vesselBytes)
+        private void CreateAndSendDockMessage(Guid weakVesselId, Guid dominantVesselId, int subspaceId, byte[] vesselBytes)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselDockMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.WeakVesselId = weakVesselId;
-            msgData.WeakVesselPersistentId = weakPersistentId;
             msgData.DominantVesselId = dominantVesselId;
-            msgData.DominantVesselPersistentId = dominantPersistentId;
 
             msgData.FinalVesselData = vesselBytes;
             msgData.NumBytes = vesselBytes.Length;

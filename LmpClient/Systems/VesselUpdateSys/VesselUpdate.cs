@@ -13,7 +13,6 @@ namespace LmpClient.Systems.VesselUpdateSys
 
         public double GameTime;
         public Guid VesselId;
-        public uint VesselPersistentId;
         public string Name;
         public string Type;
         public double DistanceTraveled;
@@ -37,7 +36,7 @@ namespace LmpClient.Systems.VesselUpdateSys
 
         public void ProcessVesselUpdate()
         {
-            var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
+            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
             if (vessel == null) return;
 
             if (!VesselCommon.DoVesselChecks(vessel.id))

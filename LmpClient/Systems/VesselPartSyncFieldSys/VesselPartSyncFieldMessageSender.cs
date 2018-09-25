@@ -134,9 +134,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncFieldMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
-            msgData.VesselPersistentId = vessel.persistentId;
             msgData.PartFlightId = part.flightID;
-            msgData.PartPersistentId = part.persistentId;
             msgData.ModuleName = moduleName;
             msgData.FieldName = field;
 

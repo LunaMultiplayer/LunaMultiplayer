@@ -273,10 +273,6 @@
     <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldMessageSender.cs" />
     <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldQueue.cs" />
     <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldSystem.cs" />
-    <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageSender.cs" />
-    <Compile Include="Systems\VesselPersistentSys\VesselPersistentMessageHandler.cs" />
-    <Compile Include="Systems\VesselPersistentSys\VesselPersistentEvents.cs" />
-    <Compile Include="Systems\VesselPersistentSys\VesselPersistentSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VesselProtoUpdater.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionEvents.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionUpdateQueue.cs" />

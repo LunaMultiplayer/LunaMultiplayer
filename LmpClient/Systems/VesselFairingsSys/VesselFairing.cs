@@ -13,10 +13,7 @@ namespace LmpClient.Systems.VesselFairingsSys
 
         public double GameTime;
         public Guid VesselId;
-        public uint VesselPersistentId;
-
         public uint PartFlightId;
-        public uint PartPersistentId;
 
         #endregion
 
@@ -25,21 +22,14 @@ namespace LmpClient.Systems.VesselFairingsSys
             if (!VesselCommon.DoVesselChecks(VesselId))
                 return;
 
-            if (FlightGlobals.FindUnloadedPart(PartPersistentId, out var protoPart))
+            //Finding using persistentId failed, try searching it with the flightId...
+            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
+            if (vessel == null) return;
+
+            var protoPart = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
+            if (protoPart != null)
             {
                 ProcessFairingChange(protoPart);
-            }
-            else
-            {
-                //Finding using persistentId failed, try searching it with the flightId...
-                var vessel = FlightGlobals.fetch.FindVessel(VesselPersistentId, VesselId);
-                if (vessel == null) return;
-
-                var part = VesselCommon.FindProtoPartInProtovessel(PartPersistentId, vessel.protoVessel, PartFlightId);
-                if (part != null)
-                {
-                    ProcessFairingChange(protoPart);
-                }
             }
         }
 
