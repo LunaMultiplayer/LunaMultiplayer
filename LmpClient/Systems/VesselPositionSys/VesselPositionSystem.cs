@@ -222,7 +222,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 vessel.UpdatePosVel();
                 if (!vessel.LandedOrSplashed)
                 {
-                    vessel.orbitDriver?.updateFromParameters();
+                    vessel.orbitDriver?.UpdateOrbit();
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
                 }
             }
@@ -236,10 +236,10 @@ namespace LmpClient.Systems.VesselPositionSys
         {
             vessel.UpdateLandedSplashed();
             vessel.UpdatePosVel();
-            vessel.precalc.CalculatePhysicsStats();
 
-            vessel.orbitDriver?.updateFromParameters();
+            vessel.orbitDriver?.UpdateOrbit();
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
+
             vessel.mainBody.GetLatLonAlt(vessel.vesselTransform.position, out vessel.latitude, out vessel.longitude, out vessel.altitude);
         }
 
