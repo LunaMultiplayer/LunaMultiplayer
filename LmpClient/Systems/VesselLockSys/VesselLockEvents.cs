@@ -114,8 +114,6 @@ namespace LmpClient.Systems.VesselLockSys
                     LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                     LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
                     break;
-                case LockType.UnloadedUpdate:
-
             }
         }
 
