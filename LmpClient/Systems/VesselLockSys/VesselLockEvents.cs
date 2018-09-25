@@ -144,7 +144,8 @@ namespace LmpClient.Systems.VesselLockSys
                         switch (lockDefinition.Type)
                         {
                             case LockType.Update:
-                                LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId);
+                                if (vessel.loaded)
+                                    LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId);
                                 break;
                             case LockType.UnloadedUpdate:
                                 LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId);
