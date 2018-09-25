@@ -39,7 +39,7 @@ namespace Server.Command.Command
             var vesselList = VesselStoreSystem.CurrentVessels.ToArray();
             foreach (var vesselKeyVal in vesselList)
             {
-                if (vesselKeyVal.Value.Fields.GetSingle("landed").Value == "True" &&
+                if (vesselKeyVal.Value.Fields.GetSingle("landed").Value.ToLower() == "true" &&
                     vesselKeyVal.Value.Fields.GetSingle("landedAt").Value.ToLower().Contains("ksc") ||
                     vesselKeyVal.Value.Fields.GetSingle("landedAt").Value.ToLower().Contains("runway") ||
                     vesselKeyVal.Value.Fields.GetSingle("landedAt").Value.ToLower().Contains("launchpad"))

@@ -39,7 +39,7 @@ namespace Server.Command.Command
             var vesselList = VesselStoreSystem.CurrentVessels.ToArray();
             foreach (var vesselKeyVal in vesselList)
             {
-                if (vesselKeyVal.Value.Fields.GetSingle("type").Value == "debris")
+                if (vesselKeyVal.Value.Fields.GetSingle("type").Value.ToLower() == "debris")
                 {
                     LunaLog.Normal($"Removing debris vessel: {vesselKeyVal.Key}");
 
