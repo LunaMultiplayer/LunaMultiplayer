@@ -95,7 +95,6 @@
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
-    <Compile Include="Harmony\ShipConstruct_LoadShip.cs" />
     <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
