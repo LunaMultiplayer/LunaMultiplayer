@@ -2,7 +2,6 @@
 using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
-using LmpClient.Systems.SettingsSys;
 using LmpClient.VesselUtilities;
 using LmpCommon.Locks;
 using System;
@@ -97,13 +96,12 @@ namespace LmpClient.Systems.VesselLockSys
             //Lock all vessel controls
             InputLockManager.SetControlLock(BlockAllControls, SpectateLock);
 
-            var currentSpectatorLock = LockSystem.LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName);
-            if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
-                LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
-
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.Spectator);
             LockSystem.Singleton.ReleasePlayerLocks(LockType.Kerbal);
             LockSystem.Singleton.ReleasePlayerLocks(LockType.Update);
             LockSystem.Singleton.ReleasePlayerLocks(LockType.UnloadedUpdate);
+
+            LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
 
             VesselCommon.IsSpectating = true;
             VesselCommon.SpectatingVesselId = spectatingVesselId;
