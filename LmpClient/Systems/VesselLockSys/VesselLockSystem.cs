@@ -4,6 +4,7 @@ using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.VesselUtilities;
+using LmpCommon.Locks;
 using System;
 
 namespace LmpClient.Systems.VesselLockSys
@@ -99,6 +100,9 @@ namespace LmpClient.Systems.VesselLockSys
             var currentSpectatorLock = LockSystem.LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName);
             if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
                 LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
+
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.Update);
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.UnloadedUpdate);
 
             VesselCommon.IsSpectating = true;
             VesselCommon.SpectatingVesselId = spectatingVesselId;

@@ -129,14 +129,14 @@ namespace LmpClient.Systems.VesselLockSys
                     //Someone stopped controlling a vessel so remove it from the flight state system
                     VesselFlightStateSystem.Singleton.RemoveVessel(lockDefinition.VesselId);
 
-                    if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
+                    if (FlightGlobals.ActiveVessel?.id == lockDefinition.VesselId)
                     {
                         LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselId);
                     }
                     break;
                 case LockType.UnloadedUpdate:
                 case LockType.Update:
-                    if (HighLogic.LoadedScene <= GameScenes.FLIGHT) return;
+                    if (HighLogic.LoadedScene <= GameScenes.FLIGHT || VesselCommon.IsSpectating) return;
 
                     var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
                     if (vessel != null)

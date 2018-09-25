@@ -121,7 +121,7 @@ namespace LmpClient.Systems.VesselPositionSys
         /// </summary>
         private void SendSecondaryVesselPositionUpdates()
         {
-            if (PositionUpdateSystemReady)
+            if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
                 SecondaryVesselsToUpdate.Clear();
                 SecondaryVesselsToUpdate.AddRange(VesselCommon.GetSecondaryVessels());
@@ -139,7 +139,7 @@ namespace LmpClient.Systems.VesselPositionSys
         /// </summary>
         private void SendUnloadedSecondaryVesselPositionUpdates()
         {
-            if (PositionUpdateSystemBasicReady)
+            if (PositionUpdateSystemBasicReady && !VesselCommon.IsSpectating)
             {
                 AbandonedVesselsToUpdate.Clear();
                 AbandonedVesselsToUpdate.AddRange(VesselCommon.GetUnloadedSecondaryVessels());
