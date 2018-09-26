@@ -50,6 +50,23 @@
 Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-install-LMP), [run](../../wiki/How-to-play-with-LMP), [build](../../wiki/How-to-compile-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP among other things
 
 ---
+### Troubleshooting:
+
+Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the most common issues with LMP 
+[![Analytics](https://ga-beacon.appspot.com/UA-118326748-1/Home?pixel&useReferer)](https://github.com/igrigorik/ga-beacon)
+
+---
+### Contributing:
+
+Consider [donating trough paypal](https://paypal.me/gavazquez) if you like this project. 
+It will encourage us to do future releases, fix bugs and add new features :star:
+
+Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
+It's **very** important that the code is clean and documented so in case someone leaves, another programmer could take and maintain it. Bear in mind that **nobody** likes to take a project where it's code looks like a dumpster.
+
+There's also a test project in case you want to add tests to your code.
+
+---
 ### Servers:
 
 You can check [how many servers are up](../../wiki/Master-server-status) and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions through our [master servers](../../wiki/Master-server)
@@ -70,25 +87,6 @@ Tekbot | [![Release servers](https://img.shields.io/uptimerobot/status/m78100052
 <p align="center">
     <a href="https://ci.appveyor.com/project/gavazquez/lunamultiplayer/history"><img src="https://buildstats.info/appveyor/chart/gavazquez/lunamultiplayer?buildCount=100" alt="Build history"/></a>
 </p>
-
----
-
-### Contributing:
-
-Consider [donating trough paypal](https://paypal.me/gavazquez) if you like this project. 
-It will encourage us to do future releases, fix bugs and add new features :star:
-
-Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
-It's **very** important that the code is clean and documented so in case someone leaves, another programmer could take and maintain it. Bear in mind that **nobody** likes to take a project where it's code looks like a dumpster.
-
-There's also a test project in case you want to add tests to your code.
-
----
-
-### Troubleshooting:
-
-Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the most common issues with LMP 
-[![Analytics](https://ga-beacon.appspot.com/UA-118326748-1/Home?pixel&useReferer)](https://github.com/igrigorik/ga-beacon)
 
 ---
 
