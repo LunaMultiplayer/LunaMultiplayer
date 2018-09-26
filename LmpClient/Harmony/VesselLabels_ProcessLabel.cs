@@ -12,7 +12,7 @@ namespace LmpClient.Harmony
     public class VesselLabels_ProcessLabel
     {
         [HarmonyPostfix]
-        private static void PostProcessLabel(BaseLabel label)
+        private static void PostfixProcessLabel(BaseLabel label)
         {
             if (label.gameObject.activeSelf)
             {
