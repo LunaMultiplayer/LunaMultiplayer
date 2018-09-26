@@ -129,6 +129,7 @@
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Harmony\OrbitRendererBase_OnUpdateCaption.cs" />
     <Compile Include="Harmony\TrackingStationWidget_Update.cs" />
+    <Compile Include="Harmony\ModuleWheelDamage_FixedUpdate.cs" />
     <Compile Include="Harmony\VesselLabels_ProcessLabel.cs" />
     <Compile Include="Harmony\Vessel_Initialize.cs" />
     <Compile Include="Harmony\Vessel_Load.cs" />
