@@ -199,8 +199,6 @@ namespace LmpClient
             SystemsHandler.FillUpSystemsList();
             WindowsHandler.FillUpWindowsList();
 
-            FieldModuleStore.ReadLoadedPartModules();
-
             ModApiSystem.Singleton.Enabled = true;
             NetworkSystem.Singleton.Enabled = true;
 

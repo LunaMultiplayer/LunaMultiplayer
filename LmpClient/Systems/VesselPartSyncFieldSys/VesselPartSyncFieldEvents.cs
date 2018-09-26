@@ -27,20 +27,17 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             if (float.IsPositiveInfinity(part.crashTolerance))
                 return false;
 
-            foreach (var moduleName in FieldModuleStore.InheritanceTypeChain[module.moduleName])
+            if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(module.moduleName, out var customization))
             {
-                if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(moduleName, out var customization))
+                var fieldCust = customization.Fields.FirstOrDefault(f => f.FieldName == fieldName);
+                if (fieldCust != null)
                 {
-                    var fieldCust = customization.Fields.FirstOrDefault(f => f.FieldName == fieldName);
-                    if (fieldCust != null)
-                    {
-                        var timeToSend = LastSendTimeDictionary.GetOrAdd(module.vessel.id, () => new Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>())
-                            .GetOrAdd(module.part.flightID, () => new Dictionary<string, Dictionary<string, TimeToSend>>())
-                            .GetOrAdd(moduleName, () => new Dictionary<string, TimeToSend>())
-                            .GetOrAdd(fieldName, () => new TimeToSend(fieldCust.MaxIntervalInMs));
+                    var timeToSend = LastSendTimeDictionary.GetOrAdd(module.vessel.id, () => new Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>())
+                        .GetOrAdd(module.part.flightID, () => new Dictionary<string, Dictionary<string, TimeToSend>>())
+                        .GetOrAdd(module.moduleName, () => new Dictionary<string, TimeToSend>())
+                        .GetOrAdd(fieldName, () => new TimeToSend(fieldCust.MaxIntervalInMs));
 
-                        return timeToSend.ReadyToSend();
-                    }
+                    return timeToSend.ReadyToSend();
                 }
             }
 

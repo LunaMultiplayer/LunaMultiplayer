@@ -8,7 +8,7 @@ namespace LmpClient.ModuleStore.Structures
     {
         [XmlComment(Value = "Module that we are modifying")]
         public string ModuleName { get; set; }
-
+        
         [XmlComment(Value = "Fields to sync")]
         public List<FieldDefinition> Fields { get; set; } = new List<FieldDefinition>();
         
@@ -18,5 +18,11 @@ namespace LmpClient.ModuleStore.Structures
         public FieldDefinition GetCustomizationForField(string fieldName) => Fields.FirstOrDefault(f => f.FieldName == fieldName);
 
         public MethodDefinition GetCustomizationForMethod(string methodName) => Methods.FirstOrDefault(f => f.MethodName == methodName);
+        
+        public void MergeWith(ModuleDefinition other)
+        {
+            Fields.AddRange(other.Fields);
+            Methods.AddRange(other.Methods);
+        }
     }
 }

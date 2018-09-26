@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using UnityEngine;
 
 namespace LmpClient.ModuleStore
 {
@@ -19,55 +19,16 @@ namespace LmpClient.ModuleStore
         private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "PartSync");
 
         /// <summary>
-        /// Here we store all the part modules loaded and its fields that have the "ispersistent" as true to use it on the default part sync behaviour.
-        /// </summary>
-        public static readonly Dictionary<string, FieldModuleDefinition> ModuleFieldsDictionary = new Dictionary<string, FieldModuleDefinition>();
-
-        /// <summary>
         /// Here we store our customized part modules behaviours
         /// </summary>
         public static Dictionary<string, ModuleDefinition> CustomizedModuleBehaviours = new Dictionary<string, ModuleDefinition>();
-
+        
         /// <summary>
-        /// Here we store the inheritance chain of the types up to PartModule
-        /// For example. 
-        /// ModuleEngineFX inherits from ModuleEngine and ModuleEngine inherits from PartModule
-        /// So for the value of ModuleEngineFX we get an array containing ModuleEngineFX and ModuleEngine
+        /// Here we store all the types that inherit from PartModule including the mod files
         /// </summary>
-        public static Dictionary<string, string[]> InheritanceTypeChain = new Dictionary<string, string[]>();
-
-        /// <summary>
-        /// Check all part modules that inherit from PartModule. Then it gets all the fields of those classes that have the "ispersistent" as true.
-        /// Basically it fills up the ModuleFieldsDictionary dictionary
-        /// </summary>
-        public static void ReadLoadedPartModules()
-        {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                try
-                {
-                    var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
-                    foreach (var partModule in partModules)
-                    {
-                        var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                            .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
-
-                        if (persistentFields.Any())
-                        {
-                            ModuleFieldsDictionary.Add(partModule.Name, new FieldModuleDefinition(partModule, persistentFields));
-                        }
-
-                        InheritanceTypeChain.Add(partModule.Name, GetInheritChain(partModule));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    LunaLog.LogError($"Exception loading types from assembly {assembly.FullName}: {ex.Message}");
-                }
-            }
-
-            LunaLog.Log($"Loaded {ModuleFieldsDictionary.Keys.Count} modules and a total of {ModuleFieldsDictionary.Values.Count} fields");
-        }
+        private static IEnumerable<Type> PartModuleTypes { get; } = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => t.IsClass && t.IsSubclassOf(typeof(PartModule)));
 
         /// <summary>
         /// Reads the module customizations xml.
@@ -85,28 +46,64 @@ namespace LmpClient.ModuleStore
             }
 
             CustomizedModuleBehaviours = moduleValues.ToDictionary(m => m.ModuleName, v => v);
-        }
-        
-        /// <summary>
-        /// Gets the inheritance chain of a type up to PartModule.
-        /// For example. 
-        /// ModuleEngineFX inherits from ModuleEngine and ModuleEngine inherits from PartModule
-        /// So for the value of ModuleEngineFX we get an array containing ModuleEngineFX and ModuleEngine
-        /// </summary>
-        private static string[] GetInheritChain(Type partModuleType)
-        {
-            var list = new List<string>();
-            if (partModuleType != null)
+
+            var newChildModulesToAdd = new List<ModuleDefinition>();
+            foreach (var value in CustomizedModuleBehaviours.Values)
             {
-                var current = partModuleType;
-                while (current != typeof(PartModule) && current != null)
+                var moduleClass = PartModuleTypes.FirstOrDefault(t => t.Name == value.ModuleName);
+                if (moduleClass != null)
                 {
-                    list.Add(current.Name);
-                    current = current.BaseType;
+                    AddParentsCustomizations(value, moduleClass);
+                    newChildModulesToAdd.AddRange(GetChildCustomizations(value, moduleClass));
                 }
             }
 
-            return list.ToArray();
+            foreach (var moduleToAdd in newChildModulesToAdd)
+            {
+                CustomizedModuleBehaviours.Add(moduleToAdd.ModuleName, moduleToAdd);
+            }
+        }
+
+        /// <summary>
+        /// Here we return the UNEXISTING CHILD customizations of this moduleDefinition.
+        /// Example: ModuleDeployableAntenna inherits from ModuleDeployablePart.
+        /// But we don't have ANY ModuleDeployableAntenna customization XML.
+        /// Here we return a NEW the ModuleDeployableAntenna XML with the customizations of ModuleDeployablePart
+        /// </summary>
+        private static List<ModuleDefinition> GetChildCustomizations(ModuleDefinition moduleDefinition, Type moduleClass)
+        {
+            var newPartModules = new List<ModuleDefinition>();
+            foreach (var partModuleType in PartModuleTypes.Where(t => t.BaseType == moduleClass))
+            {
+                if (!CustomizedModuleBehaviours.ContainsKey(partModuleType.Name))
+                {
+                    newPartModules.Add(new ModuleDefinition
+                    {
+                        ModuleName = partModuleType.Name,
+                        Fields = moduleDefinition.Fields,
+                        Methods = moduleDefinition.Methods,
+                    });
+                }
+            }
+
+            return newPartModules;
+        }
+
+        /// <summary>
+        /// Here we add the PARENT customizations to this moduleDefinition.
+        /// Example: ModuleDeployableSolarPanel inherits from ModuleDeployablePart.
+        /// Here we add the fields and methods of ModuleDeployablePart into the ModuleDeployableSolarPanel customizations
+        /// </summary>
+        private static void AddParentsCustomizations(ModuleDefinition moduleDefinition, Type moduleClass)
+        {
+            if (moduleClass.BaseType == null || moduleClass.BaseType == typeof(MonoBehaviour)) return;
+
+            if (CustomizedModuleBehaviours.TryGetValue(moduleClass.BaseType.Name, out var parentModule))
+            {
+                moduleDefinition.MergeWith(parentModule);
+            }
+
+            AddParentsCustomizations(moduleDefinition, moduleClass.BaseType);
         }
     }
 }
