@@ -39,7 +39,6 @@ namespace LmpClient.Systems.VesselLockSys
         {
             base.OnEnabled();
             GameEvents.onVesselChange.Add(VesselLockEvents.OnVesselChange);
-            GameEvents.onGameSceneLoadRequested.Add(VesselLockEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Add(VesselLockEvents.LevelLoaded);
             GameEvents.onVesselLoaded.Add(VesselLockEvents.VesselLoaded);
             LockEvent.onLockAcquireUnityThread.Add(VesselLockEvents.LockAcquire);
@@ -54,7 +53,6 @@ namespace LmpClient.Systems.VesselLockSys
         {
             base.OnDisabled();
             GameEvents.onVesselChange.Remove(VesselLockEvents.OnVesselChange);
-            GameEvents.onGameSceneLoadRequested.Remove(VesselLockEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Remove(VesselLockEvents.LevelLoaded);
             GameEvents.onVesselLoaded.Remove(VesselLockEvents.VesselLoaded);
             LockEvent.onLockAcquireUnityThread.Remove(VesselLockEvents.LockAcquire);

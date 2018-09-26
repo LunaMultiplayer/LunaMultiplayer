@@ -44,21 +44,9 @@ namespace LmpClient.Systems.VesselLockSys
                 }
             }
         }
-
+        
         /// <summary>
-        /// Event called when switching scene and before reaching the other scene
-        /// </summary>
-        internal void OnSceneRequested(GameScenes requestedScene)
-        {
-            if (requestedScene != GameScenes.FLIGHT)
-            {
-                InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
-                VesselLockSystem.Singleton.StopSpectating();
-            }
-        }
-
-        /// <summary>
-        /// Be extra sure that we remove the spectate lock
+        /// Remove the spectate lock AFTER the scene is loaded
         /// </summary>
         public void LevelLoaded(GameScenes data)
         {
@@ -67,7 +55,7 @@ namespace LmpClient.Systems.VesselLockSys
                 InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
                 VesselLockSystem.Singleton.StopSpectating();
             }
-            if (data >= GameScenes.FLIGHT)
+            if (data >= GameScenes.FLIGHT && !VesselCommon.IsSpectating)
             {
                 //If we are going to flight scene or tracking station try to get as many unloaded update locks as possible
                 foreach (var vessel in FlightGlobals.Vessels)
@@ -83,7 +71,7 @@ namespace LmpClient.Systems.VesselLockSys
         /// </summary>
         public void VesselLoaded(Vessel vessel)
         {
-            if (!LockSystem.LockQuery.UpdateLockExists(vessel.id))
+            if (!LockSystem.LockQuery.UpdateLockExists(vessel.id) && !VesselCommon.IsSpectating)
             {
                 LockSystem.Singleton.AcquireUpdateLock(vessel.id);
             }
@@ -157,7 +145,7 @@ namespace LmpClient.Systems.VesselLockSys
         /// </summary>
         public void VesselUnloading(Vessel vessel)
         {
-            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 LockSystem.Singleton.ReleaseUpdateLock(vessel.id, vessel.persistentId);
         }
     }
