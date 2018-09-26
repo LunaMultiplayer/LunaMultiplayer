@@ -1,5 +1,7 @@
-﻿using LmpCommon.Xml;
+﻿using LmpClient.Extensions;
+using LmpCommon.Xml;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UniLinq;
 
 namespace LmpClient.ModuleStore.Structures
@@ -15,14 +17,23 @@ namespace LmpClient.ModuleStore.Structures
         [XmlComment(Value = "Methods to sync")]
         public List<MethodDefinition> Methods { get; set; } = new List<MethodDefinition>();
 
-        public FieldDefinition GetCustomizationForField(string fieldName) => Fields.FirstOrDefault(f => f.FieldName == fieldName);
+        [XmlIgnore]
+        public Dictionary<string, FieldDefinition> CustomizedFields { get; private set; } = new Dictionary<string, FieldDefinition>();
 
-        public MethodDefinition GetCustomizationForMethod(string methodName) => Methods.FirstOrDefault(f => f.MethodName == methodName);
+        [XmlIgnore]
+        public Dictionary<string, MethodDefinition> CustomizedMethods { get; private set; } = new Dictionary<string, MethodDefinition>();
+
+        public void Init()
+        {
+            CustomizedFields = Fields.DistinctBy(f=> f.FieldName).ToDictionary(f => f.FieldName, f => f);
+            CustomizedMethods = Methods.DistinctBy(m => m.MethodName).ToDictionary(f => f.MethodName, f => f);
+        }
         
         public void MergeWith(ModuleDefinition other)
         {
             Fields.AddRange(other.Fields);
             Methods.AddRange(other.Methods);
+            Init();
         }
     }
 }

@@ -3,7 +3,6 @@ using LmpClient.Extensions;
 using LmpClient.ModuleStore;
 using System;
 using System.Collections.Generic;
-using UniLinq;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPartSyncFieldSys
@@ -29,8 +28,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
 
             if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(module.moduleName, out var customization))
             {
-                var fieldCust = customization.Fields.FirstOrDefault(f => f.FieldName == fieldName);
-                if (fieldCust != null)
+                if (customization.CustomizedFields.TryGetValue(fieldName, out var fieldCust))
                 {
                     var timeToSend = LastSendTimeDictionary.GetOrAdd(module.vessel.id, () => new Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>())
                         .GetOrAdd(module.part.flightID, () => new Dictionary<string, Dictionary<string, TimeToSend>>())

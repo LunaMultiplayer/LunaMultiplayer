@@ -51,6 +51,7 @@
     <Reference Include="System.Threading">
       <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
     </Reference>
+    <Reference Include="System.XML" />
     <Reference Include="UnityEngine">
       <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -91,6 +92,7 @@
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\FlightGlobalExtension.cs" />
+    <Compile Include="Extensions\LinqExtention.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\VesselExtension.cs" />

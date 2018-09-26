@@ -17,15 +17,10 @@ namespace LmpClient.Harmony
         {
             if (__instance.IsModule && ___partModule != null && ___evt != null)
             {
-                if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(___partModule.moduleName, out var moduleCustomization))
+                if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(___partModule.moduleName, out var moduleCustomization) &&
+                    moduleCustomization.CustomizedMethods.ContainsKey(___evt.name))
                 {
-                    foreach (var method in moduleCustomization.Methods)
-                    {
-                        if (method.MethodName == ___evt.name)
-                        {
-                            PartModuleEvent.onPartModuleMethodCalling.Fire(___partModule, ___evt.name);
-                        }
-                    }
+                    PartModuleEvent.onPartModuleMethodCalling.Fire(___partModule, ___evt.name);
                 }
             }
         }

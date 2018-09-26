@@ -42,6 +42,8 @@ namespace LmpClient.ModuleStore
             {
                 var moduleDefinition = LunaXmlSerializer.ReadXmlFromPath<ModuleDefinition>(file);
                 moduleDefinition.ModuleName = Path.GetFileNameWithoutExtension(file);
+                moduleDefinition.Init();
+
                 moduleValues.Add(moduleDefinition);
             }
 
