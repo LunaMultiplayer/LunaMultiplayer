@@ -90,8 +90,7 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                     {
                         //Apply rotation to part
                         vessel.parts[i].partTransform.rotation = rotation * vessel.parts[i].orgRot;
-                        vessel.parts[i].partTransform.position = vessel.vesselTransform.position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
-                        vessel.parts[i].partTransform.position += position - vessel.vesselTransform.position;
+                        vessel.parts[i].partTransform.position = vessel.vesselTransform.rotation * vessel.parts[i].orgPos + position;
                         //Always run this at the end!!
                         //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
                         vessel.parts[i].ResumeVelocity();
