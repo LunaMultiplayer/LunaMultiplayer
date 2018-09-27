@@ -71,7 +71,7 @@ namespace LmpClient.Systems.VesselPositionSys
 
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
             TimingManager.LateUpdateAdd(SendPositionsStage, SendVesselPositionUpdates);
-
+            
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));

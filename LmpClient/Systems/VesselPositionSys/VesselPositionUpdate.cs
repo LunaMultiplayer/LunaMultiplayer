@@ -157,7 +157,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 InitializeOrbits();
             }
 
-            if (Target == null) return;
+            if (Target == null || InterpolationFinished) return;
             try
             {
                 Vessel.SetVesselPosition(this, Target, LerpPercentage);
