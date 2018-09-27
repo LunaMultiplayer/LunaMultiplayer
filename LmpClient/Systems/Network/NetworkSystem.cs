@@ -69,7 +69,7 @@ namespace LmpClient.Systems.Network
                     break;
                 case ClientState.Handshaking:
                     MainSystem.Singleton.Status = "Waiting for handshake response";
-                    if (ConnectionIsStuck())
+                    if (ConnectionIsStuck(10000))
                         MainSystem.NetworkState = ClientState.Connected;
                     break;
                 case ClientState.Handshaked:
