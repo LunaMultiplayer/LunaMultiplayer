@@ -76,27 +76,10 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
         }
 
         /// <summary>
-        /// Checks if we must resume the velocity of the part
-        /// It's important do resume it as otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-        /// </summary>
-        private static bool MustResumeVelocity(Vessel vessel)
-        {
-            if (!vessel.packed && vessel.rootPart?.rb != null)
-            {
-                var velBeforeCorrection = vessel.rootPart.rb.velocity;
-                vessel.rootPart.ResumeVelocity();
-                return velBeforeCorrection != vessel.rootPart.rb.velocity;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Here we set the position and the rotation of every part at once, this is much more optimized than calling SetRotation and SetPosition
         /// </summary>
         private static void SetLoadedVesselPositionAndRotation(Vessel vessel, Vector3d position, Quaternion rotation)
         {
-            var mustFixVelocity = MustResumeVelocity(vessel);
             if (!vessel.packed)
             {
                 foreach (var part in vessel.parts)
@@ -108,12 +91,9 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                         part.partTransform.position = vessel.vesselTransform.position + vessel.vesselTransform.rotation * part.orgPos;
 
                         part.partTransform.position += position - vessel.vesselTransform.position;
-                        if (mustFixVelocity)
-                        {
-                            //Always run this at the end!!
-                            //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                            part.ResumeVelocity();
-                        }
+                        //Always run this at the end!!
+                        //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+                        part.ResumeVelocity();
                     }
                 }
             }
@@ -123,12 +103,9 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                 {
                     part.partTransform.rotation = rotation * part.orgRot;
                     part.partTransform.position = position + vessel.vesselTransform.rotation * part.orgPos;
-                    if (mustFixVelocity)
-                    {
-                        //Always run this at the end!!
-                        //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                        part.ResumeVelocity();
-                    }
+                    //Always run this at the end!!
+                    //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
+                    part.ResumeVelocity();
                 }
             }
         }
