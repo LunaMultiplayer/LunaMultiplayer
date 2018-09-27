@@ -1,6 +1,8 @@
 ﻿using LmpClient.Systems.TimeSyncer;
 using LmpCommon;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
 {
@@ -78,34 +80,37 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
         /// <summary>
         /// Here we set the position and the rotation of every part at once, this is much more optimized than calling SetRotation and SetPosition
         /// </summary>
+        [SuppressMessage("ReSharper", "ForCanBeConvertedToForeach")]
         private static void SetLoadedVesselPositionAndRotation(Vessel vessel, Vector3d position, Quaternion rotation)
         {
             if (!vessel.packed)
             {
-                foreach (var part in vessel.parts)
+                Profiler.BeginSample("SetLoadedVesselPositionAndRotation");
+                for (var i = 0; i < vessel.parts.Count; i++)
                 {
-                    if (part.physicalSignificance == Part.PhysicalSignificance.FULL)
+                    if (vessel.parts[i].physicalSignificance == Part.PhysicalSignificance.FULL)
                     {
                         //Apply rotation to part
-                        part.partTransform.rotation = rotation * part.orgRot;
-                        part.partTransform.position = vessel.vesselTransform.position + vessel.vesselTransform.rotation * part.orgPos;
-
-                        part.partTransform.position += position - vessel.vesselTransform.position;
+                        vessel.parts[i].partTransform.rotation = rotation * vessel.parts[i].orgRot;
+                        vessel.parts[i].partTransform.position = vessel.vesselTransform.position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
+                        vessel.parts[i].partTransform.position += position - vessel.vesselTransform.position;
                         //Always run this at the end!!
                         //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                        part.ResumeVelocity();
+                        vessel.parts[i].ResumeVelocity();
                     }
                 }
+
+                Profiler.EndSample();
             }
             else
             {
-                foreach (var part in vessel.parts)
+                for (var i = 0; i < vessel.parts.Count; i++)
                 {
-                    part.partTransform.rotation = rotation * part.orgRot;
-                    part.partTransform.position = position + vessel.vesselTransform.rotation * part.orgPos;
+                    vessel.parts[i].partTransform.rotation = rotation * vessel.parts[i].orgRot;
+                    vessel.parts[i].partTransform.position = position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
                     //Always run this at the end!!
                     //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                    part.ResumeVelocity();
+                    vessel.parts[i].ResumeVelocity();
                 }
             }
         }
