@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Extensions;
+using LmpClient.Systems.KscScene;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.VesselProtoSys;
@@ -83,6 +84,9 @@ namespace LmpClient.Systems.VesselLockSys
         /// </summary>
         public void LockAcquire(LockDefinition lockDefinition)
         {
+            if (lockDefinition.Type == LockType.Control)
+                KscSceneSystem.Singleton.RefreshTrackingStationVessels();
+
             if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
                 return;
 
@@ -113,6 +117,7 @@ namespace LmpClient.Systems.VesselLockSys
             switch (lockDefinition.Type)
             {
                 case LockType.Control:
+                    KscSceneSystem.Singleton.RefreshTrackingStationVessels();
                     if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == lockDefinition.VesselId)
                     {
                         LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselId);

@@ -1,11 +1,10 @@
 ﻿using KSP.UI.Screens;
 using LmpClient.Extensions;
-using LmpClient.Systems.Asteroid;
 using LmpClient.Systems.Flag;
+using LmpClient.Systems.KscScene;
 using LmpClient.Systems.PlayerColorSys;
 using LmpClient.Systems.VesselPositionSys;
 using System;
-using System.Reflection;
 using UniLinq;
 using Object = UnityEngine.Object;
 
@@ -15,10 +14,7 @@ namespace LmpClient.VesselUtilities
     {
         public static Guid CurrentlyLoadingVesselId { get; private set; }
 
-        /// <summary>
-        /// Invoke this private method to rebuild the vessel lists that appear on the tracking station
-        /// </summary>
-        private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", BindingFlags.NonPublic | BindingFlags.Instance);
+
 
         /// <summary>
         /// Loads/reloads a vessel into game
@@ -174,16 +170,8 @@ namespace LmpClient.VesselUtilities
             }
 
             PlayerColorSystem.Singleton.SetVesselOrbitColor(vesselProto.vesselRef);
-            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
-            {
-                //When in trackstation rebuild the vessels left panel as otherwise the new vessel won't be listed
-                var spaceTracking = Object.FindObjectOfType<SpaceTracking>();
-                if (spaceTracking != null)
-                    BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
-            }
-
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                KSCVesselMarkers.fetch?.RefreshMarkers();
+            KscSceneSystem.Singleton.RefreshTrackingStationVessels();
+            KSCVesselMarkers.fetch?.RefreshMarkers();
 
             if (reloadingOwnVessel)
             {

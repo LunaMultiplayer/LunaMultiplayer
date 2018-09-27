@@ -1,5 +1,9 @@
-﻿using LmpClient.Base;
+﻿using Harmony;
+using KSP.UI.Screens;
+using LmpClient.Base;
 using LmpClient.Events;
+using System.Reflection;
+using UnityEngine;
 
 namespace LmpClient.Systems.KscScene
 {
@@ -8,6 +12,8 @@ namespace LmpClient.Systems.KscScene
     /// </summary>
     public class KscSceneSystem : System<KscSceneSystem>
     {
+        private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", AccessTools.all);
+
         private static KscSceneEvents KscSceneEvents { get; } = new KscSceneEvents();
 
         #region Base overrides
@@ -28,6 +34,23 @@ namespace LmpClient.Systems.KscScene
             LockEvent.onLockReleaseUnityThread.Remove(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Remove(KscSceneEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Remove(KscSceneEvents.LevelLoaded);
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Refreshes the vessels displayed in the tracking station panel
+        /// </summary>
+        public void RefreshTrackingStationVessels()
+        {
+            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+            {
+                var spaceTracking = Object.FindObjectOfType<SpaceTracking>();
+                if (spaceTracking != null)
+                    BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
+            }
         }
 
         #endregion
