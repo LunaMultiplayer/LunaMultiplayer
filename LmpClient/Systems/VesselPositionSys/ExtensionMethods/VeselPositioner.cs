@@ -66,14 +66,11 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
             var rotation = (Quaternion)lerpedBody.rotation * currentSurfaceRelRotation;
-            if (vessel.situation <= Vessel.Situations.PRELAUNCH)
-            {
-                SetLoadedVesselPositionAndRotation(vessel, lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude), rotation);
-            }
-            else
-            {
-                SetLoadedVesselPositionAndRotation(vessel, vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime), rotation);
-            }
+            var position = vessel.situation <= Vessel.Situations.PRELAUNCH ? 
+                lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) : 
+                vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime);
+
+            SetLoadedVesselPositionAndRotation(vessel, position, rotation);
         }
 
         /// <summary>
