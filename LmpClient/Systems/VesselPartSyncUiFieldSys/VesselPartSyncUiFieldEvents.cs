@@ -1,5 +1,4 @@
 ﻿using LmpClient.Base;
-using LmpClient.Events;
 using LmpClient.ModuleStore;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
@@ -58,18 +57,19 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
 
         private static void OnFieldChanged(BaseField baseField, object oldValue)
         {
-            if (!CallIsValid((PartModule)baseField.host)) return;
+            var partModule = (PartModule)baseField.host;
+            if (!CallIsValid(partModule)) return;
 
             //TODO: add some sort of buffering so it sends the value after 500ms to avoid clogging in case a user changes it too often
 
             var fieldType = baseField.FieldInfo.FieldType;
 
             if (fieldType == typeof(bool))
-                PartModuleEvent.onPartModuleBoolFieldChanged.Fire((PartModule)baseField.host, baseField.name, (bool)baseField.GetValue(baseField.host));
+                System.MessageSender.SendVesselPartSyncUiFieldBoolMsg(partModule.vessel, partModule.part, partModule.moduleName, baseField.name, (bool)baseField.GetValue(baseField.host));
             else if (fieldType == typeof(int))
-                PartModuleEvent.onPartModuleIntFieldChanged.Fire((PartModule)baseField.host, baseField.name, (int)baseField.GetValue(baseField.host));
+                System.MessageSender.SendVesselPartSyncUiFieldIntMsg(partModule.vessel, partModule.part, partModule.moduleName, baseField.name, (int)baseField.GetValue(baseField.host));
             else if (fieldType == typeof(float))
-                PartModuleEvent.onPartModuleFloatFieldChanged.Fire((PartModule)baseField.host, baseField.name, (float)baseField.GetValue(baseField.host));
+                System.MessageSender.SendVesselPartSyncUiFieldFloatMsg(partModule.vessel, partModule.part, partModule.moduleName, baseField.name, (float)baseField.GetValue(baseField.host));
         }
     }
 }
