@@ -2,7 +2,6 @@
 using LmpCommon;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
 {
@@ -85,7 +84,6 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
         {
             if (!vessel.packed)
             {
-                Profiler.BeginSample("SetLoadedVesselPositionAndRotation");
                 for (var i = 0; i < vessel.parts.Count; i++)
                 {
                     if (vessel.parts[i].physicalSignificance == Part.PhysicalSignificance.FULL)
@@ -99,8 +97,6 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                         vessel.parts[i].ResumeVelocity();
                     }
                 }
-
-                Profiler.EndSample();
             }
             else
             {
