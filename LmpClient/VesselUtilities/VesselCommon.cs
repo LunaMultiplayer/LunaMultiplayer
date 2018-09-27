@@ -89,17 +89,28 @@ namespace LmpClient.VesselUtilities
         {
             if (FlightGlobals.ActiveVessel != null)
             {
-                //If there is someone spectating us then return true and update it fast;
-                if (IsSomeoneSpectatingUs)
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (var i = 0; i < FlightGlobals.VesselsLoaded.Count; i++)
                 {
-                    return true;
+                    if (FlightGlobals.VesselsLoaded[i] != FlightGlobals.ActiveVessel)
+                        return true;
                 }
 
-                var controlledVesselsIds = GetControlledVesselIds();
-                var loadedVesselIds = FlightGlobals.VesselsLoaded?.Where(v => v != null).Select(v => v.id);
+                return false;
 
-                if (loadedVesselIds != null)
-                    return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel?.id);
+                //TODO: I simplified this method as it generates a lot of garbage since it's called on every frame
+                ////If there is someone spectating us then return true and update it fast;
+                //if (IsSomeoneSpectatingUs)
+                //{
+                //    return true;
+                //}
+
+                //var controlledVesselsIds = GetControlledVesselIds();
+                //var loadedVesselIds = FlightGlobals.VesselsLoaded?.Where(v => v != null).Select(v => v.id);
+
+                //if (loadedVesselIds != null)
+                //    return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel?.id);
             }
 
             return false;
