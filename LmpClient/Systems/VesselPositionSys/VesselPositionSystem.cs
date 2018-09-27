@@ -52,6 +52,9 @@ namespace LmpClient.Systems.VesselPositionSys
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
         private List<Vessel> AbandonedVesselsToUpdate { get; } = new List<Vessel>();
 
+        private const TimingManager.TimingStage HandlePositionsStage = TimingManager.TimingStage.BetterLateThanNever;
+        private const TimingManager.TimingStage SendPositionsStage = TimingManager.TimingStage.BetterLateThanNever;
+
         #endregion
 
         #region Base overrides
@@ -64,10 +67,10 @@ namespace LmpClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(HandlePositionsStage, HandleVesselUpdates);
 
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
-            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+            TimingManager.LateUpdateAdd(SendPositionsStage, SendVesselPositionUpdates);
 
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
@@ -81,8 +84,8 @@ namespace LmpClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
             
-            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+            TimingManager.FixedUpdateRemove(HandlePositionsStage, HandleVesselUpdates);
+            TimingManager.LateUpdateRemove(SendPositionsStage, SendVesselPositionUpdates);
 
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
