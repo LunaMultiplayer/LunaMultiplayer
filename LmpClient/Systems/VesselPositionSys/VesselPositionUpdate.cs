@@ -157,9 +157,10 @@ namespace LmpClient.Systems.VesselPositionSys
                 InitializeOrbits();
             }
 
-            if (Target == null || InterpolationFinished) return;
+            if (Target == null || InterpolationFinished && !Vessel.packed) return;
             try
             {
+                //ALWAYS set the position if the vessel is UNPACKED even if we don't have anything in the queue. Otherwise its position will shake
                 Vessel.SetVesselPosition(this, Target, LerpPercentage);
             }
             catch (Exception e)
