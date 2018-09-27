@@ -1,6 +1,8 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.ModuleStore;
+using LmpClient.Systems.SettingsSys;
+using LmpCommon.Locks;
 
 namespace LmpClient.Systems.VesselPartSyncUiFieldSys
 {
@@ -23,9 +25,12 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             return true;
         }
 
-        public void SubscribeToFieldChanges()
+        public void LockAcquire(LockDefinition lockDef)
         {
-            SubscribeToFieldChanges(FlightGlobals.ActiveVessel);
+            if (lockDef.Type == LockType.Control && lockDef.PlayerName == SettingsSystem.CurrentSettings.PlayerName)
+            {
+                SubscribeToFieldChanges(FlightGlobals.ActiveVessel);
+            }
         }
 
         public void SubscribeToFieldChanges(Vessel vessel)

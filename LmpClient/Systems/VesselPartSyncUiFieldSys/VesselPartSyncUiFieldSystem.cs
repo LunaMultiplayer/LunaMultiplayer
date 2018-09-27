@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Events;
 using LmpClient.Systems.TimeSyncer;
 using System;
 using System.Collections.Concurrent;
@@ -31,8 +32,7 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
         {
             base.OnEnabled();
 
-            GameEvents.onFlightReady.Add(VesselPartModuleSyncUiFieldEvents.SubscribeToFieldChanges);
-            GameEvents.onVesselLoaded.Add(VesselPartModuleSyncUiFieldEvents.SubscribeToFieldChanges);
+            LockEvent.onLockAcquireUnityThread.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartUiFieldsSyncs));
         }
@@ -41,8 +41,7 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
         {
             base.OnDisabled();
 
-            GameEvents.onFlightReady.Remove(VesselPartModuleSyncUiFieldEvents.SubscribeToFieldChanges);
-            GameEvents.onVesselLoaded.Remove(VesselPartModuleSyncUiFieldEvents.SubscribeToFieldChanges);
+            LockEvent.onLockAcquireUnityThread.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
 
             VesselPartsUiFieldsSyncs.Clear();
         }
