@@ -40,7 +40,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         }
 
         /// <summary>
-        /// Handles the vessel immortal state when someone gets a lock
+        /// Handles the vessel immortal state when someone gets an update or control lock
         /// </summary>
         public void OnLockAcquire(LockDefinition lockDefinition)
         {
