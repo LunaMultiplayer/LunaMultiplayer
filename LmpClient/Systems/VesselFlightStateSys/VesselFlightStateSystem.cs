@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.VesselFlightStateSys
 {
@@ -139,11 +140,15 @@ namespace LmpClient.Systems.VesselFlightStateSys
         /// </summary>
         private void SendFlightState()
         {
+            Profiler.BeginSample(nameof(SendFlightState));
+
             if (FlightStateSystemReady && TimeToSendFlightStateUpdate && !VesselCommon.IsSpectating && !FlightGlobals.ActiveVessel.isEVA)
             {
                 MessageSender.SendCurrentFlightState();
                 LastVesselFlightStateSentTime = Time.time;
             }
+
+            Profiler.EndSample();
         }
 
         #endregion

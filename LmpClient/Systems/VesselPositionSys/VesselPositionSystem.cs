@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.VesselPositionSys
 {
@@ -89,10 +90,14 @@ namespace LmpClient.Systems.VesselPositionSys
 
         private void HandleVesselUpdates()
         {
+            Profiler.BeginSample(nameof(HandleVesselUpdates));
+            
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 keyVal.Value.ApplyInterpolatedVesselUpdate();
             }
+
+            Profiler.EndSample();
         }
 
         #endregion
@@ -105,11 +110,15 @@ namespace LmpClient.Systems.VesselPositionSys
         /// </summary>
         private void SendVesselPositionUpdates()
         {
+            Profiler.BeginSample(nameof(SendVesselPositionUpdates));
+
             if (PositionUpdateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating && !WarpSystem.Singleton.CurrentlyWarping)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
                 LastVesselUpdatesSentTime = Time.time;
             }
+
+            Profiler.EndSample();
         }
 
         #endregion
