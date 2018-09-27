@@ -25,7 +25,7 @@ namespace LmpClient.Harmony
             if (crashingVessel != null)
             {
                 if (crashingVessel.rootPart != null)
-                    return float.IsPositiveInfinity(crashingVessel.rootPart.crashTolerance);
+                    return !float.IsPositiveInfinity(crashingVessel.rootPart.crashTolerance);
 
                 if (!LockSystem.LockQuery.UpdateLockExists(crashingVessel.id)) return true;
                 return LockSystem.LockQuery.UpdateLockBelongsToPlayer(crashingVessel.id, SettingsSystem.CurrentSettings.PlayerName);
