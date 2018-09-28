@@ -110,7 +110,6 @@ namespace LmpClient.Systems.VesselUpdateSys
                         vessel.ActionGroups.ToggleGroup(KSPActionGroup.SAS);
                         vessel.ActionGroups.groups[i] = false;
                     }
-                    continue;
                 }
             }
         }
