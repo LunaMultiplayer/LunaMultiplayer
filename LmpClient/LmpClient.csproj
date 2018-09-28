@@ -99,6 +99,8 @@
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
+    <Compile Include="Harmony\FlightIntegrator_FixedUpdate.cs" />
+    <Compile Include="Harmony\FlightIntegrator_Update.cs" />
     <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />
     <Compile Include="Harmony\SpaceTracking_StartTrackingObject.cs" />
     <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
