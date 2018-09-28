@@ -1,25 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace LmpClient.Utilities
+﻿namespace LmpClient.Utilities
 {
     /// <summary>
     /// Class that handles all clock related things of KSP
     /// </summary>
     public class ClockHandler
     {
-        private static readonly List<Vessel> VesselsToPack = new List<Vessel>();
-
         /// <summary>
         /// Call this method to set a new time using the planetarium
         /// </summary>
         public static void StepClock(double targetTick)
         {
-            if (HighLogic.LoadedScene == GameScenes.LOADING)
-            {
-                LunaLog.Log("[LMP] Skipping StepClock in loading screen");
-                return;
-            }
             if (HighLogic.LoadedSceneIsFlight)
             {
                 if (FlightGlobals.fetch.activeVessel == null || !FlightGlobals.ready)
@@ -35,7 +25,6 @@ namespace LmpClient.Utilities
         
         private static void PutVesselsInPhysicsRangeOnRails(double targetTick)
         {
-            //TODO: Check if this is really needed...
             /*  
              *  Dagger - why you made all vessels go on rails? v.GoOnRails();
              *  Darklight - Because the universe time is jumped
@@ -49,21 +38,14 @@ namespace LmpClient.Utilities
              *  Darklight - Lets say you are orbital and are just passing the KSC, if you jump 5 minutes, you should be way past it, if you aren't on rails you'll still be over the KSC and you will fall behind packed vessels that are moving correctly
              */
 
+            //Packing the vessels is needed. Otherwise in orbit if you lag, when syncing time the vessels will terribly far away
             if (FlightGlobals.Vessels != null)
             {
-                VesselsToPack.Clear();
-                VesselsToPack.AddRange(FlightGlobals.Vessels.Where(v => v != null && !v.packed));
-                foreach (var vessel in VesselsToPack)
+                foreach (var vessel in FlightGlobals.VesselsLoaded)
                 {
-                    try
-                    {
-                        if (FlightGlobals.ActiveVessel.id != vessel.id || SafeToStepClock(vessel, targetTick))
-                            vessel.GoOnRails();
-                    }
-                    catch
-                    {
-                        LunaLog.LogError($"[LMP] Error packing vessel {vessel?.id}");
-                    }
+                    if (vessel.packed || FlightGlobals.ActiveVessel == vessel) continue;
+                    if (SafeToStepClock(vessel, targetTick))
+                        vessel.GoOnRails();
                 }
             }
         }
@@ -80,10 +62,8 @@ namespace LmpClient.Utilities
                     return false; //If we Change the clock while landed/splashed the throttle goes back to 0
                 case Vessel.Situations.ORBITING:
                 case Vessel.Situations.ESCAPING:
-                    return true;
                 case Vessel.Situations.SUB_ORBITAL:
-                    var altitudeAtUt = checkVessel.orbit.getRelativePositionAtUT(targetTick).magnitude;
-                    return altitudeAtUt > checkVessel.mainBody.Radius + 10000 && checkVessel.altitude > 10000;
+                    return true;
                 default:
                     return false;
             }
