@@ -32,7 +32,7 @@ namespace LmpClient.Systems.VesselSyncSys
             }
 
             if (msgData.VesselIds.Length < msgData.VesselsCount)
-                Array.Resize(ref msgData.VesselIds, msgData.VesselsCount);
+                msgData.VesselIds = new Guid[msgData.VesselsCount];
 
             Array.Copy(vesselIds, msgData.VesselIds, msgData.VesselsCount);
 
