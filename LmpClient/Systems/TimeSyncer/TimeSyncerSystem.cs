@@ -5,6 +5,7 @@ using LmpClient.Utilities;
 using LmpCommon.Time;
 using System;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.TimeSyncer
 {
@@ -114,7 +115,7 @@ namespace LmpClient.Systems.TimeSyncer
             //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, () => LunaLog.Log($"BetterLateThanNever {Planetarium.GetUniversalTime() - UniversalTime}"));
 
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, SyncTimeScale);
-
+            
             SpectateEvent.onStartSpectating.Add(TimerSyncerEvents.OnStartSpectating);
         }
 
@@ -123,7 +124,7 @@ namespace LmpClient.Systems.TimeSyncer
             base.OnDisabled();
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, SetGameTime);
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, SyncTimeScale);
-
+            
             SpectateEvent.onStartSpectating.Remove(TimerSyncerEvents.OnStartSpectating);
             ServerStartTime = 0;
         }
@@ -140,6 +141,8 @@ namespace LmpClient.Systems.TimeSyncer
         /// </summary>
         private void SyncTimeScale()
         {
+            Profiler.BeginSample(nameof(SyncTimeScale));
+
             if (Enabled && !CurrentlyWarping && CanSyncTime && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
             {
                 var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
@@ -160,6 +163,8 @@ namespace LmpClient.Systems.TimeSyncer
                     ClockHandler.StepClock(targetTime);
                 }
             }
+
+            Profiler.EndSample();
         }
 
         #endregion
