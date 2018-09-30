@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Kerbal
     {
         /// <inheritdoc />
         internal KerbalBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)KerbalMessageType;
 
         public virtual KerbalMessageType KerbalMessageType => throw new NotImplementedException();

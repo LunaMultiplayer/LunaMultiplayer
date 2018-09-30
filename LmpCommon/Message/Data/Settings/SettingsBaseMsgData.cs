@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Settings
     {
         /// <inheritdoc />
         internal SettingsBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)SettingsMessageType;
         public virtual SettingsMessageType SettingsMessageType => throw new NotImplementedException();
 

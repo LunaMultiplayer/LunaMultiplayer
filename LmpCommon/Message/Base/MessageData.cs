@@ -26,10 +26,6 @@ namespace LmpCommon.Message.Base
         /// <inheritdoc />
         public long SentTime { get; set; }
 
-        public bool Compressed { get; set; }
-
-        public abstract bool CompressCondition { get; }
-
         /// <inheritdoc />
         public virtual ushort SubType => 0;
 
@@ -42,7 +38,6 @@ namespace LmpCommon.Message.Base
             lidgrenMsg.Write(MajorVersion);
             lidgrenMsg.Write(MinorVersion);
             lidgrenMsg.Write(BuildVersion);
-            lidgrenMsg.Write(CompressCondition);
             lidgrenMsg.WritePadBits();
             InternalSerialize(lidgrenMsg);
         }
@@ -55,7 +50,6 @@ namespace LmpCommon.Message.Base
             MajorVersion = lidgrenMsg.ReadUInt16();
             MinorVersion = lidgrenMsg.ReadUInt16();
             BuildVersion = lidgrenMsg.ReadUInt16();
-            Compressed = lidgrenMsg.ReadBoolean();
             lidgrenMsg.SkipPadBits();
             InternalDeserialize(lidgrenMsg);
         }
@@ -65,6 +59,20 @@ namespace LmpCommon.Message.Base
         public int GetMessageSize()
         {
             return sizeof(long) + sizeof(ushort) * 3 + sizeof(byte) + InternalGetMessageSize();
+        }
+
+        protected static void CompressByteArray(ref byte[] data, ref int numBytes)
+        {
+            var compressedData = CachedQuickLz.CachedQlz.Compress(data, numBytes, out numBytes);
+            CachedQuickLz.ArrayPool<byte>.Recycle(data);
+            data = compressedData;
+        }
+
+        protected static void DecompressByteArray(ref byte[] data, out int numBytes)
+        {
+            var decompressedData = CachedQuickLz.CachedQlz.Decompress(data, out numBytes);
+            CachedQuickLz.ArrayPool<byte>.Recycle(data);
+            data = decompressedData;
         }
 
         internal abstract int InternalGetMessageSize();

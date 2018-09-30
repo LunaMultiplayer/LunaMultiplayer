@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.PlayerStatus
     {
         /// <inheritdoc />
         internal PlayerStatusBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)PlayerStatusMessageType;
         public virtual PlayerStatusMessageType PlayerStatusMessageType => throw new NotImplementedException();
 

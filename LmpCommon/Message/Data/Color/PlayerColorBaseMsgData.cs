@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Color
     {
         /// <inheritdoc />
         internal PlayerColorBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)PlayerColorMessageType;
         public virtual PlayerColorMessageType PlayerColorMessageType => throw new NotImplementedException();
 

@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.PlayerConnection
     {
         /// <inheritdoc />
         internal PlayerConnectionBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)PlayerConnectionMessageType;
         public virtual PlayerConnectionMessageType PlayerConnectionMessageType => throw new NotImplementedException();
 

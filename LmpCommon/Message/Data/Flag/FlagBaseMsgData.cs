@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Flag
     {
         /// <inheritdoc />
         internal FlagBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)FlagMessageType;
         public virtual FlagMessageType FlagMessageType => throw new NotImplementedException();
 

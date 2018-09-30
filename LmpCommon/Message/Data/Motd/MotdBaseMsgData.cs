@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Motd
     {
         /// <inheritdoc />
         internal MotdBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)MotdMessageType;
         public virtual MotdMessageType MotdMessageType => throw new NotImplementedException();
 

@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Admin
     {
         /// <inheritdoc />
         internal AdminBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)AdminMessageType;
         public virtual AdminMessageType AdminMessageType => throw new NotImplementedException();
 

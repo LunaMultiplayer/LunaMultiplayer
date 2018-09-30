@@ -9,7 +9,6 @@ namespace LmpCommon.Message.Data.Lock
     {
         /// <inheritdoc />
         internal LockBaseMsgData() { }
-        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)LockMessageType;
         public virtual LockMessageType LockMessageType => throw new NotImplementedException();
 
