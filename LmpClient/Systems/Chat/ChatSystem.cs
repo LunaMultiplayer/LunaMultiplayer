@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.Chat;
-using Smooth.Algebraics;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 

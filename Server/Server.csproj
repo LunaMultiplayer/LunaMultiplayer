@@ -44,8 +44,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CachedQuickLz, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\CachedQuickLz.1.0.0\lib\net35\CachedQuickLz.dll</HintPath>
+    <Reference Include="CachedQuickLz, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\CachedQuickLz.1.0.2\lib\net35\CachedQuickLz.dll</HintPath>
     </Reference>
     <Reference Include="LunaConfigNode, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\LunaConfigNode.1.8.1\lib\net35\LunaConfigNode.dll</HintPath>
@@ -57,8 +57,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
+    <Reference Include="System.Threading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\TPL4Unity.1.0.0\lib\net35\System.Threading.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
