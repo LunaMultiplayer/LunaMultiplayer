@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Smooth.Algebraics;
 using UnityEngine;
 
 namespace LmpClient.Windows.Debug

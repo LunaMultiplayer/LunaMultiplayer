@@ -36,10 +36,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CachedQuickLz, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\CachedQuickLz.1.0.0\lib\net35\CachedQuickLz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Threading">
-      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
+    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -106,7 +109,6 @@
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="LunaNetUtils.cs" />
     <Compile Include="MasterServerRetriever.cs" />
-    <Compile Include="Compression\CompressionHelper.cs" />
     <Compile Include="Message\Base\FactoryBase.cs" />
     <Compile Include="Message\Base\MessageBase.cs" />
     <Compile Include="Message\Base\MessageData.cs" />
@@ -334,7 +336,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

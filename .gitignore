@@ -2,6 +2,7 @@
 *.userprefs
 .vs/
 External/KSPLibraries/*.dll
+External/Nuget/*
 TestResults/*
 LmpClient/*.csproj.user
 LmpClient/bin/*
@@ -35,3 +36,4 @@ Server/obj/*
 LmpGlobal/*.csproj.user
 LmpGlobal/bin/*
 LmpGlobal/obj/*
+*.nupkg

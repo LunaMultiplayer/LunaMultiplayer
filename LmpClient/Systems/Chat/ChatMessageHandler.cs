@@ -4,6 +4,7 @@ using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.Chat;
 using LmpCommon.Message.Interface;
 using System.Collections.Concurrent;
+using Smooth.Algebraics;
 
 namespace LmpClient.Systems.Chat
 {
