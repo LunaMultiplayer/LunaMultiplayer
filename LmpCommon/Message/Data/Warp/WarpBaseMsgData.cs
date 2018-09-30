@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Warp
     {
         /// <inheritdoc />
         internal WarpBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)WarpMessageType;
         public virtual WarpMessageType WarpMessageType => throw new NotImplementedException();
 

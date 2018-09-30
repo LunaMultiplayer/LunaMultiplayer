@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Handshake
     {
         /// <inheritdoc />
         internal HandshakeBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)HandshakeMessageType;
 
         public virtual HandshakeMessageType HandshakeMessageType => throw new NotImplementedException();

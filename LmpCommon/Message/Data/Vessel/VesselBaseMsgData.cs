@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Vessel
     {
         /// <inheritdoc />
         internal VesselBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)VesselMessageType;
         public virtual VesselMessageType VesselMessageType => throw new NotImplementedException();
 

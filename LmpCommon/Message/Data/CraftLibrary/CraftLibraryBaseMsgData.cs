@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.CraftLibrary
     {
         /// <inheritdoc />
         internal CraftLibraryBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)CraftMessageType;
         public virtual CraftMessageType CraftMessageType => throw new NotImplementedException();
 

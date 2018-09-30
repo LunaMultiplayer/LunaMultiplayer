@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Screenshot
     {
         /// <inheritdoc />
         internal ScreenshotBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)ScreenshotMessageType;
         public virtual ScreenshotMessageType ScreenshotMessageType => throw new NotImplementedException();
 

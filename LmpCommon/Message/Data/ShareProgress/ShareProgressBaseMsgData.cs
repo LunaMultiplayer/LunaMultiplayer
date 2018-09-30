@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.ShareProgress
     {
         /// <inheritdoc />
         internal ShareProgressBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)ShareProgressMessageType;
         public virtual ShareProgressMessageType ShareProgressMessageType => throw new NotImplementedException();
 

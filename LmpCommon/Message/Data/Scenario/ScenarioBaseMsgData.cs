@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Scenario
     {
         /// <inheritdoc />
         internal ScenarioBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)ScenarioMessageType;
         public virtual ScenarioMessageType ScenarioMessageType => throw new NotImplementedException();
 

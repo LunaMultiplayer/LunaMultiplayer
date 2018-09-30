@@ -7,6 +7,7 @@ namespace LmpCommon.Message.Data.Chat
     {
         /// <inheritdoc />
         internal ChatMsgData() { }
+        public override bool CompressCondition => false;
 
         public string From;
         public string Text;

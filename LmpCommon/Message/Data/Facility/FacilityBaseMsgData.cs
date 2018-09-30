@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Facility
     {
         /// <inheritdoc />
         internal FacilityBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)FacilityMessageType;
         public virtual FacilityMessageType FacilityMessageType => throw new NotImplementedException();
 

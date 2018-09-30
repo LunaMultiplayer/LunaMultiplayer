@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.MasterServer
     {
         /// <inheritdoc />
         internal MsBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)MasterServerMessageSubType;
         public virtual MasterServerMessageSubType MasterServerMessageSubType => throw new NotImplementedException();
 

@@ -12,19 +12,23 @@ namespace LmpCommon.Message.Base
         internal MessageData() { }
 
         /// <inheritdoc />
-        public virtual ushort MajorVersion { get; set; } = LmpVersioning.MajorVersion;
+        public ushort MajorVersion { get; set; } = LmpVersioning.MajorVersion;
 
         /// <inheritdoc />
-        public virtual ushort MinorVersion { get; set; } = LmpVersioning.MinorVersion;
+        public ushort MinorVersion { get; set; } = LmpVersioning.MinorVersion;
 
         /// <inheritdoc />
-        public virtual ushort BuildVersion { get; set; } = LmpVersioning.BuildVersion;
+        public ushort BuildVersion { get; set; } = LmpVersioning.BuildVersion;
 
         /// <inheritdoc />
         public long ReceiveTime { get; set; }
 
         /// <inheritdoc />
         public long SentTime { get; set; }
+
+        public bool Compressed { get; set; }
+
+        public abstract bool CompressCondition { get; }
 
         /// <inheritdoc />
         public virtual ushort SubType => 0;
@@ -38,6 +42,8 @@ namespace LmpCommon.Message.Base
             lidgrenMsg.Write(MajorVersion);
             lidgrenMsg.Write(MinorVersion);
             lidgrenMsg.Write(BuildVersion);
+            lidgrenMsg.Write(CompressCondition);
+            lidgrenMsg.WritePadBits();
             InternalSerialize(lidgrenMsg);
         }
 
@@ -49,6 +55,8 @@ namespace LmpCommon.Message.Base
             MajorVersion = lidgrenMsg.ReadUInt16();
             MinorVersion = lidgrenMsg.ReadUInt16();
             BuildVersion = lidgrenMsg.ReadUInt16();
+            Compressed = lidgrenMsg.ReadBoolean();
+            lidgrenMsg.SkipPadBits();
             InternalDeserialize(lidgrenMsg);
         }
 
@@ -56,7 +64,7 @@ namespace LmpCommon.Message.Base
         
         public int GetMessageSize()
         {
-            return sizeof(long) + sizeof(ushort) * 3 + InternalGetMessageSize();
+            return sizeof(long) + sizeof(ushort) * 3 + sizeof(byte) + InternalGetMessageSize();
         }
 
         internal abstract int InternalGetMessageSize();

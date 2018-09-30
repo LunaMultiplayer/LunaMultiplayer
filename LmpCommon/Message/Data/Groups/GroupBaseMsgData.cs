@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Groups
     {
         /// <inheritdoc />
         internal GroupBaseMsgData() { }
+        public override bool CompressCondition => false;
         public override ushort SubType => (ushort)(int)GroupMessageType;
 
         public virtual GroupMessageType GroupMessageType => throw new NotImplementedException();

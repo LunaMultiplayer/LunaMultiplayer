@@ -7,6 +7,7 @@ namespace LmpCommon.Message.Data
     {
         /// <inheritdoc />
         internal ModMsgData() { }
+        public override bool CompressCondition => false;
 
         /// <summary>
         /// Name of the mod that creates this msg
