@@ -38,7 +38,7 @@ namespace LmpClient.ModuleStore
         {
             var moduleValues = new List<ModuleDefinition>();
 
-            foreach (var file in Directory.GetFiles(CustomPartSyncFolder, "*.xml"))
+            foreach (var file in Directory.GetFiles(CustomPartSyncFolder, "*.xml", SearchOption.AllDirectories))
             {
                 var moduleDefinition = LunaXmlSerializer.ReadXmlFromPath<ModuleDefinition>(file);
                 moduleDefinition.ModuleName = Path.GetFileNameWithoutExtension(file);
