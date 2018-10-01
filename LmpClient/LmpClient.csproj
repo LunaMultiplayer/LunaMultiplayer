@@ -40,12 +40,15 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\External\Dependencies\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="mcs">
+      <HintPath>..\External\Dependencies\mcs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Threading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
