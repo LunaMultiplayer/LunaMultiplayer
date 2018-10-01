@@ -44,7 +44,7 @@
 - [x] Every network message is cached in order to reduce the garbage collector spikes.
 - [x] Based on tasks instead of threads.
 - [x] Supports career and science modes.
-- [ ] [QuickLZ](http://www.quicklz.com) for fast compression.
+- [x] Cached [QuickLZ](http://www.quicklz.com) for fast compression without generating garbage.
 - [ ] Support for groups/companies inside career and science modes.
 
 Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-install-LMP), [run](../../wiki/How-to-play-with-LMP), [build](../../wiki/How-to-compile-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP among other things

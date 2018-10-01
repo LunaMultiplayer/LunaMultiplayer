@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using CachedQuickLz;
+using Lidgren.Network;
 using LmpCommon.Message.Base;
 using LmpCommon.Message.Types;
 using System;
@@ -29,6 +30,7 @@ namespace LmpCommon.Message.Data.Vessel
             GuidUtil.Serialize(DominantVesselId, lidgrenMsg);
             GuidUtil.Serialize(WeakVesselId, lidgrenMsg);
 
+            CachedQlz.Compress(ref FinalVesselData, ref NumBytes);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(FinalVesselData, 0, NumBytes);
         }
@@ -46,6 +48,7 @@ namespace LmpCommon.Message.Data.Vessel
                 FinalVesselData = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(FinalVesselData, 0, NumBytes);
+            CachedQlz.Decompress(ref FinalVesselData, out NumBytes);
         }
         
         internal override int InternalGetMessageSize()

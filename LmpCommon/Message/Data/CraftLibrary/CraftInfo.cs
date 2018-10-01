@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using CachedQuickLz;
+using Lidgren.Network;
 using LmpCommon.Enums;
 using LmpCommon.Message.Base;
 
@@ -18,6 +19,8 @@ namespace LmpCommon.Message.Data.CraftLibrary
             lidgrenMsg.Write(FolderName);
             lidgrenMsg.Write(CraftName);
             lidgrenMsg.Write((int)CraftType);
+
+            CachedQlz.Compress(ref Data, ref NumBytes);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
@@ -34,6 +37,7 @@ namespace LmpCommon.Message.Data.CraftLibrary
                 Data = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
+            CachedQlz.Decompress(ref Data, out NumBytes);
         }
 
         public int GetByteCount()

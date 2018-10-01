@@ -61,20 +61,6 @@ namespace LmpCommon.Message.Base
             return sizeof(long) + sizeof(ushort) * 3 + sizeof(byte) + InternalGetMessageSize();
         }
 
-        protected static void CompressByteArray(ref byte[] data, ref int numBytes)
-        {
-            var compressedData = CachedQuickLz.CachedQlz.Compress(data, numBytes, out numBytes);
-            CachedQuickLz.ArrayPool<byte>.Recycle(data);
-            data = compressedData;
-        }
-
-        protected static void DecompressByteArray(ref byte[] data, out int numBytes)
-        {
-            var decompressedData = CachedQuickLz.CachedQlz.Decompress(data, out numBytes);
-            CachedQuickLz.ArrayPool<byte>.Recycle(data);
-            data = decompressedData;
-        }
-
         internal abstract int InternalGetMessageSize();
     }
 }

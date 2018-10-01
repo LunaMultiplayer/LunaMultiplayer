@@ -12,7 +12,9 @@ namespace LmpCommon.Message.Data.Flag
         public byte[] FlagData = new byte[0];
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
-        {
+        {            
+            //Do not compress this message type. Flags are already compressed
+
             lidgrenMsg.Write(Owner);
             lidgrenMsg.Write(FlagName);
             lidgrenMsg.Write(NumBytes);

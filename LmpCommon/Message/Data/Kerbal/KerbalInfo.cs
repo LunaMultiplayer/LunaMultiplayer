@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using CachedQuickLz;
+using Lidgren.Network;
 using LmpCommon.Message.Base;
 
 namespace LmpCommon.Message.Data.Kerbal
@@ -13,6 +14,7 @@ namespace LmpCommon.Message.Data.Kerbal
         {
             lidgrenMsg.Write(KerbalName);
 
+            CachedQlz.Compress(ref KerbalData, ref NumBytes);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(KerbalData, 0, NumBytes);
         }
@@ -26,6 +28,7 @@ namespace LmpCommon.Message.Data.Kerbal
                 KerbalData = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(KerbalData, 0, NumBytes);
+            CachedQlz.Decompress(ref KerbalData, out NumBytes);
         }
 
         public int GetByteCount()

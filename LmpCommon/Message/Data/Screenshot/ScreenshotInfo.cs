@@ -15,10 +15,13 @@ namespace LmpCommon.Message.Data.Screenshot
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
+            //Do not compress this message type. Screenshots are already compressed
+
             lidgrenMsg.Write(FolderName);
             lidgrenMsg.Write(DateTaken);
             lidgrenMsg.Write(Width);
             lidgrenMsg.Write(Height);
+
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }

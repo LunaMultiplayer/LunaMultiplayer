@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using CachedQuickLz;
+using Lidgren.Network;
 using LmpCommon.Message.Base;
 
 namespace LmpCommon.Message.Data.Scenario
@@ -13,6 +14,8 @@ namespace LmpCommon.Message.Data.Scenario
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(Module);
+
+            CachedQlz.Compress(ref Data, ref NumBytes);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
@@ -26,6 +29,7 @@ namespace LmpCommon.Message.Data.Scenario
                 Data = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
+            CachedQlz.Decompress(ref Data, out NumBytes);
         }
 
         public int GetByteCount()

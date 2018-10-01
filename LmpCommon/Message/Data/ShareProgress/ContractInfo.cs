@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using CachedQuickLz;
+using Lidgren.Network;
 using LmpCommon.Message.Base;
 using System;
 
@@ -13,15 +14,11 @@ namespace LmpCommon.Message.Data.ShareProgress
         public int NumBytes;
         public byte[] Data = new byte[0];
 
-        public ContractInfo()
-        {
-            
-        }
+        public ContractInfo() { }
 
         /// <summary>
         /// Copy constructor.
         /// </summary>
-        /// <param name="copyFrom"></param>
         public ContractInfo(ContractInfo copyFrom)
         {
             ContractGuid = copyFrom.ContractGuid;
@@ -30,11 +27,14 @@ namespace LmpCommon.Message.Data.ShareProgress
                 Data = new byte[NumBytes];
 
             Array.Copy(copyFrom.Data, Data, NumBytes);
+
         }
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             GuidUtil.Serialize(ContractGuid, lidgrenMsg);
+
+            CachedQlz.Compress(ref Data, ref NumBytes);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
@@ -48,6 +48,7 @@ namespace LmpCommon.Message.Data.ShareProgress
                 Data = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
+            CachedQlz.Decompress(ref Data, out NumBytes);
         }
 
         public int GetByteCount()
