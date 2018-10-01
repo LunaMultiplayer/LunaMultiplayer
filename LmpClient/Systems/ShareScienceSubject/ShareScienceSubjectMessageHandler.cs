@@ -59,10 +59,10 @@ namespace LmpClient.Systems.ShareScienceSubject
         /// </summary>
         private static ScienceSubject ConvertByteArrayToScienceSubject(byte[] data, int numBytes)
         {
-            ConfigNode node;
+            var node = new ConfigNode("Science");
             try
             {
-                node = ConfigNodeSerializer.Deserialize(data, numBytes);
+                node.AddData(ConfigNodeSerializer.Deserialize(data, numBytes));
             }
             catch (Exception e)
             {
@@ -70,13 +70,7 @@ namespace LmpClient.Systems.ShareScienceSubject
                 return null;
             }
 
-            if (node == null)
-            {
-                LunaLog.LogError("[LMP]: Error, the science subject configNode was null.");
-                return null;
-            }
-
-            return new ScienceSubject(node.GetNode("Science"));
+            return new ScienceSubject(node);
         }
     }
 }
