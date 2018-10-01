@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using LmpClient.ModuleStore.Patching;
 using UnityEngine;
 using PartModulePatcher = LmpClient.ModuleStore.Patching.PartModulePatcher;
 
@@ -236,6 +237,7 @@ namespace LmpClient
             LmpBaseEvent.Awake();
             HarmonyPatcher.Awake();
             PartModulePatcher.Awake();
+            InjectorsPatcher.Awake();
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
 

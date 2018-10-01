@@ -78,7 +78,6 @@ namespace LmpClient.ModuleStore.Patching
                     try
                     {
                         LunaLog.Log($"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-
                         HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, BackupAndCallTranspilerMethod);
                     }
                     catch

@@ -47,9 +47,6 @@
       <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="mcs">
-      <HintPath>..\External\Dependencies\mcs.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Threading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\TPL4Unity.1.0.0\lib\net35\System.Threading.dll</HintPath>
@@ -149,7 +146,10 @@
     <Compile Include="Localization\Structures\CompatibleDialogText.cs" />
     <Compile Include="Localization\Structures\UpdateWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
+    <Compile Include="ModuleStore\Injectors\Base\BaseInjector.cs" />
+    <Compile Include="ModuleStore\Injectors\KIS\KISInjector.cs" />
     <Compile Include="ModuleStore\Patching\FieldChangeTranspiler.cs" />
+    <Compile Include="ModuleStore\Patching\InjectorsPatcher.cs" />
     <Compile Include="ModuleStore\Patching\PartModulePatcher.cs" />
     <Compile Include="ModuleStore\Patching\TestModule.cs" />
     <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />
