@@ -36,18 +36,20 @@ namespace LmpClient.Systems.Status
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
             MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            MyPlayerStatus.StatusText = StatusTexts.Syncing;
+            MyPlayerStatus.StatusText = LastPlayerStatus.StatusText = StatusTexts.Syncing;
+            MyPlayerStatus.VesselText = LastPlayerStatus.VesselText = string.Empty;
+
+            MessageSender.SendOwnStatus();
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckPlayerStatus));
-            MessageSender.SendOwnStatus();
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             PlayerStatusList.Clear();
-            MyPlayerStatus.StatusText = StatusTexts.Syncing;
         }
 
         #endregion
@@ -81,7 +83,7 @@ namespace LmpClient.Systems.Status
 
         private void CheckPlayerStatus()
         {
-            if (Enabled)
+            if (Enabled && HighLogic.LoadedScene >= GameScenes.SPACECENTER && HighLogic.LoadedScene <= GameScenes.TRACKSTATION)
             {
                 MyPlayerStatus.VesselText = GetVesselText();
                 MyPlayerStatus.StatusText = GetStatusText();
@@ -149,14 +151,14 @@ namespace LmpClient.Systems.Status
             return StrBuilder.Append(StatusTexts.Spectating).Append(' ').Append(LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id)).ToString();
         }
 
-        private static string GetStatusText()
+        private string GetStatusText()
         {
             switch (HighLogic.LoadedScene)
             {
                 case GameScenes.FLIGHT:
                     if (FlightGlobals.ActiveVessel != null)
                         return !VesselCommon.IsSpectating ? GetCurrentShipStatus() : GetSpectatingShipStatus();
-                    return StatusTexts.Loading;
+                    break;
                 case GameScenes.EDITOR:
                     switch (EditorDriver.editorFacility)
                     {
@@ -165,16 +167,14 @@ namespace LmpClient.Systems.Status
                         case EditorFacility.SPH:
                             return StatusTexts.BuildingSph;
                     }
-                    return StatusTexts.Building;
+                    break;
                 case GameScenes.SPACECENTER:
                     return StatusTexts.SpaceCenter;
                 case GameScenes.TRACKSTATION:
                     return StatusTexts.TrackStation;
-                case GameScenes.LOADING:
-                    return StatusTexts.Loading;
-                default:
-                    return StatusTexts.Other;
             }
+
+            return MyPlayerStatus.StatusText;
         }
 
         #endregion

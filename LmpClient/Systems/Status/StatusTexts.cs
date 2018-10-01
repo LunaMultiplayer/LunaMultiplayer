@@ -19,12 +19,9 @@
         public static string WaitingControl = "Waiting for vessel control";
         public static string Spectating = "Spectating";
 
-        public static string Loading = "Loading";
         public static string BuildingVab = "Building in VAB";
         public static string BuildingSph = "Building in SPH";
-        public static string Building = "Building";
         public static string SpaceCenter = "At Space Center";
         public static string TrackStation = "At Tracking Station";
-        public static string Other = "Other";
     }
 }
