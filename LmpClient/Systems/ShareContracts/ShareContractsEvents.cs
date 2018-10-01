@@ -83,7 +83,8 @@ namespace LmpClient.Systems.ShareContracts
 
         public void ContractParameterChanged(Contract contract, ContractParameter contractParameter)
         {
-            System.MessageSender.SendContractMessage(contract);
+            //Do not send contract parameter changes as other players might override them
+            //See: https://github.com/LunaMultiplayer/LunaMultiplayer/issues/186
             LunaLog.Log($"Contract parameter changed on:{contract.ContractGuid}");
         }
 
