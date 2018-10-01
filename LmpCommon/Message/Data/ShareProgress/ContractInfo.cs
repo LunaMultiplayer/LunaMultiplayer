@@ -27,7 +27,6 @@ namespace LmpCommon.Message.Data.ShareProgress
                 Data = new byte[NumBytes];
 
             Array.Copy(copyFrom.Data, Data, NumBytes);
-
         }
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
