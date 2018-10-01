@@ -147,6 +147,8 @@ namespace LmpClient.Systems.VesselProtoSys
                         var protoVessel = vesselProto.CreateProtoVessel();
                         keyVal.Value.Recycle(vesselProto);
 
+                        if (protoVessel == null) return;
+
                         var existingVessel = FlightGlobals.fetch.LmpFindVessel(vesselProto.VesselId);
                         if (existingVessel == null)
                         {
