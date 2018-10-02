@@ -31,7 +31,6 @@ namespace LmpClient.Systems.VesselPositionSys
         }
 
         public CelestialBody Body => GetBody(BodyIndex);
-        public CelestialBody LerpBody => LerpPercentage < 0.5 ? GetBody(BodyIndex) : GetBody(Target.BodyIndex);
 
         public VesselPositionUpdate Target { get; set; }
 
