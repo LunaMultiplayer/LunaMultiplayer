@@ -2,7 +2,7 @@
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Systems.Mod;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
 using LmpClient.Windows.BannedParts;
@@ -137,7 +137,7 @@ namespace LmpClient.Systems.VesselProtoSys
             {
                 foreach (var keyVal in VesselProtos)
                 {
-                    if (keyVal.Value.TryPeek(out var vesselProto) && vesselProto.GameTime <= TimeSyncerSystem.UniversalTime)
+                    if (keyVal.Value.TryPeek(out var vesselProto) && vesselProto.GameTime <= TimeSyncSystem.UniversalTime)
                     {
                         keyVal.Value.TryDequeue(out _);
 

@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Client;
@@ -71,7 +71,7 @@ namespace LmpClient.Systems.VesselProtoSys
                 if (numBytes > 0)
                 {
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    msgData.GameTime = TimeSyncerSystem.UniversalTime;
+                    msgData.GameTime = TimeSyncSystem.UniversalTime;
                     msgData.VesselId = protoVessel.vesselID;
                     msgData.NumBytes = numBytes;
                     if (msgData.Data.Length < numBytes)

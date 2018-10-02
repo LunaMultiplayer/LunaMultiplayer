@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
@@ -22,7 +22,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             flightState.CopyFrom(FlightGlobals.ActiveVessel.ctrlState);
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFlightStateMsgData>();
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
 
             msgData.VesselId = FlightGlobals.ActiveVessel.id;

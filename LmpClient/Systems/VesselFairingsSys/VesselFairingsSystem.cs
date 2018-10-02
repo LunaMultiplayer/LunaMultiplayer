@@ -1,5 +1,5 @@
 ﻿using LmpClient.Base;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using System;
 using System.Collections.Concurrent;
 
@@ -45,7 +45,7 @@ namespace LmpClient.Systems.VesselFairingsSys
         {
             foreach (var keyVal in VesselFairings)
             {
-                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)
+                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncSystem.UniversalTime)
                 {
                     keyVal.Value.TryDequeue(out update);
                     update.ProcessFairing();

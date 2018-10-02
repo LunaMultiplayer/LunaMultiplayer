@@ -243,7 +243,7 @@
     <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesMessageSender.cs" />
     <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesSystem.cs" />
     <Compile Include="Systems\Status\StatusTexts.cs" />
-    <Compile Include="Systems\TimeSyncer\TimerSyncerEvents.cs" />
+    <Compile Include="Systems\TimeSync\TimerSyncEvents.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupEvents.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewEvents.cs" />
@@ -439,7 +439,7 @@
     <Compile Include="Systems\Status\StatusSystem.cs" />
     <Compile Include="Systems\Scenario\ScenarioSystem.cs" />
     <Compile Include="Systems\SettingsSys\SettingsSystem.cs" />
-    <Compile Include="Systems\TimeSyncer\TimeSyncerSystem.cs" />
+    <Compile Include="Systems\TimeSync\TimeSyncSystem.cs" />
     <Compile Include="Systems\Toolbar\ToolbarSystem.cs" />
     <Compile Include="Utilities\UniverseConverter.cs" />
     <Compile Include="Windows\ServerList\ServerListDrawer.cs" />

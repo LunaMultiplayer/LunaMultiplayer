@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
@@ -35,7 +35,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         {
             LunaLog.Log($"[LMP]: Removing {vesselId} from the server");
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselRemoveMsgData>();
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.VesselId = vesselId;
             msgData.AddToKillList = keepVesselInRemoveList;
 

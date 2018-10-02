@@ -18,7 +18,7 @@ using LmpClient.Systems.ShareScience;
 using LmpClient.Systems.ShareScienceSubject;
 using LmpClient.Systems.ShareStrategy;
 using LmpClient.Systems.ShareTechnology;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselActionGroupSys;
 using LmpClient.Systems.VesselCrewSys;
 using LmpClient.Systems.VesselDockSys;
@@ -136,7 +136,7 @@ namespace LmpClient.Windows.Systems
             _timeSyncer = GUILayout.Toggle(_timeSyncer, "Time sync system", ButtonStyle);
             if (_timeSyncer)
             {
-                TimeSyncerSystem.Singleton.Enabled = GUILayout.Toggle(TimeSyncerSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                TimeSyncSystem.Singleton.Enabled = GUILayout.Toggle(TimeSyncSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             //Toolbar = GUILayout.Toggle(Toolbar, "Toolbar system", ButtonStyle);
             //if (Toolbar)

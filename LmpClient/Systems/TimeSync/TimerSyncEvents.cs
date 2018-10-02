@@ -1,8 +1,8 @@
 ﻿using LmpClient.Base;
 
-namespace LmpClient.Systems.TimeSyncer
+namespace LmpClient.Systems.TimeSync
 {
-    public class TimerSyncerEvents:SubSystem<TimeSyncerSystem>
+    public class TimerSyncEvents : SubSystem<TimeSyncSystem>
     {
         /// <summary>
         /// When start to spectate force a sync with server

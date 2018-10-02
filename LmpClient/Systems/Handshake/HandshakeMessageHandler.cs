@@ -2,7 +2,7 @@
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.Mod;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Handshake;
 using LmpCommon.Message.Interface;
@@ -35,7 +35,7 @@ namespace LmpClient.Systems.Handshake
 
         public void HandleHandshakeReplyReceivedMessage(HandshakeReplyMsgData data)
         {
-            TimeSyncerSystem.ServerStartTime = data.ServerStartTime;
+            TimeSyncSystem.ServerStartTime = data.ServerStartTime;
             
             switch (data.Response)
             {

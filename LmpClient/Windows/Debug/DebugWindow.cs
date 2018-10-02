@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Network;
 using LmpClient.Systems.SafetyBubble;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Systems.Warp;
 using LmpCommon.Enums;
@@ -181,8 +181,8 @@ namespace LmpClient.Windows.Debug
                     StringBuilder.AppendLine($"Current subspace: {WarpSystem.Singleton.CurrentSubspace}.");
                     StringBuilder.AppendLine($"Current subspace time: {WarpSystem.Singleton.CurrentSubspaceTime}s.");
                     StringBuilder.AppendLine($"Current subspace time difference: {WarpSystem.Singleton.CurrentSubspaceTimeDifference}s.");
-                    StringBuilder.AppendLine($"Current Error: {Math.Round(TimeSyncerSystem.CurrentErrorSec * 1000, 0)}ms.");
-                    StringBuilder.AppendLine($"Current universe time: {Math.Round(TimeSyncerSystem.UniversalTime, 3)} UT");
+                    StringBuilder.AppendLine($"Current Error: {Math.Round(TimeSyncSystem.CurrentErrorSec * 1000, 0)}ms.");
+                    StringBuilder.AppendLine($"Current universe time: {Math.Round(TimeSyncSystem.UniversalTime, 3)} UT");
 
                     _subspaceText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
@@ -190,7 +190,7 @@ namespace LmpClient.Windows.Debug
 
                 if (_displayTimes)
                 {
-                    StringBuilder.AppendLine($"Server start time: {new DateTime(TimeSyncerSystem.ServerStartTime):yyyy-MM-dd HH-mm-ss.ffff}");
+                    StringBuilder.AppendLine($"Server start time: {new DateTime(TimeSyncSystem.ServerStartTime):yyyy-MM-dd HH-mm-ss.ffff}");
 
                     StringBuilder.AppendLine($"Computer clock time (UTC): {DateTime.UtcNow:HH:mm:ss.fff}");
                     StringBuilder.AppendLine($"Computer clock offset (minutes): {LunaComputerTime.SimulatedMinutesTimeOffset}");

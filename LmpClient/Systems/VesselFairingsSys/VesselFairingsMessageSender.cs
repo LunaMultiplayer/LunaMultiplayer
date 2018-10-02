@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
@@ -20,7 +20,7 @@ namespace LmpClient.Systems.VesselFairingsSys
             if (vessel == null) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFairingMsgData>();
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.VesselId = vessel.id;
             msgData.PartFlightId = partFlightId;
 

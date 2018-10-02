@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
@@ -225,7 +225,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
                 TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesMsInterval).TotalSeconds * 2
                 : double.MaxValue;
 
-            return update.GameTimeStamp < TimeSyncerSystem.UniversalTime - maxInterpolationTime;
+            return update.GameTimeStamp < TimeSyncSystem.UniversalTime - maxInterpolationTime;
         }
 
         /// <summary>

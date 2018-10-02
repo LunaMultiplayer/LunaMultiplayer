@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpCommon.Enums;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
@@ -46,7 +46,7 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
         private static VesselPartSyncUiFieldMsgData GetBaseMsg(Vessel vessel, Part part, string moduleName, string field)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncUiFieldMsgData>();
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.VesselId = vessel.id;
             msgData.PartFlightId = part.flightID;
             msgData.ModuleName = moduleName;

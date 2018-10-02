@@ -1,6 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using System;
 using System.Collections.Concurrent;
 
@@ -49,7 +49,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
         {
             foreach (var keyVal in VesselActionGroups)
             {
-                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)
+                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncSystem.UniversalTime)
                 {
                     keyVal.Value.TryDequeue(out update);
                     update.ProcessActionGroup();

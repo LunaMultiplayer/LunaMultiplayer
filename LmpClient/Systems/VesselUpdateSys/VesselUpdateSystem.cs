@@ -1,5 +1,5 @@
 ﻿using LmpClient.Base;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
@@ -58,7 +58,7 @@ namespace LmpClient.Systems.VesselUpdateSys
 
             foreach (var keyVal in VesselUpdates)
             {
-                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncerSystem.UniversalTime)
+                while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncSystem.UniversalTime)
                 {
                     keyVal.Value.TryDequeue(out update);
                     update.ProcessVesselUpdate();

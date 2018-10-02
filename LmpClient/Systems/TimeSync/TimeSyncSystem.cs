@@ -7,20 +7,21 @@ using System;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace LmpClient.Systems.TimeSyncer
+namespace LmpClient.Systems.TimeSync
 {
+    /// <inheritdoc />
     /// <summary>
     /// This system syncs the game time with the UTC time.
     /// Your game time may shift, for example when you computer hangs or there are lots of vessels etc.
     /// Those "micro hangs" should be corrected so all the players are in the same time as the UTC
     /// </summary>
-    public class TimeSyncerSystem : System<TimeSyncerSystem>
+    public class TimeSyncSystem : System<TimeSyncSystem>
     {
         #region Fields & properties
 
         #region Public
 
-        public TimerSyncerEvents TimerSyncerEvents { get; } = new TimerSyncerEvents();
+        public TimerSyncEvents TimerSyncEvents { get; } = new TimerSyncEvents();
 
         public static long ServerStartTime { get; set; }
 
@@ -52,19 +53,19 @@ namespace LmpClient.Systems.TimeSyncer
         /// <summary>
         /// If the time between UTC and game is greater than this, the game time will be fixed using the phisics clock (makes game go faster/slower)
         /// </summary>
-        private const int MinPhisicsClockMsError = 25;
+        private const int MinPhysicsClockMsError = 25;
         /// <summary>
         /// Minimum speed that the game can go
         /// </summary>
-        private const float MinPhisicsClockRate = 0.85f;
+        private const float MinPhysicsClockRate = 0.85f;
         /// <summary>
         /// Max speed that the game can go. If you put this number too high the game will lag a lot.
         /// </summary>
-        private const float MaxPhisicsClockRate = 1.20f;
+        private const float MaxPhysicsClockRate = 1.20f;
         /// <summary>
         /// Limit at which we won't fix the time with the GAME timescale
         /// </summary>
-        private const int MaxPhisicsClockMsError = 3500;
+        private const int MaxPhysicsClockMsError = 3500;
 
         #endregion
 
@@ -95,7 +96,7 @@ namespace LmpClient.Systems.TimeSyncer
 
         #region Base overrides
 
-        public override string SystemName { get; } = nameof(TimeSyncerSystem);
+        public override string SystemName { get; } = nameof(TimeSyncSystem);
 
         protected override void OnEnabled()
         {
@@ -117,7 +118,7 @@ namespace LmpClient.Systems.TimeSyncer
 
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, SyncTimeScale);
             
-            SpectateEvent.onStartSpectating.Add(TimerSyncerEvents.OnStartSpectating);
+            SpectateEvent.onStartSpectating.Add(TimerSyncEvents.OnStartSpectating);
         }
 
         protected override void OnDisabled()
@@ -126,7 +127,7 @@ namespace LmpClient.Systems.TimeSyncer
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, SetGameTime);
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, SyncTimeScale);
             
-            SpectateEvent.onStartSpectating.Remove(TimerSyncerEvents.OnStartSpectating);
+            SpectateEvent.onStartSpectating.Remove(TimerSyncEvents.OnStartSpectating);
             ServerStartTime = 0;
         }
 
@@ -136,8 +137,8 @@ namespace LmpClient.Systems.TimeSyncer
 
         /// <summary>
         /// Routine that checks our time against the server time and adjust it if needed.
-        /// We only adjust the GAME time. And we will only do if the time error is between <see cref="MinPhisicsClockMsError"/> and <see cref="MaxPhisicsClockMsError"/>
-        /// We cannot do it with more than <see cref="MaxPhisicsClockMsError"/> as then we would need a lot of time to catch up with the time error.
+        /// We only adjust the GAME time. And we will only do if the time error is between <see cref="MinPhysicsClockMsError"/> and <see cref="MaxPhysicsClockMsError"/>
+        /// We cannot do it with more than <see cref="MaxPhysicsClockMsError"/> as then we would need a lot of time to catch up with the time error.
         /// For greater errors we just fix the time with the StepClock
         /// </summary>
         private void SyncTimeScale()
@@ -149,16 +150,16 @@ namespace LmpClient.Systems.TimeSyncer
                 var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
                 var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
 
-                if (Math.Abs(currentError) < MinPhisicsClockMsError)
+                if (Math.Abs(currentError) < MinPhysicsClockMsError)
                 {
                     Time.timeScale = 1;
                 }
-                if (Math.Abs(currentError) > MinPhisicsClockMsError && Math.Abs(currentError) < MaxPhisicsClockMsError)
+                if (Math.Abs(currentError) > MinPhysicsClockMsError && Math.Abs(currentError) < MaxPhysicsClockMsError)
                 {
                     //Time error is not so big so we can fix it adjusting the physics time
                     SkewClock();
                 }
-                else if (Math.Abs(currentError) > MaxPhisicsClockMsError)
+                else if (Math.Abs(currentError) > MaxPhysicsClockMsError)
                 {
                     LunaLog.LogWarning($"[LMP] Adjusted time from: {UniversalTime} to: {targetTime} due to error: {currentError}");
                     ClockHandler.StepClock(targetTime);
@@ -210,8 +211,8 @@ namespace LmpClient.Systems.TimeSyncer
         {
             var timeWarpRate = (float)Math.Pow(2, -CurrentErrorSec);
 
-            //Set the physwarp rate between the max and min allowed
-            Time.timeScale = Mathf.Clamp(timeWarpRate, MinPhisicsClockRate, MaxPhisicsClockRate);
+            //Set the physics warp rate between the max and min allowed
+            Time.timeScale = Mathf.Clamp(timeWarpRate, MinPhysicsClockRate, MaxPhysicsClockRate);
         }
 
         #endregion

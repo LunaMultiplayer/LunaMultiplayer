@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
@@ -117,7 +117,7 @@ namespace LmpClient.Systems.VesselPositionSys
         {
             Profiler.BeginSample(nameof(SendVesselPositionUpdates));
 
-            if (PositionUpdateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating && !WarpSystem.Singleton.CurrentlyWarping)
+            if (PositionUpdateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
                 LastVesselUpdatesSentTime = LunaComputerTime.UtcNow;
@@ -222,7 +222,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
                 : double.MaxValue;
 
-            return update.GameTimeStamp < TimeSyncerSystem.UniversalTime - maxInterpolationTime;
+            return update.GameTimeStamp < TimeSyncSystem.UniversalTime - maxInterpolationTime;
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿using LmpClient.Extensions;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
@@ -121,7 +121,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
+            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp;
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {

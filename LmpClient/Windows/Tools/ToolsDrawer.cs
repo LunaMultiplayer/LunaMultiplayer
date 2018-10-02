@@ -1,4 +1,4 @@
-﻿using LmpClient.Systems.TimeSyncer;
+﻿using LmpClient.Systems.TimeSync;
 using LmpClient.VesselUtilities;
 using UniLinq;
 using UnityEngine;
@@ -19,7 +19,7 @@ namespace LmpClient.Windows.Tools
             }
             if (GUILayout.Button("Force time sync", ButtonStyle))
             {
-                TimeSyncerSystem.Singleton.ForceTimeSync();
+                TimeSyncSystem.Singleton.ForceTimeSync();
             }
 
             ReloadSection();

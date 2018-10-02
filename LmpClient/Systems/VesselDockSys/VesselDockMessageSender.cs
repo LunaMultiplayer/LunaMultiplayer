@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
@@ -45,7 +45,7 @@ namespace LmpClient.Systems.VesselDockSys
         private void CreateAndSendDockMessage(Guid weakVesselId, Guid dominantVesselId, int subspaceId, byte[] vesselBytes)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselDockMsgData>();
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.WeakVesselId = weakVesselId;
             msgData.DominantVesselId = dominantVesselId;
 

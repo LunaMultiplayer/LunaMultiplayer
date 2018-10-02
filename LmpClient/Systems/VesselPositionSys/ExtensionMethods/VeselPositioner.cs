@@ -1,4 +1,4 @@
-﻿using LmpClient.Systems.TimeSyncer;
+﻿using LmpClient.Systems.TimeSync;
 using LmpCommon;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
@@ -39,16 +39,16 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
 
         private static void ApplyOrbitInterpolation(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
         {
-            var currentPos = update.KspOrbit.getRelativePositionAtUT(TimeSyncerSystem.UniversalTime);
-            var targetPos = target.KspOrbit.getRelativePositionAtUT(TimeSyncerSystem.UniversalTime);
+            var currentPos = update.KspOrbit.getRelativePositionAtUT(TimeSyncSystem.UniversalTime);
+            var targetPos = target.KspOrbit.getRelativePositionAtUT(TimeSyncSystem.UniversalTime);
 
-            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(TimeSyncerSystem.UniversalTime);
-            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(TimeSyncerSystem.UniversalTime);
+            var currentVel = update.KspOrbit.getOrbitalVelocityAtUT(TimeSyncSystem.UniversalTime);
+            var targetVel = target.KspOrbit.getOrbitalVelocityAtUT(TimeSyncSystem.UniversalTime);
 
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, percentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, percentage);
 
-            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, TimeSyncerSystem.UniversalTime);
+            vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, TimeSyncSystem.UniversalTime);
         }
 
         private static void ApplyInterpolationsToLoadedVessel(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
@@ -68,7 +68,7 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             var rotation = (Quaternion)lerpedBody.rotation * currentSurfaceRelRotation;
             var position = vessel.situation <= Vessel.Situations.PRELAUNCH ? 
                 lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) : 
-                vessel.orbit.getPositionAtUT(TimeSyncerSystem.UniversalTime);
+                vessel.orbit.getPositionAtUT(TimeSyncSystem.UniversalTime);
 
             SetLoadedVesselPositionAndRotation(vessel, position, rotation);
         }

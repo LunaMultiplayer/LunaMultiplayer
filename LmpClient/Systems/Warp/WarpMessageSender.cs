@@ -2,7 +2,7 @@
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Warp;
 using LmpCommon.Message.Interface;
@@ -34,7 +34,7 @@ namespace LmpClient.Systems.Warp
         public void SendNewSubspace()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<WarpNewSubspaceMsgData>();
-            msgData.ServerTimeDifference = TimeSyncerSystem.UniversalTime - TimeSyncerSystem.ServerClockSec;
+            msgData.ServerTimeDifference = TimeSyncSystem.UniversalTime - TimeSyncSystem.ServerClockSec;
             msgData.PlayerCreator = SettingsSystem.CurrentSettings.PlayerName;
             //we don't send the SubspaceKey as it will be given by the server except when warping that we set it to -1
 

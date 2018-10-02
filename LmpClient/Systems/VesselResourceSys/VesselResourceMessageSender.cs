@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
@@ -23,7 +23,7 @@ namespace LmpClient.Systems.VesselResourceSys
             var resourceCount = 0;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselResourceMsgData>();
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.VesselId = vessel.id;
 
             for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)

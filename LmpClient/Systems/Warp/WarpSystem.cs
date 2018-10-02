@@ -3,7 +3,7 @@ using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
@@ -212,7 +212,7 @@ namespace LmpClient.Systems.Warp
             get
             {
                 if (CurrentlyWarping)
-                    return TimeSyncerSystem.UniversalTime - TimeSyncerSystem.ServerClockSec;
+                    return TimeSyncSystem.UniversalTime - TimeSyncSystem.ServerClockSec;
 
                 return Subspaces.TryGetValue(CurrentSubspace, out var time) ? time : 0;
             }
@@ -223,7 +223,7 @@ namespace LmpClient.Systems.Warp
         /// </summary>
         public double GetSubspaceTime(int subspace)
         {
-            return Subspaces.ContainsKey(subspace) ? TimeSyncerSystem.ServerClockSec + Subspaces[subspace] : 0d;
+            return Subspaces.ContainsKey(subspace) ? TimeSyncSystem.ServerClockSec + Subspaces[subspace] : 0d;
         }
 
         public int GetPlayerSubspace(string playerName)

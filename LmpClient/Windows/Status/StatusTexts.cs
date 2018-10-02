@@ -1,6 +1,6 @@
-﻿using LmpClient.Systems.Warp;
+﻿using LmpClient.Systems.TimeSync;
+using LmpClient.Systems.Warp;
 using System.Text;
-using LmpClient.Systems.TimeSyncer;
 
 namespace LmpClient.Windows.Status
 {
@@ -48,7 +48,7 @@ namespace LmpClient.Windows.Status
 
         private static void AppendDeltaTime(double subspaceTime)
         {
-            var currentTime = TimeSyncerSystem.UniversalTime;
+            var currentTime = TimeSyncSystem.UniversalTime;
             if (subspaceTime < currentTime)
             {
                 StringBuilder.Append(NegativeDeltaTimePrefix).Append(KSPUtil.PrintTimeCompact(currentTime - subspaceTime, false));

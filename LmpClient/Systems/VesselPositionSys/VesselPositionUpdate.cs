@@ -1,6 +1,6 @@
 ﻿using LmpClient.Extensions;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselPositionSys.ExtensionMethods;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
@@ -216,13 +216,13 @@ namespace LmpClient.Systems.VesselPositionSys
                 return 0;
 
             //If the vessel is in atmo, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin if we are in a different subspace
-            if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
-                return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
+            if (subspaceId == -1 && timestamp < TimeSyncSystem.UniversalTime)
+                return (orbit.getObtAtUT(TimeSyncSystem.UniversalTime) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
 
             if (WarpSystem.Singleton.CurrentlyWarping || WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
             {
                 var timeDiff = WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(subspaceId);
-                return (orbit.getObtAtUT(TimeSyncerSystem.UniversalTime) - orbit.getObtAtUT(TimeSyncerSystem.UniversalTime - timeDiff)) * orbit.meanMotion;
+                return (orbit.getObtAtUT(TimeSyncSystem.UniversalTime) - orbit.getObtAtUT(TimeSyncSystem.UniversalTime - timeDiff)) * orbit.meanMotion;
             }
 
             return 0;
@@ -242,8 +242,8 @@ namespace LmpClient.Systems.VesselPositionSys
             //If the vessel is in atmo, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin if we are in a different subspace
             if (body.SiderealDayLength() > 0)
             {
-                if (subspaceId == -1 && timestamp < TimeSyncerSystem.UniversalTime)
-                    return Math.Abs((TimeSyncerSystem.UniversalTime - timestamp) * 360 / body.SiderealDayLength());
+                if (subspaceId == -1 && timestamp < TimeSyncSystem.UniversalTime)
+                    return Math.Abs((TimeSyncSystem.UniversalTime - timestamp) * 360 / body.SiderealDayLength());
 
                 if (WarpSystem.Singleton.CurrentlyWarping || WarpSystem.Singleton.SubspaceIsInThePast(subspaceId))
                 {
@@ -262,7 +262,7 @@ namespace LmpClient.Systems.VesselPositionSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
+            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp;
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {

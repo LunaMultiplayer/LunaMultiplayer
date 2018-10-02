@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
-using LmpClient.Systems.TimeSyncer;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
@@ -34,7 +34,7 @@ namespace LmpClient.Systems.VesselPositionSys
 
             var msgData = MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
-            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.GameTime = TimeSyncSystem.UniversalTime;
             try
             {
                 msgData.VesselId = vessel.id;
