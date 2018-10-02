@@ -5,6 +5,7 @@ using LmpClient.Events;
 using LmpClient.Events.Base;
 using LmpClient.Localization;
 using LmpClient.ModuleStore;
+using LmpClient.ModuleStore.Patching;
 using LmpClient.Network;
 using LmpClient.Systems;
 using LmpClient.Systems.Flag;
@@ -24,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using LmpClient.ModuleStore.Patching;
 using UnityEngine;
 using PartModulePatcher = LmpClient.ModuleStore.Patching.PartModulePatcher;
 
@@ -136,11 +136,6 @@ namespace LmpClient
                         foreach (var gravityEntry in BodiesGees)
                             gravityEntry.Key.GeeASL = gravityEntry.Value;
                     }
-
-                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready)
-                        HighLogic.CurrentGame.Parameters.Flight.CanLeaveToSpaceCenter = PauseMenu.canSaveAndExit == ClearToSaveStatus.CLEAR;
-                    else
-                        HighLogic.CurrentGame.Parameters.Flight.CanLeaveToSpaceCenter = true;
                 }
                 if (StartGame)
                 {
