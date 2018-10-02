@@ -117,8 +117,11 @@ namespace LmpClient.Systems.ShareContracts
         {
             //Do not send contract parameter changes as other players might override them
             //See: https://github.com/LunaMultiplayer/LunaMultiplayer/issues/186
-            if (contractParameter.State == ParameterState.Complete)
-                System.MessageSender.SendContractMessage(contract);
+            
+            //TODO: Perhaps we can send only when the parameters are complete?
+            //if (contractParameter.State == ParameterState.Complete)
+            //    System.MessageSender.SendContractMessage(contract);
+
             LunaLog.Log($"Contract parameter changed on:{contract.ContractGuid}");
         }
 
