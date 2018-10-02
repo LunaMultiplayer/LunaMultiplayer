@@ -5,6 +5,7 @@ using LmpClient.Systems.TimeSyncer;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
+using LmpCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -23,16 +24,17 @@ namespace LmpClient.Systems.VesselPositionSys
         public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(VesselCommon.PositionAndFlightStateMessageOffsetMs, 
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
 
-        private static float LastVesselUpdatesSentTime { get; set; }
+        private static DateTime LastVesselUpdatesSentTime { get; set; } = LunaComputerTime.UtcNow;
 
         private static int UpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval 
             / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
-        private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval
+
+        private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity => 2 * (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval
             / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
 
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
-            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > UpdateIntervalLockedToUnity :
-            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SecondaryVesselUpdatesUpdateIntervalLockedToUnity;
+            (LunaComputerTime.UtcNow - LastVesselUpdatesSentTime).TotalMilliseconds > UpdateIntervalLockedToUnity :
+            (LunaComputerTime.UtcNow - LastVesselUpdatesSentTime).TotalMilliseconds > SecondaryVesselUpdatesUpdateIntervalLockedToUnity;
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -118,7 +120,7 @@ namespace LmpClient.Systems.VesselPositionSys
             if (PositionUpdateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating && !WarpSystem.Singleton.CurrentlyWarping)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
-                LastVesselUpdatesSentTime = Time.time;
+                LastVesselUpdatesSentTime = LunaComputerTime.UtcNow;
             }
 
             Profiler.EndSample();

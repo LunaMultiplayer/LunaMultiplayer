@@ -5,11 +5,11 @@ using LmpClient.Systems.TimeSyncer;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
+using LmpCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using UnityEngine;
 using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.VesselFlightStateSys
@@ -25,11 +25,11 @@ namespace LmpClient.Systems.VesselFlightStateSys
 
         public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(VesselCommon.PositionAndFlightStateMessageOffsetMs, SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
 
-        private static float LastVesselFlightStateSentTime { get; set; }
+        private static DateTime LastVesselFlightStateSentTime { get; set; } = LunaComputerTime.UtcNow;
 
         private static bool TimeToSendFlightStateUpdate => VesselCommon.PlayerVesselsNearby() ?
-            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselUpdatesMsInterval :
-            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval;
+            (LunaComputerTime.UtcNow - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselUpdatesMsInterval :
+            (LunaComputerTime.UtcNow - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval;
 
         public bool FlightStateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && HighLogic.LoadedScene == GameScenes.FLIGHT &&
                                               FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -145,7 +145,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             if (FlightStateSystemReady && TimeToSendFlightStateUpdate && !VesselCommon.IsSpectating && !FlightGlobals.ActiveVessel.isEVA)
             {
                 MessageSender.SendCurrentFlightState();
-                LastVesselFlightStateSentTime = Time.time;
+                LastVesselFlightStateSentTime = LunaComputerTime.UtcNow;
             }
 
             Profiler.EndSample();
