@@ -2,6 +2,7 @@
 using LmpUpdater.Appveyor;
 using LmpUpdater.Github;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,7 +32,17 @@ namespace MasterServer
         private static readonly string DllPath = Path.Combine(Directory.GetCurrentDirectory(), DllFileName);
         private static readonly AppDomainSetup DomainSetup = new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory };
 
-        private static Version CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version;
+        private static Version CurrentVersion
+        {
+            get
+            {
+                var dllVersion = FileVersionInfo.GetVersionInfo(DllPath).FileVersion;
+                var versionComponents = dllVersion.Split('.');
+
+                return new Version(int.Parse(versionComponents[0]), int.Parse(versionComponents[1]), int.Parse(versionComponents[2]));
+            }
+        }
+
         private static AppDomain LmpDomain { get; set; }
         private static string[] Arguments { get; set; }
 

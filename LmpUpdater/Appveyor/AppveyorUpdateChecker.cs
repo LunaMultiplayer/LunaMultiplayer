@@ -37,8 +37,10 @@ namespace LmpUpdater.Appveyor
 
         public static Version GetLatestVersion()
         {
-            return LatestBuild != null ?
-                new Version(LatestBuild.build.version.Substring(0, LatestBuild.build.version.LastIndexOf('.'))) :
+            var versionComponents = LatestBuild?.build.version.Split('.');
+
+            return versionComponents != null && versionComponents.Length == 3 ?
+                new Version(int.Parse(versionComponents[0]), int.Parse(versionComponents[1]), int.Parse(versionComponents[2])) :
                 new Version("0.0.0");
         }
     }

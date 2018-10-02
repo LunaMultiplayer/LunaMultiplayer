@@ -38,8 +38,13 @@ namespace LmpUpdater.Github
 
         public static Version GetLatestVersion()
         {
-            return LatestRelease != null ?
-                new Version(new string(LatestRelease.TagName.Where(c => char.IsDigit(c) || char.IsPunctuation(c)).ToArray())) :
+            var jsonObj = LatestRelease;
+            if (jsonObj == null) return new Version("0.0.0");
+
+            var version = new string(jsonObj.TagName.Where(c => char.IsDigit(c) || char.IsPunctuation(c)).ToArray()).Split('.');
+
+            return version.Length == 3 ?
+                new Version(int.Parse(version[0]), int.Parse(version[1]), int.Parse(version[2])) :
                 new Version("0.0.0");
         }
     }
