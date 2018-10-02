@@ -94,6 +94,7 @@
     <Compile Include="Extensions\FlightGlobalExtension.cs" />
     <Compile Include="Extensions\LinqExtention.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
+    <Compile Include="Extensions\PartExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />

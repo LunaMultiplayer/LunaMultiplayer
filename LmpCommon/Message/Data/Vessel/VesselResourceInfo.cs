@@ -10,6 +10,18 @@ namespace LmpCommon.Message.Data.Vessel
         public double Amount;
         public bool FlowState;
 
+        public VesselResourceInfo() { }
+
+        public VesselResourceInfo(VesselResourceInfo resource) => CopyFrom(resource);
+
+        public void CopyFrom(VesselResourceInfo resource)
+        {
+            PartFlightId = resource.PartFlightId;
+            ResourceName = resource.ResourceName;
+            Amount = resource.Amount;
+            FlowState = resource.FlowState;
+        }
+
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(PartFlightId);

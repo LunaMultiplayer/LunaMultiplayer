@@ -43,10 +43,21 @@ namespace LmpClient.Systems.VesselResourceSys
                     resourceSnapshot.amount = Resources[i].Amount;
                     resourceSnapshot.flowState = Resources[i].FlowState;
 
-                    if (resourceSnapshot.resourceRef == null) continue;
-
-                    resourceSnapshot.resourceRef.amount = Resources[i].Amount;
-                    resourceSnapshot.resourceRef.flowState = Resources[i].FlowState;
+                    //Using "resourceSnapshot.resourceRef" sometimes returns null so we also try to get the resource from the part...
+                    if (resourceSnapshot.resourceRef == null)
+                    {
+                        if (partSnapshot.partRef != null)
+                        {
+                            var foundResource = partSnapshot.partRef.FindResource(resourceSnapshot.resourceName);
+                            foundResource.amount = Resources[i].Amount;
+                            foundResource.flowState = Resources[i].FlowState;
+                        }
+                    }
+                    else
+                    {
+                        resourceSnapshot.resourceRef.amount = Resources[i].Amount;
+                        resourceSnapshot.resourceRef.flowState = Resources[i].FlowState;
+                    }
                 }
             }
         }

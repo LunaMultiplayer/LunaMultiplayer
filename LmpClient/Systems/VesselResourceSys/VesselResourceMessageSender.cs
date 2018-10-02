@@ -20,33 +20,56 @@ namespace LmpClient.Systems.VesselResourceSys
 
         public void SendVesselResources(Vessel vessel)
         {
-            Resources.Clear();
+            var resourceCount = 0;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselResourceMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
-            
+
             for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)
             {
                 for (var j = 0; j < vessel.protoVessel.protoPartSnapshots[i].resources.Count; j++)
                 {
                     var resource = vessel.protoVessel.protoPartSnapshots[i].resources[j].resourceRef;
+                    if (resource == null) continue;
 
-                    if(resource == null) continue;
-
-                    var resourceInfo = new VesselResourceInfo
+                    if (Resources.Count > resourceCount)
                     {
-                        ResourceName = resource.resourceName,
-                        PartFlightId = vessel.protoVessel.protoPartSnapshots[i].flightID,
-                        Amount = resource.amount,
-                        FlowState = resource.flowState
-                    };
-                    
-                    Resources.Add(resourceInfo);
+                        Resources[resourceCount].ResourceName = resource.resourceName;
+                        Resources[resourceCount].PartFlightId = vessel.protoVessel.protoPartSnapshots[i].flightID;
+                        Resources[resourceCount].Amount = resource.amount;
+                        Resources[resourceCount].FlowState = resource.flowState;
+                    }
+                    else
+                    {
+                        Resources.Add(new VesselResourceInfo
+                        {
+                            ResourceName = resource.resourceName,
+                            PartFlightId = vessel.protoVessel.protoPartSnapshots[i].flightID,
+                            Amount = resource.amount,
+                            FlowState = resource.flowState
+                        });
+                    }
+
+                    resourceCount++;
                 }
             }
-            
-            msgData.Resources = Resources.ToArray();
+
+            msgData.ResourcesCount = resourceCount;
+
+            if (msgData.Resources.Length < resourceCount)
+            {
+                msgData.Resources = new VesselResourceInfo[resourceCount];
+            }
+
+            for (var i = 0; i < resourceCount; i++)
+            {
+                if (msgData.Resources[i] == null)
+                    msgData.Resources[i] = new VesselResourceInfo(Resources[i]);
+                else
+                    msgData.Resources[i].CopyFrom(Resources[i]);
+            }
+
             SendMessage(msgData);
         }
     }
