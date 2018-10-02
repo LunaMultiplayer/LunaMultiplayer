@@ -81,6 +81,7 @@ namespace LmpClient.Systems.TimeSyncer
                     case GameScenes.TRACKSTATION:
                     case GameScenes.FLIGHT:
                     case GameScenes.SPACECENTER:
+                    case GameScenes.EDITOR:
                         return true;
                     default:
                         return false;
