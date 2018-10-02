@@ -67,10 +67,10 @@ xcopy /Y "%~dp0..\LmpClient\Resources\*.png" "%KSPPATH%\GameData\LunaMultiplayer
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\LmpClient\Resources\*.png" "%KSPPATH2%\GameData\LunaMultiplayer\Button")
 
 xcopy /Y /S "%~dp0..\LmpClient\Localization\XML\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Localization"
-IF DEFINED KSPPATH2 (xcopy /Y /E "%~dp0..\LmpClient\Localization\XML\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Localization")
+IF DEFINED KSPPATH2 (xcopy /Y /S "%~dp0..\LmpClient\Localization\XML\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Localization")
 
 xcopy /Y /S "%~dp0..\LmpClient\ModuleStore\XML\*.xml" "%KSPPATH%\GameData\LunaMultiplayer\PartSync"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\LmpClient\ModuleStore\XML\*.xml" "%KSPPATH2%\GameData\LunaMultiplayer\PartSync")
+IF DEFINED KSPPATH2 (xcopy /Y /S "%~dp0..\LmpClient\ModuleStore\XML\*.xml" "%KSPPATH2%\GameData\LunaMultiplayer\PartSync")
 
 xcopy /Y "%~dp0..\LmpClient\Resources\Icons\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Icons"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\LmpClient\Resources\Icons\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Icons")
