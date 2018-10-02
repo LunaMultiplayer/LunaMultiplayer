@@ -49,7 +49,6 @@ namespace LmpClient.Systems.VesselRemoveSys
             GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
 
             RevertEvent.onRevertedToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
-            RevertEvent.onRevertedToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
             RevertEvent.onReturnedToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
 
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
@@ -65,7 +64,6 @@ namespace LmpClient.Systems.VesselRemoveSys
             GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
 
             RevertEvent.onRevertedToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
-            RevertEvent.onRevertedToPrelaunch.Remove(VesselRemoveEvents.OnRevertToEditor);
             RevertEvent.onReturnedToEditor.Remove(VesselRemoveEvents.OnRevertToEditor);
         }
 
