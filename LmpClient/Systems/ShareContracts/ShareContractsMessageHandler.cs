@@ -2,6 +2,7 @@
 using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Systems.ShareCareer;
+using LmpClient.Systems.ShareExperimentalParts;
 using LmpClient.Systems.ShareFunds;
 using LmpClient.Systems.ShareReputation;
 using LmpClient.Systems.ShareScience;
@@ -53,6 +54,7 @@ namespace LmpClient.Systems.ShareContracts
             ShareFundsSystem.Singleton.StartIgnoringEvents();
             ShareScienceSystem.Singleton.StartIgnoringEvents();
             ShareReputationSystem.Singleton.StartIgnoringEvents();
+            ShareExperimentalPartsSystem.Singleton.StartIgnoringEvents();
 
             foreach (var cInfo in contractInfos)
             {
@@ -78,6 +80,7 @@ namespace LmpClient.Systems.ShareContracts
             ShareFundsSystem.Singleton.StopIgnoringEvents(true);
             ShareScienceSystem.Singleton.StopIgnoringEvents(true);
             ShareReputationSystem.Singleton.StopIgnoringEvents(true);
+            ShareExperimentalPartsSystem.Singleton.StopIgnoringEvents();
             GameEvents.Contract.onContractsListChanged.Fire();
             System.StopIgnoringEvents();
         }

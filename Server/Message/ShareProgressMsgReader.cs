@@ -44,6 +44,9 @@ namespace Server.Message
                 case ShareProgressMessageType.PartPurchase:
                     SharePartPurchaseSystem.PurchaseReceived(client, (ShareProgressPartPurchaseMsgData)data);
                     break;
+                case ShareProgressMessageType.ExperimentalPart:
+                    ShareExperimentalPartSystem.ExperimentalPartReceived(client, (ShareProgressExperimentalPartMsgData)data);
+                    break;
             }
         }
     }

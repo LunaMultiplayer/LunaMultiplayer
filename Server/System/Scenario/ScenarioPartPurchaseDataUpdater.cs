@@ -1,6 +1,6 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
-using System.Linq;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -8,9 +8,9 @@ namespace Server.System.Scenario
     public partial class ScenarioDataUpdater
     {
         /// <summary>
-        /// We received a part purchase message so update the scenario file accordingly
+        /// We received a experimental part message so update the scenario file accordingly
         /// </summary>
-        public static void WritePartPurchaseDataToFile(ShareProgressPartPurchaseMsgData partPurchaseMsg)
+        public static void WriteExperimentalPartDataToFile(ShareProgressExperimentalPartMsgData experimentalPartMsg)
         {
             Task.Run(() =>
             {
@@ -18,12 +18,31 @@ namespace Server.System.Scenario
                 {
                     if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
 
-                    var techNodes = scenario.GetNodes("Tech").Select(v => v.Value);
-                    var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == partPurchaseMsg.TechId);
-                    if (specificTechNode != null)
+                    var expPartNode = scenario.GetNode("ExpParts");
+                    if (expPartNode == null && experimentalPartMsg.Count > 0)
                     {
-                        specificTechNode.CreateValue(new CfgNodeValue<string, string>("part", partPurchaseMsg.PartName));
+                        scenario.AddNode(new ConfigNode("ExpParts", scenario));
+                        expPartNode = scenario.GetNode("ExpParts");
                     }
+
+                    var specificExpPart = expPartNode?.Value.GetValue(experimentalPartMsg.PartName);
+                    if (specificExpPart == null)
+                    {
+                        var newVal = new CfgNodeValue<string, string>(experimentalPartMsg.PartName,
+                            experimentalPartMsg.Count.ToString(CultureInfo.InvariantCulture));
+
+                        expPartNode?.Value.CreateValue(newVal);
+                    }
+                    else
+                    {
+                        if (experimentalPartMsg.Count == 0)
+                            expPartNode.Value.RemoveValue(specificExpPart.Value);
+                        else
+                            specificExpPart.Value = experimentalPartMsg.Count.ToString(CultureInfo.InvariantCulture);
+                    }
+
+                    if (expPartNode?.Value.GetAllValues().Count == 0)
+                        scenario.RemoveNode(expPartNode.Value);
                 }
             });
         }

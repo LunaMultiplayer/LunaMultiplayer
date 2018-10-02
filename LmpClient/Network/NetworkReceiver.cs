@@ -17,6 +17,7 @@ using LmpClient.Systems.Screenshot;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareAchievements;
 using LmpClient.Systems.ShareContracts;
+using LmpClient.Systems.ShareExperimentalParts;
 using LmpClient.Systems.ShareFunds;
 using LmpClient.Systems.SharePurchaseParts;
 using LmpClient.Systems.ShareReputation;
@@ -255,6 +256,9 @@ namespace LmpClient.Network
                             break;
                         case ShareProgressMessageType.PartPurchase:
                             SharePurchasePartsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ExperimentalPart:
+                            ShareExperimentalPartsSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;

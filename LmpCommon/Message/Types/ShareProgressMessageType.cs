@@ -12,5 +12,6 @@
         StrategyUpdate = 7,
         FacilityUpgrade = 8,
         PartPurchase = 9,
+        ExperimentalPart = 10,
     }
 }
