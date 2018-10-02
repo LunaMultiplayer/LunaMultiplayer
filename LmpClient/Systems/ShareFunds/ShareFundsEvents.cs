@@ -11,5 +11,26 @@ namespace LmpClient.Systems.ShareFunds
             LunaLog.Log($"Funds changed to: {funds} reason: {reason}");
             System.MessageSender.SendFundsMessage(funds, reason.ToString());
         }
+
+        public void RevertingDetected()
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void RevertingToEditorDetected(EditorFacility data)
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void LevelLoaded(GameScenes data)
+        {
+            if (System.Reverting)
+            {
+                System.Reverting = false;
+                System.StopIgnoringEvents(true);
+            }
+        }
     }
 }

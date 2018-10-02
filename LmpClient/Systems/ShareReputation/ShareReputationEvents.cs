@@ -11,5 +11,26 @@ namespace LmpClient.Systems.ShareReputation
             LunaLog.Log($"Reputation changed to: {reputation} reason: {reason}");
             System.MessageSender.SendReputationMsg(reputation, reason.ToString());
         }
+
+        public void RevertingDetected()
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void RevertingToEditorDetected(EditorFacility data)
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void LevelLoaded(GameScenes data)
+        {
+            if (System.Reverting)
+            {
+                System.Reverting = false;
+                System.StopIgnoringEvents(true);
+            }
+        }
     }
 }

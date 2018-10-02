@@ -10,5 +10,26 @@ namespace LmpClient.Systems.ShareScienceSubject
 
             System.MessageSender.SendScienceSubjectMessage(subject);
         }
+
+        public void RevertingDetected()
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void RevertingToEditorDetected(EditorFacility data)
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void LevelLoaded(GameScenes data)
+        {
+            if (System.Reverting)
+            {
+                System.Reverting = false;
+                System.StopIgnoringEvents(true);
+            }
+        }
     }
 }

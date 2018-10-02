@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using LmpClient.Events;
 using LmpClient.Systems.ShareProgress;
 using LmpCommon.Enums;
 using System.Collections.Generic;
@@ -26,11 +27,12 @@ namespace LmpClient.Systems.ShareScienceSubject
                 return _scienceSubjects;
             }
         }
-
-
+        
         protected override bool ShareSystemReady => ResearchAndDevelopment.Instance != null;
 
         protected override GameMode RelevantGameModes => GameMode.Career | GameMode.Science;
+
+        public bool Reverting { get; set; }
 
         protected override void OnEnabled()
         {
@@ -38,6 +40,11 @@ namespace LmpClient.Systems.ShareScienceSubject
 
             if (!CurrentGameModeIsRelevant) return;
             GameEvents.OnScienceRecieved.Add(ShareScienceSubjectEvents.ScienceRecieved);
+
+            RevertEvent.onRevertingToLaunch.Add(ShareScienceSubjectEvents.RevertingDetected);
+            RevertEvent.onReturningToEditor.Add(ShareScienceSubjectEvents.RevertingToEditorDetected);
+            GameEvents.onLevelWasLoadedGUIReady.Add(ShareScienceSubjectEvents.LevelLoaded);
+
         }
 
         protected override void OnDisabled()
@@ -46,6 +53,12 @@ namespace LmpClient.Systems.ShareScienceSubject
 
             //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.OnScienceRecieved.Remove(ShareScienceSubjectEvents.ScienceRecieved);
+
+            RevertEvent.onRevertingToLaunch.Remove(ShareScienceSubjectEvents.RevertingDetected);
+            RevertEvent.onReturningToEditor.Remove(ShareScienceSubjectEvents.RevertingToEditorDetected);
+            GameEvents.onLevelWasLoadedGUIReady.Remove(ShareScienceSubjectEvents.LevelLoaded);
+
+            Reverting = false;
             _lastScienceSubjects.Clear();
             _scienceSubjects = null;
         }
@@ -60,7 +73,6 @@ namespace LmpClient.Systems.ShareScienceSubject
         {
             base.RestoreState();
             Traverse.Create(ResearchAndDevelopment.Instance).Field("scienceSubjects").SetValue(_lastScienceSubjects);
-            _scienceSubjects = null;
         }
     }
 }

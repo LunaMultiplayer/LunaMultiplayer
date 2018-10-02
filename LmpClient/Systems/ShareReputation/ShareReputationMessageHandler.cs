@@ -1,10 +1,10 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Systems.ShareCareer;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using System.Collections.Concurrent;
-using LmpClient.Systems.ShareCareer;
 
 namespace LmpClient.Systems.ShareReputation
 {
@@ -30,9 +30,7 @@ namespace LmpClient.Systems.ShareReputation
 
         private static void ReputationUpdate(float reputation)
         {
-            System.StartIgnoringEvents();
-            Reputation.Instance.SetReputation(reputation, TransactionReasons.None);
-            System.StopIgnoringEvents();
+            System.SetReputationWithoutTriggeringEvent(reputation);
             LunaLog.Log($"ReputationUpdate received - reputation changed to: {reputation}");
         }
     }

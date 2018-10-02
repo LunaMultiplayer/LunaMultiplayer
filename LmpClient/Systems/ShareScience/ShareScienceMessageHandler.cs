@@ -29,9 +29,7 @@ namespace LmpClient.Systems.ShareScience
 
         private static void ScienceUpdate(float science)
         {
-            System.StartIgnoringEvents();
-            ResearchAndDevelopment.Instance.SetScience(science, TransactionReasons.None);
-            System.StopIgnoringEvents();
+            System.SetScienceWithoutTriggeringEvent(science);
             LunaLog.Log($"ScienceUpdate received - science changed to: {science}");
         }
     }

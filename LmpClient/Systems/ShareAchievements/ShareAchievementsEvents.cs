@@ -28,6 +28,27 @@ namespace LmpClient.Systems.ShareAchievements
             //LunaLog.Log("Achievement achieved:" + progressNode.Id);
         }
 
+        public void RevertingDetected()
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void RevertingToEditorDetected(EditorFacility data)
+        {
+            System.Reverting = true;
+            System.StartIgnoringEvents();
+        }
+
+        public void LevelLoaded(GameScenes data)
+        {
+            if (System.Reverting)
+            {
+                System.Reverting = false;
+                System.StopIgnoringEvents(true);
+            }
+        }
+
         #endregion
     }
 }
