@@ -214,7 +214,8 @@ namespace LmpClient.Systems.VesselPositionSys
             if (vessel?.situation >= Vessel.Situations.ORBITING)
                 return 0;
 
-            //If the vessel is in atmo, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin if we are in a different subspace
+            //If the vessel is in atmosphere, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin
+            //if we are in a different subspace
             if (subspaceId == -1 && timestamp < TimeSyncSystem.UniversalTime)
                 return (orbit.getObtAtUT(TimeSyncSystem.UniversalTime) - orbit.getObtAtUT(timestamp)) * orbit.meanMotion;
 
@@ -238,7 +239,8 @@ namespace LmpClient.Systems.VesselPositionSys
             if (vessel?.situation >= Vessel.Situations.ORBITING)
                 return 0;
 
-            //If the vessel is in atmo, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin if we are in a different subspace
+            //If the vessel is in atmosphere, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin
+            //if we are in a different subspace
             if (body.SiderealDayLength() > 0)
             {
                 if (subspaceId == -1 && timestamp < TimeSyncSystem.UniversalTime)
@@ -256,7 +258,7 @@ namespace LmpClient.Systems.VesselPositionSys
 
         /// <summary>
         /// This method adjust the extra interpolation duration in case we are lagging or too advanced.
-        /// The idea is that we replay the message at the correct time that is GameTimeWhenMEssageWasSent+InterpolationOffset
+        /// The idea is that we replay the message at the correct time that is GameTimeWhenMessageWasSent+InterpolationOffset
         /// In order to adjust we increase or decrease the interpolation duration so next packet matches the time more perfectly
         /// </summary>
         public void AdjustExtraInterpolationTimes()
