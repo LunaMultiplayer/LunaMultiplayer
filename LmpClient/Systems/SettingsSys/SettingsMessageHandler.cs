@@ -34,14 +34,12 @@ namespace LmpClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.MaxScreenshotHeight = msgData.MaxScreenshotHeight;
             SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs = msgData.MinScreenshotIntervalMs;
 
-            if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.Custom)
-            {
-                SettingsSystem.ServerSettings.ServerParameters =
-                    GameParameters.GetDefaultParameters(
-                        MainSystem.Singleton.ConvertGameMode(SettingsSystem.ServerSettings.GameMode),
-                        (GameParameters.Preset)SettingsSystem.ServerSettings.GameDifficulty);
-            }
-            else
+            SettingsSystem.ServerSettings.ServerParameters =
+                GameParameters.GetDefaultParameters(
+                    MainSystem.Singleton.ConvertGameMode(SettingsSystem.ServerSettings.GameMode),
+                    (GameParameters.Preset)SettingsSystem.ServerSettings.GameDifficulty);
+
+            if (SettingsSystem.ServerSettings.GameDifficulty == GameDifficulty.Custom)
             {
                 SettingsSystem.ServerSettings.ServerParameters = new GameParameters
                 {
@@ -73,7 +71,6 @@ namespace LmpClient.Systems.SettingsSys
                     },
                     Flight =
                     {
-                        CanQuickLoad = false, //Do not allow quickload, it's useless ina  multiplayer game
                         CanRestart = msgData.CanRevert,
                         CanLeaveToEditor = msgData.CanRevert
                     }
@@ -106,6 +103,9 @@ namespace LmpClient.Systems.SettingsSys
                     plasmaBlackout = msgData.PlasmaBlackout
                 };
             }
+
+            //Never allow quickload, it's useless in a multiplayer game
+            SettingsSystem.ServerSettings.ServerParameters.Flight.CanQuickLoad = false;
 
             MainSystem.NetworkState = ClientState.SettingsSynced;
         }
