@@ -2,7 +2,7 @@
 
 namespace LmpClient.Systems.TimeSync
 {
-    public class TimerSyncEvents : SubSystem<TimeSyncSystem>
+    public class TimeSyncEvents : SubSystem<TimeSyncSystem>
     {
         /// <summary>
         /// When start to spectate force a sync with server

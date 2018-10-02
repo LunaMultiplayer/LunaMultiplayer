@@ -243,7 +243,7 @@
     <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesMessageSender.cs" />
     <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesSystem.cs" />
     <Compile Include="Systems\Status\StatusTexts.cs" />
-    <Compile Include="Systems\TimeSync\TimerSyncEvents.cs" />
+    <Compile Include="Systems\TimeSync\TimeSyncEvents.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupEvents.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewEvents.cs" />

@@ -21,7 +21,7 @@ namespace LmpClient.Systems.TimeSync
 
         #region Public
 
-        public TimerSyncEvents TimerSyncEvents { get; } = new TimerSyncEvents();
+        public TimeSyncEvents TimerSyncEvents { get; } = new TimeSyncEvents();
 
         public static long ServerStartTime { get; set; }
 
