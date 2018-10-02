@@ -206,12 +206,12 @@ namespace LmpClient.Systems.VesselPositionSys
 
         /// <summary>
         /// Here we adjust the Mean anomaly according to the time of the subspace where the player send the message.
-        /// If we don't do this then the vessel will be in a incorrect position along the orbit as the epoch (the times) are not the same
+        /// If we don't do this then the vessel will be in a incorrect position along the orbit as the epoch is not the same
         /// </summary>
         private static double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Vessel vessel, Orbit orbit)
         {
             //If the vessel is in orbit we return 0 as we want to see the vessel IN THE FUTURE. This makes the behaviour closer to what KSP in single player does
-            if (vessel?.situation >= Vessel.Situations.ORBITING)
+            if (vessel?.situation >= Vessel.Situations.ORBITING || (vessel?.loaded ?? false) && subspaceId == -1)
                 return 0;
 
             //If the vessel is in atmosphere, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin
