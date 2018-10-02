@@ -13,7 +13,7 @@ namespace LmpClient.Systems.Lock
             if (requestedScene >= GameScenes.FLIGHT) return;
 
             //Always release the Update/UnloadedUpdate lock and the spectate lock
-            System.ReleaseAllPlayerLocks();
+            System.ReleaseAllPlayerVesselLocks();
             VesselCommon.IsSpectating = false;
         }
     }

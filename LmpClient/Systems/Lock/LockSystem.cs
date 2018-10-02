@@ -244,11 +244,12 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Releases all the player locks
         /// </summary>
-        public void ReleaseAllPlayerLocks()
+        public void ReleaseAllPlayerVesselLocks()
         {
             foreach (var lockToRelease in LockQuery.GetAllPlayerLocks(SettingsSystem.CurrentSettings.PlayerName))
             {
-                ReleaseLock(lockToRelease);
+                if (lockToRelease.Type > LockType.Asteroid)
+                    ReleaseLock(lockToRelease);
             }
         }
 

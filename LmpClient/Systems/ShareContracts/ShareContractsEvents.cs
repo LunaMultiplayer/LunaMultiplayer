@@ -2,12 +2,44 @@
 using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
+using LmpCommon.Locks;
 
 namespace LmpClient.Systems.ShareContracts
 {
     public class ShareContractsEvents : SubSystem<ShareContractsSystem>
     {
+        /// <summary>
+        /// If we get the contract lock then generate contracts
+        /// </summary>
+        public void LockAcquire(LockDefinition lockDefinition)
+        {
+            if (lockDefinition.Type == LockType.Contract && lockDefinition.PlayerName == SettingsSystem.CurrentSettings.PlayerName)
+            {
+                ContractSystem.generateContractIterations = ShareContractsSystem.Singleton.DefaultContractGenerateIterations;
+            }
+        }
+
+        /// <summary>
+        /// Try to get contract lock
+        /// </summary>
+        public void LockReleased(LockDefinition lockDefinition)
+        {
+            if (lockDefinition.Type == LockType.Contract)
+            {
+                System.TryGetContractLock();
+            }
+        }
+        
+        /// <summary>
+        /// Try to get contract lock when loading a level
+        /// </summary>
+        public void LevelLoaded(GameScenes data)
+        {
+            System.TryGetContractLock();
+        }
+
         #region EventHandlers
+
         public void ContractAccepted(Contract contract)
         {
             if (System.IgnoreEvents) return;
@@ -85,6 +117,8 @@ namespace LmpClient.Systems.ShareContracts
         {
             //Do not send contract parameter changes as other players might override them
             //See: https://github.com/LunaMultiplayer/LunaMultiplayer/issues/186
+            if (contractParameter.State == ParameterState.Complete)
+                System.MessageSender.SendContractMessage(contract);
             LunaLog.Log($"Contract parameter changed on:{contract.ContractGuid}");
         }
 
@@ -97,6 +131,7 @@ namespace LmpClient.Systems.ShareContracts
         {
             LunaLog.Log($"Contract seen:{contract.ContractGuid}");
         }
+
         #endregion
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Contracts;
-using LmpClient.Base;
+using LmpClient.Events;
 using LmpClient.Systems.Lock;
-using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareProgress;
 using LmpCommon.Enums;
 
@@ -13,7 +12,7 @@ namespace LmpClient.Systems.ShareContracts
 
         private ShareContractsEvents ShareContractsEvents { get; } = new ShareContractsEvents();
 
-        private int _defaultContractGenerateIterations;
+        public int DefaultContractGenerateIterations;
 
         //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
         protected override bool ShareSystemReady => true;
@@ -26,11 +25,11 @@ namespace LmpClient.Systems.ShareContracts
 
             if (!CurrentGameModeIsRelevant) return;
 
-            _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
             ContractSystem.generateContractIterations = 0;
 
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, TryGetContractLock));
-            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, SetContractGenerationBasedOnLock));
+            LockEvent.onLockAcquireUnityThread.Add(ShareContractsEvents.LockAcquire);
+            LockEvent.onLockReleaseUnityThread.Add(ShareContractsEvents.LockReleased);
+            GameEvents.onLevelWasLoadedGUIReady.Add(ShareContractsEvents.LevelLoaded);
 
             GameEvents.Contract.onAccepted.Add(ShareContractsEvents.ContractAccepted);
             GameEvents.Contract.onCancelled.Add(ShareContractsEvents.ContractCancelled);
@@ -50,6 +49,12 @@ namespace LmpClient.Systems.ShareContracts
         {
             base.OnDisabled();
 
+            ContractSystem.generateContractIterations = DefaultContractGenerateIterations;
+
+            LockEvent.onLockAcquireUnityThread.Remove(ShareContractsEvents.LockAcquire);
+            LockEvent.onLockReleaseUnityThread.Remove(ShareContractsEvents.LockReleased);
+            GameEvents.onLevelWasLoadedGUIReady.Remove(ShareContractsEvents.LevelLoaded);
+
             //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.Contract.onAccepted.Remove(ShareContractsEvents.ContractAccepted);
             GameEvents.Contract.onCancelled.Remove(ShareContractsEvents.ContractCancelled);
@@ -66,18 +71,9 @@ namespace LmpClient.Systems.ShareContracts
         }
 
         /// <summary>
-        /// Update the ContractSystem generation depending on if the current player has the lock or not.
-        /// </summary>
-        private void SetContractGenerationBasedOnLock()
-        {
-            ContractSystem.generateContractIterations = !LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) ? 0 :
-                _defaultContractGenerateIterations;
-        }
-
-        /// <summary>
         /// Try to acquire the contract lock
         /// </summary>
-        private static void TryGetContractLock()
+        public void TryGetContractLock()
         {
             if (!LockSystem.LockQuery.ContractLockExists())
             {

@@ -1,7 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.Lock;
-using LmpClient.Systems.Warp;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,38 +22,35 @@ namespace LmpClient.Systems.Asteroid
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            
+
+            LockEvent.onLockReleaseUnityThread.Add(AsteroidEvents.LockReleased);
+            GameEvents.onLevelWasLoadedGUIReady.Add(AsteroidEvents.LevelLoaded);
             TrackingEvent.onStartTrackingAsteroid.Add(AsteroidEvents.StartTrackingAsteroid);
             TrackingEvent.onStopTrackingAsteroid.Add(AsteroidEvents.StopTrackingAsteroid);
-            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetAsteroidLock));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
 
+            LockEvent.onLockReleaseUnityThread.Remove(AsteroidEvents.LockReleased);
+            GameEvents.onLevelWasLoadedGUIReady.Remove(AsteroidEvents.LevelLoaded);
             TrackingEvent.onStartTrackingAsteroid.Remove(AsteroidEvents.StartTrackingAsteroid);
             TrackingEvent.onStopTrackingAsteroid.Remove(AsteroidEvents.StopTrackingAsteroid);
         }
 
         #endregion
 
-        #region Update methods
-        
+        #region Public methods
+
         /// <summary>
         /// Try to acquire the asteroid-spawning lock if nobody else has it.
         /// </summary>
-        private void TryGetAsteroidLock()
+        public void TryGetAsteroidLock()
         {
-            if (!Enabled || !AsteroidSystemReady) return;
-
-            if (!LockSystem.LockQuery.AsteroidLockExists() && WarpSystem.Singleton.CurrentSubspace == 0)
+            if (!LockSystem.LockQuery.AsteroidLockExists())
                 LockSystem.Singleton.AcquireAsteroidLock();
         }
-
-        #endregion
-
-        #region Public methods
 
         public bool VesselIsAsteroid(Vessel vessel)
         {
