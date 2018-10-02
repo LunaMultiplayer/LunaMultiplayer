@@ -8,8 +8,6 @@ namespace LmpClient.Events
     {
         public static EventVoid onRevertingToLaunch;
         public static EventVoid onRevertedToLaunch;
-        public static EventData<EditorFacility> onRevertingToPrelaunch;
-        public static EventData<EditorFacility> onRevertedToPrelaunch;
         public static EventData<EditorFacility> onReturningToEditor;
         public static EventData<EditorFacility> onReturnedToEditor;
     }
