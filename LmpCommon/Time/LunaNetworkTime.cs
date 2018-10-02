@@ -20,6 +20,7 @@ namespace LmpCommon.Time
 
         /// <summary>
         /// We sync time with time provider every 30 seconds. This limits the number of clients/servers in the same machine to 6
+        /// as the max queries a NTP server accept are 1 every 5 seconds
         /// </summary>
         private const int TimeSyncIntervalMs = 30 * 1000;
 
