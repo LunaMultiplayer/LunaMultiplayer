@@ -47,26 +47,36 @@ namespace LmpClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// This event is called when requesting a recovery
+        /// This event is called when requesting a recovery FROM FLIGHT
         /// </summary>
         public void OnVesselRecovering(Vessel recoveredVessel)
         {
-            if (!LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(recoveredVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            OnVesselRecovered(recoveredVessel.protoVessel, false);
+        }
+
+        /// <summary>
+        /// This event is called when the vessel is recovered
+        /// </summary>
+        public void OnVesselRecovered(ProtoVessel recoveredVessel, bool quick)
+        {
+            //quick == true when you press "space center" from the inflight menu
+
+            if (!LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(recoveredVessel.vesselID, SettingsSystem.CurrentSettings.PlayerName))
             {
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.CannotRecover, 5f, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
 
-            _recoveringTerminatingVesselId = recoveredVessel.id;
-            LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.id}, Name: {recoveredVessel.vesselName} from the server: Recovered");
+            _recoveringTerminatingVesselId = recoveredVessel.vesselID;
+            LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
 
-            System.MessageSender.SendVesselRemove(recoveredVessel.id);
+            System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
             //Vessel is recovered so remove the locks
-            LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c => c.name), recoveredVessel.id);
+            LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c => c.name), recoveredVessel.vesselID);
 
             //We consider this vessel removed but we let KSP do the remove of the vessel
-            System.RemovedVessels.TryAdd(recoveredVessel.id, DateTime.Now);
+            System.RemovedVessels.TryAdd(recoveredVessel.vesselID, DateTime.Now);
         }
 
         /// <summary>

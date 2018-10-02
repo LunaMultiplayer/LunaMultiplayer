@@ -45,6 +45,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         {
             base.OnEnabled();
             GameEvents.OnVesselRecoveryRequested.Add(VesselRemoveEvents.OnVesselRecovering);
+            GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
 
@@ -60,6 +61,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             base.OnDisabled();
             ClearSystem();
             GameEvents.OnVesselRecoveryRequested.Remove(VesselRemoveEvents.OnVesselRecovering);
+            GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
 
