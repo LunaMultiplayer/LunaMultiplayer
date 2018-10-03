@@ -1,4 +1,5 @@
-﻿using LmpCommon.Message.Data.Vessel;
+﻿using ByteSizeLib;
+using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Server;
 using LmpCommon.Message.Types;
@@ -110,7 +111,7 @@ namespace Server.Message
 
             if (!VesselStoreSystem.VesselExists(msgData.VesselId))
             {
-                LunaLog.Debug($"Saving vessel {msgData.VesselId} from {client.PlayerName}. Bytes: {msgData.NumBytes}");
+                LunaLog.Debug($"Saving vessel {msgData.VesselId} ({ByteSize.FromBytes(msgData.NumBytes).KiloBytes} KB) from {client.PlayerName}.");
             }
 
             VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.VesselId, Encoding.UTF8.GetString(msgData.Data, 0, msgData.NumBytes));

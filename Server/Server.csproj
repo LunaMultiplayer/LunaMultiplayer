@@ -44,6 +44,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ByteSize, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\ByteSize.1.3.0\lib\net45\ByteSize.dll</HintPath>
+    </Reference>
     <Reference Include="LunaConfigNode, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\LunaConfigNode.1.8.1\lib\net35\LunaConfigNode.dll</HintPath>
     </Reference>

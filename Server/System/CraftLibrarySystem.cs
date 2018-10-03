@@ -1,4 +1,5 @@
-﻿using LmpCommon.Enums;
+﻿using ByteSizeLib;
+using LmpCommon.Enums;
 using LmpCommon.Message.Data.CraftLibrary;
 using LmpCommon.Message.Server;
 using Server.Client;
@@ -67,7 +68,7 @@ namespace Server.System
 
                     if (FileHandler.FileExists(fullPath))
                     {
-                        LunaLog.Normal($"Overwriting craft {data.Craft.CraftName} ({data.Craft.NumBytes} bytes) from: {client.PlayerName}.");
+                        LunaLog.Normal($"Overwriting craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes} KB) from: {client.PlayerName}.");
 
                         //Send a msg to all the players so they remove the old copy
                         var deleteMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryDeleteRequestMsgData>();
@@ -79,7 +80,7 @@ namespace Server.System
                     }
                     else
                     {
-                        LunaLog.Normal($"Saving craft {data.Craft.CraftName} ({data.Craft.NumBytes} bytes) from: {client.PlayerName}.");
+                        LunaLog.Normal($"Saving craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes} KB) from: {client.PlayerName}.");
                         FileHandler.WriteToFile(fullPath, data.Craft.Data, data.Craft.NumBytes);
                     }
                     SendNotification(client.PlayerName);
@@ -181,7 +182,7 @@ namespace Server.System
                         msgData.Craft.FolderName = data.CraftRequested.FolderName;
                         msgData.Craft.CraftName = data.CraftRequested.CraftName;
 
-                        LunaLog.Debug($"Sending craft ({msgData.Craft.NumBytes} bytes): {data.CraftRequested.CraftName} to: {client.PlayerName}.");
+                        LunaLog.Debug($"Sending craft ({ByteSize.FromBytes(msgData.Craft.NumBytes).KiloBytes} KB): {data.CraftRequested.CraftName} to: {client.PlayerName}.");
                         MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
                     }
                 }
