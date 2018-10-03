@@ -1,10 +1,10 @@
-﻿using System;
+﻿using LmpClient.ModuleStore.Structures;
+using LmpClient.Utilities;
+using LmpCommon.Xml;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LmpClient.ModuleStore.Structures;
-using LmpClient.Utilities;
-using LmpCommon.Xml;
 using UnityEngine;
 
 namespace LmpClient.ModuleStore
@@ -42,7 +42,6 @@ namespace LmpClient.ModuleStore
             {
                 var moduleDefinition = LunaXmlSerializer.ReadXmlFromPath<ModuleDefinition>(file);
                 moduleDefinition.ModuleName = Path.GetFileNameWithoutExtension(file);
-                moduleDefinition.Init();
 
                 moduleValues.Add(moduleDefinition);
             }
@@ -64,6 +63,9 @@ namespace LmpClient.ModuleStore
             {
                 CustomizedModuleBehaviours.Add(moduleToAdd.ModuleName, moduleToAdd);
             }
+
+            foreach (var module in CustomizedModuleBehaviours.Values)
+                module.Init();
         }
 
         /// <summary>
