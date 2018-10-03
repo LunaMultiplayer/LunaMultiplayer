@@ -152,10 +152,7 @@
     <Compile Include="Localization\Structures\UpdateWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
     <Compile Include="ModuleStore\Harmony\ModuleEngines_Activate.cs" />
-    <Compile Include="ModuleStore\Injectors\Base\BaseInjector.cs" />
-    <Compile Include="ModuleStore\Injectors\KIS\KISInjector.cs" />
     <Compile Include="ModuleStore\Patching\FieldChangeTranspiler.cs" />
-    <Compile Include="ModuleStore\Patching\InjectorsPatcher.cs" />
     <Compile Include="ModuleStore\Patching\PartModulePatcher.cs" />
     <Compile Include="ModuleStore\Patching\TestModule.cs" />
     <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />
@@ -657,9 +654,6 @@
     <Content Include="Localization\XML\Swedish\ServerListWindowText.xml" />
     <Content Include="Localization\XML\Swedish\StatusWindowText.xml" />
     <Content Include="Localization\XML\Swedish\UpdateWindowText.xml" />
-    <Content Include="ModuleStore\XML\KIS\ModuleKISItem.xml" />
-    <Content Include="ModuleStore\XML\KIS\ModuleKISInventory.xml" />
-    <Content Include="ModuleStore\XML\KIS\ModuleKISItemBomb.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleColorChanger.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleAnchoredDecoupler.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleAnalysisResource.xml" />
