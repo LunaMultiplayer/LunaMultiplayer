@@ -1,10 +1,9 @@
 ﻿using Harmony;
 using LmpCommon.Enums;
 using ModuleWheels;
-
 // ReSharper disable All
 
-namespace LmpClient.Harmony
+namespace LmpClient.ModuleStore.Harmony
 {
     /// <summary>
     /// This harmony patch is intended to skip the damage in a wheel if the vessel is not ours

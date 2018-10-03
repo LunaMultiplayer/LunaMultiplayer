@@ -1,9 +1,8 @@
 ﻿using Harmony;
 using LmpClient.Events;
-
 // ReSharper disable All
 
-namespace LmpClient.Harmony
+namespace LmpClient.ModuleStore.Harmony
 {
     [HarmonyPatch(typeof(ModuleScienceExperiment))]
     [HarmonyPatch("resetExperiment")]

@@ -1,9 +1,8 @@
 ﻿using Harmony;
 using LmpClient.Events;
-
 // ReSharper disable All
 
-namespace LmpClient.Harmony
+namespace LmpClient.ModuleStore.Harmony
 {
     /// <summary>
     /// This harmony patch is intended to trigger an event when successfully unboarding an external seat
