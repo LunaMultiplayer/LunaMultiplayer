@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Expansions;
+﻿using Expansions;
 using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Utilities;
@@ -12,6 +6,12 @@ using LmpCommon;
 using LmpCommon.ModFile.Structure;
 using LmpCommon.Properties;
 using LmpCommon.Xml;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace LmpClient.Systems.Mod
 {
@@ -96,9 +96,10 @@ namespace LmpClient.Systems.Mod
 
         public void GenerateModControlFile(bool appendSha)
         {
-            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(Resources.LMPModControl);
-
-            modFile.RequiredExpansions = GetInstalledExpansions();
+            var modFile = new ModControlStructure
+            {
+                RequiredExpansions = GetInstalledExpansions()
+            };
 
             var extraParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name)).Select(p => p.name);
             modFile.AllowedParts.AddRange(extraParts);
@@ -132,7 +133,7 @@ namespace LmpClient.Systems.Mod
         {
             var missingPartsCount = 0;
             LunaLog.Log("[LMP]: Missing parts start");
-            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(Resources.LMPModControl);
+            var modFile = new ModControlStructure();
             var missingParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name));
 
             foreach (var part in missingParts)
