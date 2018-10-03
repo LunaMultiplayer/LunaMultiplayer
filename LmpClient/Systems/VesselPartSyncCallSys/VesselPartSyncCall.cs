@@ -1,7 +1,8 @@
-﻿using System;
-using Harmony;
+﻿using Harmony;
+using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
+using System;
 
 namespace LmpClient.Systems.VesselPartSyncCallSys
 {
@@ -38,6 +39,7 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
                     if (module.moduleRef != null)
                     {
                         module.moduleRef.GetType().GetMethod(MethodName, AccessTools.all)?.Invoke(module.moduleRef, null);
+                        PartModuleEvent.onPartModuleMethodProcessed.Fire(module, MethodName);
                     }
                 }
             }

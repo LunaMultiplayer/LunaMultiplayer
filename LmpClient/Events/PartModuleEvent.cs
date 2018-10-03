@@ -19,5 +19,16 @@ namespace LmpClient.Events
         public static EventData<PartModule, string, int, string> onPartModuleEnumFieldChanged;
 
         public static EventData<PartModule, string> onPartModuleMethodCalling;
+        public static EventData<ProtoPartModuleSnapshot, string> onPartModuleMethodProcessed;
+
+        public static EventData<ProtoPartModuleSnapshot, string, string> onPartModuleStringFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, bool> onPartModuleBoolFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, int> onPartModuleIntFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, float> onPartModuleFloatFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, double> onPartModuleDoubleFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, Vector3> onPartModuleVectorFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, Quaternion> onPartModuleQuaternionFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, object> onPartModuleObjectFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, int, string> onPartModuleEnumFieldProcessed;
     }
 }

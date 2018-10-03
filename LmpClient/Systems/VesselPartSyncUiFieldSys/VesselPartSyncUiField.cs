@@ -1,7 +1,8 @@
-﻿using System;
+﻿using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
+using System;
 
 namespace LmpClient.Systems.VesselPartSyncUiFieldSys
 {
@@ -46,14 +47,17 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
                         case PartSyncFieldType.Boolean:
                             module.moduleValues.SetValue(FieldName, BoolValue);
                             module.moduleRef?.Fields[FieldName].SetValue(BoolValue, module.moduleRef);
+                            PartModuleEvent.onPartModuleBoolFieldProcessed.Fire(module, FieldName, BoolValue);
                             break;
                         case PartSyncFieldType.Integer:
                             module.moduleValues.SetValue(FieldName, IntValue);
                             module.moduleRef?.Fields[FieldName].SetValue(IntValue, module.moduleRef);
+                            PartModuleEvent.onPartModuleIntFieldProcessed.Fire(module, FieldName, IntValue);
                             break;
                         case PartSyncFieldType.Float:
                             module.moduleValues.SetValue(FieldName, FloatValue);
                             module.moduleRef?.Fields[FieldName].SetValue(FloatValue, module.moduleRef);
+                            PartModuleEvent.onPartModuleFloatFieldProcessed.Fire(module, FieldName, FloatValue);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
