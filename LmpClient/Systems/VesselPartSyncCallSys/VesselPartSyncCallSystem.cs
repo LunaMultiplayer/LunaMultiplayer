@@ -1,8 +1,8 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.TimeSync;
-using System;
-using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPartSyncCallSys

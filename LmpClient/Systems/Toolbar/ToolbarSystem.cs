@@ -1,9 +1,10 @@
-﻿using LmpClient.Systems.SettingsSys;
+﻿using LmpClient.Base;
+using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
 
 namespace LmpClient.Systems.Toolbar
 {
-    public class ToolbarSystem : Base.System<ToolbarSystem>
+    public class ToolbarSystem : System<ToolbarSystem>
     {
         #region Constructor
 

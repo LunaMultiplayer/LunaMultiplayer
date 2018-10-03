@@ -1,7 +1,7 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Network;
 using LmpCommon.Message.Data;
-using System;
 
 namespace LmpClient.Systems.ModApi
 {

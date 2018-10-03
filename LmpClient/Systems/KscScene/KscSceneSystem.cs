@@ -1,8 +1,8 @@
-﻿using Harmony;
+﻿using System.Reflection;
+using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events;
-using System.Reflection;
 using UnityEngine;
 
 namespace LmpClient.Systems.KscScene

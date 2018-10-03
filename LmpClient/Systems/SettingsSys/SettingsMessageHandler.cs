@@ -1,10 +1,10 @@
-﻿using CommNet;
+﻿using System.Collections.Concurrent;
+using CommNet;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Settings;
 using LmpCommon.Message.Interface;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.SettingsSys
 {

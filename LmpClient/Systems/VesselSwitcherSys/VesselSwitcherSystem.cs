@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using LmpClient.Base;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselSwitcherSys
@@ -7,7 +8,7 @@ namespace LmpClient.Systems.VesselSwitcherSys
     /// This system handles the vessel loading into the game and sending our vessel structure to other players.
     /// We only load vesels that are in our subspace
     /// </summary>
-    public class VesselSwitcherSystem : Base.System<VesselSwitcherSystem>
+    public class VesselSwitcherSystem : System<VesselSwitcherSystem>
     {
         #region Fields & properties
 

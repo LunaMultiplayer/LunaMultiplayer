@@ -1,4 +1,6 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Generic;
+using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareScienceSubject;
@@ -6,8 +8,6 @@ using LmpClient.Systems.VesselDockSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
-using System;
-using System.Collections.Generic;
 
 namespace LmpClient.Systems.VesselProtoSys
 {

@@ -1,6 +1,6 @@
-﻿using LmpClient.Base.Interface;
+﻿using System;
+using LmpClient.Base.Interface;
 using LmpClient.Systems.SettingsSys;
-using System;
 using UnityEngine;
 
 namespace LmpClient.Base

@@ -1,6 +1,6 @@
-using LmpClient.Localization;
 using System.IO;
 using System.Reflection;
+using LmpClient.Localization;
 using UnityEngine;
 
 namespace LmpClient.Utilities

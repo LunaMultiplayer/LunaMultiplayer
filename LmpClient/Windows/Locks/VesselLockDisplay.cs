@@ -1,5 +1,5 @@
-﻿using LmpClient.Systems.SettingsSys;
-using System;
+﻿using System;
+using LmpClient.Systems.SettingsSys;
 
 namespace LmpClient.Windows.Locks
 {

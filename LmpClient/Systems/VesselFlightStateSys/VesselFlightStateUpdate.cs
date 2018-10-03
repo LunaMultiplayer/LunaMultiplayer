@@ -1,11 +1,11 @@
-﻿using LmpClient.Extensions;
+﻿using System;
+using LmpClient.Extensions;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
 using LmpCommon.Message.Data.Vessel;
-using System;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselFlightStateSys

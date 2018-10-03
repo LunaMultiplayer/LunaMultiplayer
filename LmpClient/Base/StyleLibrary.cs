@@ -173,7 +173,7 @@ namespace LmpClient.Base
                 onNormal = new GUIStyleState { background = ResizeIcon },
                 onActive = new GUIStyleState { background = ResizeIcon },
                 onFocused = new GUIStyleState { background = ResizeIcon },
-                onHover = new GUIStyleState { background = ResizeIcon },
+                onHover = new GUIStyleState { background = ResizeIcon }
             };
             LabelStyle = new GUIStyle(GUI.skin.label);
             HyperlinkLabelStyle = new GUIStyle(GUI.skin.button)
@@ -188,7 +188,7 @@ namespace LmpClient.Base
                 onNormal = new GUIStyleState(),
                 onActive = new GUIStyleState(),
                 onFocused = new GUIStyleState(),
-                onHover = new GUIStyleState(),
+                onHover = new GUIStyleState()
             };
             BoldGreenLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.green } };
             BoldRedLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.red } };

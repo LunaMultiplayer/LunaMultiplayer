@@ -1,7 +1,7 @@
-﻿using LmpClient.Extensions;
-using LmpCommon.Xml;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using LmpClient.Extensions;
+using LmpCommon.Xml;
 using UniLinq;
 
 namespace LmpClient.ModuleStore.Structures

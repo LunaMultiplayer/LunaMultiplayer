@@ -1,7 +1,7 @@
-﻿using Harmony;
+﻿using System;
+using Harmony;
 using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
-using System;
 
 namespace LmpClient.Systems.VesselPartSyncCallSys
 {

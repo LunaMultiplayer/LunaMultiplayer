@@ -1,7 +1,7 @@
-﻿using LmpClient.Extensions;
+﻿using System;
+using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Data.Vessel;
-using System;
 
 namespace LmpClient.Systems.VesselResourceSys
 {

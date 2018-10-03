@@ -322,7 +322,7 @@
             function appendToTable(table, cache) {
 
                 if (table.config.debug) {
-                    var appendTime = new Date()
+                    var appendTime = new Date();
                 }
 
                 var c = cache,
@@ -433,7 +433,7 @@
                         var rowIndex = c.parentNode.rowIndex;
                         var cellId = rowIndex + "-" + c.cellIndex;
                         var rowSpan = c.rowSpan || 1;
-                        var colSpan = c.colSpan || 1
+                        var colSpan = c.colSpan || 1;
                         var firstAvailCol;
                         if (typeof(matrix[rowIndex]) == "undefined") {
                             matrix[rowIndex] = [];
@@ -689,22 +689,21 @@
                     // if no thead or tbody quit.
                     if (!this.tHead || !this.tBodies) return;
                     // declare
-                    var $this, $document, $headers, cache, config, shiftDown = 0,
-                        sortOrder;
+                    var $document, shiftDown = 0, sortOrder;
                     // new blank config object
                     this.config = {};
                     // merge and extend.
-                    config = $.extend(this.config, $.tablesorter.defaults, settings);
+                    var config = $.extend(this.config, $.tablesorter.defaults, settings);
                     // store common expression for speed
-                    $this = $(this);
+                    var $this = $(this);
                     // save the settings where they read
                     $.data(this, "tablesorter", config);
                     // build headers
-                    $headers = buildHeaders(this);
+                    var $headers = buildHeaders(this);
                     // try to auto detect column type, and store in tables config
                     this.config.parsers = buildParserCache(this, $headers);
                     // build the cache for the tbody cells
-                    cache = buildCache(this);
+                    var cache = buildCache(this);
                     // get the css class names, could be done else where.
                     var sortCSS = [config.cssDesc, config.cssAsc];
                     // fixate columns if the users supplies the fixedWidth option
@@ -779,7 +778,7 @@
                     }).mousedown(function () {
                         if (config.cancelSelection) {
                             this.onselectstart = function () {
-                                return false
+                                return false;
                             };
                             return false;
                         }
@@ -1021,7 +1020,7 @@
                 odd = (row % 2 == 0);
                 $tr.removeClass(
                 table.config.widgetZebra.css[odd ? 0 : 1]).addClass(
-                table.config.widgetZebra.css[odd ? 1 : 0])
+                table.config.widgetZebra.css[odd ? 1 : 0]);
             });
             if (table.config.debug) {
                 $.tablesorter.benchmark("Applying Zebra widget", time);

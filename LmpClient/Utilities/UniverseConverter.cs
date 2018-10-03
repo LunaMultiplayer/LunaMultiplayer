@@ -1,8 +1,7 @@
-﻿using LmpCommon;
-using LmpCommon.Xml;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using LmpCommon;
 
 namespace LmpClient.Utilities
 {

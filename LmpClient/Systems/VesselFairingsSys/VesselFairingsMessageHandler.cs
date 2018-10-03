@@ -1,9 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselFairingsSys
 {

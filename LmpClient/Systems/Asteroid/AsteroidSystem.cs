@@ -1,8 +1,8 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.Lock;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LmpClient.Systems.Asteroid
 {

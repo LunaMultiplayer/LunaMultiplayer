@@ -1,6 +1,6 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Systems.VesselProtoSys;
-using System;
 
 namespace LmpClient.Systems.FlagPlant
 {

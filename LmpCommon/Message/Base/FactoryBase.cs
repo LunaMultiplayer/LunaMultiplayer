@@ -116,7 +116,7 @@ namespace LmpCommon.Message.Base
         /// <returns>New empty message data</returns>
         public T CreateNewMessageData<T>() where T : class, IMessageData
         {
-            return MessageStore.GetMessageData<T>(); ;
+            return MessageStore.GetMessageData<T>();
         }
 
         /// <summary>

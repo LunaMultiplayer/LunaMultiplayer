@@ -42,7 +42,7 @@ namespace LmpClient.Windows.Systems
 
         #region Other systems
 
-        private static bool _asteroid;
+        //private static bool _asteroid;
         private static bool _craftLibrary;
         private static bool _facility;
         private static bool _flag;
@@ -52,12 +52,12 @@ namespace LmpClient.Windows.Systems
         private static bool _kerbal;
         private static bool _lock;
         private static bool _modS;
-        private static bool _modApi;
+        //private static bool _modApi;
         private static bool _playerColor;
         private static bool _playerConnection;
         private static bool _scenario;
         private static bool _timeSyncer;
-        private static bool _toolbar;
+        //private static bool _toolbar;
         private static bool _warp;
         private static bool _shareFunds;
         private static bool _shareScience;

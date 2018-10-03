@@ -1,11 +1,11 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using System.Linq;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.Facility;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
-using System.Linq;
-using Object = UnityEngine.Object;
+using UnityEngine;
 
 namespace LmpClient.Systems.Facility
 {

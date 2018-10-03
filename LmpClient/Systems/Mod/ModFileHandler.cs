@@ -1,11 +1,11 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using LmpClient.Base;
 using LmpClient.Utilities;
 using LmpClient.Windows.Mod;
 using LmpCommon.ModFile.Structure;
 using LmpCommon.Xml;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace LmpClient.Systems.Mod
 {

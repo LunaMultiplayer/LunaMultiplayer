@@ -16,6 +16,7 @@ namespace LmpClient.Systems.Scenario
         private ConcurrentDictionary<string, string> CheckData { get; } = new ConcurrentDictionary<string, string>();
         public ConcurrentQueue<ScenarioEntry> ScenarioQueue { get; private set; } = new ConcurrentQueue<ScenarioEntry>();
 
+        // ReSharper disable once InconsistentNaming
         private static readonly ConcurrentDictionary<string, Type> _allScenarioTypesInAssemblies = new ConcurrentDictionary<string, Type>();
         private static ConcurrentDictionary<string, Type> AllScenarioTypesInAssemblies
         {

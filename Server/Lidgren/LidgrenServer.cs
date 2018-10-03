@@ -54,8 +54,8 @@ namespace Server.Lidgren
             {
                 ServerContext.Config.SimulatedDuplicatesChance = DebugSettings.SettingsStore.SimulatedDuplicatesChance / 100f;
             }
-            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs ?? 0).TotalSeconds;
-            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MinSimulatedLatencyMs ?? 0).TotalSeconds;
+            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds((double) DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs).TotalSeconds;
+            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds((double) DebugSettings.SettingsStore?.MinSimulatedLatencyMs).TotalSeconds;
 
             Server = new NetServer(ServerContext.Config);
             Server.Start();

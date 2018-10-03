@@ -110,10 +110,7 @@ namespace LmpClient.Network
                     }
                     else
                     {
-                        if (MainSystem.NetworkState == ClientState.Connecting)
-                            Disconnect("Initial connection timeout");
-                        else
-                            Disconnect("Cancelled connection");
+                        Disconnect(MainSystem.NetworkState == ClientState.Connecting ? "Initial connection timeout" : "Cancelled connection");
                     }
                 }
                 catch (Exception e)

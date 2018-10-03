@@ -1,7 +1,7 @@
-﻿using LmpClient.Systems.VesselRemoveSys;
+﻿using System;
+using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
-using System;
 
 namespace LmpClient.Systems.VesselProtoSys
 {

@@ -4,6 +4,7 @@ using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareContracts;
 using LmpCommon.Enums;
+
 // ReSharper disable All
 
 namespace LmpClient.Harmony

@@ -1,5 +1,5 @@
-﻿using KSP.UI.Screens.Flight;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using KSP.UI.Screens.Flight;
 
 namespace LmpClient.Extensions
 {

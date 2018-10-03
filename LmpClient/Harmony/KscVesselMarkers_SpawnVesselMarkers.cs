@@ -1,9 +1,9 @@
-﻿using Harmony;
+﻿using System.Collections.Generic;
+using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpCommon.Enums;
-using System.Collections.Generic;
 
 // ReSharper disable All
 

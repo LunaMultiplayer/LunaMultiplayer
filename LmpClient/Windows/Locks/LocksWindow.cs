@@ -1,11 +1,11 @@
-﻿using LmpClient.Base;
-using LmpClient.Systems.Lock;
-using LmpCommon.Enums;
-using LmpCommon.Time;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LmpClient.Base;
+using LmpClient.Systems.Lock;
+using LmpCommon.Enums;
+using LmpCommon.Time;
 using UnityEngine;
 
 namespace LmpClient.Windows.Locks
@@ -59,7 +59,7 @@ namespace LmpClient.Windows.Locks
                             VesselName = FlightGlobals.Vessels[i].name,
                             ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id),
                             UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id),
-                            UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id),
+                            UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id)
                         });
                     }
                     else

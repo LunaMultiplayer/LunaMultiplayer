@@ -1,10 +1,10 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.VesselUtilities;
 using LmpCommon.Locks;
-using System;
 
 namespace LmpClient.Systems.VesselLockSys
 {

@@ -1,7 +1,7 @@
-﻿using Lidgren.Network;
-using LmpClient.Systems.PlayerColorSys;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Lidgren.Network;
+using LmpClient.Systems.PlayerColorSys;
 using UnityEngine;
 
 namespace LmpClient.Systems.SettingsSys

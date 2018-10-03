@@ -1,9 +1,11 @@
-﻿namespace LmpClient.Systems.FlagPlant
+﻿using LmpClient.Base;
+
+namespace LmpClient.Systems.FlagPlant
 {
     /// <summary>
     /// This class handles the events when you plant a flag
     /// </summary>
-    public class FlagPlantSystem : Base.System<FlagPlantSystem>
+    public class FlagPlantSystem : System<FlagPlantSystem>
     {
         #region Fields & properties
         

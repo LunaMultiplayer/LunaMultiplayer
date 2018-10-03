@@ -1,7 +1,7 @@
-﻿using LmpClient.ModuleStore.Injectors.Base;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
+using LmpClient.ModuleStore.Injectors.Base;
 
 namespace LmpClient.ModuleStore.Patching
 {

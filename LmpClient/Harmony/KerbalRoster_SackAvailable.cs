@@ -3,6 +3,7 @@ using LmpClient.Localization;
 using LmpClient.Systems.KerbalSys;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
+
 // ReSharper disable All
 
 namespace LmpClient.Harmony

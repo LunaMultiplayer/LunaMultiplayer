@@ -1,6 +1,6 @@
-﻿using LmpClient.Utilities;
+﻿using System.IO;
+using LmpClient.Utilities;
 using LmpCommon.Xml;
-using System.IO;
 
 namespace LmpClient.Systems.SettingsSys
 {

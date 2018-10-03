@@ -1,8 +1,8 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Systems.TimeSync;
 using LmpClient.VesselUtilities;
-using System;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselResourceSys
 {

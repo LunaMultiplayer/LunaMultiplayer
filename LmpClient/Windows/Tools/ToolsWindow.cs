@@ -1,10 +1,10 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.IO;
+using LmpClient.Base;
 using LmpClient.Extensions;
 using LmpClient.Utilities;
 using LmpCommon.Enums;
 using LmpCommon.Time;
-using System;
-using System.IO;
 using UnityEngine;
 
 namespace LmpClient.Windows.Tools
@@ -16,7 +16,7 @@ namespace LmpClient.Windows.Tools
         private const float WindowHeight = 400;
         private const float WindowWidth = 400;
 
-        private static bool _saveCurrentOrbitData = false;
+        private static bool _saveCurrentOrbitData;
 
         private static bool _display;
         public override bool Display

@@ -1,9 +1,9 @@
-﻿using Contracts;
+﻿using System;
+using System.Collections.Generic;
+using Contracts;
 using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LmpClient.Systems.ShareCareer

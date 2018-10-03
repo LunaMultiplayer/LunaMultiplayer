@@ -1,4 +1,6 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
@@ -7,8 +9,6 @@ using LmpCommon.Locks;
 using LmpCommon.Message.Data.Lock;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UniLinq;
 
 namespace LmpClient.Systems.Lock

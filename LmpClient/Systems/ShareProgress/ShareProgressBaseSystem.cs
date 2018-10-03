@@ -1,9 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Generic;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace LmpClient.Systems.ShareProgress
 {

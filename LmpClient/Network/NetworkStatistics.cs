@@ -1,6 +1,6 @@
-﻿using LmpCommon.Message.Base;
+﻿using System;
+using LmpCommon.Message.Base;
 using LmpCommon.Time;
-using System;
 
 namespace LmpClient.Network
 {

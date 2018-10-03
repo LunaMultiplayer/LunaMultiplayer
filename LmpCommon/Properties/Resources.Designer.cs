@@ -59,24 +59,5 @@ namespace LmpCommon.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;!--Please check the following wiki link that explains how this file works: https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Mod-file--&gt;
-        ///&lt;ModControlStructure xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-        ///  &lt;AllowNonListedPlugins&gt;true&lt;/AllowNonListedPlugins&gt;
-        ///  &lt;RequiredExpansions&gt;
-        ///  &lt;/RequiredExpansions&gt;
-        ///  &lt;MandatoryPlugins&gt;
-        ///  &lt;/MandatoryPlugins&gt;
-        ///  &lt;ForbiddenPlugins&gt;
-        ///  &lt;/ForbiddenPlugins&gt;
-        ///  &lt;Mandato [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string LMPModControl {
-            get {
-                return ResourceManager.GetString("LMPModControl", resourceCulture);
-            }
-        }
     }
 }

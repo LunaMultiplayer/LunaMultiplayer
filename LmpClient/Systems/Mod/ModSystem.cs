@@ -1,19 +1,21 @@
-﻿using Expansions;
-using LmpClient.Localization;
-using LmpClient.Utilities;
-using LmpCommon;
-using LmpCommon.ModFile.Structure;
-using LmpCommon.Xml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Expansions;
+using LmpClient.Base;
+using LmpClient.Localization;
+using LmpClient.Utilities;
+using LmpCommon;
+using LmpCommon.ModFile.Structure;
+using LmpCommon.Properties;
+using LmpCommon.Xml;
 
 namespace LmpClient.Systems.Mod
 {
-    public class ModSystem : Base.System<ModSystem>
+    public class ModSystem : System<ModSystem>
     {
         #region Fields & properties
 
@@ -94,7 +96,7 @@ namespace LmpClient.Systems.Mod
 
         public void GenerateModControlFile(bool appendSha)
         {
-            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LmpCommon.Properties.Resources.LMPModControl);
+            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(Resources.LMPModControl);
 
             modFile.RequiredExpansions = GetInstalledExpansions();
 
@@ -130,7 +132,7 @@ namespace LmpClient.Systems.Mod
         {
             var missingPartsCount = 0;
             LunaLog.Log("[LMP]: Missing parts start");
-            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LmpCommon.Properties.Resources.LMPModControl);
+            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(Resources.LMPModControl);
             var missingParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name));
 
             foreach (var part in missingParts)

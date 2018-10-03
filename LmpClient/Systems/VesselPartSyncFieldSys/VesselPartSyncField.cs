@@ -1,7 +1,7 @@
-﻿using LmpClient.Extensions;
+﻿using System;
+using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
-using System;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPartSyncFieldSys

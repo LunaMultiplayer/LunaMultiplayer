@@ -58,7 +58,7 @@ namespace LmpClient.Utilities
         }
 
         /// <summary>
-        /// Compare two ienumerables and return if they are the same or not IGNORING the order
+        /// Compare two IEnumerable and return if they are the same or not IGNORING the order
         /// </summary>
         public static bool ScrambledEquals<T>(IEnumerable<T> list1, IEnumerable<T> list2)
         {

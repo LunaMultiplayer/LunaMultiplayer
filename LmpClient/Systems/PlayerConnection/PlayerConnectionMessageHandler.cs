@@ -1,4 +1,5 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Systems.Chat;
 using LmpClient.Systems.Status;
@@ -7,7 +8,6 @@ using LmpClient.Utilities;
 using LmpCommon.Message.Data.PlayerConnection;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.PlayerConnection
 {

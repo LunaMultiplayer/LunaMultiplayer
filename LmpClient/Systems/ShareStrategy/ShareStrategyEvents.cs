@@ -1,6 +1,6 @@
-﻿using LmpClient.Base;
+﻿using System.Linq;
+using LmpClient.Base;
 using Strategies;
-using System.Linq;
 
 namespace LmpClient.Systems.ShareStrategy
 {

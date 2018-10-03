@@ -1,9 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.ShareScience
 {

@@ -1,14 +1,14 @@
-﻿using Lidgren.Network;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
+using Lidgren.Network;
 using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.BannedParts;
 using LmpCommon.Message;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace LmpClient.Network
 {
@@ -31,7 +31,7 @@ namespace LmpClient.Network
             PingInterval = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.HearbeatMsInterval).TotalSeconds,
             ConnectionTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds,
             MaximumTransmissionUnit = SettingsSystem.CurrentSettings.Mtu,
-            AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu,
+            AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu
         };
 
         public static NetClient ClientConnection { get; private set; }

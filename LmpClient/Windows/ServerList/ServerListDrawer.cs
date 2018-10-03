@@ -1,8 +1,8 @@
-﻿using LmpClient.Localization;
+﻿using System.Linq;
+using LmpClient.Localization;
 using LmpClient.Network;
 using LmpCommon;
 using LmpCommon.Enums;
-using System.Linq;
 using UnityEngine;
 
 namespace LmpClient.Windows.ServerList

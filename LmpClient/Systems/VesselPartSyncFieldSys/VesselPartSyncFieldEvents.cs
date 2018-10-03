@@ -9,7 +9,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
 {
     public class VesselPartSyncFieldEvents : SubSystem<VesselPartSyncFieldSystem>
     {
-        private static Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>> LastSendTimeDictionary =
+        private static readonly Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>> LastSendTimeDictionary =
             new Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, TimeToSend>>>>();
 
         private static bool CallIsValid(PartModule module, string fieldName)

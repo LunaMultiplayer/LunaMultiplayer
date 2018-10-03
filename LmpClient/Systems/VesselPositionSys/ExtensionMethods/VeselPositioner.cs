@@ -1,6 +1,6 @@
-﻿using LmpClient.Systems.TimeSync;
+﻿using System.Diagnostics.CodeAnalysis;
+using LmpClient.Systems.TimeSync;
 using LmpCommon;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods

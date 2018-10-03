@@ -1,6 +1,6 @@
-﻿using LmpClient.Extensions;
+﻿using System;
+using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
-using System;
 
 namespace LmpClient.Systems.VesselFairingsSys
 {

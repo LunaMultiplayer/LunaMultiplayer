@@ -1,7 +1,7 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Localization;
 using LmpCommon.Enums;
-using System;
 using UnityEngine;
 
 namespace LmpClient.Windows.BannedParts

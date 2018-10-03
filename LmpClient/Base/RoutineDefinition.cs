@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Profiler = UnityEngine.Profiling.Profiler;
+using UnityEngine.Profiling;
 
 namespace LmpClient.Base
 {

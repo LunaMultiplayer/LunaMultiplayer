@@ -1,4 +1,7 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
@@ -6,9 +9,6 @@ using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Time;
-using System;
-using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselDockSys

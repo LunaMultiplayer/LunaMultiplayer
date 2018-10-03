@@ -1,6 +1,7 @@
-﻿using Harmony;
+﻿using System;
+using Harmony;
 using LmpClient.Events;
-using System;
+
 // ReSharper disable All
 
 namespace LmpClient.Harmony

@@ -116,7 +116,7 @@ namespace LmpClient.Systems.Screenshot
                 MessageSender.RequestMiniatures(selectedFolder);
         }
 
-        private byte[] ScaleScreenshot(byte[] source, int maxWidth, int maxHeight)
+        private static byte[] ScaleScreenshot(byte[] source, int maxWidth, int maxHeight)
         {
             var image = new Texture2D(1, 1);
             image.LoadImage(source);
@@ -133,7 +133,7 @@ namespace LmpClient.Systems.Screenshot
             {
                 for (var j = 0; j < scaledImage.width; ++j)
                 {
-                    var newColor = image.GetPixelBilinear((float)j / (float)scaledImage.width, (float)i / (float)scaledImage.height);
+                    var newColor = image.GetPixelBilinear(j / (float)scaledImage.width, i / (float)scaledImage.height);
                     scaledImage.SetPixel(j, i, newColor);
                 }
             }

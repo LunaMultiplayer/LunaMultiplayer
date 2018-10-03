@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -132,7 +131,7 @@ namespace MasterServer
                             ConsoleLogger.Log(LogLevels.Normal, $"Found a new updated version! Current: {CurrentVersion} Latest: {latestVersion}");
                             ConsoleLogger.Log(LogLevels.Normal, "Downloading and restarting program....");
 
-                            var zipFileName = url.Substring(url.LastIndexOf("/") + 1);
+                            var zipFileName = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
                             if (CommonDownloader.DownloadZipFile(url, Path.Combine(Directory.GetCurrentDirectory(), zipFileName)))
                             {
                                 StopMasterServerDll();

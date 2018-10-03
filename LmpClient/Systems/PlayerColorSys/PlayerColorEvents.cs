@@ -1,8 +1,8 @@
-﻿using LmpClient.Base;
-using LmpCommon.Locks;
-using System;
-using UniLinq;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Extensions;
+using LmpCommon.Locks;
+using UniLinq;
 
 namespace LmpClient.Systems.PlayerColorSys
 {

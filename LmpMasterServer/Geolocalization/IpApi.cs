@@ -1,5 +1,4 @@
-﻿using JsonFx.Json;
-using LmpMasterServer.Geolocalization.Base;
+﻿using LmpMasterServer.Geolocalization.Base;
 using System;
 using System.Net;
 using System.Net.Http;

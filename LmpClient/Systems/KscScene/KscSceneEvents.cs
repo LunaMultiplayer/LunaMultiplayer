@@ -1,7 +1,7 @@
-﻿using KSP.UI.Screens;
+﻿using System.Reflection;
+using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpCommon.Locks;
-using System.Reflection;
 
 namespace LmpClient.Systems.KscScene
 {

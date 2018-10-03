@@ -1,6 +1,6 @@
-﻿using Harmony;
+﻿using System.Reflection;
+using Harmony;
 using LmpClient.Events;
-using System.Reflection;
 
 namespace LmpClient.ModuleStore.Patching
 {

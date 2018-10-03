@@ -4,7 +4,7 @@ using LmpClient.Base;
 using LmpClient.Events;
 using System.Collections.Concurrent;
 using System.Reflection;
-using Object = UnityEngine.Object;
+using UnityEngine;
 
 namespace LmpClient.Systems.KerbalSys
 {
@@ -180,7 +180,7 @@ namespace LmpClient.Systems.KerbalSys
         {
             if (CrewAssignmentDialog.Instance != null)
             {
-                CrewAssignmentDialog.Instance.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
+                CrewAssignmentDialog.Instance.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(), false, true);
                 CrewAssignmentDialog.Instance.ButtonClear();
                 CrewAssignmentDialog.Instance.ButtonFill();
             }

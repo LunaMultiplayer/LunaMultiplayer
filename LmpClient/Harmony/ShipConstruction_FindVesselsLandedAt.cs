@@ -1,7 +1,7 @@
-﻿using Harmony;
+﻿using System.Collections.Generic;
+using Harmony;
 using LmpClient.Systems.Lock;
 using LmpCommon.Enums;
-using System.Collections.Generic;
 
 // ReSharper disable All
 

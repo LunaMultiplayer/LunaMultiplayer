@@ -1,4 +1,8 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
@@ -6,10 +10,6 @@ using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
 using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.VesselFlightStateSys

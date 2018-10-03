@@ -1,4 +1,9 @@
-﻿using CommNet;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using CommNet;
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events;
@@ -20,13 +25,7 @@ using LmpClient.Utilities;
 using LmpClient.Windows;
 using LmpCommon;
 using LmpCommon.Enums;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using UnityEngine;
-using PartModulePatcher = LmpClient.ModuleStore.Patching.PartModulePatcher;
 
 namespace LmpClient
 {

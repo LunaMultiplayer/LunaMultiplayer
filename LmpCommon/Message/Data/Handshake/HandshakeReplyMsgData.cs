@@ -2,7 +2,6 @@
 using LmpCommon.Enums;
 using LmpCommon.Message.Base;
 using LmpCommon.Message.Types;
-using System;
 
 namespace LmpCommon.Message.Data.Handshake
 {

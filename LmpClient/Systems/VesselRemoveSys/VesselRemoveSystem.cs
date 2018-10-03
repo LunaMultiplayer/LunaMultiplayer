@@ -1,13 +1,14 @@
-﻿using KSP.UI.Screens;
+﻿using System;
+using System.Collections.Concurrent;
+using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Localization;
 using LmpClient.VesselUtilities;
 using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
 using UniLinq;
+using Object = UnityEngine.Object;
 
 namespace LmpClient.Systems.VesselRemoveSys
 {
@@ -151,9 +152,9 @@ namespace LmpClient.Systems.VesselRemoveSys
                 FlightGlobals.RemoveVessel(killVessel);
                 foreach (var part in killVessel.parts)
                 {
-                    UnityEngine.Object.Destroy(part.gameObject);
+                    Object.Destroy(part.gameObject);
                 }
-                UnityEngine.Object.Destroy(killVessel.gameObject);
+                Object.Destroy(killVessel.gameObject);
 
                 HighLogic.CurrentGame.flightState.protoVessels.RemoveAll(v => v == null || v.vesselID == killVessel.id);
                 KSCVesselMarkers.fetch?.RefreshMarkers();

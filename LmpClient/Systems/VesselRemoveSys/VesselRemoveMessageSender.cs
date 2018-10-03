@@ -13,7 +13,7 @@ namespace LmpClient.Systems.VesselRemoveSys
     {
         public void SendMessage(IMessageData msg)
         {
-            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg))); ;
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg)));
         }
 
         /// <summary>

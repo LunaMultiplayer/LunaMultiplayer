@@ -1,6 +1,6 @@
-﻿using LmpClient.Systems.TimeSync;
+﻿using System.Text;
+using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
-using System.Text;
 
 namespace LmpClient.Windows.Status
 {

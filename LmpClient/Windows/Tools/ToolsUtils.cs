@@ -10,7 +10,7 @@
             orbit = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = 0, unpack = int.MaxValue },
             prelaunch = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = 0, unpack = int.MaxValue },
             splashed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = 0, unpack = int.MaxValue },
-            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = 0, unpack = int.MaxValue },
+            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = 0, unpack = int.MaxValue }
         };
 
         public static VesselRanges UnPackRanges { get; } = new VesselRanges
@@ -21,7 +21,7 @@
             orbit = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = int.MaxValue, unpack = 0 },
             prelaunch = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = int.MaxValue, unpack = 0 },
             splashed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = int.MaxValue, unpack = 0 },
-            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = int.MaxValue, unpack = 0 },
+            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { pack = int.MaxValue, unpack = 0 }
         };
 
         public static VesselRanges LoadRanges { get; } = new VesselRanges
@@ -32,7 +32,7 @@
             orbit = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = 0, unload = int.MaxValue },
             prelaunch = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = 0, unload = int.MaxValue },
             splashed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = 0, unload = int.MaxValue },
-            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = 0, unload = int.MaxValue },
+            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = 0, unload = int.MaxValue }
         };
 
         public static VesselRanges UnloadRanges { get; } = new VesselRanges
@@ -43,7 +43,7 @@
             orbit = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = int.MaxValue, unload = 0 },
             prelaunch = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = int.MaxValue, unload = 0 },
             splashed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = int.MaxValue, unload = 0 },
-            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = int.MaxValue, unload = 0 },
+            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit) { load = int.MaxValue, unload = 0 }
         };
     }
 }

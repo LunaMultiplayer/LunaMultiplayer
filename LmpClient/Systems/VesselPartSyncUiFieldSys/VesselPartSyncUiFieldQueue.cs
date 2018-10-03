@@ -1,7 +1,7 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Vessel;
-using System;
 
 namespace LmpClient.Systems.VesselPartSyncUiFieldSys
 {

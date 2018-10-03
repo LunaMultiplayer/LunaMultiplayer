@@ -1,4 +1,5 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
@@ -7,7 +8,6 @@ using LmpCommon.Enums;
 using LmpCommon.Message.Data.Color;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
 using UniLinq;
 
 namespace LmpClient.Systems.PlayerColorSys

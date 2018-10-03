@@ -1,5 +1,5 @@
-﻿using LmpCommon.Message.Interface;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
+using LmpCommon.Message.Interface;
 
 namespace LmpClient.Base
 {

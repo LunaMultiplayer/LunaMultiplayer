@@ -123,10 +123,7 @@ namespace Server
             }
             catch (Exception e)
             {
-                if (e is HandledException)
-                    LunaLog.Fatal(e.Message);
-                else
-                    LunaLog.Fatal($"Error in main server thread, Exception: {e}");
+                LunaLog.Fatal(e is HandledException ? e.Message : $"Error in main server thread, Exception: {e}");
                 Console.ReadLine(); //Avoid closing automatically
             }
         }

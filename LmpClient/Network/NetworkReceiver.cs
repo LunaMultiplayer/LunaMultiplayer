@@ -1,4 +1,6 @@
-﻿using Lidgren.Network;
+﻿using System;
+using System.Threading;
+using Lidgren.Network;
 using LmpClient.Systems.Admin;
 using LmpClient.Systems.Chat;
 using LmpClient.Systems.CraftLibrary;
@@ -46,8 +48,6 @@ using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using LmpCommon.Time;
-using System;
-using System.Threading;
 
 namespace LmpClient.Network
 {

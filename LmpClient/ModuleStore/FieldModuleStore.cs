@@ -1,10 +1,10 @@
-﻿using LmpClient.ModuleStore.Structures;
-using LmpClient.Utilities;
-using LmpCommon.Xml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LmpClient.ModuleStore.Structures;
+using LmpClient.Utilities;
+using LmpCommon.Xml;
 using UnityEngine;
 
 namespace LmpClient.ModuleStore
@@ -83,7 +83,7 @@ namespace LmpClient.ModuleStore
                     {
                         ModuleName = partModuleType.Name,
                         Fields = moduleDefinition.Fields,
-                        Methods = moduleDefinition.Methods,
+                        Methods = moduleDefinition.Methods
                     });
                 }
             }

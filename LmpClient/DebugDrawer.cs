@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace LmpClient
 {
@@ -84,11 +85,11 @@ namespace LmpClient
                     hideFlags = HideFlags.HideAndDontSave
                 };
 
-                LineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                LineMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                LineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+                LineMaterial.SetInt("_SrcBlend", (int)BlendMode.One);
+                LineMaterial.SetInt("_DstBlend", (int)BlendMode.Zero);
+                LineMaterial.SetInt("_Cull", (int)CullMode.Off);
                 LineMaterial.SetInt("_ZWrite", 0);
-                LineMaterial.SetInt("_ZWrite", (int)UnityEngine.Rendering.CompareFunction.Always);
+                LineMaterial.SetInt("_ZWrite", (int)CompareFunction.Always);
             }
 
             StartCoroutine(EndOfFrameDrawing());

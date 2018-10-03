@@ -1,6 +1,6 @@
-﻿using Harmony;
+﻿using System.Collections.Generic;
+using Harmony;
 using LmpClient.Base;
-using System.Collections.Generic;
 
 namespace LmpClient.Systems.Facility
 {

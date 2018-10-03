@@ -1,7 +1,7 @@
-﻿using LmpClient.Base;
-using LmpClient.Systems.TimeSync;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
+using LmpClient.Base;
+using LmpClient.Systems.TimeSync;
 
 namespace LmpClient.Systems.VesselFairingsSys
 {

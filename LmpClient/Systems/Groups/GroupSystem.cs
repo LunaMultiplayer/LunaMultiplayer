@@ -26,8 +26,8 @@ namespace LmpClient.Systems.Groups
         {
             if (Groups.TryGetValue(groupName, out var existingVal))
             {
-                if (!existingVal.Members.Any(m=> m == SettingsSystem.CurrentSettings.PlayerName) && 
-                    !existingVal.Invited.Any(m => m == SettingsSystem.CurrentSettings.PlayerName))
+                if (existingVal.Members.All(m => m != SettingsSystem.CurrentSettings.PlayerName) && 
+                    existingVal.Invited.All(m => m != SettingsSystem.CurrentSettings.PlayerName))
                 {
                     var expectedGroup = existingVal.Clone();
 

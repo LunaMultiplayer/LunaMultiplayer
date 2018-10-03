@@ -1,4 +1,7 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Linq;
+using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Systems.Mod;
@@ -6,9 +9,6 @@ using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
 using LmpClient.Windows.BannedParts;
-using System;
-using System.Collections.Concurrent;
-using System.Linq;
 
 namespace LmpClient.Systems.VesselProtoSys
 {

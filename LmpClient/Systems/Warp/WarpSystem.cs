@@ -1,4 +1,7 @@
-﻿using FinePrint.Utilities;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using FinePrint.Utilities;
 using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Localization;
@@ -8,9 +11,6 @@ using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
 using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UniLinq;
 
 namespace LmpClient.Systems.Warp

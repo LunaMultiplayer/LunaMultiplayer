@@ -1,4 +1,5 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.TimeSync;
@@ -6,7 +7,6 @@ using LmpCommon.Enums;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
-using System;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPartSyncFieldSys

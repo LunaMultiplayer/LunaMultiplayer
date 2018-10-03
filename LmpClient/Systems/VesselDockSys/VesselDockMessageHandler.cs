@@ -1,4 +1,6 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Extensions;
 using LmpClient.Systems.VesselRemoveSys;
@@ -7,8 +9,6 @@ using LmpClient.VesselUtilities;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselDockSys
 {

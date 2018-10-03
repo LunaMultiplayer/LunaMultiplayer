@@ -1,11 +1,11 @@
-﻿using Lidgren.Network;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using Lidgren.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
 
 namespace LmpClient.Network
 {

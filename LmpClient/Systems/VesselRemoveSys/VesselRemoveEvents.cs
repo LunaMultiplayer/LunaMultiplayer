@@ -1,9 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.VesselUtilities;
-using System;
 using UniLinq;
 
 namespace LmpClient.Systems.VesselRemoveSys

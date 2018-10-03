@@ -1,11 +1,11 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Flag;
 using LmpCommon.Message.Interface;
-using System;
 
 namespace LmpClient.Systems.Flag
 {

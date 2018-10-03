@@ -4,6 +4,7 @@ using LmpClient.Network;
 using LmpClient.Systems.Mod;
 using LmpClient.Systems.PlayerColorSys;
 using LmpClient.Systems.SettingsSys;
+using LmpClient.Utilities;
 using LmpClient.Windows.Status;
 using LmpCommon.Enums;
 using LmpCommon.Time;
@@ -127,14 +128,10 @@ namespace LmpClient.Windows.Options
                     }
                 }
 
-                if (SettingsSystem.CurrentSettings.TimeoutSeconds == float.MaxValue)
-                {
-                    GUILayout.Label($"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} ∞");
-                }
-                else
-                {
-                    GUILayout.Label($"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} {NetworkMain.Config.ConnectionTimeout} sec");
-                }
+                GUILayout.Label(SettingsSystem.CurrentSettings.TimeoutSeconds == float.MaxValue
+                    ? $"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} ∞"
+                    : $"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} {NetworkMain.Config.ConnectionTimeout} sec");
+
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
                     _infiniteTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds == float.MaxValue;
@@ -220,9 +217,9 @@ namespace LmpClient.Windows.Options
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
-            foreach (var saveFolder in Utilities.UniverseConverter.GetSavedNames())
+            foreach (var saveFolder in UniverseConverter.GetSavedNames())
                 if (GUILayout.Button(saveFolder))
-                    Utilities.UniverseConverter.GenerateUniverse(saveFolder);
+                    UniverseConverter.GenerateUniverse(saveFolder);
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
         }

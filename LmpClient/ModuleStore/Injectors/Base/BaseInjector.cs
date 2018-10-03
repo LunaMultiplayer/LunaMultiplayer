@@ -1,7 +1,7 @@
-﻿using Harmony;
-using LmpClient.Base;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using LmpClient.Base;
 
 namespace LmpClient.ModuleStore.Injectors.Base
 {

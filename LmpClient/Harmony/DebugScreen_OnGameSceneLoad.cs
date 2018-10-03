@@ -2,6 +2,7 @@
 using KSP.UI.Screens.DebugToolbar;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
+
 // ReSharper disable All
 
 namespace LmpClient.Harmony

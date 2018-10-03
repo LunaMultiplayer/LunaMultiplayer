@@ -1,12 +1,12 @@
-﻿using Harmony;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace LmpClient.Systems.ShareExperimentalParts
 {

@@ -41,7 +41,7 @@ namespace LmpClient.Windows.ServerList
 
         private static long _selectedServerId;
         private static string _orderBy = "PlayerCount";
-        private static bool _ascending = false;
+        private static bool _ascending;
 
         private static GUIStyle _headerServerLine;
         private static GUIStyle _evenServerLine;
@@ -69,24 +69,39 @@ namespace LmpClient.Windows.ServerList
             _serverDetailWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
-            _headerServerLine = new GUIStyle();
-            _headerServerLine.normal.background = new Texture2D(1, 1);
+            _headerServerLine = new GUIStyle
+            {
+                normal =
+                {
+                    background = new Texture2D(1, 1)
+                }
+            };
             _headerServerLine.normal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
             _headerServerLine.normal.background.Apply();
             _headerServerLine.onNormal.background = new Texture2D(1, 1);
             _headerServerLine.onNormal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
             _headerServerLine.onNormal.background.Apply();
 
-            _evenServerLine = new GUIStyle();
-            _evenServerLine.normal.background = new Texture2D(1, 1);
+            _evenServerLine = new GUIStyle
+            {
+                normal =
+                {
+                    background = new Texture2D(1, 1)
+                }
+            };
             _evenServerLine.normal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
             _evenServerLine.normal.background.Apply();
             _evenServerLine.onNormal.background = new Texture2D(1, 1);
             _evenServerLine.onNormal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
             _evenServerLine.onNormal.background.Apply();
-            
-            _oddServerLine = new GUIStyle();
-            _oddServerLine.normal.background = new Texture2D(1, 1);
+
+            _oddServerLine = new GUIStyle
+            {
+                normal =
+                {
+                    background = new Texture2D(1, 1)
+                }
+            };
             _oddServerLine.normal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
             _oddServerLine.normal.background.Apply();
             _oddServerLine.onNormal.background = new Texture2D(1, 1);

@@ -1,10 +1,10 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.Screenshot;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.Screenshot
 {

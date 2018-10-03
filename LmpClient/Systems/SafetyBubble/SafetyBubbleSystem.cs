@@ -1,8 +1,7 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Generic;
+using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
-using System.Collections.Generic;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace LmpClient.Systems.SafetyBubble
 {

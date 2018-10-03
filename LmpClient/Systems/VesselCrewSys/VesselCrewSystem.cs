@@ -1,9 +1,11 @@
-﻿namespace LmpClient.Systems.VesselCrewSys
+﻿using LmpClient.Base;
+
+namespace LmpClient.Systems.VesselCrewSys
 {
     /// <summary>
     /// System for handling when a kerbal boards/unboards a vessel or gets transfered
     /// </summary>
-    public class VesselCrewSystem : Base.System<VesselCrewSystem>
+    public class VesselCrewSystem : System<VesselCrewSystem>
     {
         #region Fields & properties
 

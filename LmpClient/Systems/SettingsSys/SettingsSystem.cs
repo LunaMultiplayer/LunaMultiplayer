@@ -1,14 +1,13 @@
 ﻿using LmpClient.Base;
 using LmpClient.Network;
 using LmpCommon.Enums;
-using LmpCommon.Message.Data.Settings;
 using System.Text;
 
 namespace LmpClient.Systems.SettingsSys
 {
     public class SettingsSystem : MessageSystem<SettingsSystem, SettingsMessageSender, SettingsMessageHandler>
     {
-        public static SettingStructure CurrentSettings { get; private set; }
+        public static SettingStructure CurrentSettings { get; }
         public static SettingsServerStructure ServerSettings { get; private set; } = new SettingsServerStructure();
 
         private static readonly StringBuilder Builder = new StringBuilder();

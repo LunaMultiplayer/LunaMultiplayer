@@ -1,11 +1,11 @@
-﻿using Harmony;
-using LmpClient.Events;
-using LmpClient.ModuleStore.Structures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using LmpClient.Events;
+using LmpClient.ModuleStore.Structures;
 using UnityEngine;
 
 namespace LmpClient.ModuleStore.Patching

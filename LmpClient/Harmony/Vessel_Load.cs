@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using LmpClient.Systems.SafetyBubble;
+
 // ReSharper disable All
 
 namespace LmpClient.Harmony

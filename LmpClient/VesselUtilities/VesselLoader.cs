@@ -1,10 +1,10 @@
-﻿using KSP.UI.Screens;
+﻿using System;
+using KSP.UI.Screens;
 using LmpClient.Extensions;
 using LmpClient.Systems.Flag;
 using LmpClient.Systems.KscScene;
 using LmpClient.Systems.PlayerColorSys;
 using LmpClient.Systems.VesselPositionSys;
-using System;
 using UniLinq;
 using Object = UnityEngine.Object;
 

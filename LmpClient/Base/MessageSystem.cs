@@ -1,8 +1,8 @@
-﻿using LmpClient.Base.Interface;
+﻿using System;
+using System.Collections.Concurrent;
+using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpCommon.Message.Interface;
-using System;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Base
 {

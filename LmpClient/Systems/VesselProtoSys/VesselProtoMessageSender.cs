@@ -10,7 +10,6 @@ using LmpCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
 
-
 namespace LmpClient.Systems.VesselProtoSys
 {
     public class VesselProtoMessageSender : SubSystem<VesselProtoSystem>, IMessageSender
@@ -21,8 +20,6 @@ namespace LmpClient.Systems.VesselProtoSys
         private static readonly byte[] VesselSerializedBytes = new byte[10 * 1024 * 1000];
 
         private static readonly object VesselArraySyncLock = new object();
-
-        private static Dictionary<Guid, Vessel> VesselsWithPartsChanged = new Dictionary<Guid, Vessel>();
 
         public void SendMessage(IMessageData msg)
         {

@@ -1,4 +1,6 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.Mod;
@@ -8,8 +10,6 @@ using LmpCommon.Message.Data.Handshake;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using LmpCommon.ModFile;
-using System;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.Handshake
 {

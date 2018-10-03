@@ -1,15 +1,14 @@
-﻿using Lidgren.Network;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net;
+using Lidgren.Network;
 using LmpClient.Systems.Ping;
 using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.MasterServer;
 using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Net;
 using UniLinq;
-using Random = System.Random;
 
 namespace LmpClient.Network
 {

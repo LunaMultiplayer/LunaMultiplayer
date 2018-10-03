@@ -1,10 +1,10 @@
-﻿using LmpClient.Localization.Structures;
-using LmpClient.Utilities;
-using LmpCommon.Xml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LmpClient.Localization.Structures;
+using LmpClient.Utilities;
+using LmpCommon.Xml;
 
 namespace LmpClient.Localization
 {

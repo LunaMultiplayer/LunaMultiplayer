@@ -114,7 +114,7 @@ namespace LmpClient.Utilities
                 True,
                 False,
                 Null
-            };
+            }
 
             #endregion
 
@@ -206,7 +206,7 @@ namespace LmpClient.Utilities
 
             #region Methods: public
 
-            public static bool IsWordBreak(char c)
+            private static bool IsWordBreak(char c)
             {
                 return char.IsWhiteSpace(c) || WordBreak.IndexOf(c) != -1;
             }

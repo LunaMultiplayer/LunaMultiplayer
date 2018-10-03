@@ -1,6 +1,6 @@
-﻿using LmpGlobal;
-using LmpClient.Localization;
+﻿using LmpClient.Localization;
 using LmpCommon;
+using LmpGlobal;
 using UnityEngine;
 
 namespace LmpClient.Windows.Update

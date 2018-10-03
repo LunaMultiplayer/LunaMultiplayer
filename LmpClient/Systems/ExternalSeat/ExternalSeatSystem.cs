@@ -1,11 +1,12 @@
-﻿using LmpClient.Events;
+﻿using LmpClient.Base;
+using LmpClient.Events;
 
 namespace LmpClient.Systems.ExternalSeat
 {
     /// <summary>
     /// This system handles the events when a kerbal boards or unboards an external seat
     /// </summary>
-    public class ExternalSeatSystem : Base.System<ExternalSeatSystem>
+    public class ExternalSeatSystem : System<ExternalSeatSystem>
     {
         #region Fields & properties
 

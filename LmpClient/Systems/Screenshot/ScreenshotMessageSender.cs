@@ -1,11 +1,11 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Screenshot;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
-using System;
 using UniLinq;
 
 namespace LmpClient.Systems.Screenshot

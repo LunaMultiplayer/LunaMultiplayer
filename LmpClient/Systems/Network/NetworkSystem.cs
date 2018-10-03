@@ -1,4 +1,5 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Network;
 using LmpClient.Systems.Flag;
@@ -16,7 +17,6 @@ using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
 using LmpCommon.Enums;
 using LmpCommon.Time;
-using System;
 
 namespace LmpClient.Systems.Network
 {

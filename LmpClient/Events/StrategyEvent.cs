@@ -1,5 +1,6 @@
 ﻿using LmpClient.Events.Base;
 using Strategies;
+
 // ReSharper disable All
 #pragma warning disable IDE1006
 

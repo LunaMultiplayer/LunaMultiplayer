@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpCommon.Message.Types;
 
 namespace LmpCommon.Message.Data.ShareProgress

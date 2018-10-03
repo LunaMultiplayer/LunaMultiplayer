@@ -1,4 +1,5 @@
-﻿using LmpClient.Events;
+﻿using LmpClient.Base;
+using LmpClient.Events;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 
@@ -8,7 +9,7 @@ namespace LmpClient.Systems.VesselImmortalSys
     /// This class makes the other vessels immortal, this way if we crash against them they are not destroyed but we do.
     /// In the other player screens they will be destroyed and they will send their new vessel definition.
     /// </summary>
-    public class VesselImmortalSystem : Base.System<VesselImmortalSystem>
+    public class VesselImmortalSystem : System<VesselImmortalSystem>
     {
         #region Fields & properties
 

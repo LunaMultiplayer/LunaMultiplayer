@@ -1,12 +1,12 @@
-﻿using Harmony;
-using Harmony.ILCopying;
-using LmpClient.Base;
-using LmpClient.ModuleStore.Structures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using Harmony.ILCopying;
+using LmpClient.Base;
+using LmpClient.ModuleStore.Structures;
 
 namespace LmpClient.ModuleStore.Patching
 {

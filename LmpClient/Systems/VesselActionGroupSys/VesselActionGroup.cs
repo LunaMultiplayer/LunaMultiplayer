@@ -1,7 +1,7 @@
-﻿using LmpClient.Extensions;
-using LmpClient.VesselUtilities;
-using System;
+﻿using System;
 using System.Globalization;
+using LmpClient.Extensions;
+using LmpClient.VesselUtilities;
 
 namespace LmpClient.Systems.VesselActionGroupSys
 {

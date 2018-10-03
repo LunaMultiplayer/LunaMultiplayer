@@ -1,10 +1,11 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using System.Linq;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
-using System.Linq;
+using UnityEngine;
 using Upgradeables;
 
 namespace LmpClient.Systems.ShareUpgradeableFacilities
@@ -34,7 +35,7 @@ namespace LmpClient.Systems.ShareUpgradeableFacilities
         {
             System.StartIgnoringEvents();
             
-            var facility = UnityEngine.Object.FindObjectsOfType<UpgradeableFacility>().FirstOrDefault(o => o.id == facilityId);
+            var facility = Object.FindObjectsOfType<UpgradeableFacility>().FirstOrDefault(o => o.id == facilityId);
             if (facility != null)
             {
                 facility.SetLevel(newLevel);

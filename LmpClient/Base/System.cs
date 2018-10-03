@@ -87,19 +87,19 @@ namespace LmpClient.Base
         {
             if (routine == null)
             {
-                LunaLog.LogError($"[LMP]: Cannot set a null routine!");
+                LunaLog.LogError("[LMP]: Cannot set a null routine!");
                 return;
             }
 
-            if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.Any(r => r.Name == routine.Name))
+            if (routine.Execution == RoutineExecution.FixedUpdate && FixedUpdateRoutines.All(r => r.Name != routine.Name))
             {
                 FixedUpdateRoutines.Add(routine);
             }
-            else if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.Any(r => r.Name == routine.Name))
+            else if (routine.Execution == RoutineExecution.Update && UpdateRoutines.All(r => r.Name != routine.Name))
             {
                 UpdateRoutines.Add(routine);
             }
-            else if (routine.Execution == RoutineExecution.LateUpdate && !LateUpdateRoutines.Any(r => r.Name == routine.Name))
+            else if (routine.Execution == RoutineExecution.LateUpdate && LateUpdateRoutines.All(r => r.Name != routine.Name))
             {
                 LateUpdateRoutines.Add(routine);
             }

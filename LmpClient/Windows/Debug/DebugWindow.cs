@@ -1,4 +1,8 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using LmpClient.Base;
 using LmpClient.Network;
 using LmpClient.Systems.SafetyBubble;
 using LmpClient.Systems.TimeSync;
@@ -6,10 +10,6 @@ using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Systems.Warp;
 using LmpCommon.Enums;
 using LmpCommon.Time;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace LmpClient.Windows.Debug

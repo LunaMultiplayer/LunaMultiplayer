@@ -4,6 +4,7 @@
     {
         public static PartResource FindResource(this Part part, string resourceName)
         {
+            // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < part.Resources.Count; i++)
             {
                 if (part.Resources[i].resourceName == resourceName)

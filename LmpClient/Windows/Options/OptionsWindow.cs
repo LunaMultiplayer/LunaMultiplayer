@@ -19,7 +19,6 @@ namespace LmpClient.Windows.Options
 
         private static GUIStyle _tempColorLabelStyle;
         private static bool _showGeneralSettings;
-        private static bool _showInterpolationSettings;
         private static bool _showBadNetworkSimulationSettings;
         private static bool _showAdvancedNetworkSettings;
         private static bool _showClockOffsetSettings;

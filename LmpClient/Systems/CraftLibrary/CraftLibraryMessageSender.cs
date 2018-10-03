@@ -1,10 +1,10 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.CraftLibrary;
 using LmpCommon.Message.Interface;
-using System;
 
 namespace LmpClient.Systems.CraftLibrary
 {

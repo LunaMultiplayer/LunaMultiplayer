@@ -19,7 +19,7 @@ namespace LmpClient.Systems.ShareAchievements
         //They will only appear in the debug console.
         protected override GameMode RelevantGameModes => GameMode.Career;
 
-        public ConfigNode _lastAchievements;
+        private ConfigNode _lastAchievements;
 
         public bool Reverting { get; set; }
 

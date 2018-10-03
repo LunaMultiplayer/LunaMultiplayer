@@ -1,8 +1,8 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Generic;
+using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 

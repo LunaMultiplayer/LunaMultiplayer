@@ -1,7 +1,7 @@
-﻿using LmpClient.Base;
+﻿using System.Linq;
+using LmpClient.Base;
 using LmpClient.Systems.Scenario;
 using LmpClient.VesselUtilities;
-using System.Linq;
 using UnityEngine;
 
 namespace LmpClient.Systems.Facility

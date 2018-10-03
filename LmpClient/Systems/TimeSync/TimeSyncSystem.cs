@@ -1,9 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
 using LmpCommon.Time;
-using System;
 using UnityEngine;
 using UnityEngine.Profiling;
 

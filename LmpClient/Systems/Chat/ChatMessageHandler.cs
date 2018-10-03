@@ -1,9 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System;
+using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.Chat;
 using LmpCommon.Message.Interface;
-using System;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.Chat
 {

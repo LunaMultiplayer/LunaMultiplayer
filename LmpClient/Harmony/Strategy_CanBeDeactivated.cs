@@ -2,6 +2,7 @@
 using LmpClient.Systems.ShareStrategy;
 using LmpCommon.Enums;
 using Strategies;
+
 // ReSharper disable All
 
 namespace LmpClient.Harmony

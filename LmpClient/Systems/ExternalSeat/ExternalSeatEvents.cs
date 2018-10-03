@@ -1,9 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
-using System;
 
 namespace LmpClient.Systems.ExternalSeat
 {

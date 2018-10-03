@@ -1,11 +1,11 @@
-﻿using KSP.UI.Screens;
+﻿using System.Collections.Concurrent;
+using System.Linq;
+using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
-using System.Collections.Concurrent;
-using System.Linq;
 
 namespace LmpClient.Systems.ShareTechnology
 {

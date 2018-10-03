@@ -1,10 +1,10 @@
-﻿using LmpClient.Base;
+﻿using System.Collections.Concurrent;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Events;
 using LmpCommon;
 using LmpCommon.Message.Data;
 using LmpCommon.Message.Interface;
-using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.ModApi
 {
