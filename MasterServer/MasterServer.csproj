@@ -73,9 +73,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Icon.ico" />
     <Content Include="Resources\Icon.ico" />
   </ItemGroup>
