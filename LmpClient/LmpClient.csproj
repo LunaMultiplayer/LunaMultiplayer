@@ -75,6 +75,7 @@
     <Compile Include="Events\ExperimentalPartEvent.cs" />
     <Compile Include="Events\ExperimentEvent.cs" />
     <Compile Include="Events\ExternalSeatEvent.cs" />
+    <Compile Include="Events\FlightDriverEvent.cs" />
     <Compile Include="Events\ImmortalEvent.cs" />
     <Compile Include="Events\LabelEvent.cs" />
     <Compile Include="Events\LockEvent.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
+    <Compile Include="Harmony\FlightDriver_Start.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
     <Compile Include="Harmony\PartBuoyancy_FixedUpdate.cs" />

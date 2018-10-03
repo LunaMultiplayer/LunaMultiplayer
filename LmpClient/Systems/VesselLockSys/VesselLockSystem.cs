@@ -1,10 +1,10 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.VesselUtilities;
 using LmpCommon.Locks;
+using System;
 
 namespace LmpClient.Systems.VesselLockSys
 {
@@ -44,6 +44,7 @@ namespace LmpClient.Systems.VesselLockSys
             LockEvent.onLockAcquireUnityThread.Add(VesselLockEvents.LockAcquire);
             LockEvent.onLockReleaseUnityThread.Add(VesselLockEvents.LockReleased);
             VesselUnloadEvent.onVesselUnloading.Add(VesselLockEvents.VesselUnloading);
+            FlightDriverEvent.onFlightStarted.Add(VesselLockEvents.FlightStarted);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, LockSystem.Singleton.MessageSender.SendLocksRequest));
@@ -58,6 +59,7 @@ namespace LmpClient.Systems.VesselLockSys
             LockEvent.onLockAcquireUnityThread.Remove(VesselLockEvents.LockAcquire);
             LockEvent.onLockReleaseUnityThread.Remove(VesselLockEvents.LockReleased);
             VesselUnloadEvent.onVesselUnloading.Remove(VesselLockEvents.VesselUnloading);
+            FlightDriverEvent.onFlightStarted.Remove(VesselLockEvents.FlightStarted);
         }
 
         #endregion

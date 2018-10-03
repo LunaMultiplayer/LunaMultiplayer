@@ -36,12 +36,14 @@ namespace LmpClient.Systems.VesselLockSys
             }
             else
             {
-                LockSystem.Singleton.AcquireControlLock(vessel.id);
-
                 if (vessel.isEVA)
                 {
                     //Send the vessel that we are switching to if it's a newly created EVA
                     VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
+                }
+                else if(FlightDriver.flightStarted)
+                {
+                    LockSystem.Singleton.AcquireControlLock(vessel.id);
                 }
             }
         }
@@ -125,7 +127,7 @@ namespace LmpClient.Systems.VesselLockSys
                     break;
                 case LockType.UnloadedUpdate:
                 case LockType.Update:
-                    if (HighLogic.LoadedScene <= GameScenes.FLIGHT || VesselCommon.IsSpectating) return;
+                    if (HighLogic.LoadedScene < GameScenes.FLIGHT || VesselCommon.IsSpectating) return;
 
                     var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
                     if (vessel != null)
@@ -152,6 +154,21 @@ namespace LmpClient.Systems.VesselLockSys
         {
             if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 LockSystem.Singleton.ReleaseUpdateLock(vessel.id, vessel.persistentId);
+        }
+
+        /// <summary>
+        /// This event is triggered after we started a flight and we are already in the final vessel.
+        /// It's important that we get the control lock once the FlightDriver has started!
+        /// Otherwise another player will see your vessel going up in the air while you're loading
+        /// as you have the control lock -> the immortal system makes you immortal -> the FlightIntegrator_FixedUpdate is skipped on
+        /// that vessel.
+        /// </summary>
+        public void FlightStarted()
+        {
+            if (FlightGlobals.ActiveVessel != null && !LockSystem.LockQuery.ControlLockExists(FlightGlobals.ActiveVessel.id))
+            {
+                LockSystem.Singleton.AcquireControlLock(FlightGlobals.ActiveVessel.id);
+            }
         }
     }
 }
