@@ -26,10 +26,10 @@ namespace LmpClient.Systems.VesselCrewSys
                     VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVessel);
                     LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalVessel.vesselName }, kerbalVessel.id);
                 }
+
                 VesselRemoveSystem.Singleton.AddToKillList(kerbalVessel, "Killing kerbal as it boarded a vessel");
 
-                //The vessel definition has changed so send the new vessel even if it's controlled by someone else
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
+                //Do not send the vessel definition. OnCrewTransfered handles that
             }
         }
 
@@ -38,7 +38,10 @@ namespace LmpClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel);
+            if(!data.from?.vessel?.isEVA ?? false)
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel);
+            else if (!data.to?.vessel?.isEVA ?? false)
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.to.vessel);
         }
 
         /// <summary>
