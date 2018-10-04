@@ -112,7 +112,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /y /s "$(TargetDir)*.*" "$(SolutionDir)MasterServer\bin\$(ConfigurationName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
