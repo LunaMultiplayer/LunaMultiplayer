@@ -28,10 +28,8 @@ namespace LmpClient.Systems.VesselCrewSys
                 }
                 VesselRemoveSystem.Singleton.AddToKillList(kerbalVessel, "Killing kerbal as it boarded a vessel");
 
-                if (!LockSystem.LockQuery.UpdateLockExists(vessel.id) || LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                {
-                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
-                }
+                //The vessel definition has changed so send the new vessel even if it's controlled by someone else
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
             }
         }
 
