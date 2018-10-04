@@ -1,9 +1,10 @@
 ﻿using LmpClient.Base;
+using LmpClient.Events;
 using LmpClient.Systems.Lock;
-using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
-using LmpClient.VesselUtilities;
+using System;
+using System.Collections;
 
 namespace LmpClient.Systems.VesselCrewSys
 {
@@ -12,45 +13,53 @@ namespace LmpClient.Systems.VesselCrewSys
         /// <summary>
         /// Event triggered when a kerbal boards a vessel
         /// </summary>
-        public void OnCrewBoard(GameEvents.FromToAction<Part, Part> partAction)
+        public void OnCrewBoard(Guid kerbalId, string kerbalName, Vessel vessel)
         {
             LunaLog.Log("Crew boarding detected!");
-            if (!VesselCommon.IsSpectating)
+
+            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalId, false);
+            LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalId);
+            VesselRemoveSystem.Singleton.AddToKillList(kerbalId, "Killing kerbal as it boarded a vessel");
+
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
+        }
+        
+        /// <summary>
+        /// Trigger an event once the kerbal in EVA is ready to be sent
+        /// </summary>
+        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
+        {
+            MainSystem.Singleton.StartCoroutine(OnCrewEvaReady(data.to.FindModuleImplementing<KerbalEVA>()));
+
+            IEnumerator OnCrewEvaReady(KerbalEVA eva)
             {
-                var kerbalVessel = partAction.from.vessel;
-                var vessel = partAction.to.vessel;
-
-                LunaLog.Log($"EVA Boarding. Kerbal: {kerbalVessel.vesselName} boarding: {vessel.vesselName}");
-                if (LockSystem.LockQuery.ControlLockBelongsToPlayer(kerbalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                while (eva != null && !eva.Ready)
                 {
-                    VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVessel);
-                    LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalVessel.vesselName }, kerbalVessel.id);
+                    yield return null;
                 }
-
-                VesselRemoveSystem.Singleton.AddToKillList(kerbalVessel, "Killing kerbal as it boarded a vessel");
-
-                //Do not send the vessel definition. OnCrewTransfered handles that
+                if (eva != null && eva.Ready)
+                {
+                    EvaEvent.onCrewEvaReady.Fire(eva.vessel);
+                }
             }
         }
 
         /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
+        /// Kerbal in eva is initialized with orbit data and ready to be sent to the server
         /// </summary>
-        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
+        /// <param name="evaVessel"></param>
+        public void CrewEvaReady(Vessel evaVessel)
         {
-            if(!data.from?.vessel?.isEVA ?? false)
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel);
-            else if (!data.to?.vessel?.isEVA ?? false)
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.to.vessel);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(evaVessel);
         }
 
         /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition.
+        /// Crew in the vessel has been modified so send the vessel to the server
         /// </summary>
-        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
+        public void OnCrewModified(Vessel vessel)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel);
-            //Do not send the kerbal as his orbit is not ready. It will be handled by the VesselLockEvents.OnVesselChange
+            if(!vessel.isEVA)
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
         }
     }
 }

@@ -72,6 +72,7 @@
     <Compile Include="DebugDrawer.cs" />
     <Compile Include="Events\ActionGroupEvent.cs" />
     <Compile Include="Events\Base\LmpBaseEvent.cs" />
+    <Compile Include="Events\EvaEvent.cs" />
     <Compile Include="Events\ExperimentalPartEvent.cs" />
     <Compile Include="Events\ExperimentEvent.cs" />
     <Compile Include="Events\ExternalSeatEvent.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Harmony\FlightIntegrator_Update.cs" />
     <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />
     <Compile Include="Harmony\SpaceTracking_StartTrackingObject.cs" />
+    <Compile Include="Harmony\KerbalEVA_proceedAndBoard.cs" />
     <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />

@@ -3,7 +3,6 @@ using LmpClient.Extensions;
 using LmpClient.Systems.KscScene;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Systems.VesselProtoSys;
 using LmpClient.VesselUtilities;
 using LmpCommon.Locks;
 
@@ -36,12 +35,6 @@ namespace LmpClient.Systems.VesselLockSys
             }
             else
             {
-                if (vessel.isEVA)
-                {
-                    //Send the vessel that we are switching to if it's a newly created EVA
-                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
-                }
-
                 if (FlightDriver.flightStarted)
                 {
                     LockSystem.Singleton.AcquireControlLock(vessel.id);

@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Events;
 
 namespace LmpClient.Systems.VesselCrewSys
 {
@@ -20,17 +21,19 @@ namespace LmpClient.Systems.VesselCrewSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onCrewBoardVessel.Add(VesselCrewEvents.OnCrewBoard);
             GameEvents.onCrewOnEva.Add(VesselCrewEvents.OnCrewEva);
-            GameEvents.onCrewTransferred.Add(VesselCrewEvents.OnCrewTransfered);
+            GameEvents.onVesselCrewWasModified.Add(VesselCrewEvents.OnCrewModified);
+            EvaEvent.onCrewEvaReady.Add(VesselCrewEvents.CrewEvaReady);
+            EvaEvent.onCrewEvaBoarded.Add(VesselCrewEvents.OnCrewBoard);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onCrewBoardVessel.Remove(VesselCrewEvents.OnCrewBoard);
             GameEvents.onCrewOnEva.Remove(VesselCrewEvents.OnCrewEva);
-            GameEvents.onCrewTransferred.Remove(VesselCrewEvents.OnCrewTransfered);
+            GameEvents.onVesselCrewWasModified.Remove(VesselCrewEvents.OnCrewModified);
+            EvaEvent.onCrewEvaReady.Remove(VesselCrewEvents.CrewEvaReady);
+            EvaEvent.onCrewEvaBoarded.Remove(VesselCrewEvents.OnCrewBoard);
         }
 
         #endregion
