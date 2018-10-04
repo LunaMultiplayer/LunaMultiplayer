@@ -37,3 +37,4 @@ LmpGlobal/*.csproj.user
 LmpGlobal/bin/*
 LmpGlobal/obj/*
 *.nupkg
+.idea
