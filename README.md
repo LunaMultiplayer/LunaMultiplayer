@@ -75,7 +75,7 @@ You can check [how many servers are up](../../wiki/Master-server-status) and run
 | ------------  | ------- |-------- |
 [Dagger](https://github.com/gavazquez) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8701.svg?label=status)](http://servers.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8751.svg?label=status&colorB=brightgreen)](http://servers.lunamultiplayer.com:8751) |
 [PictoCube](https://github.com/Alfred-PictoCube) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/pictocube.ddns.net:8701.svg?label=status)](http://pictocube.ddns.net:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/pictocube.ddns.net:8711.svg?label=status)](http://pictocube.ddns.net:8711) |
-Tekbot | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/http://ms.lmp.dnsd.info:8701.svg?label=status)](http://ms.lmp.dnsd.info:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/http://ms.lmp.dnsd.info:8751.svg?label=status)](http://ms.lmp.dnsd.info:8751) |
+Tekbot | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/ms.lmp.dnsd.info:8701.svg?label=status)](http://ms.lmp.dnsd.info:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/ms.lmp.dnsd.info:8751.svg?label=status)](http://ms.lmp.dnsd.info:8751) |
 
 ---
 ### Status:
