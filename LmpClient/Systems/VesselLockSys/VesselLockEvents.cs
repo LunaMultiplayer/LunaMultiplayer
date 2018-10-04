@@ -41,7 +41,8 @@ namespace LmpClient.Systems.VesselLockSys
                     //Send the vessel that we are switching to if it's a newly created EVA
                     VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
                 }
-                else if(FlightDriver.flightStarted)
+
+                if (FlightDriver.flightStarted)
                 {
                     LockSystem.Singleton.AcquireControlLock(vessel.id);
                 }
