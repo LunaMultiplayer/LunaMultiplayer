@@ -1,10 +1,11 @@
-﻿using System;
-using KSP.UI.Screens;
+﻿using KSP.UI.Screens;
+using KSP.UI.Screens.Flight;
 using LmpClient.Extensions;
 using LmpClient.Systems.Flag;
 using LmpClient.Systems.KscScene;
 using LmpClient.Systems.PlayerColorSys;
 using LmpClient.Systems.VesselPositionSys;
+using System;
 using UniLinq;
 using Object = UnityEngine.Object;
 
@@ -13,9 +14,7 @@ namespace LmpClient.VesselUtilities
     public class VesselLoader
     {
         public static Guid CurrentlyLoadingVesselId { get; private set; }
-
-
-
+        
         /// <summary>
         /// Loads/reloads a vessel into game
         /// </summary>
@@ -132,6 +131,22 @@ namespace LmpClient.VesselUtilities
             var existingVessel = FlightGlobals.fetch.LmpFindVessel(vesselProto.vesselID);
             if (existingVessel != null)
             {
+                if (reloadingOwnVessel)
+                {
+                    foreach (var part in existingVessel.Parts)
+                    {
+                        if (part.protoModuleCrew.Any())
+                        {
+                            //Serialize to avoid modifying the collection
+                            var crewMembers = part.protoModuleCrew.ToArray();
+                            foreach (var crew in crewMembers)
+                            {
+                                part.RemoveCrew(crew);
+                            }
+                        }
+                    }
+                }
+
                 FlightGlobals.RemoveVessel(existingVessel);
                 foreach (var part in existingVessel.parts)
                 {
@@ -176,11 +191,30 @@ namespace LmpClient.VesselUtilities
             if (reloadingOwnVessel)
             {
                 vesselProto.vesselRef.Load();
-                FlightGlobals.fetch.activeVessel = vesselProto.vesselRef;
-                OrbitPhysicsManager.CheckReferenceFrame();
-                OrbitPhysicsManager.HoldVesselUnpack();
-                FlightCamera.SetTarget(vesselProto.vesselRef);
-                vesselProto.vesselRef.MakeActive();
+                vesselProto.vesselRef.RebuildCrewList();
+
+                //Do not do the setting of the active vessel manually, too many systems are dependant of the events triggered by KSP
+                FlightGlobals.ForceSetActiveVessel(vesselProto.vesselRef);
+
+                if (vesselProto.vesselRef.GetCrewCount() > 0)
+                {
+                    foreach (var part in vesselProto.vesselRef.Parts)
+                    {
+                        if (part.protoModuleCrew.Any())
+                        {
+                            //Serialize to avoid modifying the collection
+                            var crewMembers = part.protoModuleCrew.ToArray();
+                            foreach (var crew in crewMembers)
+                            {
+                                part.RemoveCrew(crew);
+                                part.AddCrew(crew);
+                            }
+                        }
+                    }
+
+                    vesselProto.vesselRef.SpawnCrew();
+                    KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel);
+                }
             }
 
             return true;
