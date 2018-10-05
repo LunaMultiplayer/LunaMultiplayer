@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using Harmony;
+﻿using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events;
+using System.Reflection;
 using UnityEngine;
 
 namespace LmpClient.Systems.KscScene
@@ -26,6 +26,8 @@ namespace LmpClient.Systems.KscScene
             LockEvent.onLockReleaseUnityThread.Add(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Add(KscSceneEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Add(KscSceneEvents.LevelLoaded);
+
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, IncreaseTimeWhileInEditor));
         }
 
         protected override void OnDisabled()
@@ -34,6 +36,22 @@ namespace LmpClient.Systems.KscScene
             LockEvent.onLockReleaseUnityThread.Remove(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Remove(KscSceneEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Remove(KscSceneEvents.LevelLoaded);
+        }
+
+        #endregion
+
+        #region Routines
+        
+        /// <summary>
+        /// While in editor the time doesn't advance so here we make it advance
+        /// </summary>
+        private static void IncreaseTimeWhileInEditor()
+        {
+            if (!HighLogic.LoadedSceneHasPlanetarium)
+            {
+                Planetarium.fetch.time += Time.fixedDeltaTime;
+                HighLogic.CurrentGame.flightState.universalTime = Planetarium.fetch.time;
+            }
         }
 
         #endregion
