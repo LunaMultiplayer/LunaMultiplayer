@@ -10,7 +10,8 @@ namespace LmpClient.Systems.Lock
         /// </summary>
         public void OnSceneRequested(GameScenes requestedScene)
         {
-            if (requestedScene >= GameScenes.FLIGHT) return;
+            //We must release ALL locks EVEN if we go to tracking station as otherwise we will still keep the control lock!
+            if (requestedScene == GameScenes.FLIGHT) return;
 
             //Always release the Update/UnloadedUpdate lock and the spectate lock
             System.ReleaseAllPlayerVesselLocks();
