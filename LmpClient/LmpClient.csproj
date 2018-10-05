@@ -331,6 +331,7 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
+    <Compile Include="VesselUtilities\OwnVesselReloader.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\Admin\AdminDrawer.cs" />

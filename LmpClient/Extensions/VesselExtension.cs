@@ -31,5 +31,23 @@ namespace LmpClient.Extensions
                 }
             }
         }
+
+
+        /// <summary>
+        /// Freeze a vessel position
+        /// </summary>
+        public static Part FindPart(this Vessel vessel, uint partFlightId)
+        {
+            if (vessel != null && !vessel.packed && vessel.parts.Count > 0)
+            {
+                for (var i = 0; i < vessel.parts.Count; i++)
+                {
+                    if (vessel.parts[i].flightID == partFlightId)
+                        return vessel.parts[i];
+                }
+            }
+
+            return null;
+        }
     }
 }
