@@ -78,8 +78,8 @@ namespace LmpClient.Systems.VesselImmortalSys
                 if (part == null) return;
 
                 //Do not remove the colliders as then you can't dock
-                //if(part.collider != null)
-                //    part.collider.enabled = SettingsSystem.CurrentSettings.CollidersEnabled || !immortal;
+                if (part.collider != null && vessel.isEVA)
+                    part.collider.enabled = !immortal;
 
                 part.gTolerance = immortal ? double.PositiveInfinity : 50;
                 part.maxPressure = immortal ? double.PositiveInfinity : 4000;
