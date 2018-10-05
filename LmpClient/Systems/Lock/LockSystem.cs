@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
 using LmpCommon.Message.Data.Lock;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace LmpClient.Systems.Lock
 {
@@ -34,6 +34,7 @@ namespace LmpClient.Systems.Lock
             base.OnEnabled();
             GameEvents.onGameSceneLoadRequested.Add(LockEvents.OnSceneRequested);
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, TriggerEvents));
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageSender.SendLocksRequest));
         }
 
         protected override void OnDisabled()

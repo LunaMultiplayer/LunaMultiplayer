@@ -47,7 +47,6 @@ namespace LmpClient.Systems.VesselLockSys
             FlightDriverEvent.onFlightStarted.Add(VesselLockEvents.FlightStarted);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
-            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, LockSystem.Singleton.MessageSender.SendLocksRequest));
         }
 
         protected override void OnDisabled()
