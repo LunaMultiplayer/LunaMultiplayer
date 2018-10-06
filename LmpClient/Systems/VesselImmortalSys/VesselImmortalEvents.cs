@@ -1,12 +1,32 @@
 ﻿using LmpClient.Base;
 using LmpClient.Extensions;
+using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
 
 namespace LmpClient.Systems.VesselImmortalSys
 {
     public class VesselImmortalEvents : SubSystem<VesselImmortalSystem>
-    {
+    {        
+        /// <summary>
+        /// This event is called after a vessel has changed. Also called when starting a flight
+        /// </summary>
+        public void OnVesselChange(Vessel vessel)
+        {
+            //Safety check
+            if (vessel == null) return;
+
+            if (LockSystem.LockQuery.ControlLockExists(vessel.id) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            {
+                //We switched to a vessel that is controlled by another player so make it immortal
+                System.SetVesselImmortalState(vessel, true);
+            }
+            else
+            {
+                System.SetVesselImmortalState(vessel, false);
+            }
+        }
+
         /// <summary>
         /// Set vessel immortal state just when the vessel has more/less parts (docking for example)
         /// </summary>

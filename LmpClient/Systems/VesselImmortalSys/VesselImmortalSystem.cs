@@ -28,6 +28,7 @@ namespace LmpClient.Systems.VesselImmortalSys
             GameEvents.onVesselGoOffRails.Add(VesselImmortalEvents.VesselGoOffRails);
             GameEvents.onVesselLoaded.Add(VesselImmortalEvents.VesselLoaded);
             GameEvents.onVesselPartCountChanged.Add(VesselImmortalEvents.PartCountChanged);
+            GameEvents.onVesselChange.Add(VesselImmortalEvents.OnVesselChange);
             SpectateEvent.onStartSpectating.Add(VesselImmortalEvents.StartSpectating);
             SpectateEvent.onFinishedSpectating.Add(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Add(VesselImmortalEvents.OnLockAcquire);
@@ -40,6 +41,7 @@ namespace LmpClient.Systems.VesselImmortalSys
             GameEvents.onVesselGoOffRails.Remove(VesselImmortalEvents.VesselGoOffRails);
             GameEvents.onVesselLoaded.Remove(VesselImmortalEvents.VesselLoaded);
             GameEvents.onVesselPartCountChanged.Remove(VesselImmortalEvents.PartCountChanged);
+            GameEvents.onVesselChange.Remove(VesselImmortalEvents.OnVesselChange);
             SpectateEvent.onStartSpectating.Remove(VesselImmortalEvents.StartSpectating);
             SpectateEvent.onFinishedSpectating.Remove(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Remove(VesselImmortalEvents.OnLockAcquire);
