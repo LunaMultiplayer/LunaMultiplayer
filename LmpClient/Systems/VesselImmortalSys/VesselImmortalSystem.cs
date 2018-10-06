@@ -78,8 +78,14 @@ namespace LmpClient.Systems.VesselImmortalSys
                 if (part == null) return;
 
                 //Do not remove the colliders as then you can't dock
-                if (part.collider != null && vessel.isEVA)
-                    part.collider.enabled = !immortal;
+                //if (part.collider != null)
+                //    part.collider.enabled = !immortal;
+
+                if (part.rb != null)
+                {
+                    part.rb.isKinematic = immortal;
+                    part.rb.detectCollisions = !immortal;
+                }
 
                 part.gTolerance = immortal ? double.PositiveInfinity : 50;
                 part.maxPressure = immortal ? double.PositiveInfinity : 4000;
@@ -94,6 +100,11 @@ namespace LmpClient.Systems.VesselImmortalSys
                 else
                     part.ResetJoints();
 
+                if (immortal)
+                    GameEvents.onPartPack.Fire(part);
+                else
+                    GameEvents.onPartUnpack.Fire(part);
+                
                 //Do not set this as then you can't click on parts
                 //part.SetDetectCollisions(!immortal);
             }
