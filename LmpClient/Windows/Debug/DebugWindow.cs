@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Network;
 using LmpClient.Systems.SafetyBubble;
 using LmpClient.Systems.TimeSync;
@@ -10,6 +6,10 @@ using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Systems.Warp;
 using LmpCommon.Enums;
 using LmpCommon.Time;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace LmpClient.Windows.Debug
@@ -28,6 +28,7 @@ namespace LmpClient.Windows.Debug
         private static bool _displayFast;
         private static string _vectorText;
         private static string _positionText;
+        private static string _positionVesselsText;
         private static string _orbitText;
         private static string _orbitVesselsText;
         private static string _subspaceText;
@@ -38,6 +39,7 @@ namespace LmpClient.Windows.Debug
 
         private static bool _displayVectors;
         private static bool _displayPositions;
+        private static bool _displayVesselsPositions;
         private static bool _displayOrbit;
         private static bool _displayVesselsOrbit;
         private static bool _displaySubspace;
@@ -97,7 +99,8 @@ namespace LmpClient.Windows.Debug
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
-                        
+
+                        StringBuilder.AppendLine($"Situation: {ourVessel.situation}");
                         StringBuilder.AppendLine($"Orbit Pos: {ourVessel.orbit.pos}");
                         StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}");
                         StringBuilder.AppendLine($"Com Pos: {ourVessel.CoM}");
@@ -118,6 +121,34 @@ namespace LmpClient.Windows.Debug
                     {
                         _positionText = "You have to be in flight";
                     }
+                }
+                if (_displayVesselsPositions)
+                {
+                    foreach (var vessel in FlightGlobals.Vessels)
+                    {
+                        if (vessel == null) continue;
+
+                        if (vessel.id != FlightGlobals.ActiveVessel?.id)
+                        {
+                            StringBuilder.AppendLine($"Situation: {vessel.situation}");
+                            StringBuilder.AppendLine($"Orbit Pos: {vessel.orbit.pos}");
+                            StringBuilder.AppendLine($"Transform Pos: {vessel.vesselTransform.position}");
+                            StringBuilder.AppendLine($"Com Pos: {vessel.CoM}");
+                            StringBuilder.AppendLine($"ComD Pos: {vessel.CoMD}");
+                            StringBuilder.AppendLine($"Lat,Lon,Alt: {vessel.latitude},{vessel.longitude},{vessel.altitude}");
+
+                            vessel.mainBody.GetLatLonAlt(vessel.vesselTransform.position, out var lat, out var lon, out var alt);
+                            StringBuilder.AppendLine($"Current Lat,Lon,Alt: {lat},{lon},{alt}");
+                            vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out lat, out lon, out alt);
+                            StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
+
+                            StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(vessel)}");
+                            StringBuilder.AppendLine();
+                        }
+                    }
+
+                    _positionVesselsText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
                 }
                 if (_displayOrbit)
                 {
@@ -169,10 +200,10 @@ namespace LmpClient.Windows.Debug
                             StringBuilder.AppendLine($"Obt Speed : {vessel.orbit.GetRelativeVel()}, |v|: {vessel.orbit.GetRelativeVel().magnitude}");
                             StringBuilder.AppendLine();
                         }
-
-                        _orbitVesselsText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
                     }
+
+                    _orbitVesselsText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
                 }
 
                 if (_displaySubspace)

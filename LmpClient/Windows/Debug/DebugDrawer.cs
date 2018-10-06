@@ -14,9 +14,13 @@ namespace LmpClient.Windows.Debug
             if (_displayVectors)
                 GUILayout.Label(_vectorText, LabelStyle);
 
-            _displayPositions = GUILayout.Toggle(_displayPositions, "Display vessel positions", ButtonStyle);
+            _displayPositions = GUILayout.Toggle(_displayPositions, "Display active vessel positions", ButtonStyle);
             if (_displayPositions)
                 GUILayout.Label(_positionText, LabelStyle);
+
+            _displayVesselsPositions = GUILayout.Toggle(_displayVesselsPositions, "Display other vessel positions", ButtonStyle);
+            if (_displayVesselsPositions)
+                GUILayout.Label(_positionVesselsText, LabelStyle);
 
             _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info", ButtonStyle);
             if (_displayOrbit)
