@@ -35,6 +35,7 @@ namespace LmpClient.Systems.VesselLockSys
             }
             else
             {
+                VesselLockSystem.Singleton.StopSpectating();
                 if (FlightDriver.flightStarted)
                 {
                     LockSystem.Singleton.AcquireControlLock(vessel.id);
