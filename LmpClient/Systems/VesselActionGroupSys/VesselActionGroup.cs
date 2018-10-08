@@ -28,7 +28,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
                 return;
 
             //Ignore SAS if we are spectating as it will fight with the FI
-            if (ActionGroup == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
+            if (ActionGroup == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == vessel.id)
                 return;
 
             if (vessel.ActionGroups != null)

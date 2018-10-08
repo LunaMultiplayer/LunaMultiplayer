@@ -123,7 +123,7 @@ namespace LmpClient.Systems.PlayerColorSys
             if (vessel != null && vessel.orbitDriver != null)
             {
                 vessel.orbitDriver.orbitColor = colour;
-                vessel.orbitDriver.Renderer?.SetColor(colour);
+                if (vessel.orbitDriver.Renderer) vessel.orbitDriver.Renderer.SetColor(colour);
             }
         }
         

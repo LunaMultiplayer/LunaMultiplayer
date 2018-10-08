@@ -33,7 +33,7 @@ namespace LmpClient.VesselUtilities
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
             //Ignore updates to our own vessel if we aren't spectating
-            return !IsSpectating && FlightGlobals.ActiveVessel?.id == vesselId;
+            return !IsSpectating && FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == vesselId;
         }
 
         private static bool _isSpectating;
@@ -273,7 +273,7 @@ namespace LmpClient.VesselUtilities
         {
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
             return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
+                .Where(l => FlightGlobals.ActiveVessel && l.VesselId != FlightGlobals.ActiveVessel.id)
                 .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v != null && v.id == vi.VesselId))
                 .Where(v => v != null && v.id != Guid.Empty);
         }
@@ -285,7 +285,7 @@ namespace LmpClient.VesselUtilities
         {
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
             return LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id && !LockSystem.LockQuery.UpdateLockExists(l.VesselId))
+                .Where(l => FlightGlobals.ActiveVessel && l.VesselId != FlightGlobals.ActiveVessel.id && !LockSystem.LockQuery.UpdateLockExists(l.VesselId))
                 .Select(vi => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v != null && v.id == vi.VesselId))
                 .Where(v => v != null && v.id != Guid.Empty);
         }

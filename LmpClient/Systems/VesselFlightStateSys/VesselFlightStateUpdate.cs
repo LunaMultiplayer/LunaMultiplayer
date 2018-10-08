@@ -77,7 +77,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         /// </summary>
         public FlightCtrlState GetInterpolatedValue()
         {
-            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == VesselId)
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == VesselId)
             {
                 //Do not apply flight states updates to our OWN controlled vessel
                 return FlightGlobals.ActiveVessel.ctrlState;

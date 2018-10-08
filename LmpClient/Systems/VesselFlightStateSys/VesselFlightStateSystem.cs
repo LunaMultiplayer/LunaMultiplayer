@@ -246,7 +246,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
                 {
                     //If we are close to a vessel and we both are in space don't copy the
                     //input controls as then the vessel jitters, specially if the other player has SAS on
-                    if (FlightGlobals.ActiveVessel?.situation > Vessel.Situations.FLYING)
+                    if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.situation > Vessel.Situations.FLYING)
                     {
                         var interpolatedState = value.GetInterpolatedValue();
                         st.mainThrottle = interpolatedState.mainThrottle;

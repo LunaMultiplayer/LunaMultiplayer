@@ -61,11 +61,14 @@ namespace LmpClient.Systems.SharePurchaseParts
             }
 
             //Refresh RD nodes in case we are in the RD screen
-            RDController.Instance?.partList?.Refresh();
-            RDController.Instance?.UpdatePanel();
+            if(RDController.Instance && RDController.Instance.partList)
+            {
+                RDController.Instance.partList.Refresh();                
+                RDController.Instance.UpdatePanel();
+            }
 
             //Refresh the part list in case we are in the VAB/SPH
-            EditorPartList.Instance?.Refresh();
+            if (EditorPartList.Instance) EditorPartList.Instance.Refresh();
             
             ShareFundsSystem.Singleton.StopIgnoringEvents();
             System.StopIgnoringEvents();

@@ -58,7 +58,7 @@ namespace LmpClient.Systems.Asteroid
                 return ProtoVesselIsAsteroid(vessel.protoVessel);
 
             //Check the vessel has exactly one part.
-            return vessel?.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
+            return vessel && vessel.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
         }
 
         private static bool ProtoVesselIsAsteroid(ProtoVessel protoVessel)

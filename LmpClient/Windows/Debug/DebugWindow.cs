@@ -126,9 +126,9 @@ namespace LmpClient.Windows.Debug
                 {
                     foreach (var vessel in FlightGlobals.Vessels)
                     {
-                        if (vessel == null) continue;
+                        if (vessel == null || FlightGlobals.ActiveVessel == null) continue;
 
-                        if (vessel.id != FlightGlobals.ActiveVessel?.id)
+                        if (vessel.id != FlightGlobals.ActiveVessel.id)
                         {
                             StringBuilder.AppendLine($"Situation: {vessel.situation}");
                             StringBuilder.AppendLine($"Orbit Pos: {vessel.orbit.pos}");
@@ -152,7 +152,7 @@ namespace LmpClient.Windows.Debug
                 }
                 if (_displayOrbit)
                 {
-                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.orbitDriver?.orbit != null)
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.orbitDriver != null && FlightGlobals.ActiveVessel.orbitDriver.orbit != null)
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
 
@@ -182,9 +182,9 @@ namespace LmpClient.Windows.Debug
                 {
                     foreach (var vessel in FlightGlobals.Vessels)
                     {
-                        if (vessel == null) continue;
+                        if (vessel == null || FlightGlobals.ActiveVessel == null || vessel.orbitDriver == null || vessel.orbitDriver.orbit == null) continue;
 
-                        if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
+                        if (vessel.id != FlightGlobals.ActiveVessel.id)
                         {
                             StringBuilder.AppendLine($"Id: {vessel.id}");
                             StringBuilder.AppendLine($"Mode: {vessel.orbitDriver.updateMode}");

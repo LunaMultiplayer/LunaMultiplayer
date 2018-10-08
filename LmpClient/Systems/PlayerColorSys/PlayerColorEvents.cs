@@ -44,7 +44,7 @@ namespace LmpClient.Systems.PlayerColorSys
         /// </summary>
         public void MapEntered()
         {
-            foreach (var vessel in FlightGlobals.Vessels.Where(v=> v != null && v.orbitDriver?.Renderer != null))
+            foreach (var vessel in FlightGlobals.Vessels.Where(v=> v != null && v.orbitDriver && v.orbitDriver.Renderer))
             {
                 System.SetVesselOrbitColor(vessel);
             }

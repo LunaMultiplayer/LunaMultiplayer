@@ -11,12 +11,12 @@ namespace LmpClient.Systems.KscScene
 
         public void OnLockAcquire(LockDefinition lockdefinition)
         {
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
         }
 
         public void OnLockRelease(LockDefinition lockdefinition)
         {
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
         }
 
         /// <summary>
@@ -35,8 +35,10 @@ namespace LmpClient.Systems.KscScene
         /// </summary>
         public void LevelLoaded(GameScenes data)
         {
-            if (data == GameScenes.SPACECENTER)
-                KSCVesselMarkers.fetch?.RefreshMarkers();
+            if (data == GameScenes.SPACECENTER && KSCVesselMarkers.fetch)
+            {
+                KSCVesselMarkers.fetch.RefreshMarkers();
+            }
         }
     }
 }

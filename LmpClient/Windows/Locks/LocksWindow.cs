@@ -73,7 +73,7 @@ namespace LmpClient.Windows.Locks
                     }
                 }
 
-                VesselLocks.RemoveAll(v => FlightGlobals.Vessels.All(ev => ev?.id != v.VesselId));
+                VesselLocks.RemoveAll(v => FlightGlobals.Vessels.All(ev => ev != null && ev.id != v.VesselId));
             }
         }
 

@@ -34,30 +34,33 @@ namespace LmpClient.Windows.Tools
             _displayRanges = GUILayout.Toggle(_displayRanges, "Vessel ranges", ButtonStyle);
             if (_displayRanges)
             {
-                if (GUILayout.Button("Pack all vessels", ButtonStyle))
+                if (FlightGlobals.ActiveVessel != null)
                 {
-                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
+                    if (GUILayout.Button("Pack all vessels", ButtonStyle))
                     {
-                        if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                        vessel.vesselRanges = ToolsUtils.PackRanges;
+                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
+                        {
+                            if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
+                            vessel.vesselRanges = ToolsUtils.PackRanges;
+                        }
                     }
-                }
 
-                if (GUILayout.Button("Unpack all vessels", ButtonStyle))
-                {
-                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
+                    if (GUILayout.Button("Unpack all vessels", ButtonStyle))
                     {
-                        if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                        vessel.vesselRanges = ToolsUtils.UnPackRanges;
+                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
+                        {
+                            if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
+                            vessel.vesselRanges = ToolsUtils.UnPackRanges;
+                        }
                     }
-                }
 
-                if (GUILayout.Button("Reset ranges", ButtonStyle))
-                {
-                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
+                    if (GUILayout.Button("Reset ranges", ButtonStyle))
                     {
-                        if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                        vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
+                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
+                        {
+                            if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
+                            vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
+                        }
                     }
                 }
             }
@@ -79,11 +82,14 @@ namespace LmpClient.Windows.Tools
                 if (GUILayout.Button("Reload other vessels", ButtonStyle))
                 {
                     var vessels = FlightGlobals.Vessels.Where(v => v != null).ToList();
-                    foreach (var vessel in vessels)
+                    if (FlightGlobals.ActiveVessel != null)
                     {
-                        if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                        vessel.protoVessel = vessel.BackupVessel();
-                        VesselLoader.LoadVessel(vessel.protoVessel);
+                        foreach (var vessel in vessels)
+                        {
+                            if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
+                            vessel.protoVessel = vessel.BackupVessel();
+                            VesselLoader.LoadVessel(vessel.protoVessel);
+                        }                        
                     }
                 }
             }

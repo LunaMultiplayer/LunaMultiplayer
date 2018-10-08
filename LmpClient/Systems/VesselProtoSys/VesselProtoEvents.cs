@@ -98,7 +98,7 @@ namespace LmpClient.Systems.VesselProtoSys
             if (VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id)) return;
 
             //We are spectating and the vessel has been modified so trigger a reload
-            if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id && vessel.protoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
+            if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel&& FlightGlobals.ActiveVessel.id == vessel.id && vessel.protoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
             {
                 VesselLoader.LoadVessel(vessel.protoVessel);
                 return;
