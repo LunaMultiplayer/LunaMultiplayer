@@ -11,7 +11,7 @@ namespace LmpClient.Extensions
         {
             if (vessel != null && !vessel.packed && vessel.parts.Count > 0)
             {
-                if (vessel.rootPart?.Rigidbody?.constraints == RigidbodyConstraints.None)
+                if (vessel.rootPart && vessel.rootPart.Rigidbody && vessel.rootPart.Rigidbody.constraints == RigidbodyConstraints.None)
                 {
                     vessel.parts?.ForEach(p => p.Rigidbody.constraints = RigidbodyConstraints.FreezeAll);
                 }
@@ -25,7 +25,7 @@ namespace LmpClient.Extensions
         {
             if (vessel != null && !vessel.packed && vessel.parts.Count > 0)
             {
-                if (vessel.rootPart?.Rigidbody?.constraints == RigidbodyConstraints.FreezeAll)
+                if (vessel.rootPart && vessel.rootPart.Rigidbody && vessel.rootPart.Rigidbody.constraints == RigidbodyConstraints.FreezeAll)
                 {
                     vessel.parts?.ForEach(p => p.Rigidbody.constraints = RigidbodyConstraints.None);
                 }

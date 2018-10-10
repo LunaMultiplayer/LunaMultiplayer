@@ -35,7 +35,7 @@ namespace LmpClient.Systems.VesselDockSys
 
             WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
 
-            if (FlightGlobals.ActiveVessel?.id == msgData.WeakVesselId)
+            if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.WeakVesselId)
             {
                 LunaLog.Log($"Docking NOT detected. We DON'T OWN the dominant vessel. Switching to {msgData.DominantVesselId}");
                 if (dominantProto.vesselRef != null)
@@ -45,7 +45,7 @@ namespace LmpClient.Systems.VesselDockSys
                     FlightGlobals.ForceSetActiveVessel(dominantProto.vesselRef);
                 }
             }
-            else if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId)
+            else if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.DominantVesselId)
             {
                 LunaLog.Log("Docking NOT detected. We OWN the dominant vessel");
             }

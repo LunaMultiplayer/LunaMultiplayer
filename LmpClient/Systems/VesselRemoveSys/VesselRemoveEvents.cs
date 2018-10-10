@@ -147,7 +147,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
             //vessel and remove them both from our game and server
             var vesselsToRemove = FlightGlobals.Vessels
-                .Where(v => v!= null && v.rootPart?.missionID == vessel.rootPart.missionID && v.id != vessel.id).Distinct();
+                .Where(v => v!= null && v.rootPart && v.rootPart.missionID == vessel.rootPart.missionID && v.id != vessel.id).Distinct();
 
             foreach (var vesselToRemove in vesselsToRemove)
             {

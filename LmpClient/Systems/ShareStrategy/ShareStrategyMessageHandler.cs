@@ -64,7 +64,7 @@ namespace LmpClient.Systems.ShareStrategy
                 }
             }
 
-            Administration.Instance?.RedrawPanels();
+            if (Administration.Instance) Administration.Instance.RedrawPanels();
 
             //Listen to the events again. Restore funds, science and reputation in case the contract action changed some of that.
             ShareFundsSystem.Singleton.StopIgnoringEvents(true);

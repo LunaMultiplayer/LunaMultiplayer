@@ -15,7 +15,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         {
             if (!(msg.Data is VesselRemoveMsgData msgData)) return;
 
-            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == msgData.VesselId)
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.VesselId)
                 return;
 
             if (msgData.AddToKillList)

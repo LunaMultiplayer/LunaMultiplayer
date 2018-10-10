@@ -98,7 +98,9 @@ namespace LmpClient.Systems.VesselImmortalSys
                     part.collisionEnhancer.OnTerrainPunchThrough = immortal ? CollisionEnhancerBehaviour.DO_NOTHING : CollisionEnhancerBehaviour.EXPLODE;
 
                 if (immortal)
-                    part.attachJoint?.SetUnbreakable(true, true);
+                {
+                    if (part.attachJoint != null) part.attachJoint.SetUnbreakable(true, true);
+                }
                 else
                     part.ResetJoints();
 

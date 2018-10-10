@@ -58,7 +58,7 @@ namespace LmpClient.Systems.ShareAchievements
         {
             base.SaveState();
             _lastAchievements = new ConfigNode();
-            ProgressTracking.Instance?.achievementTree.Save(_lastAchievements);
+            if (ProgressTracking.Instance) ProgressTracking.Instance.achievementTree.Save(_lastAchievements);
         }
 
         public override void RestoreState()

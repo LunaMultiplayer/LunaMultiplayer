@@ -97,7 +97,7 @@ namespace LmpClient.Systems.VesselLockSys
                             //As we got control of that vessel, remove its FS and position updates
                             VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                         }
-                        else if (FlightGlobals.ActiveVessel?.id == lockDefinition.VesselId)
+                        else if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
                         {
                             System.StartSpectating(lockDefinition.VesselId);
                         }
@@ -126,7 +126,7 @@ namespace LmpClient.Systems.VesselLockSys
             {
                 case LockType.Control:
                     KscSceneSystem.Singleton.RefreshTrackingStationVessels();
-                    if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == lockDefinition.VesselId)
+                    if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
                     {
                         LockSystem.Singleton.AcquireControlLock(lockDefinition.VesselId);
                     }

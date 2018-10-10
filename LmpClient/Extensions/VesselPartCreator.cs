@@ -37,8 +37,8 @@ namespace LmpClient.Extensions
                 partSnapshot.Init(vessel);
 
             vessel.RebuildCrewList();
-            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
-            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
+            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { if (FlightGlobals.ActiveVessel) FlightGlobals.ActiveVessel.SpawnCrew(); }));
+            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { if (KerbalPortraitGallery.Instance) KerbalPortraitGallery.Instance.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
         }
     }
 }

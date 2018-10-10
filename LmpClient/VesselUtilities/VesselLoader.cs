@@ -125,7 +125,7 @@ namespace LmpClient.VesselUtilities
             if (HighLogic.CurrentGame?.flightState == null)
                 return false;
 
-            var reloadingOwnVessel = vesselProto.vesselID == FlightGlobals.ActiveVessel?.id && HighLogic.LoadedSceneIsFlight;
+            var reloadingOwnVessel = FlightGlobals.ActiveVessel && vesselProto.vesselID == FlightGlobals.ActiveVessel.id && HighLogic.LoadedSceneIsFlight;
 
             //In case the vessel exists, silently remove them from unity and recreate it again
             var existingVessel = FlightGlobals.fetch.LmpFindVessel(vesselProto.vesselID);
@@ -186,7 +186,7 @@ namespace LmpClient.VesselUtilities
 
             PlayerColorSystem.Singleton.SetVesselOrbitColor(vesselProto.vesselRef);
             KscSceneSystem.Singleton.RefreshTrackingStationVessels();
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
 
             if (reloadingOwnVessel)
             {
@@ -213,7 +213,8 @@ namespace LmpClient.VesselUtilities
                     }
 
                     vesselProto.vesselRef.SpawnCrew();
-                    KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel);
+                    if (KerbalPortraitGallery.Instance)
+                        KerbalPortraitGallery.Instance.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel);
                 }
             }
 

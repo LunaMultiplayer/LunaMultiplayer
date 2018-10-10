@@ -103,7 +103,7 @@ namespace LmpClient.Systems.VesselUpdateSys
                 var kspActGrp = (KSPActionGroup)(1 << (i & 31));
 
                 //Ignore SAS if we are spectating as it will fight with the FI
-                if (kspActGrp == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
+                if (kspActGrp == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == vessel.id)
                 {
                     if (vessel.ActionGroups[KSPActionGroup.SAS])
                     {

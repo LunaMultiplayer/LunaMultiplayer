@@ -118,7 +118,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// </summary>
         public bool VesselWillBeKilled(Guid vesselId)
         {
-            return VesselsToRemove.Any(v => v.Vessel?.id == vesselId) || RemovedVessels.ContainsKey(vesselId);
+            return VesselsToRemove.Any(v => v.Vessel && v.Vessel.id == vesselId) || RemovedVessels.ContainsKey(vesselId);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                 Object.Destroy(killVessel.gameObject);
 
                 HighLogic.CurrentGame.flightState.protoVessels.RemoveAll(v => v == null || v.vesselID == killVessel.id);
-                KSCVesselMarkers.fetch?.RefreshMarkers();
+                if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
             }
             catch (Exception killException)
             {
@@ -206,7 +206,7 @@ namespace LmpClient.Systems.VesselRemoveSys
 
         private static void SwitchVesselIfKillingActiveVessel(Vessel killVessel)
         {
-            if (FlightGlobals.ActiveVessel?.id == killVessel.id)
+            if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == killVessel.id)
             {
                 FlightGlobals.fetch.SetVesselTarget(null);
 

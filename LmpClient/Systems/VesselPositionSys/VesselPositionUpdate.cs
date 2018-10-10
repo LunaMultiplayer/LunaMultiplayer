@@ -152,7 +152,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 }
 
                 AdjustExtraInterpolationTimes();
-                Vessel?.protoVessel?.UpdatePositionValues(Target);
+                if (Vessel) Vessel.protoVessel?.UpdatePositionValues(Target);
                 InitializeOrbits();
             }
 
@@ -211,7 +211,7 @@ namespace LmpClient.Systems.VesselPositionSys
         private static double GetMeanAnomalyFixFactor(double timestamp, int subspaceId, Vessel vessel, Orbit orbit)
         {
             //If the vessel is in orbit we return 0 as we want to see the vessel IN THE FUTURE. This makes the behaviour closer to what KSP in single player does
-            if (vessel?.situation >= Vessel.Situations.ORBITING || (vessel?.loaded ?? false) && subspaceId == -1)
+            if (vessel && (vessel.situation >= Vessel.Situations.ORBITING || vessel.loaded && subspaceId == -1))
                 return 0;
 
             //If the vessel is in atmosphere, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin
@@ -236,7 +236,7 @@ namespace LmpClient.Systems.VesselPositionSys
         private static double GetLanFixFactor(double timestamp, int subspaceId, Vessel vessel, CelestialBody body)
         {
             //If the vessel is in orbit we return 0 as we want to see the vessel IN THE FUTURE. This makes the behaviour closer to what KSP in single player does
-            if (vessel?.situation >= Vessel.Situations.ORBITING)
+            if (vessel && vessel.situation >= Vessel.Situations.ORBITING)
                 return 0;
 
             //If the vessel is in atmosphere, we must show the REAL position of the vessel as if we use the projection, the vessel might be inside kerbin

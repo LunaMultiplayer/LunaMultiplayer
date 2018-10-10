@@ -117,7 +117,7 @@ namespace LmpClient.Systems.VesselDockSys
             var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
             var waitInterval = new WaitForSeconds(0.5f);
 
-            while (FlightGlobals.ActiveVessel?.persistentId != dominantPersistentId && LunaComputerTime.UtcNow - start < TimeSpan.FromSeconds(30))
+            while (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.persistentId != dominantPersistentId && LunaComputerTime.UtcNow - start < TimeSpan.FromSeconds(30))
             {
                 yield return waitInterval;
             }
