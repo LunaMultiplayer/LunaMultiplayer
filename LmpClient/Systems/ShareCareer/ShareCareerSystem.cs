@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Contracts;
+﻿using Contracts;
 using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LmpClient.Systems.ShareCareer
@@ -24,7 +24,8 @@ namespace LmpClient.Systems.ShareCareer
         protected bool ShareSystemReady => ContractSystem.Instance != null && ContractSystem.Instance.Contracts.Count != 0 &&
                                            Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
                                            Reputation.Instance != null && ProgressTracking.Instance != null &&
-                                           Time.timeSinceLevelLoad > 1f;
+                                           Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene >= GameScenes.SPACECENTER
+                                           && HighLogic.LoadedScene <= GameScenes.TRACKSTATION;
 
         protected override void OnEnabled()
         {
