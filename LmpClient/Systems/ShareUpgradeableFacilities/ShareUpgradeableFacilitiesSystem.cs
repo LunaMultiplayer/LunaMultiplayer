@@ -1,8 +1,5 @@
 ﻿using LmpClient.Systems.ShareProgress;
 using LmpCommon.Enums;
-using UniLinq;
-using UnityEngine;
-using Upgradeables;
 
 namespace LmpClient.Systems.ShareUpgradeableFacilities
 {
@@ -12,7 +9,8 @@ namespace LmpClient.Systems.ShareUpgradeableFacilities
 
         private ShareUpgradeableFacilitiesEvents ShareUpgradeableFacilitiesEvents { get; } = new ShareUpgradeableFacilitiesEvents();
 
-        protected override bool ShareSystemReady => Object.FindObjectsOfType<UpgradeableFacility>().Any();
+        //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
+        protected override bool ShareSystemReady => true;
 
         protected override GameMode RelevantGameModes => GameMode.Career;
 

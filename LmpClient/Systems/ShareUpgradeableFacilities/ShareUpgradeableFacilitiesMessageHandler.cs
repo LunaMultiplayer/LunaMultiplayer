@@ -1,10 +1,11 @@
-﻿using System.Collections.Concurrent;
-using System.Linq;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Systems.ShareCareer;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System.Collections.Concurrent;
+using System.Linq;
 using UnityEngine;
 using Upgradeables;
 
@@ -24,7 +25,7 @@ namespace LmpClient.Systems.ShareUpgradeableFacilities
                 var facilityId = data.FacilityId;
                 var level = data.Level;
                 LunaLog.Log("Queue FacilityLevelUpdate.");
-                System.QueueAction(() =>
+                ShareCareerSystem.Singleton.QueueAction(() =>
                 {
                     FacilityLevelUpdate(facilityId, level);
                 });
