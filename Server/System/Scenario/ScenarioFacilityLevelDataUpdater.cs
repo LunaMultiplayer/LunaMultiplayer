@@ -8,7 +8,7 @@ namespace Server.System.Scenario
         /// <summary>
         /// We received a facility upgrade message so update the scenario file accordingly
         /// </summary>
-        public static void WriteFacilityLevelDataToFile(string facilityId, int level)
+        public static void WriteFacilityLevelDataToFile(string facilityId, float level)
         {
             Task.Run(() =>
             {

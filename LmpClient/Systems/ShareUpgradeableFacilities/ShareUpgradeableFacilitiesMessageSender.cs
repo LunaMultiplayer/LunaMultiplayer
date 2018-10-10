@@ -14,11 +14,12 @@ namespace LmpClient.Systems.ShareUpgradeableFacilities
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ShareProgressCliMsg>(msg)));
         }
 
-        public void SendFacilityUpgradeMessage(string facilityId, int level)
+        public void SendFacilityUpgradeMessage(string facilityId, int level, float normLevel)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressFacilityUpgradeMsgData>();
             msgData.FacilityId = facilityId;
             msgData.Level = level;
+            msgData.NormLevel = normLevel;
             System.MessageSender.SendMessage(msgData);
         }
     }

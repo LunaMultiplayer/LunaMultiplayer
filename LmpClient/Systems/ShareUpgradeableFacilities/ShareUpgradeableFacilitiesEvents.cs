@@ -12,7 +12,7 @@ namespace LmpClient.Systems.ShareUpgradeableFacilities
             if (System.IgnoreEvents) return;
 
             LunaLog.Log($"Facility {facility.id} upgraded to level: {level}");
-            System.MessageSender.SendFacilityUpgradeMessage(facility.id, level);
+            System.MessageSender.SendFacilityUpgradeMessage(facility.id, level, (float)level / facility.MaxLevel);
         }
 
         #endregion

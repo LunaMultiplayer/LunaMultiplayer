@@ -15,7 +15,7 @@ namespace Server.System
 
             //send the upgrade facility update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
-            ScenarioDataUpdater.WriteFacilityLevelDataToFile(data.FacilityId, data.Level);
+            ScenarioDataUpdater.WriteFacilityLevelDataToFile(data.FacilityId, data.NormLevel);
         }
     }
 }
