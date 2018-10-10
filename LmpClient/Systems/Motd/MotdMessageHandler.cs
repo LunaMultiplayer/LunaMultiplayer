@@ -1,9 +1,8 @@
-﻿using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
-using LmpClient.Systems.Chat;
 using LmpCommon.Message.Data.Motd;
 using LmpCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.Motd
 {
@@ -17,7 +16,6 @@ namespace LmpClient.Systems.Motd
 
             if (!string.IsNullOrEmpty(msgData.MessageOfTheDay))
             {
-                ChatSystem.Singleton.PrintToChat(msgData.MessageOfTheDay);
                 LunaScreenMsg.PostScreenMessage(msgData.MessageOfTheDay, 30f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
