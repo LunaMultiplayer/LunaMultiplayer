@@ -51,9 +51,9 @@
         {
             if (part == null) return;
 
-            part.gTolerance = immortal ? double.PositiveInfinity : 50;
-            part.maxPressure = immortal ? double.PositiveInfinity : 4000;
-            part.crashTolerance = immortal ? float.PositiveInfinity : 9f;
+            part.gTolerance = immortal ? double.PositiveInfinity : part.partInfo.partPrefab.gTolerance;
+            part.maxPressure = immortal ? double.PositiveInfinity : part.partInfo.partPrefab.maxPressure;
+            part.crashTolerance = immortal ? float.PositiveInfinity : part.partInfo.partPrefab.crashTolerance;
 
             if (part.rb)
             {
