@@ -72,10 +72,22 @@ namespace LmpClient.Extensions
                 part.SetImmortal(immortal);
             }
 
-            var fi = vessel.GetComponent<FlightIntegrator>();
-            if (fi)
+            var buoyancy = vessel.GetComponent<PartBuoyancy>();
+            if (buoyancy)
             {
-                fi.enabled = !immortal;
+                buoyancy.enabled = !immortal;
+            }
+
+            var collisionEnhancer = vessel.GetComponent<CollisionEnhancer>();
+            if (collisionEnhancer)
+            {
+                collisionEnhancer.enabled = !immortal;
+            }
+
+            var flightIntegrator = vessel.GetComponent<FlightIntegrator>();
+            if (flightIntegrator)
+            {
+                flightIntegrator.enabled = !immortal;
             }
 
             if (immortal)

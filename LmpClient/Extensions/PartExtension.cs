@@ -59,17 +59,23 @@
             {
                 part.rb.isKinematic = immortal;
                 part.rb.detectCollisions = !immortal;
-                if (part.GetComponent<PartBuoyancy>())
+
+                var buoyancy = part.GetComponent<PartBuoyancy>();
+                if (buoyancy)
                 {
-                    part.GetComponent<PartBuoyancy>().enabled = !immortal;
+                    buoyancy.enabled = !immortal;
                 }
-                if (part.GetComponent<PQS_PartCollider>())
+
+                var pqsPartCollider = part.GetComponent<PQS_PartCollider>();
+                if (pqsPartCollider)
                 {
-                    part.GetComponent<PQS_PartCollider>().enabled = !immortal;
+                    pqsPartCollider.enabled = !immortal;
                 }
-                if (part.GetComponent<CollisionEnhancer>())
+
+                var collisionEnhancer = part.GetComponent<CollisionEnhancer>();
+                if (collisionEnhancer)
                 {
-                    part.GetComponent<CollisionEnhancer>().enabled = !immortal;
+                    collisionEnhancer.enabled = !immortal;
                 }
             }
             if (part.attachJoint)
@@ -82,10 +88,6 @@
                 {
                     part.ResetJoints();
                 }
-            }
-            if (part.collisionEnhancer)
-            {
-                part.collisionEnhancer.OnTerrainPunchThrough = immortal ? CollisionEnhancerBehaviour.DO_NOTHING : CollisionEnhancerBehaviour.EXPLODE;
             }
 
             //Do not set this as then you can't click on parts
