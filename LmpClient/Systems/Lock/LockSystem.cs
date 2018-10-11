@@ -20,7 +20,6 @@ namespace LmpClient.Systems.Lock
     {
         public static LockStore LockStore { get; } = new LockStore();
         public static LockQuery LockQuery { get; } = new LockQuery(LockStore);
-        public LockEvents LockEvents { get; } = new LockEvents();
 
         public ConcurrentQueue<LockDefinition> AcquiredLocks = new ConcurrentQueue<LockDefinition>();
         public ConcurrentQueue<LockDefinition> ReleasedLocks = new ConcurrentQueue<LockDefinition>();
@@ -32,7 +31,6 @@ namespace LmpClient.Systems.Lock
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onGameSceneLoadRequested.Add(LockEvents.OnSceneRequested);
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, TriggerEvents));
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageSender.SendLocksRequest));
         }
@@ -41,7 +39,6 @@ namespace LmpClient.Systems.Lock
         {
             base.OnDisabled();
             LockStore.ClearAllLocks();
-            GameEvents.onGameSceneLoadRequested.Remove(LockEvents.OnSceneRequested);
         }
 
         #endregion
@@ -245,11 +242,11 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Releases all the player locks
         /// </summary>
-        public void ReleaseAllPlayerVesselLocks()
+        public void ReleaseAllPlayerSpecifiedLocks(params LockType[] lockTypes)
         {
             foreach (var lockToRelease in LockQuery.GetAllPlayerLocks(SettingsSystem.CurrentSettings.PlayerName))
             {
-                if (lockToRelease.Type > LockType.Asteroid)
+                if (lockTypes.Contains(lockToRelease.Type))
                     ReleaseLock(lockToRelease);
             }
         }
