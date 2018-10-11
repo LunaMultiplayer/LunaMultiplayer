@@ -43,5 +43,46 @@
                 part.internalModel.UnseatKerbal(crew);
             }
         }
+
+        public static void SetImmortal(this Part part, bool immortal)
+        {
+            if (part == null) return;
+
+            part.gTolerance = immortal ? double.PositiveInfinity : 50;
+            part.maxPressure = immortal ? double.PositiveInfinity : 4000;
+            part.crashTolerance = immortal ? float.PositiveInfinity : 9f;
+
+            if (part.rb)
+            {
+                part.rb.isKinematic = immortal;
+                part.rb.detectCollisions = !immortal;
+                if (part.GetComponent<PartBuoyancy>())
+                {
+                    part.GetComponent<PartBuoyancy>().enabled = immortal;
+                }
+            }
+            if (part.attachJoint)
+            {
+                if (immortal)
+                {
+                    part.attachJoint.SetUnbreakable(true, part.rigidAttachment);
+                }
+                else
+                {
+                    part.ResetJoints();
+                }
+            }
+            if (part.collisionEnhancer)
+            {
+                part.collisionEnhancer.OnTerrainPunchThrough = immortal ? CollisionEnhancerBehaviour.DO_NOTHING : CollisionEnhancerBehaviour.EXPLODE;
+            }
+
+            //Do not set this as then you can't click on parts
+            //part.SetDetectCollisions(!immortal);
+
+            //Do not remove the colliders as then you can't dock
+            //if (part.collider != null)
+            //    part.collider.enabled = !immortal;
+        }
     }
 }

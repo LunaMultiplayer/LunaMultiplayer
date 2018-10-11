@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
+using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 
@@ -77,40 +78,7 @@ namespace LmpClient.Systems.VesselImmortalSys
 
             foreach (var part in vessel.Parts)
             {
-                if (part == null) return;
-
-                //Do not remove the colliders as then you can't dock
-                //if (part.collider != null)
-                //    part.collider.enabled = !immortal;
-
-                if (part.rb != null)
-                {
-                    part.rb.isKinematic = immortal;
-                    part.rb.detectCollisions = !immortal;
-                }
-
-                part.gTolerance = immortal ? double.PositiveInfinity : 50;
-                part.maxPressure = immortal ? double.PositiveInfinity : 4000;
-
-                part.crashTolerance = immortal ? float.PositiveInfinity : 9f;
-
-                if (part.collisionEnhancer != null)
-                    part.collisionEnhancer.OnTerrainPunchThrough = immortal ? CollisionEnhancerBehaviour.DO_NOTHING : CollisionEnhancerBehaviour.EXPLODE;
-
-                if (immortal)
-                {
-                    if (part.attachJoint != null) part.attachJoint.SetUnbreakable(true, true);
-                }
-                else
-                    part.ResetJoints();
-
-                if (immortal)
-                    GameEvents.onPartPack.Fire(part);
-                else
-                    GameEvents.onPartUnpack.Fire(part);
-                
-                //Do not set this as then you can't click on parts
-                //part.SetDetectCollisions(!immortal);
+                part.SetImmortal(immortal);
             }
 
             if (immortal)
