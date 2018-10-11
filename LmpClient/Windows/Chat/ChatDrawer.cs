@@ -23,11 +23,11 @@ namespace LmpClient.Windows.Chat
         private void DrawChatMessageBox()
         {
             GUILayout.BeginHorizontal();
-            _chatScrollPos = GUILayout.BeginScrollView(_chatScrollPos, ScrollStyle);
-            GUILayout.BeginVertical(BoxStyle);
+            _chatScrollPos = GUILayout.BeginScrollView(_chatScrollPos);
+            GUILayout.BeginVertical();
             GUILayout.FlexibleSpace();
             foreach (var channelMessage in ChatSystem.Singleton.ChatMessages)
-                GUILayout.Label(channelMessage, LabelStyle);
+                GUILayout.Label(channelMessage);
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
             GUILayout.EndHorizontal();
@@ -36,8 +36,8 @@ namespace LmpClient.Windows.Chat
         private void DrawTextInput(bool pressedEnter)
         {
             GUILayout.BeginHorizontal();
-            _chatInputText = GUILayout.TextArea(_chatInputText, TextAreaStyle);
-            if (pressedEnter || GUILayout.Button(LocalizationContainer.ChatWindowText.Send, ButtonStyle, GUILayout.Width(WindowWidth * .25f)))
+            _chatInputText = GUILayout.TextArea(_chatInputText);
+            if (pressedEnter || GUILayout.Button(LocalizationContainer.ChatWindowText.Send, GUILayout.Width(WindowWidth * .25f)))
             {
                 if (!string.IsNullOrEmpty(_chatInputText))
                 {

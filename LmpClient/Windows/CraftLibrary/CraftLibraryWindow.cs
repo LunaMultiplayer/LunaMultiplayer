@@ -94,30 +94,29 @@ namespace LmpClient.Windows.CraftLibrary
             }
         }
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6707 + MainSystem.WindowOffset,
-                    WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Folders, WindowStyle, _foldersLayoutOptions));
+                    WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Folders, _foldersLayoutOptions));
             }
 
             if (Display && !string.IsNullOrEmpty(_selectedFolder) && System.CraftInfo.ContainsKey(_selectedFolder))
             {
                 _libraryWindowRect = FixWindowPos(GUILayout.Window(6708 + MainSystem.WindowOffset,
-                    _libraryWindowRect, DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.CraftLibraryWindowText.Crafts}", WindowStyle,
+                    _libraryWindowRect, DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.CraftLibraryWindowText.Crafts}",
                     _libraryLayoutOptions));
             }
 
             if (Display && _drawUploadScreen)
             {
                 _uploadWindowRect = FixWindowPos(GUILayout.Window(6709 + MainSystem.WindowOffset,
-                    _uploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload, WindowStyle,
+                    _uploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload,
                     _uploadLayoutOptions));
             }
 
-            CheckWindowLock();
+            CheckWindowLock();            
         }
         
         public override void SetStyles()

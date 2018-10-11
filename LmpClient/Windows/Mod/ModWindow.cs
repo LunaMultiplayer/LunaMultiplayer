@@ -24,13 +24,12 @@ namespace LmpClient.Windows.Mod
             set => base.Display = _display = value;
         }
         
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6706 + MainSystem.WindowOffset, WindowRect, DrawContent,
-                    LocalizationContainer.ModWindowText.Title, WindowStyle, LayoutOptions));
+                    LocalizationContainer.ModWindowText.Title, LayoutOptions));
             }
         }
 

@@ -53,7 +53,7 @@ namespace LmpClient.Systems.VesselUpdateSys
         #region Update routines
 
         private void ProcessVesselUpdates()
-        {
+        {            
             if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
 
             foreach (var keyVal in VesselUpdates)

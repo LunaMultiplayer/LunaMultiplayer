@@ -22,6 +22,8 @@ namespace LmpClient.Windows.Chat
         
         private static Vector2 _chatScrollPos;
 
+        private GUIStyle HighlightStyle;
+
         #endregion
 
         #region Base overrides
@@ -62,13 +64,12 @@ namespace LmpClient.Windows.Chat
             }
         }
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, 
-                    LocalizationContainer.ChatWindowText.Title, WindowStyle));
+                    LocalizationContainer.ChatWindowText.Title));
             }
             CheckWindowLock();
         }

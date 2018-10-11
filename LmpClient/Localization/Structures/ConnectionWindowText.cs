@@ -8,5 +8,9 @@
         public string Port { get; set; } = "Port:";
         public string Password { get; set; } = "Password:";
         public string CustomServers { get; set; } = "Custom servers:";
+
+        public string Connect { get; set; } = "Connect";
+        public string Settings { get; set; } = "Settings";
+        public string Servers { get; set; } = "Server List";
     }
 }

@@ -79,12 +79,11 @@ namespace LmpClient.Windows.Locks
             }
         }
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6717 + MainSystem.WindowOffset, WindowRect, DrawContent, "Locks", WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6717 + MainSystem.WindowOffset, WindowRect, DrawContent, "Locks", skin.window, LayoutOptions));
             }
             CheckWindowLock();
         }

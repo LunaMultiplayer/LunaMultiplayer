@@ -14,14 +14,14 @@ namespace LmpClient.Windows.Admin
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.AdminWindowText.Password, LabelStyle);
-            AdminSystem.Singleton.AdminPassword = GUILayout.PasswordField(AdminSystem.Singleton.AdminPassword, '*', 30, TextAreaStyle, GUILayout.Width(200)); // Max 32 characters
+            GUILayout.Label(LocalizationContainer.AdminWindowText.Password);
+            AdminSystem.Singleton.AdminPassword = GUILayout.PasswordField(AdminSystem.Singleton.AdminPassword, '*', 30, GUILayout.Width(200)); // Max 32 characters
             GUILayout.EndHorizontal();
             GUILayout.Space(5);
 
             GUI.enabled = !string.IsNullOrEmpty(AdminSystem.Singleton.AdminPassword);
 
-            ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos);
             foreach (var player in StatusSystem.Singleton.PlayerStatusList.Keys)
             {
                 if (player == SettingsSystem.CurrentSettings.PlayerName) continue;
@@ -31,15 +31,15 @@ namespace LmpClient.Windows.Admin
             GUILayout.Space(5);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(DekesslerBigIcon, ButtonStyle))
+            if (GUILayout.Button(DekesslerBigIcon))
             {
                 AdminSystem.Singleton.MessageSender.SendDekesslerMsg();
             }
-            if (GUILayout.Button(NukeBigIcon, ButtonStyle))
+            if (GUILayout.Button(NukeBigIcon))
             {
                 AdminSystem.Singleton.MessageSender.SendNukeMsg();
             }
-            if (GUILayout.Button(RestartServerIcon, ButtonStyle))
+            if (GUILayout.Button(RestartServerIcon))
             {
                 AdminSystem.Singleton.MessageSender.SendServerRestartMsg();
                 Display = false;
@@ -53,14 +53,14 @@ namespace LmpClient.Windows.Admin
         private void DrawPlayerLine(string playerName)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label(playerName, LabelStyle);
+            GUILayout.Label(playerName);
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(BanIcon, ButtonStyle))
+            if (GUILayout.Button(BanIcon))
             {
                 _selectedPlayer = playerName;
                 _banMode = true;
             }
-            if (GUILayout.Button(KickIcon, ButtonStyle))
+            if (GUILayout.Button(KickIcon))
             {
                 _selectedPlayer = playerName;
                 _banMode = false;
@@ -83,7 +83,7 @@ namespace LmpClient.Windows.Admin
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.AdminWindowText.Reason, LabelOptions);
-            _reason = GUILayout.TextField(_reason, 255, TextAreaStyle, GUILayout.Width(255));
+            _reason = GUILayout.TextField(_reason, 255, GUILayout.Width(255));
             GUILayout.EndHorizontal();
             GUILayout.Space(20);
 
@@ -91,7 +91,7 @@ namespace LmpClient.Windows.Admin
             GUILayout.FlexibleSpace();
             if (_banMode)
             {
-                if (GUILayout.Button(BanBigIcon, ButtonStyle, GUILayout.Width(255)))
+                if (GUILayout.Button(BanBigIcon, GUILayout.Width(255)))
                 {
                     AdminSystem.Singleton.MessageSender.SendBanPlayerMsg(_selectedPlayer, _reason);
                     _selectedPlayer = null;
@@ -100,7 +100,7 @@ namespace LmpClient.Windows.Admin
             }
             else
             {
-                if (GUILayout.Button(KickBigIcon, ButtonStyle, GUILayout.Width(255)))
+                if (GUILayout.Button(KickBigIcon, GUILayout.Width(255)))
                 {
                     AdminSystem.Singleton.MessageSender.SendKickPlayerMsg(_selectedPlayer, _reason);
                     _selectedPlayer = null;

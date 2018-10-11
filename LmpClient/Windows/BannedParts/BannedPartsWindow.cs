@@ -26,13 +26,12 @@ namespace LmpClient.Windows.BannedParts
 
         #endregion
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6718 + MainSystem.WindowOffset, WindowRect, DrawContent, 
-                    LocalizationContainer.BannedPartsWindowText.Title, WindowStyle, LayoutOptions));
+                    LocalizationContainer.BannedPartsWindowText.Title, LayoutOptions));
             }
         }
 

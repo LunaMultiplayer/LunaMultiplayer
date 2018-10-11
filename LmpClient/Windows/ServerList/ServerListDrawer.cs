@@ -19,7 +19,7 @@ namespace LmpClient.Windows.ServerList
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(RefreshBigIcon, ButtonStyle))
+            if (GUILayout.Button(RefreshBigIcon))
             {
                 NetworkServerList.RequestServers();
             }
@@ -34,9 +34,9 @@ namespace LmpClient.Windows.ServerList
         private void DrawServersGrid()
         {
             GUILayout.BeginHorizontal();
-            _verticalScrollPosition = GUILayout.BeginScrollView(_verticalScrollPosition, ScrollStyle);
+            _verticalScrollPosition = GUILayout.BeginScrollView(_verticalScrollPosition);
             GUILayout.BeginVertical();
-            _horizontalScrollPosition = GUILayout.BeginScrollView(_horizontalScrollPosition, ScrollStyle);
+            _horizontalScrollPosition = GUILayout.BeginScrollView(_horizontalScrollPosition);
             DrawGridHeader();
             DrawServerList();
             GUILayout.EndScrollView();
@@ -50,7 +50,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(_headerServerLine);
 
             GUILayout.BeginHorizontal(GUILayout.Width(25));
-            if (GUILayout.Button(_ascending ? "▲" : "▼", ButtonStyle))
+            if (GUILayout.Button(_ascending ? "▲" : "▼"))
             {
                 _ascending = !_ascending;
             }
@@ -58,7 +58,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
-            if (GUILayout.Button(KeyIcon, ButtonStyle))
+            if (GUILayout.Button(KeyIcon))
             {
                 _orderBy = "Password";
             }
@@ -66,7 +66,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
-            if (GUILayout.Button(GlobeIcon, ButtonStyle))
+            if (GUILayout.Button(GlobeIcon))
             {
                 _orderBy = "Country";
             }
@@ -74,7 +74,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping))
             {
                 _orderBy = "Ping";
             }
@@ -82,7 +82,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players))
             {
                 _orderBy = "PlayerCount";
             }
@@ -90,7 +90,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.MaxPlayers, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.MaxPlayers))
             {
                 _orderBy = "MaxPlayers";
             }
@@ -98,7 +98,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Mode, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Mode))
             {
                 _orderBy = "GameMode";
             }
@@ -106,7 +106,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(75));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.WarpMode, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.WarpMode))
             {
                 _orderBy = "WarpMode";
             }
@@ -114,7 +114,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Terrain, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Terrain))
             {
                 _orderBy = "TerrainQuality";
             }
@@ -122,7 +122,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Cheats, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Cheats))
             {
                 _orderBy = "Cheats";
             }
@@ -130,7 +130,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(220));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name))
             {
                 _orderBy = "ServerName";
             }
@@ -138,7 +138,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(150));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Website, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Website))
             {
                 _orderBy = "WebsiteText";
             }
@@ -146,7 +146,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(600));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description))
             {
                 _orderBy = "Description";
             }
@@ -192,7 +192,7 @@ namespace LmpClient.Windows.ServerList
         private void DrawServerEntry(ServerInfo currentEntry)
         {
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[0]));
-            if (GUILayout.Button("▶", ButtonStyle))
+            if (GUILayout.Button("▶"))
             {
                 if (currentEntry.Password)
                 {
@@ -209,45 +209,45 @@ namespace LmpClient.Windows.ServerList
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[1]));
             if (currentEntry.Password)
-                GUILayout.Label(KeyIcon, LabelStyle, GUILayout.MinWidth(HeaderGridSize[1]));
+                GUILayout.Label(KeyIcon, GUILayout.MinWidth(HeaderGridSize[1]));
             else
                 GUILayout.Label("", GUILayout.MinWidth(HeaderGridSize[1]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[2]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Country}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[2]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Country}"), GUILayout.MinWidth(HeaderGridSize[2]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[3]));
-            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[3]));
+            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), GUILayout.MinWidth(HeaderGridSize[3]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[4]));
-            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[4]));
+            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), GUILayout.MinWidth(HeaderGridSize[4]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[5]));
-            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[5]));
+            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), GUILayout.MinWidth(HeaderGridSize[5]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[6]));
-            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[6]));
+            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), GUILayout.MinWidth(HeaderGridSize[6]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[7]));
-            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[7]));
+            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), GUILayout.MinWidth(HeaderGridSize[7]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[8]));
-            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[8]));
+            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), GUILayout.MinWidth(HeaderGridSize[8]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[9]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[9]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), GUILayout.MinWidth(HeaderGridSize[9]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[10]));
-            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[10]));
+            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), GUILayout.MinWidth(HeaderGridSize[10]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[11]));
@@ -261,7 +261,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[12]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[12]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), GUILayout.MinWidth(HeaderGridSize[12]));
             GUILayout.EndHorizontal();
         }
 
@@ -279,13 +279,13 @@ namespace LmpClient.Windows.ServerList
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ServerListWindowText.Password, LabelOptions);
-            NetworkServerList.Password = GUILayout.PasswordField(NetworkServerList.Password, '*', 30, TextAreaStyle, GUILayout.Width(200));
+            NetworkServerList.Password = GUILayout.PasswordField(NetworkServerList.Password, '*', 30, GUILayout.Width(200));
             GUILayout.EndHorizontal();
             GUILayout.Space(20);
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Connect, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Connect))
             {
                 NetworkServerList.IntroduceToServer(_selectedServerId);
                 _selectedServerId = 0;

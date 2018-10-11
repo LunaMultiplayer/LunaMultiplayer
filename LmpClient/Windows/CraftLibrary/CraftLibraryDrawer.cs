@@ -17,8 +17,8 @@ namespace LmpClient.Windows.CraftLibrary
             DrawRefreshAndUploadButton(() => System.MessageSender.SendRequestFoldersMsg(), ()=> _drawUploadScreen = true);
             GUILayout.Space(15);
 
-            GUILayout.BeginVertical(BoxStyle);
-            _foldersScrollPos = GUILayout.BeginScrollView(_foldersScrollPos, ScrollStyle);
+            GUILayout.BeginVertical();
+            _foldersScrollPos = GUILayout.BeginScrollView(_foldersScrollPos);
             if (!System.CraftInfo.Keys.Any()) _selectedFolder = null;
             else
             {
@@ -51,7 +51,7 @@ namespace LmpClient.Windows.CraftLibrary
 
         private GUIStyle GetFolderStyle(string folderName)
         {
-            return System.FoldersWithNewContent.Contains(folderName) ? RedFontButtonStyle : ButtonStyle;
+            return System.FoldersWithNewContent.Contains(folderName) ? RedFontButtonStyle : skin.button;
         }
 
         #endregion
@@ -70,8 +70,8 @@ namespace LmpClient.Windows.CraftLibrary
 
             if (string.IsNullOrEmpty(_selectedFolder)) return;
 
-            GUILayout.BeginVertical(BoxStyle);
-            _libraryScrollPos = GUILayout.BeginScrollView(_libraryScrollPos, ScrollStyle);
+            GUILayout.BeginVertical();
+            _libraryScrollPos = GUILayout.BeginScrollView(_libraryScrollPos);
             if (SphCrafts.Any())
             {
                 GUILayout.Label("SPH", BoldRedLabelStyle);
@@ -112,7 +112,7 @@ namespace LmpClient.Windows.CraftLibrary
 
             if (craftBasicEntry.FolderName == SettingsSystem.CurrentSettings.PlayerName)
             {
-                if (GUILayout.Button(DeleteIcon, ButtonStyle, GUILayout.Width(35)))
+                if (GUILayout.Button(DeleteIcon, GUILayout.Width(35)))
                 {
                     System.MessageSender.SendDeleteCraftMsg(craftBasicEntry);
                     _selectedFolder = null;
@@ -120,7 +120,7 @@ namespace LmpClient.Windows.CraftLibrary
             }
             else
             {
-                if (GUILayout.Button(SaveIcon, ButtonStyle, GUILayout.Width(35)))
+                if (GUILayout.Button(SaveIcon, GUILayout.Width(35)))
                 {
                     if (System.CraftDownloaded.TryGetValue(_selectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
                         System.RequestCraft(craftBasicEntry);
@@ -145,8 +145,8 @@ namespace LmpClient.Windows.CraftLibrary
             DrawRefreshButton(() => System.RefreshOwnCrafts());
             GUILayout.Space(15);
 
-            GUILayout.BeginVertical(BoxStyle);
-            _uploadScrollPos = GUILayout.BeginScrollView(_uploadScrollPos, ScrollStyle);
+            GUILayout.BeginVertical();
+            _uploadScrollPos = GUILayout.BeginScrollView(_uploadScrollPos);
             for (var i = 0; i < System.OwnCrafts.Count; i++)
             {
                 DrawUploadCraftEntry(System.OwnCrafts[i]);
@@ -162,7 +162,7 @@ namespace LmpClient.Windows.CraftLibrary
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label($"{craftEntry.CraftName} ({craftEntry.CraftType})");
-            if (GUILayout.Button(UploadIcon, ButtonStyle, GUILayout.Width(35)))
+            if (GUILayout.Button(UploadIcon, GUILayout.Width(35)))
             {
                 System.SendCraft(craftEntry);
                 _drawUploadScreen = false;
@@ -176,8 +176,8 @@ namespace LmpClient.Windows.CraftLibrary
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(RefreshIcon, ButtonStyle)) refreshAction.Invoke();
-            if (GUILayout.Button(UploadIcon, ButtonStyle)) uploadAction.Invoke();
+            if (GUILayout.Button(RefreshIcon)) refreshAction.Invoke();
+            if (GUILayout.Button(UploadIcon)) uploadAction.Invoke();
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }

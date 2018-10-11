@@ -83,22 +83,28 @@ namespace LmpClient.Base
             //Implement your own code
         }
 
-        public virtual void OnGui()
+        public void OnGui()
         {
             if (!Initialized)
             {
                 InitializeStyles();
+                
                 //We only set the styles once so we shouldn't worry so much about the memory footprint...
                 SetStyles();
                 Initialized = true;
             }
+
+            if (!Display) return;
+            
             //Implement your own code
+            GUI.skin = skin;
+            GUI.depth = 0;
+
+            //Delegate to children
+            DrawGui();
         }
 
-        public virtual void AfterGui()
-        {
-            if (Display && DisplayTooltips && !string.IsNullOrEmpty(Tooltip)) GUI.Label(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, Tooltip.Length * 10, 20), Tooltip);
-        }
+        public abstract void DrawGui();
 
         public virtual void RemoveWindowLock()
         {
@@ -111,10 +117,9 @@ namespace LmpClient.Base
         public abstract void SetStyles();
 
         protected virtual bool Resizable { get; } = false;
-        protected virtual bool DisplayTooltips { get; } = false;
-        protected string Tooltip { get; set; } = string.Empty;
 
         protected bool ResizingWindow;
+        
         protected void DrawContent(int windowId)
         {
             DrawCloseButton(OnCloseButton, WindowRect);
@@ -125,8 +130,14 @@ namespace LmpClient.Base
                     ResizingWindow = true;
                 }
             }
+            
             DrawWindowContent(windowId);
-            SetTooltip();
+
+            //Draw Tooltip
+            var last = GUI.depth;
+            GUI.depth = -3;
+            GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y, 100, 40), GUI.tooltip);
+            GUI.depth = last;                            
         }
         
         public abstract void DrawWindowContent(int windowId);
@@ -134,11 +145,6 @@ namespace LmpClient.Base
         protected virtual void OnCloseButton()
         {
             Display = false;
-        }
-
-        protected void SetTooltip()
-        {
-            if (Event.current.type == EventType.Repaint) Tooltip = GUI.tooltip;
         }
 
         protected void DrawCloseButton(Action closeAction, Rect rect)
@@ -151,7 +157,7 @@ namespace LmpClient.Base
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(RefreshIcon, ButtonStyle)) refreshAction.Invoke();
+            if (GUILayout.Button(RefreshIcon)) refreshAction.Invoke();
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }

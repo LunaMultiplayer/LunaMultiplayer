@@ -63,7 +63,6 @@ namespace LmpClient.Windows
                 {
                     Profiler.BeginSample(_windows[i].WindowName);
                     _windows[i].OnGui();
-                    _windows[i].AfterGui();
                     Profiler.EndSample();
                 }
                 catch (Exception e)

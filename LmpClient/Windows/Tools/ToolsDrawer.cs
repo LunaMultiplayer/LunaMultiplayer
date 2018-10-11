@@ -11,13 +11,13 @@ namespace LmpClient.Windows.Tools
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            var newVal = GUILayout.Toggle(_saveCurrentOrbitData, "Save orbit data to file", ButtonStyle);
+            var newVal = GUILayout.Toggle(_saveCurrentOrbitData, "Save orbit data to file");
             if (newVal != _saveCurrentOrbitData)
             {
                 _saveCurrentOrbitData = newVal;
                 if (newVal) CreateNewOrbitDataFile();
             }
-            if (GUILayout.Button("Force time sync", ButtonStyle))
+            if (GUILayout.Button("Force time sync"))
             {
                 TimeSyncSystem.Singleton.ForceTimeSync();
             }
@@ -31,12 +31,12 @@ namespace LmpClient.Windows.Tools
 
         private void RangesSection()
         {
-            _displayRanges = GUILayout.Toggle(_displayRanges, "Vessel ranges", ButtonStyle);
+            _displayRanges = GUILayout.Toggle(_displayRanges, "Vessel ranges");
             if (_displayRanges)
             {
                 if (FlightGlobals.ActiveVessel != null)
                 {
-                    if (GUILayout.Button("Pack all vessels", ButtonStyle))
+                    if (GUILayout.Button("Pack all vessels"))
                     {
                         foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                         {
@@ -45,7 +45,7 @@ namespace LmpClient.Windows.Tools
                         }
                     }
 
-                    if (GUILayout.Button("Unpack all vessels", ButtonStyle))
+                    if (GUILayout.Button("Unpack all vessels"))
                     {
                         foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                         {
@@ -54,7 +54,7 @@ namespace LmpClient.Windows.Tools
                         }
                     }
 
-                    if (GUILayout.Button("Reset ranges", ButtonStyle))
+                    if (GUILayout.Button("Reset ranges"))
                     {
                         foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                         {
@@ -67,10 +67,10 @@ namespace LmpClient.Windows.Tools
         }
         private void ReloadSection()
         {
-            _displayReloads = GUILayout.Toggle(_displayReloads, "Reload vessels", ButtonStyle);
+            _displayReloads = GUILayout.Toggle(_displayReloads, "Reload vessels");
             if (_displayReloads)
             {
-                if (GUILayout.Button("Reload own vessel", ButtonStyle))
+                if (GUILayout.Button("Reload own vessel"))
                 {
                     if (FlightGlobals.ActiveVessel != null)
                     {
@@ -79,7 +79,7 @@ namespace LmpClient.Windows.Tools
                     }
                 }
 
-                if (GUILayout.Button("Reload other vessels", ButtonStyle))
+                if (GUILayout.Button("Reload other vessels"))
                 {
                     var vessels = FlightGlobals.Vessels.Where(v => v != null).ToList();
                     if (FlightGlobals.ActiveVessel != null)
@@ -97,15 +97,15 @@ namespace LmpClient.Windows.Tools
         
         private void FloatingOriginSection()
         {
-            _displayFloatingOrigin = GUILayout.Toggle(_displayFloatingOrigin, "Floating Origin", ButtonStyle);
+            _displayFloatingOrigin = GUILayout.Toggle(_displayFloatingOrigin, "Floating Origin");
             if (_displayFloatingOrigin)
             {
-                if (GUILayout.Button("Reset floating origin", ButtonStyle))
+                if (GUILayout.Button("Reset floating origin"))
                 {
                     FloatingOrigin.fetch.ResetOffset();
                 }
 
-                if (GUILayout.Button("Set random floating origin", ButtonStyle))
+                if (GUILayout.Button("Set random floating origin"))
                 {
                     FloatingOrigin.SetOffset(new Vector3d(Random.Range(0, FloatingOrigin.fetch.threshold), 
                         Random.Range(0, FloatingOrigin.fetch.threshold), 

@@ -13,16 +13,16 @@ namespace LmpClient.Windows.Mod
             GUI.DragWindow(MoveRect);
             GUILayout.Space(10);
 
-            ScrollPos = GUILayout.BeginScrollView(_missingExpansionsScrollPos, ScrollStyle);
+            ScrollPos = GUILayout.BeginScrollView(_missingExpansionsScrollPos);
 
             if (ModSystem.Singleton.MissingExpansions.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.MissingExpansions, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal(BoxStyle);
-                _missingExpansionsScrollPos = GUILayout.BeginScrollView(_missingExpansionsScrollPos, ScrollStyle);
+                GUILayout.BeginHorizontal();
+                _missingExpansionsScrollPos = GUILayout.BeginScrollView(_missingExpansionsScrollPos);
                 foreach (var expansion in ModSystem.Singleton.MissingExpansions)
                 {
-                    GUILayout.Label(expansion, LabelStyle);
+                    GUILayout.Label(expansion);
                 }
 
                 GUILayout.EndScrollView();
@@ -33,13 +33,13 @@ namespace LmpClient.Windows.Mod
             if (ModSystem.Singleton.MandatoryFilesNotFound.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryModsNotFound, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal(BoxStyle);
-                _mandatoryFilesNotFoundScrollPos = GUILayout.BeginScrollView(_mandatoryFilesNotFoundScrollPos, ScrollStyle);
+                GUILayout.BeginHorizontal();
+                _mandatoryFilesNotFoundScrollPos = GUILayout.BeginScrollView(_mandatoryFilesNotFoundScrollPos);
                 foreach (var mod in ModSystem.Singleton.MandatoryFilesNotFound)
                 {
-                    GUILayout.Label(mod.FilePath, LabelStyle);
+                    GUILayout.Label(mod.FilePath);
                     if (!string.IsNullOrEmpty(mod.Text))
-                        GUILayout.Label(mod.Text, LabelStyle);
+                        GUILayout.Label(mod.Text);
                     if (!string.IsNullOrEmpty(mod.Link))
                     {
                         if (GUILayout.Button(LocalizationContainer.ModWindowText.Link, HyperlinkLabelStyle))
@@ -55,14 +55,14 @@ namespace LmpClient.Windows.Mod
             if (ModSystem.Singleton.MandatoryFilesDifferentSha.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryModsDifferentShaFound, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal(BoxStyle);
-                _mandatoryFilesDifferentShaScrollPos = GUILayout.BeginScrollView(_mandatoryFilesDifferentShaScrollPos, ScrollStyle);
+                GUILayout.BeginHorizontal();
+                _mandatoryFilesDifferentShaScrollPos = GUILayout.BeginScrollView(_mandatoryFilesDifferentShaScrollPos);
                 foreach (var mod in ModSystem.Singleton.MandatoryFilesDifferentSha)
                 {
-                    GUILayout.Label(mod.FilePath, LabelStyle);
-                    GUILayout.Label(mod.Sha, LabelStyle);
+                    GUILayout.Label(mod.FilePath);
+                    GUILayout.Label(mod.Sha);
                     if (!string.IsNullOrEmpty(mod.Text))
-                        GUILayout.Label(mod.Text, LabelStyle);
+                        GUILayout.Label(mod.Text);
                     if (!string.IsNullOrEmpty(mod.Link))
                     {
                         if (GUILayout.Button(LocalizationContainer.ModWindowText.Link, HyperlinkLabelStyle))
@@ -78,13 +78,13 @@ namespace LmpClient.Windows.Mod
             if (ModSystem.Singleton.ForbiddenFilesFound.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenFilesFound, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal(BoxStyle);
-                _forbiddenFilesScrollPos = GUILayout.BeginScrollView(_forbiddenFilesScrollPos, ScrollStyle);
+                GUILayout.BeginHorizontal();
+                _forbiddenFilesScrollPos = GUILayout.BeginScrollView(_forbiddenFilesScrollPos);
                 foreach (var mod in ModSystem.Singleton.ForbiddenFilesFound)
                 {
-                    GUILayout.Label(mod.FilePath, LabelStyle);
+                    GUILayout.Label(mod.FilePath);
                     if (!string.IsNullOrEmpty(mod.Text))
-                        GUILayout.Label(mod.Text, LabelStyle);
+                        GUILayout.Label(mod.Text);
                 }
 
                 GUILayout.EndScrollView();
@@ -95,11 +95,11 @@ namespace LmpClient.Windows.Mod
             if (ModSystem.Singleton.NonListedFilesFound.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.NonListedFilesFound, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal(BoxStyle);
-                _nonListedFilesScrollPos = GUILayout.BeginScrollView(_nonListedFilesScrollPos, ScrollStyle);
+                GUILayout.BeginHorizontal();
+                _nonListedFilesScrollPos = GUILayout.BeginScrollView(_nonListedFilesScrollPos);
                 foreach (var mod in ModSystem.Singleton.NonListedFilesFound)
                 {
-                    GUILayout.Label(mod, LabelStyle);
+                    GUILayout.Label(mod);
                 }
 
                 GUILayout.EndScrollView();
@@ -110,13 +110,13 @@ namespace LmpClient.Windows.Mod
             if (ModSystem.Singleton.MandatoryPartsNotFound.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryPartsNotFound, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal(BoxStyle);
-                _mandatoryPartsScrollPos = GUILayout.BeginScrollView(_mandatoryPartsScrollPos, ScrollStyle);
+                GUILayout.BeginHorizontal();
+                _mandatoryPartsScrollPos = GUILayout.BeginScrollView(_mandatoryPartsScrollPos);
                 foreach (var part in ModSystem.Singleton.MandatoryPartsNotFound)
                 {
-                    GUILayout.Label(part.PartName, LabelStyle);
+                    GUILayout.Label(part.PartName);
                     if (!string.IsNullOrEmpty(part.Text))
-                        GUILayout.Label(part.Text, LabelStyle);
+                        GUILayout.Label(part.Text);
                     if (!string.IsNullOrEmpty(part.Link))
                     {
                         if (GUILayout.Button(LocalizationContainer.ModWindowText.Link, HyperlinkLabelStyle))
@@ -132,13 +132,13 @@ namespace LmpClient.Windows.Mod
             if (ModSystem.Singleton.ForbiddenPartsFound.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenPartsFound, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal(BoxStyle);
-                _forbiddenPartsScrollPos = GUILayout.BeginScrollView(_forbiddenPartsScrollPos, ScrollStyle);
+                GUILayout.BeginHorizontal();
+                _forbiddenPartsScrollPos = GUILayout.BeginScrollView(_forbiddenPartsScrollPos);
                 foreach (var part in ModSystem.Singleton.ForbiddenPartsFound)
                 {
-                    GUILayout.Label(part.PartName, LabelStyle);
+                    GUILayout.Label(part.PartName);
                     if (!string.IsNullOrEmpty(part.Text))
-                        GUILayout.Label(part.Text, LabelStyle);
+                        GUILayout.Label(part.Text);
                 }
 
                 GUILayout.EndScrollView();

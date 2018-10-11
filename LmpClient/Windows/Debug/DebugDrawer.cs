@@ -8,45 +8,45 @@ namespace LmpClient.Windows.Debug
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            _displayFast = GUILayout.Toggle(_displayFast, "Fast debug update", ButtonStyle);
+            _displayFast = GUILayout.Toggle(_displayFast, "Fast debug update");
 
-            _displayVectors = GUILayout.Toggle(_displayVectors, "Display vessel vectors", ButtonStyle);
+            _displayVectors = GUILayout.Toggle(_displayVectors, "Display vessel vectors");
             if (_displayVectors)
-                GUILayout.Label(_vectorText, LabelStyle);
+                GUILayout.Label(_vectorText);
 
-            _displayPositions = GUILayout.Toggle(_displayPositions, "Display active vessel positions", ButtonStyle);
+            _displayPositions = GUILayout.Toggle(_displayPositions, "Display active vessel positions");
             if (_displayPositions)
-                GUILayout.Label(_positionText, LabelStyle);
+                GUILayout.Label(_positionText);
 
-            _displayVesselsPositions = GUILayout.Toggle(_displayVesselsPositions, "Display other vessel positions", ButtonStyle);
+            _displayVesselsPositions = GUILayout.Toggle(_displayVesselsPositions, "Display other vessel positions");
             if (_displayVesselsPositions)
-                GUILayout.Label(_positionVesselsText, LabelStyle);
+                GUILayout.Label(_positionVesselsText);
 
-            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info", ButtonStyle);
+            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info");
             if (_displayOrbit)
-                GUILayout.Label(_orbitText, LabelStyle);
+                GUILayout.Label(_orbitText);
 
-            _displayVesselsOrbit = GUILayout.Toggle(_displayVesselsOrbit, "Display other vessels orbit info", ButtonStyle);
+            _displayVesselsOrbit = GUILayout.Toggle(_displayVesselsOrbit, "Display other vessels orbit info");
             if (_displayVesselsOrbit)
-                GUILayout.Label(_orbitVesselsText, LabelStyle);
+                GUILayout.Label(_orbitVesselsText);
 
-            _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics", ButtonStyle);
+            _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics");
             if (_displayInterpolationData)
             {
-                GUILayout.Label(_interpolationText, LabelStyle);
+                GUILayout.Label(_interpolationText);
             }
 
-            _displaySubspace = GUILayout.Toggle(_displaySubspace, "Display subspace statistics", ButtonStyle);
+            _displaySubspace = GUILayout.Toggle(_displaySubspace, "Display subspace statistics");
             if (_displaySubspace)
-                GUILayout.Label(_subspaceText, LabelStyle);
+                GUILayout.Label(_subspaceText);
 
-            _displayTimes = GUILayout.Toggle(_displayTimes, "Display time clocks", ButtonStyle);
+            _displayTimes = GUILayout.Toggle(_displayTimes, "Display time clocks");
             if (_displayTimes)
-                GUILayout.Label(_timeText, LabelStyle);
+                GUILayout.Label(_timeText);
 
-            _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics", ButtonStyle);
+            _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics");
             if (_displayConnectionQueue)
-                GUILayout.Label(_connectionText, LabelStyle);
+                GUILayout.Label(_connectionText);
 
             GUILayout.EndVertical();
         }

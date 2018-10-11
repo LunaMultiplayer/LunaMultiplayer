@@ -19,39 +19,47 @@ namespace LmpClient.Windows.Options
         public override void DrawWindowContent(int windowId)
         {
             //Player color
-            GUILayout.BeginVertical(BoxStyle);
+            GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Language);
-            if (GUILayout.Button(LocalizationContainer.GetCurrentLanguageAsText(), ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.GetCurrentLanguageAsText()))
             {
                 LocalizationContainer.LoadLanguage(LocalizationContainer.GetNextLanguage());
                 SettingsSystem.CurrentSettings.Language = LocalizationContainer.CurrentLanguage;
                 SettingsSystem.SaveSettings();
             }
             GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
+            
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Color);
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, _tempColorLabelStyle);
-            GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, _smallOption);
             _tempColor.r = GUILayout.HorizontalScrollbar(_tempColor.r, 0, 0, 1);
             GUILayout.EndHorizontal();
+            
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Green, _smallOption);
             _tempColor.g = GUILayout.HorizontalScrollbar(_tempColor.g, 0, 0, 1);
             GUILayout.EndHorizontal();
+            
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Blue, _smallOption);
             _tempColor.b = GUILayout.HorizontalScrollbar(_tempColor.b, 0, 0, 1);
             GUILayout.EndHorizontal();
+
+            _tempColorLabelStyle.fontStyle = FontStyle.Bold;
+            _tempColorLabelStyle.fontSize = 40;
             _tempColorLabelStyle.active.textColor = _tempColor;
             _tempColorLabelStyle.normal.textColor = _tempColor;
+            
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Random, ButtonStyle))
-                _tempColor = PlayerColorSystem.GenerateRandomColor();
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Set, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Random))
+            {
+                _tempColor = PlayerColorSystem.GenerateRandomColor();                
+            }
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Set))
             {
                 StatusWindow.Singleton.ColorEventHandled = false;
                 SettingsSystem.CurrentSettings.PlayerColor = _tempColor;
@@ -66,7 +74,7 @@ namespace LmpClient.Windows.Options
                 ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl + " + SHA"))
                 ModSystem.Singleton.GenerateModControlFile(true);
-            _displayUniverseConverterDialog = GUILayout.Toggle(_displayUniverseConverterDialog, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
+            _displayUniverseConverterDialog = GUILayout.Toggle(_displayUniverseConverterDialog, LocalizationContainer.OptionsWindowText.GenerateUniverse, ToggleButtonStyle);
             GUILayout.Space(10);
 
             DrawGeneralSettings();
@@ -80,10 +88,10 @@ namespace LmpClient.Windows.Options
 
         private void DrawGeneralSettings()
         {
-            _showGeneralSettings = GUILayout.Toggle(_showGeneralSettings, LocalizationContainer.OptionsWindowText.GeneralSettings, ButtonStyle);
+            _showGeneralSettings = GUILayout.Toggle(_showGeneralSettings, LocalizationContainer.OptionsWindowText.GeneralSettings,ToggleButtonStyle);
             if (_showGeneralSettings)
             {
-                var settingSyncCheck = GUILayout.Toggle(SettingsSystem.CurrentSettings.IgnoreSyncChecks, LocalizationContainer.OptionsWindowText.IgnoreSyncChecks, "toggle");
+                var settingSyncCheck = GUILayout.Toggle(SettingsSystem.CurrentSettings.IgnoreSyncChecks, LocalizationContainer.OptionsWindowText.IgnoreSyncChecks);
                 if (settingSyncCheck != SettingsSystem.CurrentSettings.IgnoreSyncChecks)
                 {
                     SettingsSystem.CurrentSettings.IgnoreSyncChecks = settingSyncCheck;
@@ -94,7 +102,7 @@ namespace LmpClient.Windows.Options
 
         private void DrawNetworkSettings()
         {
-            _showAdvancedNetworkSettings = GUILayout.Toggle(_showAdvancedNetworkSettings, LocalizationContainer.OptionsWindowText.NetworkSettings, ButtonStyle);
+            _showAdvancedNetworkSettings = GUILayout.Toggle(_showAdvancedNetworkSettings, LocalizationContainer.OptionsWindowText.NetworkSettings, ToggleButtonStyle);
             if (_showAdvancedNetworkSettings)
             {
                 if (MainSystem.NetworkState > ClientState.Disconnected)
@@ -145,7 +153,7 @@ namespace LmpClient.Windows.Options
                     }
                     GUI.enabled = true;
 
-                    _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "∞", "toggle");
+                    _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "∞");
                     if (_infiniteTimeout)
                     {
                         NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds = float.MaxValue;
@@ -157,7 +165,7 @@ namespace LmpClient.Windows.Options
 
         private void DrawAdvancedDebugOptions()
         {
-            GUILayout.Label("Debug settings\n________________________________________");
+            GUILayout.Label("Debug settings");
 
             if (GUILayout.Button("Check Common.dll stock parts"))
                 ModSystem.Singleton.CheckCommonStockParts();
@@ -166,14 +174,14 @@ namespace LmpClient.Windows.Options
 
             GUILayout.Space(10);
 
-            _showBadNetworkSimulationSettings = GUILayout.Toggle(_showBadNetworkSimulationSettings, "Bad network simulation", ButtonStyle);
+            _showBadNetworkSimulationSettings = GUILayout.Toggle(_showBadNetworkSimulationSettings, "Bad network simulation", ToggleButtonStyle);
             if (_showBadNetworkSimulationSettings)
             {
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
                     GUILayout.BeginHorizontal();
-                    if (GUILayout.Button("Random", ButtonStyle)) NetworkMain.RandomizeBadConnectionValues();
-                    if (GUILayout.Button("Reset", ButtonStyle)) NetworkMain.ResetBadConnectionValues();
+                    if (GUILayout.Button("Random")) NetworkMain.RandomizeBadConnectionValues();
+                    if (GUILayout.Button("Reset")) NetworkMain.ResetBadConnectionValues();
                     GUILayout.EndHorizontal();
                 }
 
@@ -196,7 +204,7 @@ namespace LmpClient.Windows.Options
                     NetworkMain.Config.SimulatedMinimumLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3), 4);
             }
 
-            _showClockOffsetSettings = GUILayout.Toggle(_showClockOffsetSettings, "Clock offset simulation", ButtonStyle);
+            _showClockOffsetSettings = GUILayout.Toggle(_showClockOffsetSettings, "Clock offset simulation",ToggleButtonStyle);
             if (_showClockOffsetSettings)
             {
                 GUILayout.Label($"Computer clock offset: {LunaComputerTime.SimulatedMinutesTimeOffset:F1} min");
@@ -216,7 +224,7 @@ namespace LmpClient.Windows.Options
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos);
             foreach (var saveFolder in UniverseConverter.GetSavedNames())
                 if (GUILayout.Button(saveFolder))
                     UniverseConverter.GenerateUniverse(saveFolder);

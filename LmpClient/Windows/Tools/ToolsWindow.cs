@@ -36,12 +36,11 @@ namespace LmpClient.Windows.Tools
 
         #endregion
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6722 + MainSystem.WindowOffset, WindowRect, DrawContent, "Tools", WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6722 + MainSystem.WindowOffset, WindowRect, DrawContent, "Tools", LayoutOptions));
             }
             CheckWindowLock();
         }

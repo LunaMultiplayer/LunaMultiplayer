@@ -23,9 +23,13 @@ namespace LmpClient.Windows.Status
 
         private static Vector2 _scrollPosition;
         private static GUIStyle _subspaceStyle;
+        private static GUIStyle _subspaceListStyle;
+        
         private static Dictionary<string, GUIStyle> _playerNameStyle;
         private static GUIStyle _stateTextStyle;
-
+        
+        private static GUIStyle _highlightStyle;
+        
         private const float WindowHeight = 400;
         private const float WindowWidth = 300;
         private const float UpdateStatusInterval = 1f;
@@ -49,10 +53,8 @@ namespace LmpClient.Windows.Status
             MainSystem.ToolbarShowGui = false;
         }
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
-            
             if (Display)
             {
                 if (!ColorEventHandled)
@@ -63,7 +65,7 @@ namespace LmpClient.Windows.Status
 
                 //Calculate the minimum size of the minimize window by drawing it off the screen
                 WindowRect = FixWindowPos(GUILayout.Window(6703 + MainSystem.WindowOffset, 
-                    WindowRect, DrawContent, Title, WindowStyle, LayoutOptions));
+                    WindowRect, DrawContent, Title, LayoutOptions));
             }
             CheckWindowLock();
         }
@@ -73,15 +75,24 @@ namespace LmpClient.Windows.Status
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
-            HighlightStyle = new GUIStyle(GUI.skin.button)
+            _highlightStyle = new GUIStyle(GUI.skin.button)
             {
-                normal = { textColor = Color.red },
-                active = { textColor = Color.red },
-                hover = { textColor = Color.red }
+                normal = { textColor = XKCDColors.Red },
+                active = { textColor = XKCDColors.Red },
+                hover = { textColor = XKCDColors.KSPNotSoGoodOrange }
             };
-            _subspaceStyle = new GUIStyle { normal = { background = new Texture2D(1, 1) } };
-            _subspaceStyle.normal.background.SetPixel(0, 0, Color.black);
-            _subspaceStyle.normal.background.Apply();
+
+            _subspaceStyle = new GUIStyle(skin.box)
+            {
+                padding = new RectOffset(2, 2, 0, 0),
+                margin = new RectOffset(0, 0, 0, 0)
+            };
+
+            _subspaceListStyle = new GUIStyle(skin.scrollView)
+            {
+                padding = new RectOffset(0, 0, 0, 0),
+                margin = new RectOffset(0, 0, 0, 0)
+            };
 
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
@@ -91,7 +102,7 @@ namespace LmpClient.Windows.Status
             
             _playerNameStyle = new Dictionary<string, GUIStyle>();
 
-            _stateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
+            _stateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = XKCDColors.KSPNeutralUIGrey }};
             _stateTextStyle.hover.textColor = _stateTextStyle.normal.textColor;
             _stateTextStyle.active.textColor = _stateTextStyle.normal.textColor;
             _stateTextStyle.fontStyle = FontStyle.Normal;

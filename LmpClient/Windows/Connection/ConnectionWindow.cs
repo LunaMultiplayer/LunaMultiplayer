@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
 using LmpCommon;
@@ -55,7 +56,7 @@ namespace LmpClient.Windows.Connection
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
 
             LabelOptions = new GUILayoutOption[1];
-            LabelOptions[0] = GUILayout.Width(100);
+            LabelOptions[0] = GUILayout.Width(100);                        
         }
 
         protected override void OnCloseButton()
@@ -64,12 +65,11 @@ namespace LmpClient.Windows.Connection
             MainSystem.ToolbarShowGui = false;
         }
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title, WindowStyle));
+                WindowRect = FixWindowPos(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title));
             }
         }
         

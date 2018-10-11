@@ -7,50 +7,50 @@ namespace LmpClient.Windows.Locks
     {
         public override void DrawWindowContent(int windowId)
         {
-            GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
             GUILayout.EndHorizontal();
 
-            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5), GUILayout.Height(WindowHeight - 100));
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth), GUILayout.Height(WindowHeight));
 
             PrintLocks();
 
             GUILayout.EndScrollView();
-
-            GUILayout.EndVertical();
         }
 
         private void PrintLocks()
         {
-            GUILayout.Label("Asteroid owner: " + _asteroidLockOwner, LabelStyle);
-            GUILayout.Label("Contract owner: " + _contractLockOwner, LabelStyle);
+            GUILayout.Label("Asteroid owner: " + _asteroidLockOwner);
+            GUILayout.Label("Contract owner: " + _contractLockOwner);
             GUILayout.Space(10);
             for (var i = 0; i < VesselLocks.Count; i++)
             {
-                VesselLocks[i].Selected = GUILayout.Toggle(VesselLocks[i].Selected, VesselLocks[i].VesselId.ToString(), ButtonStyle);
+                GUILayout.BeginVertical(skin.box);
+                VesselLocks[i].Selected = GUILayout.Toggle(VesselLocks[i].Selected, VesselLocks[i].VesselId.ToString());
+                GUILayout.Label(VesselLocks[i].VesselName);
+                
                 if (VesselLocks[i].Selected)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label(CreateLockText(VesselLocks[i]), LabelStyle);
+                    GUILayout.Label(CreateLockText(VesselLocks[i]));
                     if (VesselLocks[i].PlayerOwnsAnyLock())
                     {
-                        if (GUILayout.Button("Release", ButtonStyle))
+                        if (GUILayout.Button("Release"))
                         {
                             LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselLocks[i].VesselId);
                         }
                     }
                     GUILayout.EndHorizontal();
                 }
+                GUILayout.EndVertical();
             }
         }
 
         private static string CreateLockText(VesselLockDisplay vesselLock)
         {
             StrBuilder.Length = 0;
-            StrBuilder.AppendLine(vesselLock.VesselName)
-                .Append("Loaded: ").Append(vesselLock.Loaded).AppendLine()
+            StrBuilder.Append("Loaded: ").Append(vesselLock.Loaded).AppendLine()
                 .Append("Packed: ").Append(vesselLock.Packed).AppendLine()
                 .Append("Immortal: ").Append(vesselLock.Immortal).AppendLine()
                 .Append("Control: ").Append(vesselLock.ControlLockOwner).AppendLine()

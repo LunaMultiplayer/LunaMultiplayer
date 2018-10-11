@@ -48,8 +48,8 @@ namespace LmpClient.Windows.Screenshots
             GUILayout.Label(ScreenshotKeyLabel);
             GUILayout.Space(15);
 
-            GUILayout.BeginVertical(BoxStyle);
-            _foldersScrollPos = GUILayout.BeginScrollView(_foldersScrollPos, ScrollStyle);
+            GUILayout.BeginVertical();
+            _foldersScrollPos = GUILayout.BeginScrollView(_foldersScrollPos);
             foreach (var folderName in System.MiniatureImages.Keys)
                 DrawFolderButton(folderName);
             GUILayout.EndScrollView();
@@ -76,7 +76,7 @@ namespace LmpClient.Windows.Screenshots
 
         private GUIStyle GetFolderStyle(string folderName)
         {
-            return System.FoldersWithNewContent.Contains(folderName) ? RedFontButtonStyle : ButtonStyle;
+            return System.FoldersWithNewContent.Contains(folderName) ? RedFontButtonStyle : skin.button;
         }
 
         #endregion
@@ -95,8 +95,8 @@ namespace LmpClient.Windows.Screenshots
 
             if (string.IsNullOrEmpty(_selectedFolder)) return;
 
-            GUILayout.BeginVertical(BoxStyle);
-            _libraryScrollPos = GUILayout.BeginScrollView(_libraryScrollPos, ScrollStyle);
+            GUILayout.BeginVertical();
+            _libraryScrollPos = GUILayout.BeginScrollView(_libraryScrollPos);
             if (Miniatures.Any())
             {
                 for (var i = 0; i < Miniatures.Count; i += 4)
@@ -142,7 +142,7 @@ namespace LmpClient.Windows.Screenshots
 
         private void DrawMiniature(Screenshot miniature)
         {
-            if (GUILayout.Button(miniature.Texture, ButtonStyle, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height)))
+            if (GUILayout.Button(miniature.Texture, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height)))
             {
                 _selectedImage = miniature.DateTaken;
                 if(System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
@@ -167,7 +167,7 @@ namespace LmpClient.Windows.Screenshots
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(SaveIcon, ButtonStyle))
+            if (GUILayout.Button(SaveIcon))
             {
                 System.SaveImage(_selectedFolder, _selectedImage);
                 //Close after saving
@@ -178,8 +178,8 @@ namespace LmpClient.Windows.Screenshots
 
             if (_selectedImage == 0) return;
 
-            GUILayout.BeginVertical(BoxStyle);
-            _imageScrollPos = GUILayout.BeginScrollView(_imageScrollPos, ScrollStyle);
+            GUILayout.BeginVertical();
+            _imageScrollPos = GUILayout.BeginScrollView(_imageScrollPos);
             if (System.DownloadedImages.TryGetValue(_selectedFolder, out var imagesDictionary) && imagesDictionary.TryGetValue(_selectedImage, out var screenShot))
             {
                 DrawImageCentered(screenShot);

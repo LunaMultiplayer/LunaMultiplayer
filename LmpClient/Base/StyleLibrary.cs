@@ -7,30 +7,31 @@ namespace LmpClient.Base
 {
     public abstract class StyleLibrary
     {
-        protected Rect WindowRect;
-        protected Rect MoveRect;
-
-        protected GUIStyle WindowStyle;
-        protected GUIStyle ButtonStyle;
+        protected GUISkin skin;
+        
+        //Custom styles used by LMP
         protected GUIStyle RedFontButtonStyle;
         protected GUIStyle SmallButtonStyle;
         protected GUIStyle ResizeButtonStyle;
-        protected GUIStyle LabelStyle;
+
         protected GUIStyle HyperlinkLabelStyle;
         protected GUIStyle BoldRedLabelStyle;
         protected GUIStyle BoldGreenLabelStyle;
-        protected GUIStyle ScrollStyle;
-        protected GUIStyle TextAreaStyle;
+        
         protected GUIStyle StatusStyle;
-        protected GUIStyle HighlightStyle;
-        protected GUIStyle BoxStyle;
         protected GUIStyle BigLabelStyle;
+        protected GUIStyle ToggleButtonStyle;
 
         protected GUILayoutOption[] LayoutOptions;
         protected GUILayoutOption[] TextAreaOptions;
         protected GUILayoutOption[] LabelOptions;
-
+        
+        
+        //State, used by IMGUI Window Functions
+        protected Rect WindowRect;
+        protected Rect MoveRect;
         protected Vector2 ScrollPos = new Vector2();
+
         protected GUIContent SettingsIcon;
         protected GUIContent SettingsBigIcon;
         protected GUIContent ServerIcon;
@@ -74,7 +75,11 @@ namespace LmpClient.Base
         protected GUIContent DownloadBigIcon;
 
         public void InitializeStyles()
-        {
+        {            
+            //We copy the original KSP skin, it's a ScriptableObject descendant.
+            skin = Object.Instantiate(HighLogic.Skin);
+
+            
             SettingsIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "settings.png"), 16, 16),
                 LocalizationContainer.ButtonTooltips.SettingsIcon);
             SettingsBigIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "settingsBig.png"), 32, 32),
@@ -157,12 +162,10 @@ namespace LmpClient.Base
                 LocalizationContainer.ButtonTooltips.RestartServerIcon);
             DownloadBigIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "downloadBig.png"), 32, 32),
                 LocalizationContainer.ButtonTooltips.RestartServerIcon);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
-            RedFontButtonStyle = new GUIStyle(GUI.skin.button) { normal = { textColor = Color.red }, active = { textColor = Color.red }, hover = { textColor = Color.red } };
-            SmallButtonStyle = new GUIStyle(GUI.skin.button) { padding = new RectOffset(0, 0, 0, 0) };
-            ResizeButtonStyle = new GUIStyle(GUI.skin.button)
+            
+            RedFontButtonStyle = new GUIStyle(skin.button) { normal = { textColor = Color.red }, active = { textColor = Color.red }, hover = { textColor = Color.red } };
+            SmallButtonStyle = new GUIStyle(skin.button) { padding = new RectOffset(0, 0, 0, 0) };
+            ResizeButtonStyle = new GUIStyle(skin.button)
             {
                 padding = new RectOffset(0, 0, 0, 0),
                 border = new RectOffset(0, 0, 0, 0),
@@ -175,13 +178,13 @@ namespace LmpClient.Base
                 onFocused = new GUIStyleState { background = ResizeIcon },
                 onHover = new GUIStyleState { background = ResizeIcon }
             };
-            LabelStyle = new GUIStyle(GUI.skin.label);
-            HyperlinkLabelStyle = new GUIStyle(GUI.skin.button)
+                       
+            HyperlinkLabelStyle = new GUIStyle(skin.button)
             {
                 fontStyle = FontStyle.Bold,
                 padding = new RectOffset(0, 0, 0, 0),
                 border = new RectOffset(0, 0, 0, 0),
-                normal = new GUIStyleState { textColor = Color.blue },
+                normal = new GUIStyleState { textColor = XKCDColors.KSPUnnamedCyan},
                 active = new GUIStyleState(),
                 focused = new GUIStyleState(),
                 hover = new GUIStyleState(),
@@ -190,16 +193,18 @@ namespace LmpClient.Base
                 onFocused = new GUIStyleState(),
                 onHover = new GUIStyleState()
             };
-            BoldGreenLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.green } };
-            BoldRedLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.red } };
-            ScrollStyle = new GUIStyle(GUI.skin.scrollView);
-            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
-            BoxStyle = new GUIStyle(GUI.skin.box);
-            BigLabelStyle = new GUIStyle(GUI.skin.label)
+            
+            BoldGreenLabelStyle = new GUIStyle(skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = XKCDColors.KSPBadassGreen} };
+            BoldRedLabelStyle = new GUIStyle(skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = XKCDColors.KSPNotSoGoodOrange } };
+            
+            BigLabelStyle = new GUIStyle(skin.label)
             {
                 fontSize = 80,
                 normal = { textColor = Color.red }
             };
+            
+            //Custom style used by the "folder" type buttons.
+            ToggleButtonStyle = skin.button;            
         }
     }
 }

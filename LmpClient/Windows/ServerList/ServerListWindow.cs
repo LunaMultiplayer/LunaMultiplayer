@@ -46,6 +46,7 @@ namespace LmpClient.Windows.ServerList
         private static GUIStyle _headerServerLine;
         private static GUIStyle _evenServerLine;
         private static GUIStyle _oddServerLine;
+        private static GUIStyle LabelStyle;
 
         protected override bool Resizable => true;
 
@@ -120,16 +121,15 @@ namespace LmpClient.Windows.ServerList
             LabelOptions[0] = GUILayout.Width(100);
         }
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ServerListWindowText.Title, WindowStyle));
+                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ServerListWindowText.Title));
                 if (_selectedServerId != 0)
                 {
                     _serverDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,
-                        _serverDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, WindowStyle, _serverDetailLayoutOptions));
+                        _serverDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, _serverDetailLayoutOptions));
                 }
             }
         }

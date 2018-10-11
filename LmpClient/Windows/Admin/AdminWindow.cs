@@ -30,20 +30,17 @@ namespace LmpClient.Windows.Admin
             set => base.Display = _display = value;
         }
 
-        protected override bool DisplayTooltips => true;
-
         #endregion
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6723 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.AdminWindowText.Title, WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6723 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.AdminWindowText.Title, LayoutOptions));
                 if (!string.IsNullOrEmpty(_selectedPlayer))
                 {
                     _confirmationWindowRect = FixWindowPos(GUILayout.Window(6724 + MainSystem.WindowOffset,
-                        _confirmationWindowRect, DrawConfirmationDialog, LocalizationContainer.AdminWindowText.ConfirmDialogTitle, WindowStyle, _confirmationLayoutOptions));
+                        _confirmationWindowRect, DrawConfirmationDialog, LocalizationContainer.AdminWindowText.ConfirmDialogTitle, _confirmationLayoutOptions));
                 }
             }
             else
@@ -52,7 +49,7 @@ namespace LmpClient.Windows.Admin
                 _selectedPlayer = null;
             }
 
-            CheckWindowLock();
+            CheckWindowLock();            
         }
 
         public override void SetStyles()

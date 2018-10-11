@@ -1,4 +1,5 @@
-﻿using LmpClient.Localization;
+﻿using EditorGizmos;
+using LmpClient.Localization;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.Options;
@@ -9,7 +10,7 @@ using UnityEngine;
 namespace LmpClient.Windows.Connection
 {
     public partial class ConnectionWindow
-    {
+    {        
         public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
@@ -21,15 +22,15 @@ namespace LmpClient.Windows.Connection
             DrawCustomServers();
             
             GUILayout.Label(MainSystem.Singleton.Status, StatusStyle);
-            GUILayout.EndVertical();
+            GUILayout.EndVertical();            
         }
 
         private void DrawCustomServers()
         {
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
-            GUILayout.BeginVertical(BoxStyle);
+            GUILayout.BeginVertical();
 
-            if (GUILayout.Button(PlusIcon, ButtonStyle))
+            if (GUILayout.Button(PlusIcon))
             {
                 SettingsSystem.CurrentSettings.Servers.Insert(0, new ServerEntry());
                 SettingsSystem.SaveSettings();
@@ -42,8 +43,8 @@ namespace LmpClient.Windows.Connection
             {
                 GUILayout.BeginHorizontal();
                 var selected = GUILayout.Toggle(SelectedIndex == serverPos,
-                    SettingsSystem.CurrentSettings.Servers[serverPos].Name, ButtonStyle);
-                if (GUILayout.Button(DeleteIcon, ButtonStyle, GUILayout.Width(35)))
+                    SettingsSystem.CurrentSettings.Servers[serverPos].Name, ToggleButtonStyle);
+                if (GUILayout.Button(DeleteIcon, GUILayout.Width(35)))
                 {
                     SettingsSystem.CurrentSettings.Servers.RemoveAt(SelectedIndex);
                     SettingsSystem.SaveSettings();
@@ -64,10 +65,10 @@ namespace LmpClient.Windows.Connection
         private void DrawServerEntry(int serverPos)
         {
             SelectedIndex = serverPos;
-            GUILayout.BeginVertical(BoxStyle);
+            GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.Name, LabelOptions);
-            var newServerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Name, TextAreaStyle);
+            var newServerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Name);
             if (newServerName != SettingsSystem.CurrentSettings.Servers[serverPos].Name)
             {
                 SettingsSystem.CurrentSettings.Servers[serverPos].Name = newServerName;
@@ -76,7 +77,7 @@ namespace LmpClient.Windows.Connection
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.Address, LabelOptions);
-            var newAddress = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Address, TextAreaStyle);
+            var newAddress = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Address);
             if (newAddress != SettingsSystem.CurrentSettings.Servers[serverPos].Address)
             {
                 SettingsSystem.CurrentSettings.Servers[serverPos].Address = newAddress;
@@ -85,7 +86,7 @@ namespace LmpClient.Windows.Connection
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.Port, LabelOptions);
-            var port = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Port.ToString(), TextAreaStyle);
+            var port = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Port.ToString());
             if (int.TryParse(port, out var parsedPort))
             {
                 if (parsedPort != SettingsSystem.CurrentSettings.Servers[serverPos].Port)
@@ -97,7 +98,7 @@ namespace LmpClient.Windows.Connection
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.Password, LabelOptions);
-            var newPassword = GUILayout.PasswordField(SettingsSystem.CurrentSettings.Servers[serverPos].Password, '*', 30, TextAreaStyle);
+            var newPassword = GUILayout.PasswordField(SettingsSystem.CurrentSettings.Servers[serverPos].Password, '*', 30);
             if (newPassword != SettingsSystem.CurrentSettings.Servers[serverPos].Password)
             {
                 SettingsSystem.CurrentSettings.Servers[serverPos].Password = newPassword;
@@ -109,11 +110,13 @@ namespace LmpClient.Windows.Connection
 
         private void DrawTopButtons()
         {
+            var prev = GUI.backgroundColor;
+            GUI.backgroundColor = Color.white;          
             GUILayout.BeginHorizontal();
             if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
                 GUI.enabled = SettingsSystem.CurrentSettings.Servers.Count > SelectedIndex && SelectedIndex >= 0;
-                if (GUILayout.Button(ConnectBigIcon, ButtonStyle))
+                if (GUILayout.Button(ConnectBigIcon))
                 {
                     NetworkConnection.ConnectToServer(
                         SettingsSystem.CurrentSettings.Servers[SelectedIndex].Address,
@@ -123,16 +126,19 @@ namespace LmpClient.Windows.Connection
             }
             else
             {
-                if (GUILayout.Button(DisconnectBigIcon, ButtonStyle))
+                if (GUILayout.Button(DisconnectBigIcon))
                 {
                     NetworkConnection.Disconnect("Cancelled connection to server");
                 }
             }
 
             GUI.enabled = true;
-            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsBigIcon, ButtonStyle);
-            ServerListWindow.Singleton.Display = GUILayout.Toggle(ServerListWindow.Singleton.Display, ServerBigIcon, ButtonStyle);
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsBigIcon, ToggleButtonStyle);
+            
+            ServerListWindow.Singleton.Display = GUILayout.Toggle(ServerListWindow.Singleton.Display, ServerBigIcon, ToggleButtonStyle);
             GUILayout.EndHorizontal();
+
+            GUI.backgroundColor = prev;
         }
 
         private void DrawPlayerNameSection()
@@ -140,7 +146,7 @@ namespace LmpClient.Windows.Connection
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.PlayerName, LabelOptions);
             GUI.enabled = MainSystem.NetworkState <= ClientState.Disconnected;
-            var newPlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32, TextAreaStyle); // Max 32 characters
+            var newPlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32); // Max 32 characters
             if (newPlayerName != SettingsSystem.CurrentSettings.PlayerName)
             {
                 SettingsSystem.CurrentSettings.PlayerName = newPlayerName.Trim().Replace("\n", "");

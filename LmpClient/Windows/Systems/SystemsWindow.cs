@@ -19,65 +19,15 @@ namespace LmpClient.Windows.Systems
         }
 
         private const float WindowHeight = 400;
-        private const float WindowWidth = 400;
-
-        #region Vessel systems
-
-        private static bool _vesselCrew;
-        private static bool _vesselDock;
-        private static bool _vesselFlightState;
-        private static bool _vesselImmortal;
-        private static bool _vesselLock;
-        private static bool _vesselPosition;
-        private static bool _vesselUpdate;
-        private static bool _vesselPartSyncField;
-        private static bool _vesselPartSyncCall;
-        private static bool _vesselResource;
-        private static bool _vesselFairing;
-        private static bool _vesselActionGroup;
-        private static bool _vesselProto;
-        private static bool _vesselRemove;
-        private static bool _vesselSwitcher;
-        #endregion
-
-        #region Other systems
-
-        //private static bool _asteroid;
-        private static bool _craftLibrary;
-        private static bool _facility;
-        private static bool _flag;
-        private static bool _kscScene;
-        private static bool _externalSeat;
-        private static bool _group;
-        private static bool _kerbal;
-        private static bool _lock;
-        private static bool _modS;
-        //private static bool _modApi;
-        private static bool _playerColor;
-        private static bool _playerConnection;
-        private static bool _scenario;
-        private static bool _timeSyncer;
-        //private static bool _toolbar;
-        private static bool _warp;
-        private static bool _shareFunds;
-        private static bool _shareScience;
-        private static bool _shareScienceSubject;
-        private static bool _shareReputation;
-        private static bool _shareTechnology;
-        private static bool _shareContracts;
-        private static bool _shareAchievements;
-        private static bool _shareStrategy;
+        private const float WindowWidth = 200;
 
         #endregion
 
-        #endregion
-
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6716 + MainSystem.WindowOffset, WindowRect, DrawContent, "Systems", WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6716 + MainSystem.WindowOffset, WindowRect, DrawContent, "Systems", LayoutOptions));
             }
             CheckWindowLock();
         }

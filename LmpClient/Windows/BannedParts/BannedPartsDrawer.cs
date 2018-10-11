@@ -12,11 +12,11 @@ namespace LmpClient.Windows.BannedParts
             GUILayout.Label($"{_vesselName} ({_vesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", BoldRedLabelStyle);
             GUILayout.Space(5);
 
-            GUILayout.BeginVertical(BoxStyle);
-            ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+            GUILayout.BeginVertical();
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos);
             foreach (var bannedPart in _bannedParts)
             {
-                GUILayout.Label(bannedPart, LabelStyle);
+                GUILayout.Label(bannedPart);
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();

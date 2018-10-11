@@ -46,20 +46,19 @@ namespace LmpClient.Windows.Options
 
         #endregion
 
-        private readonly GUILayoutOption[] _smallOption = { GUILayout.Width(100), GUILayout.ExpandWidth(false) };
+        private readonly GUILayoutOption[] _smallOption = { GUILayout.Width(20), GUILayout.ExpandWidth(false) };
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6711 + MainSystem.WindowOffset, WindowRect, DrawContent, 
-                    LocalizationContainer.OptionsWindowText.Title, WindowStyle, LayoutOptions));
+                    LocalizationContainer.OptionsWindowText.Title, LayoutOptions));
 
                 if (_displayUniverseConverterDialog)
                 {
                     _universeConverterWindowRect = FixWindowPos(GUILayout.Window(6712 + MainSystem.WindowOffset,
-                        _universeConverterWindowRect, DrawUniverseConverterDialog, "Universe converter", WindowStyle, _universeConverterLayoutOptions));
+                        _universeConverterWindowRect, DrawUniverseConverterDialog, "Universe converter", _universeConverterLayoutOptions));
                 }
             }
 

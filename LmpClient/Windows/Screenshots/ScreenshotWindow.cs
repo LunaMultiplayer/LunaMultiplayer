@@ -81,24 +81,23 @@ namespace LmpClient.Windows.Screenshots
             }
         }
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6719 + MainSystem.WindowOffset,
-                    WindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, WindowStyle, _foldersLayoutOptions));
+                    WindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, _foldersLayoutOptions));
                 
                 if (!string.IsNullOrEmpty(_selectedFolder) && System.MiniatureImages.ContainsKey(_selectedFolder))
                 {
                     _libraryWindowRect = FixWindowPos(GUILayout.Window(6720 + MainSystem.WindowOffset, _libraryWindowRect, 
-                        DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", WindowStyle, _libraryLayoutOptions));
+                        DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", _libraryLayoutOptions));
                 }
 
                 if (_selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder) && System.DownloadedImages[_selectedFolder].ContainsKey(_selectedImage))
                 {
                     _imageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, _imageWindowRect, 
-                        DrawImageContent, $"{DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC", WindowStyle));
+                        DrawImageContent, $"{DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC"));
                 }
             }
 

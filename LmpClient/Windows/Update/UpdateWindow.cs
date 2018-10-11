@@ -28,12 +28,11 @@ namespace LmpClient.Windows.Update
 
         #endregion
 
-        public override void OnGui()
+        public override void DrawGui()
         {
-            base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6724 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.UpdateWindowText.Title, WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6724 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.UpdateWindowText.Title, LayoutOptions));
             }
         }
 
