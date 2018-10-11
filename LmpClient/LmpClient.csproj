@@ -102,12 +102,10 @@
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
-    <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
     <Compile Include="Harmony\FlightDriver_Start.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
-    <Compile Include="Harmony\PartBuoyancy_FixedUpdate.cs" />
     <Compile Include="Harmony\FlightIntegrator_FixedUpdate.cs" />
     <Compile Include="Harmony\FlightIntegrator_Update.cs" />
     <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />

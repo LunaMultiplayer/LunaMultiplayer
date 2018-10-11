@@ -58,7 +58,15 @@
                 part.rb.detectCollisions = !immortal;
                 if (part.GetComponent<PartBuoyancy>())
                 {
-                    part.GetComponent<PartBuoyancy>().enabled = immortal;
+                    part.GetComponent<PartBuoyancy>().enabled = !immortal;
+                }
+                if (part.GetComponent<PQS_PartCollider>())
+                {
+                    part.GetComponent<PQS_PartCollider>().enabled = !immortal;
+                }
+                if (part.GetComponent<CollisionEnhancer>())
+                {
+                    part.GetComponent<CollisionEnhancer>().enabled = !immortal;
                 }
             }
             if (part.attachJoint)
