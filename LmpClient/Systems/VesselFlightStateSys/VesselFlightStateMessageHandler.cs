@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselFlightStateSys
 {
@@ -26,12 +26,6 @@ namespace LmpClient.Systems.VesselFlightStateSys
             //We are not close (unpacked range) to this vessel so ignore the message
             if (!System.FlyByWireDictionary.ContainsKey(vesselId))
                 return;
-
-            if (VesselFlightStateSystem.CurrentFlightState.TryGetValue(vesselId, out var currentFlightState) && currentFlightState.GameTimeStamp > msgData.GameTime)
-            {
-                //A user reverted, so clear his message queue and start from scratch
-                System.RemoveVessel(vesselId);
-            }
 
             if (!VesselFlightStateSystem.CurrentFlightState.ContainsKey(vesselId))
             {

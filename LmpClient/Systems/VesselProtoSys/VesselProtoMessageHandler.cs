@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -27,12 +27,6 @@ namespace LmpClient.Systems.VesselProtoSys
             }
             if (System.VesselProtos.TryGetValue(msgData.VesselId, out var queue))
             {
-                if (queue.TryPeek(out var update) && update.GameTime > msgData.GameTime)
-                {
-                    //A user reverted, so clear his message queue and start from scratch
-                    queue.Clear();
-                }
-
                 queue.Enqueue(msgData);
             }
         }

@@ -1,9 +1,9 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.VesselUtilities;
+using System;
 using UniLinq;
 
 namespace LmpClient.Systems.VesselRemoveSys
@@ -111,6 +111,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             {
                 LunaLog.Log("[LMP]: Detected a revert to launch!");
                 RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Assigned);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel, false);
             }
         }
 

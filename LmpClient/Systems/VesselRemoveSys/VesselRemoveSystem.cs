@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using KSP.UI.Screens;
+﻿using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Localization;
 using LmpClient.VesselUtilities;
 using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
 using UniLinq;
 using Object = UnityEngine.Object;
 
@@ -126,6 +126,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// </summary>
         public void KillVessel(Guid vesselId, string reason)
         {
+            VesselCommon.RemoveVesselFromSystems(vesselId);
             KillVessel(FlightGlobals.fetch.LmpFindVessel(vesselId), reason);
         }
 
@@ -138,7 +139,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                 return;
 
             VesselCommon.RemoveVesselFromSystems(killVessel.id);
-            
+
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}. Reason: {reason}");
             SwitchVesselIfKillingActiveVessel(killVessel);
 

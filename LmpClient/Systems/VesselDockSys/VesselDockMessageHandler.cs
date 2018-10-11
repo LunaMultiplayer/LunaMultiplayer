@@ -50,7 +50,7 @@ namespace LmpClient.Systems.VesselDockSys
                 LunaLog.Log("Docking NOT detected. We OWN the dominant vessel");
             }
 
-            VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.fetch.LmpFindVessel(msgData.WeakVesselId), "Killing weak (active) vessel during a docking that was not detected");
+            VesselRemoveSystem.Singleton.KillVessel(msgData.WeakVesselId, "Killing weak (active) vessel during a docking that was not detected");
             CurrentDockEvent.Reset();
         }
     }
