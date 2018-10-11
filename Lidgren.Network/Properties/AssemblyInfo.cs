@@ -14,9 +14,9 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: Guid("78f2a988-46e1-4fc4-b7b4-dd2cbe46da6a")]
 
-[assembly: AssemblyVersion("0.13.50")]
-[assembly: AssemblyFileVersion("0.13.50")]
-[assembly: AssemblyInformationalVersion("0.13.50-compiled")]
+[assembly: AssemblyVersion("0.14.51")]
+[assembly: AssemblyFileVersion("0.14.51")]
+[assembly: AssemblyInformationalVersion("0.14.51-compiled")]
 
 [assembly: System.CLSCompliant(true)]
 [assembly: InternalsVisibleTo("LmpCommonTest")]
