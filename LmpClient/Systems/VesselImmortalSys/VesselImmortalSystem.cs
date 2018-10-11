@@ -81,8 +81,6 @@ namespace LmpClient.Systems.VesselImmortalSys
                 part.SetImmortal(immortal);
             }
 
-            vessel.GetComponent<FlightIntegrator>().enabled = !immortal;
-
             if (immortal)
             {
                 ImmortalEvent.onVesselImmortal.Fire(vessel);
