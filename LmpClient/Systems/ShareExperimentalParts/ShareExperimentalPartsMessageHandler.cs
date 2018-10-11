@@ -1,12 +1,13 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using Harmony;
+﻿using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Systems.ShareCareer;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace LmpClient.Systems.ShareExperimentalParts
 {
@@ -24,7 +25,7 @@ namespace LmpClient.Systems.ShareExperimentalParts
                 var partName = string.Copy(data.PartName);
                 var count = data.Count;
                 LunaLog.Log($"Queue ExperimentalPart: part {partName} count {count}");
-                System.QueueAction(() =>
+                ShareCareerSystem.Singleton.QueueAction(() =>
                 {
                     ExperimentalPart(partName, count);
                 });

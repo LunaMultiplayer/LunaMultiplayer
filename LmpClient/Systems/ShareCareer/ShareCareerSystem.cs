@@ -18,14 +18,11 @@ namespace LmpClient.Systems.ShareCareer
         public override string SystemName { get; } = nameof(ShareCareerSystem);
 
         private Queue<Action> _actionQueue;
-        public int ActionQueueCount => _actionQueue?.Count ?? 0;
 
         //Dependencies to run the queue
-        protected bool ShareSystemReady => ContractSystem.Instance != null && ContractSystem.Instance.Contracts.Count != 0 &&
-                                           Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
-                                           Reputation.Instance != null && ProgressTracking.Instance != null &&
-                                           Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene >= GameScenes.SPACECENTER
-                                           && HighLogic.LoadedScene <= GameScenes.TRACKSTATION;
+        protected bool ShareSystemReady => ContractSystem.Instance != null && Funding.Instance != null && 
+                                           ResearchAndDevelopment.Instance != null && Reputation.Instance != null && 
+                                           Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene >= GameScenes.SPACECENTER && HighLogic.LoadedScene <= GameScenes.TRACKSTATION;
 
         protected override void OnEnabled()
         {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
-using LmpClient.Systems.ShareCareer;
 using LmpClient.Systems.ShareFunds;
 using LmpClient.Systems.ShareReputation;
 using LmpClient.Systems.ShareScience;
@@ -10,6 +7,8 @@ using LmpClient.Utilities;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.ShareAchievements
 {
@@ -27,7 +26,7 @@ namespace LmpClient.Systems.ShareAchievements
                 var incomingAchievement = ConvertByteArrayToAchievement(data.Data, data.NumBytes, data.Id);
 
                 LunaLog.Log("Queue AchievementsUpdate");
-                ShareCareerSystem.Singleton.QueueAction(() =>
+                System.QueueAction(() =>
                 {
                     AchievementUpdate(incomingAchievement);
                 });

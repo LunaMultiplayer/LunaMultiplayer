@@ -9,7 +9,8 @@ namespace LmpClient.Systems.SharePurchaseParts
 
         private SharePurchasePartsEvents SharePurchasePartsEvents { get; } = new SharePurchasePartsEvents();
 
-        protected override bool ShareSystemReady => ResearchAndDevelopment.Instance != null && Funding.Instance != null;
+        //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
+        protected override bool ShareSystemReady => true;
 
         protected override GameMode RelevantGameModes => GameMode.Career;
 

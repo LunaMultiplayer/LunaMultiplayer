@@ -1,9 +1,10 @@
-﻿using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Systems.ShareCareer;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.ShareFunds
 {
@@ -20,7 +21,7 @@ namespace LmpClient.Systems.ShareFunds
             {
                 var funds = data.Funds; //create a copy of the funds value so it will not change in the future.
                 LunaLog.Log($"Queue FundsUpdate with: {funds}");
-                System.QueueAction(() =>
+                ShareCareerSystem.Singleton.QueueAction(() =>
                 {
                     FundsUpdate(funds);
                 });

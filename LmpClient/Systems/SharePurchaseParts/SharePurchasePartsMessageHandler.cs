@@ -1,11 +1,12 @@
-﻿using System.Collections.Concurrent;
-using KSP.UI.Screens;
+﻿using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Systems.ShareCareer;
 using LmpClient.Systems.ShareFunds;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.SharePurchaseParts
 {
@@ -23,7 +24,7 @@ namespace LmpClient.Systems.SharePurchaseParts
                 var techId = string.Copy(data.TechId);
                 var partName = string.Copy(data.PartName);
                 LunaLog.Log($"Queue PartPurchase with: {techId} part {partName}");
-                System.QueueAction(() =>
+                ShareCareerSystem.Singleton.QueueAction(() =>
                 {
                     PartPurchase(techId, partName);
                 });
