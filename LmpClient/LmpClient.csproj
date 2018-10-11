@@ -83,6 +83,7 @@
     <Compile Include="Events\ModApiEvent.cs" />
     <Compile Include="Events\NetworkEvent.cs" />
     <Compile Include="Events\PartModuleEvent.cs" />
+    <Compile Include="Events\RailEvent.cs" />
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
@@ -120,6 +121,8 @@
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
+    <Compile Include="Harmony\Vessel_GoOnRails.cs" />
+    <Compile Include="Harmony\Vessel_GoOffRails.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_OnDeboardSeat.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_BoardSeat.cs" />
     <Compile Include="Harmony\KerbalRoster_SackAvailable.cs" />
