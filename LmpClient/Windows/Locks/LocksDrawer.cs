@@ -52,6 +52,7 @@ namespace LmpClient.Windows.Locks
             StrBuilder.AppendLine(vesselLock.VesselName)
                 .Append("Loaded: ").Append(vesselLock.Loaded).AppendLine()
                 .Append("Packed: ").Append(vesselLock.Packed).AppendLine()
+                .Append("Immortal: ").Append(vesselLock.Immortal).AppendLine()
                 .Append("Control: ").Append(vesselLock.ControlLockOwner).AppendLine()
                 .Append("Update: ").Append(vesselLock.UpdateLockOwner).AppendLine()
                 .Append("UnlUpdate: ").Append(vesselLock.UnloadedUpdateLockOwner);
