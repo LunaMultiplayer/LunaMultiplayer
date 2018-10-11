@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LmpClient.Events;
+using UnityEngine;
 
 namespace LmpClient.Extensions
 {
@@ -49,5 +50,40 @@ namespace LmpClient.Extensions
 
             return null;
         }
+
+        
+        /// <summary>
+        /// Set all vessel parts to unbreakable or not (makes the vessel immortal or not)
+        /// </summary>
+        public static void SetImmortal(this Vessel vessel, bool immortal)
+        {
+            if (vessel == null) return;
+
+            var isCurrentlyImmortal = float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
+            if (isCurrentlyImmortal == immortal) return;
+
+            LunaLog.Log($"Making vessel {vessel.id} {(immortal ? "immortal" : "mortal")}");
+
+            foreach (var part in vessel.Parts)
+            {
+                part.SetImmortal(immortal);
+            }
+
+            var fi = vessel.GetComponent<FlightIntegrator>();
+            if (fi)
+            {
+                fi.enabled = !immortal;
+            }
+
+            if (immortal)
+            {
+                ImmortalEvent.onVesselImmortal.Fire(vessel);
+            }
+            else
+            {
+                ImmortalEvent.onVesselMortal.Fire(vessel);
+            }
+        }
+
     }
 }

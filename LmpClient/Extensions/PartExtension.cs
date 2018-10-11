@@ -44,6 +44,9 @@
             }
         }
 
+        /// <summary>
+        /// Makes a part immortal based on the parameter
+        /// </summary>
         public static void SetImmortal(this Part part, bool immortal)
         {
             if (part == null) return;
