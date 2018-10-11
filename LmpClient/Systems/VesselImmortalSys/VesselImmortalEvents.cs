@@ -1,6 +1,5 @@
 ﻿using LmpClient.Base;
 using LmpClient.Extensions;
-using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
 
@@ -13,18 +12,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         /// </summary>
         public void OnVesselChange(Vessel vessel)
         {
-            //Safety check
-            if (vessel == null) return;
-
-            if (LockSystem.LockQuery.ControlLockExists(vessel.id) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-            {
-                //We switched to a vessel that is controlled by another player so make it immortal
-                System.SetVesselImmortalState(vessel, true);
-            }
-            else
-            {
-                System.SetVesselImmortalState(vessel, false);
-            }
+            System.SetImmortalStateBasedOnLock(vessel);
         }
 
         /// <summary>
@@ -52,14 +40,6 @@ namespace LmpClient.Systems.VesselImmortalSys
         }
 
         /// <summary>
-        /// Set vessel immortal state just when the vessel loads
-        /// </summary>
-        public void VesselLoaded(Vessel vessel)
-        {
-            System.SetImmortalStateBasedOnLock(vessel);
-        }
-
-        /// <summary>
         /// Handles the vessel immortal state when someone gets an update or control lock
         /// </summary>
         public void OnLockAcquire(LockDefinition lockDefinition)
@@ -68,7 +48,20 @@ namespace LmpClient.Systems.VesselImmortalSys
 
             var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
 
-            System.SetVesselImmortalState(vessel, lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName);
+            System.SetImmortalStateBasedOnLock(vessel);
+        }
+
+        /// <summary>
+        /// Handles the vessel immortal state when YOU release an update or control lock
+        /// </summary>
+        public void OnLockRelease(LockDefinition lockDefinition)
+        {
+            if (lockDefinition.Type < LockType.Update) return;
+            if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName) return;
+            
+            var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
+
+            System.SetImmortalStateBasedOnLock(vessel);
         }
 
         /// <summary>
@@ -76,7 +69,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         /// </summary>
         public void FinishSpectating()
         {
-            System.SetVesselImmortalState(FlightGlobals.ActiveVessel, false);
+            System.SetImmortalStateBasedOnLock(FlightGlobals.ActiveVessel);
         }
 
         /// <summary>
@@ -84,7 +77,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         /// </summary>
         public void StartSpectating()
         {
-            System.SetVesselImmortalState(FlightGlobals.ActiveVessel, true);
+            System.SetImmortalStateBasedOnLock(FlightGlobals.ActiveVessel);
         }
     }
 }

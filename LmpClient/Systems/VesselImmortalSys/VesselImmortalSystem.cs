@@ -25,27 +25,27 @@ namespace LmpClient.Systems.VesselImmortalSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onVesselGoOnRails.Add(VesselImmortalEvents.VesselGoOnRails);
-            GameEvents.onVesselGoOffRails.Add(VesselImmortalEvents.VesselGoOffRails);
-            GameEvents.onVesselLoaded.Add(VesselImmortalEvents.VesselLoaded);
+            RailEvent.onVesselGoneOnRails.Add(VesselImmortalEvents.VesselGoOnRails);
+            RailEvent.onVesselGoneOffRails.Add(VesselImmortalEvents.VesselGoOffRails);
             GameEvents.onVesselPartCountChanged.Add(VesselImmortalEvents.PartCountChanged);
             GameEvents.onVesselChange.Add(VesselImmortalEvents.OnVesselChange);
             SpectateEvent.onStartSpectating.Add(VesselImmortalEvents.StartSpectating);
             SpectateEvent.onFinishedSpectating.Add(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Add(VesselImmortalEvents.OnLockAcquire);
+            LockEvent.onLockReleaseUnityThread.Add(VesselImmortalEvents.OnLockRelease);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onVesselGoOnRails.Remove(VesselImmortalEvents.VesselGoOnRails);
-            GameEvents.onVesselGoOffRails.Remove(VesselImmortalEvents.VesselGoOffRails);
-            GameEvents.onVesselLoaded.Remove(VesselImmortalEvents.VesselLoaded);
+            RailEvent.onVesselGoneOnRails.Remove(VesselImmortalEvents.VesselGoOnRails);
+            RailEvent.onVesselGoneOffRails.Remove(VesselImmortalEvents.VesselGoOffRails);
             GameEvents.onVesselPartCountChanged.Remove(VesselImmortalEvents.PartCountChanged);
             GameEvents.onVesselChange.Remove(VesselImmortalEvents.OnVesselChange);
             SpectateEvent.onStartSpectating.Remove(VesselImmortalEvents.StartSpectating);
             SpectateEvent.onFinishedSpectating.Remove(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Remove(VesselImmortalEvents.OnLockAcquire);
+            LockEvent.onLockReleaseUnityThread.Remove(VesselImmortalEvents.OnLockRelease);
         }
 
         #endregion
@@ -59,36 +59,11 @@ namespace LmpClient.Systems.VesselImmortalSys
         {
             if (vessel == null) return;
 
-            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == vessel.id)
-                return;
-
             var isOurs = LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName) ||
                          LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName) ||
                          !LockSystem.LockQuery.UpdateLockExists(vessel.id);
 
-            SetVesselImmortalState(vessel, !isOurs);
-        }
-
-        /// <summary>
-        /// Set all vessel parts to unbreakable or not (makes the vessel immortal or not)
-        /// </summary>
-        public void SetVesselImmortalState(Vessel vessel, bool immortal)
-        {
-            if (vessel == null || !vessel.loaded) return;
-
-            foreach (var part in vessel.Parts)
-            {
-                part.SetImmortal(immortal);
-            }
-
-            if (immortal)
-            {
-                ImmortalEvent.onVesselImmortal.Fire(vessel);
-            }
-            else
-            {
-                ImmortalEvent.onVesselMortal.Fire(vessel);
-            }
+            vessel.SetImmortal(!isOurs);
         }
 
         #endregion
