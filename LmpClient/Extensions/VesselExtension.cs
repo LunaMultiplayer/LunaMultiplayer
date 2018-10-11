@@ -59,8 +59,11 @@ namespace LmpClient.Extensions
         {
             if (vessel == null) return;
 
-            var isCurrentlyImmortal = float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
-            if (isCurrentlyImmortal == immortal) return;
+            if (vessel.rootPart)
+            {
+                var isCurrentlyImmortal = float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
+                if (isCurrentlyImmortal == immortal) return;
+            }
 
             LunaLog.Log($"Making vessel {vessel.id} {(immortal ? "immortal" : "mortal")}");
 
