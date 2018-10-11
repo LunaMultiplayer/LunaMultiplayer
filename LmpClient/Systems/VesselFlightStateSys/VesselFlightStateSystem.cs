@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
@@ -10,6 +6,10 @@ using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
 using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using UnityEngine.Profiling;
 
 namespace LmpClient.Systems.VesselFlightStateSys
@@ -82,6 +82,8 @@ namespace LmpClient.Systems.VesselFlightStateSys
             TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
 
             LockEvent.onLockAcquire.Add(FlightStateEvents.OnLockAcquire);
+
+            WarpEvent.onTimeWarpStopped.Add(FlightStateEvents.WarpStopped);
         }
 
         protected override void OnDisabled()
@@ -97,6 +99,8 @@ namespace LmpClient.Systems.VesselFlightStateSys
             TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
 
             LockEvent.onLockAcquire.Remove(FlightStateEvents.OnLockAcquire);
+
+            WarpEvent.onTimeWarpStopped.Remove(FlightStateEvents.WarpStopped);
 
             ClearSystem();
         }
