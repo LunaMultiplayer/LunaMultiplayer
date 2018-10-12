@@ -32,35 +32,32 @@ namespace LmpClient.Windows.Tools
         private void RangesSection()
         {
             _displayRanges = GUILayout.Toggle(_displayRanges, "Vessel ranges", ToggleButtonStyle);
-            if (_displayRanges)
+            if (_displayRanges && HighLogic.LoadedSceneIsFlight)
             {
-                if (FlightGlobals.ActiveVessel != null)
+                if (GUILayout.Button("Pack all vessels"))
                 {
-                    if (GUILayout.Button("Pack all vessels"))
+                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                     {
-                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
-                        {
-                            if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
-                            vessel.vesselRanges = ToolsUtils.PackRanges;
-                        }
+                        if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
+                        vessel.vesselRanges = ToolsUtils.PackRanges;
                     }
+                }
 
-                    if (GUILayout.Button("Unpack all vessels"))
+                if (GUILayout.Button("Unpack all vessels"))
+                {
+                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                     {
-                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
-                        {
-                            if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
-                            vessel.vesselRanges = ToolsUtils.UnPackRanges;
-                        }
+                        if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
+                        vessel.vesselRanges = ToolsUtils.UnPackRanges;
                     }
+                }
 
-                    if (GUILayout.Button("Reset ranges"))
+                if (GUILayout.Button("Reset ranges"))
+                {
+                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
                     {
-                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null))
-                        {
-                            if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
-                            vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
-                        }
+                        if (FlightGlobals.ActiveVessel.id == vessel.id) continue;
+                        vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
                     }
                 }
             }
