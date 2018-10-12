@@ -68,7 +68,7 @@ namespace LmpClient.Windows.ServerList
         {
             WindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             _serverDetailWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
-            MoveRect = new Rect(0, 0, 10000, 20);
+            MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
 
             _headerServerLine = new GUIStyle
             {

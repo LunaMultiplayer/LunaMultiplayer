@@ -110,7 +110,7 @@ namespace LmpClient.Windows.Screenshots
             _libraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
             _imageWindowRect = new Rect(Screen.width / 2f - ImageWindowWidth, Screen.height / 2f - ImageWindowHeight / 2f, ImageWindowWidth, ImageWindowHeight);
 
-            MoveRect = new Rect(0, 0, 10000, 20);
+            MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
 
             _foldersLayoutOptions = new GUILayoutOption[4];
             _foldersLayoutOptions[0] = GUILayout.MinWidth(FoldersWindowWidth);

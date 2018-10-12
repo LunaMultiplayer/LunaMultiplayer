@@ -123,7 +123,7 @@ namespace LmpClient.Windows.CraftLibrary
         {
             WindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
             _libraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
-            MoveRect = new Rect(0, 0, 10000, 20);
+            MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
 
             _foldersLayoutOptions = new GUILayoutOption[4];
             _foldersLayoutOptions[0] = GUILayout.MinWidth(FoldersWindowWidth);

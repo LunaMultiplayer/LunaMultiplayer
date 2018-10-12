@@ -9,7 +9,9 @@ namespace LmpClient.Base
     {       
         //Simple flashing flag. 
         protected bool flash => Time.time % 0.7f < 0.25f;
-        
+
+        protected const int TitleHeight = 40;
+
         protected static GUISkin skin;
 
         //Custom styles used by LMP

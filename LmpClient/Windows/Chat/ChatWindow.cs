@@ -34,7 +34,7 @@ namespace LmpClient.Windows.Chat
         {
             // ReSharper disable once PossibleLossOfFraction
             WindowRect = new Rect(Screen.width / 10, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
-            MoveRect = new Rect(0, 0, 10000, 20);
+            MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
             
             _chatScrollPos = new Vector2(0, 0);
             HighlightStyle = new GUIStyle(GUI.skin.button)

@@ -73,7 +73,7 @@ namespace LmpClient.Windows.Status
         public override void SetStyles()
         {
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
-            MoveRect = new Rect(0, 0, 10000, 20);
+            MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
             
             _highlightStyle = new GUIStyle(GUI.skin.button)
             {
