@@ -1,5 +1,4 @@
 ﻿using LmpClient.Base;
-using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
 using LmpCommon;
@@ -26,7 +25,7 @@ namespace LmpClient.Windows.Connection
         }
 
         #endregion
-        
+
         protected const float WindowHeight = 400;
         protected const float WindowWidth = 400;
 
@@ -46,7 +45,7 @@ namespace LmpClient.Windows.Connection
         {
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
-            
+
             StatusStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.yellow } };
 
             LayoutOptions = new GUILayoutOption[4];
@@ -56,7 +55,7 @@ namespace LmpClient.Windows.Connection
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
 
             LabelOptions = new GUILayoutOption[1];
-            LabelOptions[0] = GUILayout.Width(100);                        
+            LabelOptions[0] = GUILayout.Width(100);
         }
 
         protected override void OnCloseButton()
@@ -67,12 +66,9 @@ namespace LmpClient.Windows.Connection
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title));
-            }
+            WindowRect = FixWindowPos(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title));
         }
-        
+
         #endregion
     }
 }

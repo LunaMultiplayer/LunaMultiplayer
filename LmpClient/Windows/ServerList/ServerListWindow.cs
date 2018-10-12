@@ -123,14 +123,11 @@ namespace LmpClient.Windows.ServerList
 
         protected override void DrawGui()
         {
-            if (Display)
+            WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ServerListWindowText.Title));
+            if (_selectedServerId != 0)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ServerListWindowText.Title));
-                if (_selectedServerId != 0)
-                {
-                    _serverDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,
-                        _serverDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, _serverDetailLayoutOptions));
-                }
+                _serverDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,
+                    _serverDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, _serverDetailLayoutOptions));
             }
         }
 

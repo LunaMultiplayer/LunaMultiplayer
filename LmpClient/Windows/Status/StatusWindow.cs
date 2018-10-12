@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
 using LmpCommon.Enums;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LmpClient.Windows.Status
@@ -55,19 +55,15 @@ namespace LmpClient.Windows.Status
 
         protected override void DrawGui()
         {
-            if (Display)
+            if (!ColorEventHandled)
             {
-                if (!ColorEventHandled)
-                {
-                    _playerNameStyle = new Dictionary<string, GUIStyle>();
-                    ColorEventHandled = true;
-                }
-
-                //Calculate the minimum size of the minimize window by drawing it off the screen
-                WindowRect = FixWindowPos(GUILayout.Window(6703 + MainSystem.WindowOffset, 
-                    WindowRect, DrawContent, Title, LayoutOptions));
+                _playerNameStyle = new Dictionary<string, GUIStyle>();
+                ColorEventHandled = true;
             }
-            CheckWindowLock();
+
+            //Calculate the minimum size of the minimize window by drawing it off the screen
+            WindowRect = FixWindowPos(GUILayout.Window(6703 + MainSystem.WindowOffset,
+                WindowRect, DrawContent, Title, LayoutOptions));
         }
 
         public override void SetStyles()
@@ -132,7 +128,7 @@ namespace LmpClient.Windows.Status
             }
         }
 
-        private void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {

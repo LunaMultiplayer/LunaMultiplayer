@@ -1,7 +1,7 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpCommon.Enums;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Windows.BannedParts
@@ -9,7 +9,7 @@ namespace LmpClient.Windows.BannedParts
     public partial class BannedPartsWindow : Window<BannedPartsWindow>
     {
         #region Fields
-        
+
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
 
@@ -28,18 +28,15 @@ namespace LmpClient.Windows.BannedParts
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6718 + MainSystem.WindowOffset, WindowRect, DrawContent, 
-                    LocalizationContainer.BannedPartsWindowText.Title, LayoutOptions));
-            }
+            WindowRect = FixWindowPos(GUILayout.Window(6718 + MainSystem.WindowOffset, WindowRect, DrawContent,
+                LocalizationContainer.BannedPartsWindowText.Title, LayoutOptions));
         }
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width/2f - WindowWidth/2f, Screen.height/2f - WindowHeight/2f, WindowWidth, WindowHeight);
+            WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
-            
+
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
             LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);

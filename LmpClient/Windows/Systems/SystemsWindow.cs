@@ -25,11 +25,7 @@ namespace LmpClient.Windows.Systems
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6716 + MainSystem.WindowOffset, WindowRect, DrawContent, "Systems", LayoutOptions));
-            }
-            CheckWindowLock();
+            WindowRect = FixWindowPos(GUILayout.Window(6716 + MainSystem.WindowOffset, WindowRect, DrawContent, "Systems", LayoutOptions));
         }
 
         public override void SetStyles()
@@ -56,7 +52,7 @@ namespace LmpClient.Windows.Systems
             }
         }
 
-        private void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {

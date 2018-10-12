@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.Screenshot;
 using LmpCommon.Enums;
 using LmpCommon.Time;
+using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 
@@ -83,25 +83,20 @@ namespace LmpClient.Windows.Screenshots
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6719 + MainSystem.WindowOffset,
-                    WindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, _foldersLayoutOptions));
-                
-                if (!string.IsNullOrEmpty(_selectedFolder) && System.MiniatureImages.ContainsKey(_selectedFolder))
-                {
-                    _libraryWindowRect = FixWindowPos(GUILayout.Window(6720 + MainSystem.WindowOffset, _libraryWindowRect, 
-                        DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", _libraryLayoutOptions));
-                }
+            WindowRect = FixWindowPos(GUILayout.Window(6719 + MainSystem.WindowOffset,
+                WindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, _foldersLayoutOptions));
 
-                if (_selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder) && System.DownloadedImages[_selectedFolder].ContainsKey(_selectedImage))
-                {
-                    _imageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, _imageWindowRect, 
-                        DrawImageContent, $"{DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC"));
-                }
+            if (!string.IsNullOrEmpty(_selectedFolder) && System.MiniatureImages.ContainsKey(_selectedFolder))
+            {
+                _libraryWindowRect = FixWindowPos(GUILayout.Window(6720 + MainSystem.WindowOffset, _libraryWindowRect,
+                    DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", _libraryLayoutOptions));
             }
 
-            CheckWindowLock();
+            if (_selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder) && System.DownloadedImages[_selectedFolder].ContainsKey(_selectedImage))
+            {
+                _imageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, _imageWindowRect,
+                    DrawImageContent, $"{DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC"));
+            }
         }
 
         public override void SetStyles()
@@ -134,7 +129,7 @@ namespace LmpClient.Windows.Screenshots
             }
         }
 
-        public void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {

@@ -6,6 +6,7 @@
         void Update();
         void OnGui();
         void RemoveWindowLock();
+        void CheckWindowLock();
         void SetStyles();
     }
 }

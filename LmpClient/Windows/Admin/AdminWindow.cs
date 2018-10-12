@@ -47,9 +47,7 @@ namespace LmpClient.Windows.Admin
             {
                 _reason = string.Empty;    //FIXME: State being changed when this window isn't likely to even be called. (after we're done with the refactor)
                 _selectedPlayer = null;
-            }
-
-            CheckWindowLock();            
+            }       
         }
 
         public override void SetStyles()
@@ -81,7 +79,7 @@ namespace LmpClient.Windows.Admin
             }
         }
 
-        public void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {

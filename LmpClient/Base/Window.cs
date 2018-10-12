@@ -1,7 +1,7 @@
-﻿using System;
-using LmpClient.Base.Interface;
+﻿using LmpClient.Base.Interface;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Base
@@ -96,6 +96,9 @@ namespace LmpClient.Base
                 Initialized = true;
             }
 
+            //Always check the window locks
+            CheckWindowLock();
+
             if (!Display) return;
             
             //Implement your own code
@@ -103,10 +106,14 @@ namespace LmpClient.Base
 
             //Delegate to children
             DrawGui();
-            
         }
 
         protected abstract void DrawGui();
+
+        public virtual void CheckWindowLock()
+        {
+            //Implement your own code
+        }
 
         public virtual void RemoveWindowLock()
         {

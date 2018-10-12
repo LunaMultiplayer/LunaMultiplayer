@@ -26,11 +26,8 @@ namespace LmpClient.Windows.Mod
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6706 + MainSystem.WindowOffset, WindowRect, DrawContent,
-                    LocalizationContainer.ModWindowText.Title, LayoutOptions));
-            }
+            WindowRect = FixWindowPos(GUILayout.Window(6706 + MainSystem.WindowOffset, WindowRect, DrawContent,
+                LocalizationContainer.ModWindowText.Title, LayoutOptions));
         }
 
         public override void SetStyles()

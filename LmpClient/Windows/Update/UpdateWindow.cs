@@ -1,7 +1,7 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Windows.Update
@@ -30,10 +30,7 @@ namespace LmpClient.Windows.Update
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6724 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.UpdateWindowText.Title, LayoutOptions));
-            }
+            WindowRect = FixWindowPos(GUILayout.Window(6724 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.UpdateWindowText.Title, LayoutOptions));
         }
 
         public override void SetStyles()

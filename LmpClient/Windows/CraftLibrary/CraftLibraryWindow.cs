@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.CraftLibrary;
 using LmpCommon.Enums;
 using LmpCommon.Time;
+using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 
@@ -114,9 +114,7 @@ namespace LmpClient.Windows.CraftLibrary
                 _uploadWindowRect = FixWindowPos(GUILayout.Window(6709 + MainSystem.WindowOffset,
                     _uploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload,
                     _uploadLayoutOptions));
-            }
-
-            CheckWindowLock();            
+            }         
         }
         
         public override void SetStyles()
@@ -153,7 +151,7 @@ namespace LmpClient.Windows.CraftLibrary
             }
         }
 
-        public void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {

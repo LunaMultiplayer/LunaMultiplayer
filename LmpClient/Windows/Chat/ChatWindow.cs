@@ -66,12 +66,8 @@ namespace LmpClient.Windows.Chat
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, 
-                    LocalizationContainer.ChatWindowText.Title));
-            }
-            CheckWindowLock();
+            WindowRect = FixWindowPos(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent,
+                LocalizationContainer.ChatWindowText.Title));
         }
 
         #endregion
@@ -87,7 +83,7 @@ namespace LmpClient.Windows.Chat
 
         #region Private methods
 
-        private void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {

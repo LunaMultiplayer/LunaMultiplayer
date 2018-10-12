@@ -50,19 +50,14 @@ namespace LmpClient.Windows.Options
 
         protected override void DrawGui()
         {
-            if (Display)
+            WindowRect = FixWindowPos(GUILayout.Window(6711 + MainSystem.WindowOffset, WindowRect, DrawContent,
+                LocalizationContainer.OptionsWindowText.Title, LayoutOptions));
+
+            if (_displayUniverseConverterDialog)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6711 + MainSystem.WindowOffset, WindowRect, DrawContent, 
-                    LocalizationContainer.OptionsWindowText.Title, LayoutOptions));
-
-                if (_displayUniverseConverterDialog)
-                {
-                    _universeConverterWindowRect = FixWindowPos(GUILayout.Window(6712 + MainSystem.WindowOffset,
-                        _universeConverterWindowRect, DrawUniverseConverterDialog, "Universe converter", _universeConverterLayoutOptions));
-                }
+                _universeConverterWindowRect = FixWindowPos(GUILayout.Window(6712 + MainSystem.WindowOffset,
+                    _universeConverterWindowRect, DrawUniverseConverterDialog, "Universe converter", _universeConverterLayoutOptions));
             }
-
-            CheckWindowLock();
         }
         
         public override void SetStyles()
@@ -97,7 +92,7 @@ namespace LmpClient.Windows.Options
             }
         }
 
-        private void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {

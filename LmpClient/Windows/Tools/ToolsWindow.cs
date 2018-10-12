@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Extensions;
 using LmpClient.Utilities;
 using LmpCommon.Enums;
 using LmpCommon.Time;
+using System;
+using System.IO;
 using UnityEngine;
 
 namespace LmpClient.Windows.Tools
@@ -38,11 +38,7 @@ namespace LmpClient.Windows.Tools
 
         protected override void DrawGui()
         {
-            if (Display)
-            {
-                WindowRect = FixWindowPos(GUILayout.Window(6722 + MainSystem.WindowOffset, WindowRect, DrawContent, "Tools", LayoutOptions));
-            }
-            CheckWindowLock();
+            WindowRect = FixWindowPos(GUILayout.Window(6722 + MainSystem.WindowOffset, WindowRect, DrawContent, "Tools", LayoutOptions));
         }
 
         public override void SetStyles()
@@ -69,7 +65,7 @@ namespace LmpClient.Windows.Tools
             }
         }
 
-        private void CheckWindowLock()
+        public override void CheckWindowLock()
         {
             if (Display)
             {
