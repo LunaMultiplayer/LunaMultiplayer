@@ -13,10 +13,9 @@ namespace LmpClient.Windows.Connection
     {
         protected override void DrawWindowContent(int windowId)
         {
-            GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            GUILayout.Space(10);
-
+            
+            GUILayout.BeginVertical();
             DrawPlayerNameSection();
             DrawTopButtons();
             DrawCustomServers();
