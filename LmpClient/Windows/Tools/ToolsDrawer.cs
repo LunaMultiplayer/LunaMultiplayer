@@ -11,7 +11,7 @@ namespace LmpClient.Windows.Tools
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            var newVal = GUILayout.Toggle(_saveCurrentOrbitData, "Save orbit data to file");
+            var newVal = GUILayout.Toggle(_saveCurrentOrbitData, "Save orbit data to file", ToggleButtonStyle);
             if (newVal != _saveCurrentOrbitData)
             {
                 _saveCurrentOrbitData = newVal;
@@ -31,7 +31,7 @@ namespace LmpClient.Windows.Tools
 
         private void RangesSection()
         {
-            _displayRanges = GUILayout.Toggle(_displayRanges, "Vessel ranges");
+            _displayRanges = GUILayout.Toggle(_displayRanges, "Vessel ranges", ToggleButtonStyle);
             if (_displayRanges)
             {
                 if (FlightGlobals.ActiveVessel != null)
@@ -67,7 +67,7 @@ namespace LmpClient.Windows.Tools
         }
         private void ReloadSection()
         {
-            _displayReloads = GUILayout.Toggle(_displayReloads, "Reload vessels");
+            _displayReloads = GUILayout.Toggle(_displayReloads, "Reload vessels", ToggleButtonStyle);
             if (_displayReloads)
             {
                 if (GUILayout.Button("Reload own vessel"))
@@ -97,7 +97,7 @@ namespace LmpClient.Windows.Tools
         
         private void FloatingOriginSection()
         {
-            _displayFloatingOrigin = GUILayout.Toggle(_displayFloatingOrigin, "Floating Origin");
+            _displayFloatingOrigin = GUILayout.Toggle(_displayFloatingOrigin, "Floating Origin", ToggleButtonStyle);
             if (_displayFloatingOrigin)
             {
                 if (GUILayout.Button("Reset floating origin"))
