@@ -12,6 +12,10 @@ namespace LmpClient.Windows
 
         private void OnGUI()
         {
+            //If styles not initialized yet...
+            if (StyleLibrary.ToolTipStyle == null) return;
+            
+            
             GUI.depth = -10;
 
             //Draw Tooltip - DrawWindow will actually delegate and encapsulate the DrawContent(windowid) function in its own GUI Substate.
