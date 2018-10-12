@@ -51,11 +51,11 @@ namespace LmpClient.Windows.Status
             GUILayout.BeginHorizontal();
             
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display,
-                ChatSystem.Singleton.NewMessageReceived ? ChatRedIcon : ChatIcon, ToggleButtonStyle);
+                ChatSystem.Singleton.NewMessageReceived && flash ? ChatRedIcon : ChatIcon, ToggleButtonStyle);
             CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display,
-                CraftLibrarySystem.Singleton.NewContent ? RocketRedIcon : RocketIcon, ToggleButtonStyle);
+                CraftLibrarySystem.Singleton.NewContent && flash ? RocketRedIcon : RocketIcon, ToggleButtonStyle);
             ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display,
-                ScreenshotSystem.Singleton.NewContent ? CameraRedIcon : CameraIcon, ToggleButtonStyle);
+                ScreenshotSystem.Singleton.NewContent && flash ? CameraRedIcon : CameraIcon, ToggleButtonStyle);
 
             if (SettingsSystem.ServerSettings.AllowAdmin)
             {AdminWindow.Singleton.Display = GUILayout.Toggle(AdminWindow.Singleton.Display, AdminIcon, ToggleButtonStyle);

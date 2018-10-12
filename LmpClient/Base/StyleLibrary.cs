@@ -6,7 +6,10 @@ using UnityEngine;
 namespace LmpClient.Base
 {
     public abstract class StyleLibrary
-    {
+    {       
+        //Simple flashing flag. 
+        protected bool flash => Time.time % 0.7f < 0.25f;
+        
         protected static GUISkin skin;
 
         //Custom styles used by LMP
