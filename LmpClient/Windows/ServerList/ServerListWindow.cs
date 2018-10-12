@@ -121,7 +121,7 @@ namespace LmpClient.Windows.ServerList
             LabelOptions[0] = GUILayout.Width(100);
         }
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

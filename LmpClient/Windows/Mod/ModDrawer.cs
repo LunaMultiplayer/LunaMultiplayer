@@ -7,7 +7,7 @@ namespace LmpClient.Windows.Mod
 {
     public partial class ModWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

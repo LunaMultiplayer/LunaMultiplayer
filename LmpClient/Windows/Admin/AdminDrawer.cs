@@ -8,7 +8,7 @@ namespace LmpClient.Windows.Admin
 {
     public partial class AdminWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

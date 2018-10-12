@@ -4,7 +4,7 @@ namespace LmpClient.Windows.Debug
 {
     public partial class DebugWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

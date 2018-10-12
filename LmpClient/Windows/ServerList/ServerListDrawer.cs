@@ -13,7 +13,7 @@ namespace LmpClient.Windows.ServerList
 
         #region Servers grid
 
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

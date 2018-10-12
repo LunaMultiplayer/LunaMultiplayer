@@ -5,7 +5,7 @@ namespace LmpClient.Windows.Locks
 {
     public partial class LocksWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUI.DragWindow(MoveRect);
 

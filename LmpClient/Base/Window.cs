@@ -102,9 +102,23 @@ namespace LmpClient.Base
 
             //Delegate to children
             DrawGui();
+            
+            
+            //Draw Tooltip - DrawWindow will actually delegate and encapsulate the DrawContent(windowid) function in its own GUI Substate.
+            //Therefore, we need to save it in DrawContent, and use it here.
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (!string.IsNullOrEmpty(_tooltip))
+                {
+                    var last = GUI.depth;
+                    GUI.depth = last-3;
+                    GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y, 100, 40), _tooltip);
+                    GUI.depth = last;                                                        
+                }                                                                
+            }
         }
 
-        public abstract void DrawGui();
+        protected abstract void DrawGui();
 
         public virtual void RemoveWindowLock()
         {
@@ -119,7 +133,8 @@ namespace LmpClient.Base
         protected virtual bool Resizable { get; } = false;
 
         protected bool ResizingWindow;
-        
+        private string _tooltip;
+
         protected void DrawContent(int windowId)
         {
             DrawCloseButton(OnCloseButton, WindowRect);
@@ -133,14 +148,13 @@ namespace LmpClient.Base
             
             DrawWindowContent(windowId);
 
-            //Draw Tooltip
-            var last = GUI.depth;
-            GUI.depth = -3;
-            GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y, 100, 40), GUI.tooltip);
-            GUI.depth = last;                            
+            if (Event.current.type == EventType.Repaint)
+            {
+                _tooltip = GUI.tooltip;
+            }
         }
-        
-        public abstract void DrawWindowContent(int windowId);
+
+        protected abstract void DrawWindowContent(int windowId);
 
         protected virtual void OnCloseButton()
         {

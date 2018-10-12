@@ -41,7 +41,7 @@ namespace LmpClient.Windows.Systems
 {
     public partial class SystemsWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUI.DragWindow(MoveRect);
 

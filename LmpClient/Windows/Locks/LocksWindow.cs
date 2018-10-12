@@ -79,7 +79,7 @@ namespace LmpClient.Windows.Locks
             }
         }
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

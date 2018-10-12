@@ -8,7 +8,7 @@ namespace LmpClient.Windows.Chat
     {
         private static string _chatInputText = string.Empty;
 
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             var pressedEnter = Event.current.type == EventType.KeyDown && !Event.current.shift && Event.current.character == '\n';
             GUILayout.BeginVertical();

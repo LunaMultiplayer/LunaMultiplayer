@@ -278,7 +278,7 @@ namespace LmpClient.Windows.Debug
             }
         }
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

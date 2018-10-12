@@ -7,7 +7,7 @@ namespace LmpClient.Windows.Update
 {
     public partial class UpdateWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

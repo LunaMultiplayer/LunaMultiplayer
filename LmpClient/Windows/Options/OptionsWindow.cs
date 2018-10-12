@@ -48,7 +48,7 @@ namespace LmpClient.Windows.Options
 
         private readonly GUILayoutOption[] _smallOption = { GUILayout.Width(20), GUILayout.ExpandWidth(false) };
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

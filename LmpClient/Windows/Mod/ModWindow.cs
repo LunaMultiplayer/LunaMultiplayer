@@ -23,8 +23,8 @@ namespace LmpClient.Windows.Mod
             get => base.Display && _display && HighLogic.LoadedScene == GameScenes.MAINMENU;
             set => base.Display = _display = value;
         }
-        
-        public override void DrawGui()
+
+        protected override void DrawGui()
         {
             if (Display)
             {

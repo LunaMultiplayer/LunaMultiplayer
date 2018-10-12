@@ -10,7 +10,7 @@ namespace LmpClient.Windows.CraftLibrary
     {
         #region Folders
 
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

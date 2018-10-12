@@ -94,7 +94,7 @@ namespace LmpClient.Windows.CraftLibrary
             }
         }
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

@@ -10,8 +10,8 @@ using UnityEngine;
 namespace LmpClient.Windows.Connection
 {
     public partial class ConnectionWindow
-    {        
-        public override void DrawWindowContent(int windowId)
+    {
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
@@ -22,7 +22,7 @@ namespace LmpClient.Windows.Connection
             DrawCustomServers();
             
             GUILayout.Label(MainSystem.Singleton.Status, StatusStyle);
-            GUILayout.EndVertical();            
+            GUILayout.EndVertical();                    
         }
 
         private void DrawCustomServers()
@@ -110,8 +110,6 @@ namespace LmpClient.Windows.Connection
 
         private void DrawTopButtons()
         {
-            var prev = GUI.backgroundColor;
-            GUI.backgroundColor = Color.white;          
             GUILayout.BeginHorizontal();
             if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
@@ -137,8 +135,6 @@ namespace LmpClient.Windows.Connection
             
             ServerListWindow.Singleton.Display = GUILayout.Toggle(ServerListWindow.Singleton.Display, ServerBigIcon, ToggleButtonStyle);
             GUILayout.EndHorizontal();
-
-            GUI.backgroundColor = prev;
         }
 
         private void DrawPlayerNameSection()

@@ -23,7 +23,7 @@ namespace LmpClient.Windows.Status
     {
         private static readonly WarpSystem WarpSystem = WarpSystem.Singleton;
 
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

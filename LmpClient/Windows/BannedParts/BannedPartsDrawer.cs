@@ -5,7 +5,7 @@ namespace LmpClient.Windows.BannedParts
 {
     public partial class BannedPartsWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

@@ -7,7 +7,7 @@ namespace LmpClient.Windows.Tools
 {
     public partial class ToolsWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

@@ -26,7 +26,7 @@ namespace LmpClient.Windows.BannedParts
 
         #endregion
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

@@ -64,7 +64,7 @@ namespace LmpClient.Windows.Chat
             }
         }
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

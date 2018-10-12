@@ -53,7 +53,7 @@ namespace LmpClient.Windows.Status
             MainSystem.ToolbarShowGui = false;
         }
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

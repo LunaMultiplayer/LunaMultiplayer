@@ -32,7 +32,7 @@ namespace LmpClient.Windows.Admin
 
         #endregion
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {
@@ -45,7 +45,7 @@ namespace LmpClient.Windows.Admin
             }
             else
             {
-                _reason = string.Empty;
+                _reason = string.Empty;    //FIXME: State being changed when this window isn't likely to even be called. (after we're done with the refactor)
                 _selectedPlayer = null;
             }
 

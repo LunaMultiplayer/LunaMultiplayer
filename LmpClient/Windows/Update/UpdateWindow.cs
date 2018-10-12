@@ -28,7 +28,7 @@ namespace LmpClient.Windows.Update
 
         #endregion
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

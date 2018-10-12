@@ -81,7 +81,7 @@ namespace LmpClient.Windows.Screenshots
             }
         }
 
-        public override void DrawGui()
+        protected override void DrawGui()
         {
             if (Display)
             {

@@ -16,7 +16,7 @@ namespace LmpClient.Windows.Options
 {
     public partial class OptionsWindow
     {
-        public override void DrawWindowContent(int windowId)
+        protected override void DrawWindowContent(int windowId)
         {
             //Player color
             GUILayout.BeginVertical();
@@ -32,7 +32,10 @@ namespace LmpClient.Windows.Options
             GUILayout.EndHorizontal();
             
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Color);
+            
+            GUILayout.BeginHorizontal(skin.box, GUILayout.ExpandWidth(true));
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, _tempColorLabelStyle);
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, _smallOption);
@@ -51,6 +54,7 @@ namespace LmpClient.Windows.Options
 
             _tempColorLabelStyle.fontStyle = FontStyle.Bold;
             _tempColorLabelStyle.fontSize = 40;
+            _tempColorLabelStyle.alignment = TextAnchor.MiddleCenter;
             _tempColorLabelStyle.active.textColor = _tempColor;
             _tempColorLabelStyle.normal.textColor = _tempColor;
             
