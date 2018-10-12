@@ -29,15 +29,15 @@ namespace LmpClient.Windows.Connection
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
             GUILayout.BeginVertical();
 
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
+                GUILayout.Height(WindowHeight - 100));
+
             if (GUILayout.Button(PlusIcon))
             {
                 SettingsSystem.CurrentSettings.Servers.Insert(0, new ServerEntry());
                 SettingsSystem.SaveSettings();
             }
-            GUILayout.Space(15);
-
-            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
-                GUILayout.Height(WindowHeight - 100));
+            
             for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
             {
                 GUILayout.BeginHorizontal();
