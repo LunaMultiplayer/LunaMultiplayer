@@ -262,7 +262,6 @@
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
-    <Compile Include="Systems\Lock\LockEvents.cs" />
     <Compile Include="Systems\Ping\PingSystem.cs" />
     <Compile Include="Systems\VesselDockSys\CurrentUndockEvent.cs" />
     <Compile Include="Systems\VesselDockSys\CurrentDockEvent.cs" />

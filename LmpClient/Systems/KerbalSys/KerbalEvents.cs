@@ -1,9 +1,9 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.VesselUtilities;
+using System;
 
 namespace LmpClient.Systems.KerbalSys
 {
@@ -156,9 +156,11 @@ namespace LmpClient.Systems.KerbalSys
         {
             if (System.AstronautComplex != null)
             {
-                HighLogic.CurrentGame.Updated();
                 System.RefreshCrewDialog();
             }
+
+            //Trigger a ValidateAssignments so missing crews are set as assigned
+            HighLogic.CurrentGame.Updated();
         }
     }
 }

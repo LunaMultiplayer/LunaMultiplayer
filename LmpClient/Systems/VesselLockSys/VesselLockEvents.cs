@@ -50,17 +50,25 @@ namespace LmpClient.Systems.VesselLockSys
         {
             if (data != GameScenes.FLIGHT)
             {
-                InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
+                //If we are going to anything that is not flight, remove spectator, control and update locks
+
                 VesselLockSystem.Singleton.StopSpectating();
+                LockSystem.Singleton.ReleaseAllPlayerSpecifiedLocks(LockType.Control, LockType.Update, LockType.Kerbal);
             }
-            if (data >= GameScenes.FLIGHT && !VesselCommon.IsSpectating)
-            {
+
+            if (data == GameScenes.FLIGHT || data == GameScenes.TRACKSTATION)
+            {                
                 //If we are going to flight scene or tracking station try to get as many unloaded update locks as possible
                 foreach (var vessel in FlightGlobals.Vessels)
                 {
                     if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
                         LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id);
                 }
+            }
+            else
+            {
+                //We are going to KSC/Editor/Menu so we must release all our locks
+                LockSystem.Singleton.ReleaseAllPlayerSpecifiedLocks(LockType.UnloadedUpdate);
             }
         }
 
