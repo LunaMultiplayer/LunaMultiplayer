@@ -181,8 +181,15 @@ namespace LmpClient.Base
 
         protected void DrawCloseButton(Action closeAction, Rect rect)
         {
+            var prev = GUI.backgroundColor;
+            GUI.backgroundColor = Color.red;
+
             if (GUI.Button(new Rect(rect.width - 25, 4, 20, 20), CloseIcon, CloseButtonStyle))
-                closeAction.Invoke();
+            {
+                closeAction.Invoke();                
+            }
+
+            GUI.backgroundColor = prev;
         }
 
         protected void DrawRefreshButton(Action refreshAction)
