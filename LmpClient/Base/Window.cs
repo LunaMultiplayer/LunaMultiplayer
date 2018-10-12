@@ -181,7 +181,7 @@ namespace LmpClient.Base
 
         protected void DrawCloseButton(Action closeAction, Rect rect)
         {
-            if (GUI.Button(new Rect(rect.width - 15, 4, 10, 10), CloseIcon, SmallButtonStyle))
+            if (GUI.Button(new Rect(rect.width - 25, 4, 20, 20), CloseIcon, CloseButtonStyle))
                 closeAction.Invoke();
         }
 

@@ -11,7 +11,7 @@ namespace LmpClient.Base
 
         //Custom styles used by LMP
         protected static GUIStyle RedFontButtonStyle;
-        protected static GUIStyle SmallButtonStyle;
+        protected static GUIStyle CloseButtonStyle;
         protected static GUIStyle ResizeButtonStyle;
 
         protected static GUIStyle HyperlinkLabelStyle;
@@ -290,7 +290,9 @@ namespace LmpClient.Base
                 {
                     normal = {textColor = Color.red}, active = {textColor = Color.red}, hover = {textColor = Color.red}
                 };
-                SmallButtonStyle = new GUIStyle(skin.button) {padding = new RectOffset(0, 0, 0, 0)};
+                
+                CloseButtonStyle = new GUIStyle(skin.button) {padding = new RectOffset(2, 2, 2, 2), margin = new RectOffset(2,2,2,2)};
+                
                 ResizeButtonStyle = new GUIStyle(skin.button)
                 {
                     padding = new RectOffset(0, 0, 0, 0),
