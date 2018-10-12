@@ -461,6 +461,7 @@
     <Compile Include="Windows\Status\StatusWindow.cs" />
     <Compile Include="Windows\Tools\ToolsDrawer.cs" />
     <Compile Include="Windows\Tools\ToolsWindow.cs" />
+    <Compile Include="Windows\ToolTipRenderer.cs" />
     <Compile Include="Windows\Update\UpdateDrawer.cs" />
     <Compile Include="Windows\Update\UpdateWindow.cs" />
     <Compile Include="Windows\WindowUtil.cs" />

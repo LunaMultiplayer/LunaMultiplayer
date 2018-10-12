@@ -206,6 +206,9 @@ namespace LmpClient
             {
                 StartCoroutine(UpdateHandler.CheckForUpdates());
             }
+
+            //We're using a "lightweight" secondary UI renderer to render on top of our windows.
+            gameObject.AddComponent<ToolTipRenderer>();
         }
 
         public void Awake()

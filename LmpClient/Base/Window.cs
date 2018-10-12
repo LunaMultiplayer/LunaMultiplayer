@@ -1,6 +1,7 @@
 ﻿using System;
 using LmpClient.Base.Interface;
 using LmpClient.Systems.SettingsSys;
+using LmpClient.Windows;
 using UnityEngine;
 
 namespace LmpClient.Base
@@ -92,8 +93,6 @@ namespace LmpClient.Base
                 //We only set the styles once so we shouldn't worry so much about the memory footprint...
                 SetStyles();
 
-                _tipcontent = new GUIContent();
-                
                 Initialized = true;
             }
 
@@ -101,37 +100,10 @@ namespace LmpClient.Base
             
             //Implement your own code
             GUI.skin = skin;
-            GUI.depth = 0;
 
             //Delegate to children
             DrawGui();
             
-            
-            //Draw Tooltip - DrawWindow will actually delegate and encapsulate the DrawContent(windowid) function in its own GUI Substate.
-            //Therefore, we need to save it in DrawContent, and use it here.
-            if (Event.current.type == EventType.Repaint)
-            {
-                if (!string.IsNullOrEmpty(_tooltip))
-                {
-                    if (Time.time - _tooltiptime > 0.3f)
-                    {
-                        _tipcontent.text = _tooltip;
-                        var size = ToolTipStyle.CalcSize(_tipcontent);
-                        size.x += 8;
-                        size.y += 4;
-                        
-                        var last = GUI.depth;
-                        GUI.depth = last-10; //In front of the window                        
-                        GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y-size.y, size.x, size.y), _tooltip, ToolTipStyle);
-                        GUI.depth = last;                                                                                
-                    }
-                }
-                else
-                {
-                    //No recent tooltip.
-                    _tooltiptime = Time.time;
-                }
-            }
         }
 
         protected abstract void DrawGui();
@@ -149,9 +121,6 @@ namespace LmpClient.Base
         protected virtual bool Resizable { get; } = false;
 
         protected bool ResizingWindow;
-        private GUIContent _tipcontent;
-        private string _tooltip;
-        private float _tooltiptime;
 
         protected void DrawContent(int windowId)
         {
@@ -168,7 +137,7 @@ namespace LmpClient.Base
 
             if (Event.current.type == EventType.Repaint)
             {
-                _tooltip = GUI.tooltip;
+                ToolTipRenderer.Tooltip = GUI.tooltip;
             }
         }
 

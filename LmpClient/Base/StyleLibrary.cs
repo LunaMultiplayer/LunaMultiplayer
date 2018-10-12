@@ -26,7 +26,7 @@ namespace LmpClient.Base
         protected static GUIStyle StatusStyle;
         protected static GUIStyle BigLabelStyle;
         protected static GUIStyle ToggleButtonStyle;
-        protected static GUIStyle ToolTipStyle;
+        public static GUIStyle ToolTipStyle;
 
         protected GUILayoutOption[] LayoutOptions;
         protected GUILayoutOption[] TextAreaOptions;
