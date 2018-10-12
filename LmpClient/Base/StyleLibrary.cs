@@ -21,6 +21,7 @@ namespace LmpClient.Base
         protected static GUIStyle StatusStyle;
         protected static GUIStyle BigLabelStyle;
         protected static GUIStyle ToggleButtonStyle;
+        protected static GUIStyle ToolTipStyle;
 
         protected GUILayoutOption[] LayoutOptions;
         protected GUILayoutOption[] TextAreaOptions;
@@ -331,6 +332,11 @@ namespace LmpClient.Base
                 {
                     fontSize = 60,
                     normal = {textColor = XKCDColors.KSPNotSoGoodOrange}
+                };
+
+                ToolTipStyle = new GUIStyle(skin.box)
+                {
+                    padding = new RectOffset(2,2,2,2)
                 };
 
                 //Custom style used by the "folder" type buttons.

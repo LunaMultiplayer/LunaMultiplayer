@@ -91,6 +91,9 @@ namespace LmpClient.Base
                 
                 //We only set the styles once so we shouldn't worry so much about the memory footprint...
                 SetStyles();
+
+                _tipcontent = new GUIContent();
+                
                 Initialized = true;
             }
 
@@ -110,11 +113,16 @@ namespace LmpClient.Base
             {
                 if (!string.IsNullOrEmpty(_tooltip))
                 {
-                    if (Time.time - _tooltiptime > 0.5f)
+                    if (Time.time - _tooltiptime > 0.3f)
                     {
+                        _tipcontent.text = _tooltip;
+                        var size = ToolTipStyle.CalcSize(_tipcontent);
+                        size.x += 8;
+                        size.y += 4;
+                        
                         var last = GUI.depth;
-                        GUI.depth = last-3;
-                        GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y, 100, 40), _tooltip);
+                        GUI.depth = last-10; //In front of the window                        
+                        GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y-size.y, size.x, size.y), _tooltip, ToolTipStyle);
                         GUI.depth = last;                                                                                
                     }
                 }
@@ -141,6 +149,7 @@ namespace LmpClient.Base
         protected virtual bool Resizable { get; } = false;
 
         protected bool ResizingWindow;
+        private GUIContent _tipcontent;
         private string _tooltip;
         private float _tooltiptime;
 
