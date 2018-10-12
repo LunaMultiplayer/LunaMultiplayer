@@ -50,7 +50,7 @@ namespace LmpClient.Windows.Systems
             GUILayout.EndScrollView();
         }
 
-        private void PrintSystemButtons()
+        private static void PrintSystemButtons()
         {
             //Asteroid = GUILayout.Toggle(Asteroid, "Asteroid system");
             //if (Asteroid)

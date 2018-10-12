@@ -37,7 +37,7 @@ namespace LmpClient.Windows.Status
             GUILayout.EndVertical();
         }
 
-        private void DrawBottomButtons()
+        private static void DrawBottomButtons()
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(DisconnectIcon))
@@ -49,7 +49,7 @@ namespace LmpClient.Windows.Status
         private void DrawTopButtons()
         {
             GUILayout.BeginHorizontal();
-            
+
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display,
                 ChatSystem.Singleton.NewMessageReceived && flash ? ChatRedIcon : ChatIcon, ToggleButtonStyle);
             CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display,
@@ -58,7 +58,8 @@ namespace LmpClient.Windows.Status
                 ScreenshotSystem.Singleton.NewContent && flash ? CameraRedIcon : CameraIcon, ToggleButtonStyle);
 
             if (SettingsSystem.ServerSettings.AllowAdmin)
-            {AdminWindow.Singleton.Display = GUILayout.Toggle(AdminWindow.Singleton.Display, AdminIcon, ToggleButtonStyle);
+            {
+                AdminWindow.Singleton.Display = GUILayout.Toggle(AdminWindow.Singleton.Display, AdminIcon, ToggleButtonStyle);
             }
 
             GUILayout.EndHorizontal();
@@ -66,7 +67,7 @@ namespace LmpClient.Windows.Status
 
         #region Subspace drawing 
 
-        private void DrawSubspaces()
+        private static void DrawSubspaces()
         {
             _scrollPosition =
                 GUILayout.BeginScrollView(_scrollPosition, _subspaceListStyle, GUILayout.ExpandHeight(true));
@@ -100,7 +101,7 @@ namespace LmpClient.Windows.Status
             GUILayout.EndScrollView();
 
             //Our scroll list will capture the scrollwheel.
-            if (Event.current.type == EventType.ScrollWheel) Event.current.Use();            
+            if (Event.current.type == EventType.ScrollWheel) Event.current.Use();
         }
 
         private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
@@ -152,7 +153,7 @@ namespace LmpClient.Windows.Status
             GUILayout.EndVertical();
         }
 
-        private void DrawDebugSwitches()
+        private static void DrawDebugSwitches()
         {
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, StatusTexts.Debug1BtnTxt, ToggleButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
@@ -209,7 +210,7 @@ namespace LmpClient.Windows.Status
                 SettingsSystem.SaveSettings();
             }
 
-    }
+        }
 
         #endregion
     }

@@ -19,7 +19,7 @@ namespace LmpClient.Windows.Locks
             GUILayout.EndScrollView();
         }
 
-        private void PrintLocks()
+        private static void PrintLocks()
         {
             GUILayout.Label("Asteroid owner: " + _asteroidLockOwner);
             GUILayout.Label("Contract owner: " + _contractLockOwner);

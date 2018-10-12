@@ -50,7 +50,7 @@ namespace LmpClient.Windows.Admin
             GUILayout.EndVertical();
         }
 
-        private void DrawPlayerLine(string playerName)
+        private static void DrawPlayerLine(string playerName)
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(playerName);

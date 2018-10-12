@@ -20,7 +20,7 @@ namespace LmpClient.Windows.Chat
             GUILayout.EndVertical();
         }
 
-        private void DrawChatMessageBox()
+        private static void DrawChatMessageBox()
         {
             GUILayout.BeginHorizontal();
             _chatScrollPos = GUILayout.BeginScrollView(_chatScrollPos);
@@ -33,7 +33,7 @@ namespace LmpClient.Windows.Chat
             GUILayout.EndHorizontal();
         }
         
-        private void DrawTextInput(bool pressedEnter)
+        private static void DrawTextInput(bool pressedEnter)
         {
             GUILayout.BeginHorizontal();
             _chatInputText = GUILayout.TextArea(_chatInputText);

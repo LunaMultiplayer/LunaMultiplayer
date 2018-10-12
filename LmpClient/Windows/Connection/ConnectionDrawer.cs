@@ -1,5 +1,4 @@
-﻿using EditorGizmos;
-using LmpClient.Localization;
+﻿using LmpClient.Localization;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.Options;
@@ -107,7 +106,7 @@ namespace LmpClient.Windows.Connection
             GUILayout.EndVertical();
         }
 
-        private void DrawTopButtons()
+        private static void DrawTopButtons()
         {
             GUILayout.BeginHorizontal();
             if (MainSystem.NetworkState <= ClientState.Disconnected)

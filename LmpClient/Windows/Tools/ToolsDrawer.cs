@@ -29,7 +29,7 @@ namespace LmpClient.Windows.Tools
             GUILayout.EndVertical();
         }
 
-        private void RangesSection()
+        private static void RangesSection()
         {
             _displayRanges = GUILayout.Toggle(_displayRanges, "Vessel ranges", ToggleButtonStyle);
             if (_displayRanges && HighLogic.LoadedSceneIsFlight)
@@ -62,7 +62,8 @@ namespace LmpClient.Windows.Tools
                 }
             }
         }
-        private void ReloadSection()
+
+        private static void ReloadSection()
         {
             _displayReloads = GUILayout.Toggle(_displayReloads, "Reload vessels", ToggleButtonStyle);
             if (_displayReloads)
@@ -92,7 +93,7 @@ namespace LmpClient.Windows.Tools
             }
         }
         
-        private void FloatingOriginSection()
+        private static void FloatingOriginSection()
         {
             _displayFloatingOrigin = GUILayout.Toggle(_displayFloatingOrigin, "Floating Origin", ToggleButtonStyle);
             if (_displayFloatingOrigin)

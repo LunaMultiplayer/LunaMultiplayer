@@ -90,7 +90,7 @@ namespace LmpClient.Windows.Options
             GUILayout.EndVertical();
         }
 
-        private void DrawGeneralSettings()
+        private static void DrawGeneralSettings()
         {
             _showGeneralSettings = GUILayout.Toggle(_showGeneralSettings, LocalizationContainer.OptionsWindowText.GeneralSettings,ToggleButtonStyle);
             if (_showGeneralSettings)
@@ -104,7 +104,7 @@ namespace LmpClient.Windows.Options
             }
         }
 
-        private void DrawNetworkSettings()
+        private static void DrawNetworkSettings()
         {
             _showAdvancedNetworkSettings = GUILayout.Toggle(_showAdvancedNetworkSettings, LocalizationContainer.OptionsWindowText.NetworkSettings, ToggleButtonStyle);
             if (_showAdvancedNetworkSettings)
@@ -167,7 +167,7 @@ namespace LmpClient.Windows.Options
             }
         }
 
-        private void DrawAdvancedDebugOptions()
+        private static void DrawAdvancedDebugOptions()
         {
             GUILayout.Label("Debug settings");
 

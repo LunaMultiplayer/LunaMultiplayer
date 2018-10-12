@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using LmpClient.Systems.CraftLibrary;
+﻿using LmpClient.Systems.CraftLibrary;
 using LmpClient.Systems.SettingsSys;
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace LmpClient.Windows.CraftLibrary
@@ -172,7 +172,7 @@ namespace LmpClient.Windows.CraftLibrary
 
         #endregion
 
-        private void DrawRefreshAndUploadButton(Action refreshAction, Action uploadAction)
+        private static void DrawRefreshAndUploadButton(Action refreshAction, Action uploadAction)
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();

@@ -1,5 +1,5 @@
-﻿using System.Text;
-using LmpClient.Systems.Screenshot;
+﻿using LmpClient.Systems.Screenshot;
+using System.Text;
 using UniLinq;
 using UnityEngine;
 
@@ -140,7 +140,7 @@ namespace LmpClient.Windows.Screenshots
             GUILayout.EndVertical();
         }
 
-        private void DrawMiniature(Screenshot miniature)
+        private static void DrawMiniature(Screenshot miniature)
         {
             if (GUILayout.Button(miniature.Texture, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height)))
             {

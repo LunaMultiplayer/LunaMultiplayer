@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using LmpClient.Localization;
+﻿using LmpClient.Localization;
 using LmpClient.Network;
 using LmpCommon;
 using LmpCommon.Enums;
+using System.Linq;
 using UnityEngine;
 
 namespace LmpClient.Windows.ServerList
@@ -45,7 +45,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
         }
 
-        private void DrawGridHeader()
+        private static void DrawGridHeader()
         {
             GUILayout.BeginHorizontal(_headerServerLine);
 
