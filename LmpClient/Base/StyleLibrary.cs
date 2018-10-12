@@ -10,7 +10,7 @@ namespace LmpClient.Base
         //Simple flashing flag. 
         protected bool flash => Time.time % 0.7f < 0.25f;
 
-        protected const int TitleHeight = 40;
+        protected const int TitleHeight = 30;
 
         protected static GUISkin skin;
 
