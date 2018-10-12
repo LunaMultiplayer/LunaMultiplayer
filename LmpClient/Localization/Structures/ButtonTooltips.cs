@@ -3,7 +3,7 @@
     public class ButtonTooltips
     {
         public string SettingsIcon { get; set; } = "Settings";
-        public string ServerIcon { get; set; } = "Servers";
+        public string ServerIcon { get; set; } = "Server List";
         public string ConnectIcon { get; set; } = "Connect";
         public string DisconnectIcon { get; set; } = "Disconnect";
         public string SyncIcon { get; set; } = "Warp to";
@@ -13,9 +13,10 @@
         public string PlusIcon { get; set; } = "Add";
         public string SaveIcon { get; set; } = "Save";
         public string KeyIcon { get; set; } = "Password";
+        public string GlobeIcon { get; set; } = "Country";
         public string ChatIcon { get; set; } = "Chat";
         public string CameraIcon { get; set; } = "Screenshots";
-        public string RocketIcon { get; set; } = "Vessels";
+        public string RocketIcon { get; set; } = "Craft Library";
         public string AdminIcon { get; set; } = "Admin";
         public string KickIcon { get; set; } = "Kick";
         public string BanIcon { get; set; } = "Ban";

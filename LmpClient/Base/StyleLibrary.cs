@@ -204,7 +204,7 @@ namespace LmpClient.Base
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
                             "globe.png"), 16, 16),
-                    LocalizationContainer.ButtonTooltips.KeyIcon);
+                    LocalizationContainer.ButtonTooltips.GlobeIcon);
                 ChatIcon = new GUIContent(
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
