@@ -110,11 +110,19 @@ namespace LmpClient.Base
             {
                 if (!string.IsNullOrEmpty(_tooltip))
                 {
-                    var last = GUI.depth;
-                    GUI.depth = last-3;
-                    GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y, 100, 40), _tooltip);
-                    GUI.depth = last;                                                        
-                }                                                                
+                    if (Time.time - _tooltiptime > 0.5f)
+                    {
+                        var last = GUI.depth;
+                        GUI.depth = last-3;
+                        GUI.Box(new Rect(Mouse.screenPos.x,  Mouse.screenPos.y, 100, 40), _tooltip);
+                        GUI.depth = last;                                                                                
+                    }
+                }
+                else
+                {
+                    //No recent tooltip.
+                    _tooltiptime = Time.time;
+                }
             }
         }
 
@@ -134,6 +142,7 @@ namespace LmpClient.Base
 
         protected bool ResizingWindow;
         private string _tooltip;
+        private float _tooltiptime;
 
         protected void DrawContent(int windowId)
         {
