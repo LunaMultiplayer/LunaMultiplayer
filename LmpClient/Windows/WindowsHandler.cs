@@ -11,7 +11,7 @@ namespace LmpClient.Windows
 {
     public static class WindowsHandler
     {
-        private static IWindow[] _windows = new IWindow[0];
+        public static IWindow[] Windows { get; private set; } = new IWindow[0];
 
         /// <summary>
         /// Here we pick all the classes that inherit from ISystem and we put them in the systems array
@@ -35,17 +35,17 @@ namespace LmpClient.Windows
                 }
             }
 
-            _windows = windowsList.ToArray();
+            Windows = windowsList.ToArray();
         }
 
         public static void Update()
         {
-            for (var i = 0; i < _windows.Length; i++)
+            for (var i = 0; i < Windows.Length; i++)
             {
                 try
                 {
-                    Profiler.BeginSample(_windows[i].WindowName);
-                    _windows[i].Update();
+                    Profiler.BeginSample(Windows[i].WindowName);
+                    Windows[i].Update();
                     Profiler.EndSample();
                 }
                 catch (Exception e)
@@ -57,12 +57,12 @@ namespace LmpClient.Windows
 
         public static void OnGui()
         {
-            for (var i = 0; i < _windows.Length; i++)
+            for (var i = 0; i < Windows.Length; i++)
             {
                 try
                 {
-                    Profiler.BeginSample(_windows[i].WindowName);
-                    _windows[i].OnGui();
+                    Profiler.BeginSample(Windows[i].WindowName);
+                    Windows[i].OnGui();
                     Profiler.EndSample();
                 }
                 catch (Exception e)

@@ -18,6 +18,8 @@ namespace LmpClient.Base
 
         public string WindowName { get; } = typeof(T).Name;
 
+        public string Tooltip { get; private set; }
+
         private bool _display;
 
         /// <summary>
@@ -99,7 +101,11 @@ namespace LmpClient.Base
             //Always check the window locks
             CheckWindowLock();
 
-            if (!Display) return;
+            if (!Display)
+            {
+                Tooltip = null;
+                return;
+            };
             
             //Implement your own code
             GUI.skin = skin;
@@ -142,9 +148,10 @@ namespace LmpClient.Base
             
             DrawWindowContent(windowId);
 
+            //Collect the Tooltip, if any, in the Paint Event that follows the Layout events.
             if (Event.current.type == EventType.Repaint)
             {
-                ToolTipRenderer.Tooltip = GUI.tooltip;
+                Tooltip = GUI.tooltip;
             }
         }
 
