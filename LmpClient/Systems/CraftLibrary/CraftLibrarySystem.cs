@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
 using LmpCommon.Enums;
 using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace LmpClient.Systems.CraftLibrary
 {
@@ -131,10 +131,10 @@ namespace LmpClient.Systems.CraftLibrary
             switch (craft.CraftType)
             {
                 case CraftType.Vab:
-                    folder = CommonUtil.CombinePaths(SaveFolder, "Ships", "Vab");
+                    folder = CommonUtil.CombinePaths(SaveFolder, "Ships", "VAB");
                     break;
                 case CraftType.Sph:
-                    folder = CommonUtil.CombinePaths(SaveFolder, "Ships", "Sph");
+                    folder = CommonUtil.CombinePaths(SaveFolder, "Ships", "SPH");
                     break;
                 case CraftType.Subassembly:
                     folder = CommonUtil.CombinePaths(SaveFolder, "Subassemblies");
