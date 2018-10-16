@@ -18,7 +18,9 @@ namespace LmpClient.Base
 
         public string WindowName { get; } = typeof(T).Name;
 
-        public string Tooltip { get; private set; }
+        private string Tooltip { get; set; }
+        private readonly GUIContent _tipContent = new GUIContent();
+        private double _tipTime;
 
         private bool _display;
 
@@ -103,11 +105,10 @@ namespace LmpClient.Base
 
             if (!Display)
             {
-                Tooltip = null;
                 return;
             };
             
-            //Implement your own code
+            //Use our standard skin for rendering.
             GUI.skin = skin;
 
             //Delegate to children
@@ -148,12 +149,37 @@ namespace LmpClient.Base
             
             DrawWindowContent(windowId);
 
+            if (!string.IsNullOrEmpty(Tooltip))
+            {
+                //Render it if hovering long enough.
+                if (Time.unscaledTime - _tipTime > 0.35f)
+                {
+                    _tipContent.text = Tooltip;
+                    var size = StyleLibrary.ToolTipStyle.CalcSize(_tipContent);
+                    size.x += 8;
+                    size.y += 4;
+
+                    var rect = GUIUtility.ScreenToGUIRect(new Rect(Mouse.screenPos.x, Mouse.screenPos.y - size.y,
+                        size.x, size.y));
+
+                    GUILayout.BeginArea(rect);
+                    GUILayout.Label(Tooltip, ToolTipStyle);
+                    GUILayout.EndArea();
+                }
+            }
+            else
+            {
+                _tipTime = Time.unscaledTime;
+            }            
+            
             //Collect the Tooltip, if any, in the Paint Event that follows the Layout events.
+            //We do this here so we DO NOT change our layout between the two events.
             if (Event.current.type == EventType.Repaint)
             {
                 Tooltip = GUI.tooltip;
             }
         }
+
 
         protected abstract void DrawWindowContent(int windowId);
 

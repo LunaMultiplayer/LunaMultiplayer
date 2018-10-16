@@ -11,7 +11,7 @@ namespace LmpClient.Windows
 {
     public static class WindowsHandler
     {
-        public static IWindow[] Windows { get; private set; } = new IWindow[0];
+        private static IWindow[] Windows = new IWindow[0];
 
         /// <summary>
         /// Here we pick all the classes that inherit from ISystem and we put them in the systems array

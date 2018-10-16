@@ -1,4 +1,5 @@
-﻿using CachedQuickLz;
+﻿using System;
+using CachedQuickLz;
 using Lidgren.Network;
 using LmpCommon.Message.Types;
 
@@ -19,7 +20,15 @@ namespace LmpCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            CachedQlz.Compress(ref Data, ref NumBytes);
+            try
+            {
+                CachedQlz.Compress(ref Data, ref NumBytes);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
