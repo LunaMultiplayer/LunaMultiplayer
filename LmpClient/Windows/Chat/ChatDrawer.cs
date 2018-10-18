@@ -36,7 +36,7 @@ namespace LmpClient.Windows.Chat
         private static void DrawTextInput(bool pressedEnter)
         {
             GUILayout.BeginHorizontal();
-            _chatInputText = GUILayout.TextArea(_chatInputText);
+            
             if (pressedEnter || GUILayout.Button(LocalizationContainer.ChatWindowText.Send, GUILayout.Width(WindowWidth * .25f)))
             {
                 if (!string.IsNullOrEmpty(_chatInputText))
@@ -45,6 +45,10 @@ namespace LmpClient.Windows.Chat
                 }
 
                 _chatInputText = string.Empty;
+            }
+            else
+            {
+                _chatInputText = GUILayout.TextArea(_chatInputText);
             }
 
             GUILayout.EndHorizontal();
