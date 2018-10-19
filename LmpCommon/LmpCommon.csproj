@@ -36,8 +36,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CachedQuickLz, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\CachedQuickLz.1.2.0\lib\net35\CachedQuickLz.dll</HintPath>
+    <Reference Include="CachedQuickLz, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\CachedQuickLz.1.2.1\lib\net35\CachedQuickLz.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
