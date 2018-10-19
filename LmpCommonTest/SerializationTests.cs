@@ -1,10 +1,15 @@
-﻿using LmpCommon.Message;
+﻿using Lidgren.Network;
+using LmpCommon.Message;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Chat;
+using LmpCommon.Message.Data.Kerbal;
 using LmpCommon.Message.Data.Vessel;
+using LmpCommonTest.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Lidgren.Network;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LmpCommonTest
 {
@@ -83,7 +88,47 @@ namespace LmpCommonTest
 
             //Deserialize
             var msgDes = Factory.Deserialize(lidgrenMsgRecv, Environment.TickCount);
+        }
 
+        [TestMethod]
+        public void TestSerializeCompressThreadSafety()
+        {
+            var numThreads = 100000;
+
+            var msgData = Factory.CreateNewMessageData<KerbalProtoMsgData>();
+            msgData.Kerbal.KerbalName = "TEST";
+            msgData.Kerbal.KerbalData = Encoding.UTF8.GetBytes(Resources.Jebediah_Kerman);
+            msgData.Kerbal.NumBytes = msgData.Kerbal.KerbalData.Length;
+
+            var msg = Factory.CreateNew<KerbalCliMsg>(msgData);
+
+            var taskPool = new List<Task<bool>>();
+
+            for (var i = 0; i < numThreads; i++)
+            {
+                taskPool.Add(new Task<bool>(()=>
+                {
+                    try
+                    {
+                        msg.Serialize(Client.CreateMessage());
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }));
+            }
+
+            Parallel.ForEach(taskPool, t => t.Start());
+            // ReSharper disable once CoVariantArrayConversion
+            Task.WaitAll(taskPool.ToArray());
+
+            for (var i = 0; i < numThreads; i++)
+            {
+                Assert.IsTrue(taskPool[i].Result, "Error while serializing in parallel!");
+            }
         }
     }
 }
