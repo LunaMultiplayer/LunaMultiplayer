@@ -104,6 +104,7 @@
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
+    <Compile Include="Harmony\FlightDriver_SetStartupNewVessel.cs" />
     <Compile Include="Harmony\FlightDriver_Start.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />

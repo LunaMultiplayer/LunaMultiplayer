@@ -9,7 +9,7 @@ namespace LmpClient.Windows.BannedParts
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            GUILayout.Label($"{_vesselName} ({_vesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", BoldRedLabelStyle);
+            GUILayout.Label($"{_vesselName} {LocalizationContainer.BannedPartsWindowText.Text}", BoldRedLabelStyle);
             GUILayout.Space(5);
 
             GUILayout.BeginVertical();

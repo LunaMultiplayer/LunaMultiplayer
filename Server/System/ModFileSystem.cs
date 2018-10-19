@@ -12,7 +12,10 @@ namespace Server.System
 
         public static void GenerateNewModFile()
         {
-            FileHandler.WriteToFile(ServerContext.ModFilePath, LunaXmlSerializer.SerializeToXml(new ModControlStructure()));
+            var defaultModFile = new ModControlStructure();
+            defaultModFile.SetDefaultAllowedParts();
+
+            FileHandler.WriteToFile(ServerContext.ModFilePath, LunaXmlSerializer.SerializeToXml(defaultModFile));
         }
 
         public static void LoadModFile()

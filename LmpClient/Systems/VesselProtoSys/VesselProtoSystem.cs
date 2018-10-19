@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Extensions;
-using LmpClient.Systems.Mod;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
-using LmpClient.Windows.BannedParts;
+using System;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -72,32 +69,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         #endregion
-
-        #region Public
-
-        /// <summary>
-        /// Checks the vessel for invalid parts
-        /// </summary>
-        public bool CheckVessel(Vessel vessel)
-        {
-            if (vessel == null || vessel.isEVA || vessel.vesselType == VesselType.Flag) return true;
-
-            if (ModSystem.Singleton.ModControl)
-            {
-                var bannedParts = ModSystem.Singleton.GetBannedPartsFromVessel(vessel.protoVessel).ToArray();
-                if (bannedParts.Any())
-                {
-                    LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {string.Join(", ", bannedParts)}");
-                    BannedPartsWindow.Singleton.DisplayBannedPartsDialog(vessel, bannedParts);
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        #endregion
-
+        
         #region Update routines
 
         /// <summary>

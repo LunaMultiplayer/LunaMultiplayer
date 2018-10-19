@@ -4,7 +4,6 @@ using LmpClient.Localization;
 using LmpClient.Utilities;
 using LmpCommon;
 using LmpCommon.ModFile.Structure;
-using LmpCommon.Properties;
 using LmpCommon.Xml;
 using System;
 using System.Collections.Generic;
@@ -151,16 +150,9 @@ namespace LmpClient.Systems.Mod
                 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
-        public IEnumerable<string> GetBannedPartsFromVessel(ProtoVessel protoVessel)
+        public IEnumerable<string> GetBannedPartsFromPartNames(IEnumerable<string> partNames)
         {
-            //Iterate in the PROTOVESSEL parts and not in the vessel parts as the part names in the vessel are fucked
-            var bannedParts = new List<string>();
-            foreach (var protoPart in protoVessel.protoPartSnapshots)
-            {
-                if (!ModControlData.AllowedParts.Contains(protoPart.partName))
-                    bannedParts.Add(protoPart.partName);
-            }
-
+            var bannedParts = partNames.Where(partName => !ModControlData.AllowedParts.Contains(partName)).ToList();
             return bannedParts.Distinct();
         }
 

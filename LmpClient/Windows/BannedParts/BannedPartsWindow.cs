@@ -1,7 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpCommon.Enums;
-using System;
 using UnityEngine;
 
 namespace LmpClient.Windows.BannedParts
@@ -15,7 +14,6 @@ namespace LmpClient.Windows.BannedParts
 
         private static string[] _bannedParts = new string[0];
         private static string _vesselName;
-        private static Guid _vesselId;
 
         private static bool _display;
         public override bool Display
@@ -46,12 +44,11 @@ namespace LmpClient.Windows.BannedParts
             ScrollPos = new Vector2();
         }
 
-        public void DisplayBannedPartsDialog(Vessel vessel, string[] bannedParts)
+        public void DisplayBannedPartsDialog(string vesselName, string[] bannedParts)
         {
             if (!Display)
             {
-                _vesselName = vessel.vesselName;
-                _vesselId = vessel.id;
+                _vesselName = vesselName;
                 _bannedParts = bannedParts;
                 Display = true;
             }

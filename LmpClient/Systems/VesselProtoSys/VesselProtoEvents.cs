@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareScienceSubject;
@@ -8,6 +6,8 @@ using LmpClient.Systems.VesselDockSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
+using System;
+using System.Collections.Generic;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -22,14 +22,7 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                 return;
-
-            if (!System.CheckVessel(FlightGlobals.ActiveVessel))
-            {
-                VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel, "Vessel check not passed");
-                VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel, "Vessel check not passed");
-                return;
-            }
-
+            
             System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
         }
 
