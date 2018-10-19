@@ -14,7 +14,9 @@ namespace LmpCommon.Message.Data.Kerbal
         {
             lidgrenMsg.Write(KerbalName);
 
-            CachedQlz.Compress(ref KerbalData, ref NumBytes);
+            if (!Common.ThreadSafeIsArrayCompressed(KerbalData, NumBytes))
+                CachedQlz.Compress(ref KerbalData, ref NumBytes);
+
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(KerbalData, 0, NumBytes);
         }
@@ -28,7 +30,9 @@ namespace LmpCommon.Message.Data.Kerbal
                 KerbalData = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(KerbalData, 0, NumBytes);
-            CachedQlz.Decompress(ref KerbalData, out NumBytes);
+
+            if (CachedQlz.IsCompressed(KerbalData, NumBytes))
+                CachedQlz.Decompress(ref KerbalData, out NumBytes);
         }
 
         public int GetByteCount()

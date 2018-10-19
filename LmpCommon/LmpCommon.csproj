@@ -36,8 +36,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CachedQuickLz, Version=1.1.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\CachedQuickLz.1.1.9\lib\net35\CachedQuickLz.dll</HintPath>
+    <Reference Include="CachedQuickLz, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\CachedQuickLz.1.2.0\lib\net35\CachedQuickLz.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -335,7 +335,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

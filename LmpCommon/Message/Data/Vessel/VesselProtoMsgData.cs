@@ -1,5 +1,4 @@
-﻿using System;
-using CachedQuickLz;
+﻿using CachedQuickLz;
 using Lidgren.Network;
 using LmpCommon.Message.Types;
 
@@ -20,15 +19,9 @@ namespace LmpCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            try
-            {
+            if (!CachedQlz.IsCompressed(Data, NumBytes))
                 CachedQlz.Compress(ref Data, ref NumBytes);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
@@ -42,7 +35,9 @@ namespace LmpCommon.Message.Data.Vessel
                 Data = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
-            CachedQlz.Decompress(ref Data, out NumBytes);
+
+            if (CachedQlz.IsCompressed(Data, NumBytes))
+                CachedQlz.Decompress(ref Data, out NumBytes);
         }
 
         internal override int InternalGetMessageSize()

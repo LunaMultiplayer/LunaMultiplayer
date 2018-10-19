@@ -33,7 +33,9 @@ namespace LmpCommon.Message.Data.ShareProgress
         {
             GuidUtil.Serialize(ContractGuid, lidgrenMsg);
 
-            CachedQlz.Compress(ref Data, ref NumBytes);
+            if (!Common.ThreadSafeIsArrayCompressed(Data, NumBytes))
+                CachedQlz.Compress(ref Data, ref NumBytes);
+
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
@@ -47,7 +49,9 @@ namespace LmpCommon.Message.Data.ShareProgress
                 Data = new byte[NumBytes];
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
-            CachedQlz.Decompress(ref Data, out NumBytes);
+
+            if (Common.ThreadSafeIsArrayCompressed(Data, NumBytes))
+                CachedQlz.Decompress(ref Data, out NumBytes);
         }
 
         public int GetByteCount()
