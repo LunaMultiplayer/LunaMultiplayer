@@ -1,5 +1,4 @@
 ﻿using CachedQuickLz;
-using LmpCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +19,21 @@ namespace LmpCommon
                 if (!CachedQlz.IsCompressed(data, numBytes))
                 {
                     CachedQlz.Compress(ref data, ref numBytes);
+                }
+            }
+        }
+
+        public static void ThreadSafeDecompress(object lockObj, ref byte[] data, int length, out int numBytes)
+        {
+            lock (lockObj)
+            {
+                if (CachedQlz.IsCompressed(data, length))
+                {
+                    CachedQlz.Decompress(ref data, out numBytes);
+                }
+                else
+                {
+                    numBytes = length;
                 }
             }
         }

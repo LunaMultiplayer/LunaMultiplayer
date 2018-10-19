@@ -1,5 +1,4 @@
-﻿using CachedQuickLz;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpCommon.Message.Base;
 using System;
 
@@ -49,7 +48,7 @@ namespace LmpCommon.Message.Data.ShareProgress
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
 
-            CachedQlz.Decompress(ref Data, out NumBytes);
+            Common.ThreadSafeDecompress(this, ref Data, NumBytes, out NumBytes);
         }
 
         public int GetByteCount()

@@ -1,5 +1,4 @@
-﻿using CachedQuickLz;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpCommon.Message.Base;
 using LmpCommon.Message.Types;
 using System;
@@ -50,7 +49,7 @@ namespace LmpCommon.Message.Data.Vessel
 
             lidgrenMsg.ReadBytes(FinalVesselData, 0, NumBytes);
 
-            CachedQlz.Decompress(ref FinalVesselData, out NumBytes);
+            Common.ThreadSafeDecompress(this, ref FinalVesselData, NumBytes, out NumBytes);
         }
         
         internal override int InternalGetMessageSize()
