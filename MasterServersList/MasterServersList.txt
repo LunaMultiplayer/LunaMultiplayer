@@ -8,7 +8,7 @@ servers.lunamultiplayer.com:8750
 pictocube.ddns.net:8700
 #PictoCube (Alfred) nightly. List: http://pictocube.ddns.net:8711
 pictocube.ddns.net:8710
-#Tekbot. List: http://ms.lmp.dnsd.info:8701/
-ms.lmp.dnsd.info:8701
-#Tekbot Nightly. List: http://ms.lmp.dnsd.info:8751/
-ms.lmp.dnsd.info:8751
+#Tekbot. List: http://tekbot.lunamultiplayer.com:8701/
+tekbot.lunamultiplayer.com:8701
+#Tekbot Nightly. List: http://tekbot.lunamultiplayer.com:8751/
+tekbot.lunamultiplayer.com:8751
