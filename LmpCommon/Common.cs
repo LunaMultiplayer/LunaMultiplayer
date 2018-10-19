@@ -25,8 +25,8 @@ namespace LmpCommon
 
         public static void ThreadSafeDecompress(object lockObj, ref byte[] data, int length, out int numBytes)
         {
-            //lock (lockObj)
-            //{
+            lock (lockObj)
+            {
                 if (CachedQlz.IsCompressed(data, length))
                 {
                     CachedQlz.Decompress(ref data, out numBytes);
@@ -35,7 +35,7 @@ namespace LmpCommon
                 {
                     numBytes = length;
                 }
-            //}
+            }
         }
 
         public static T[] TrimArray<T>(T[] array, int size)
