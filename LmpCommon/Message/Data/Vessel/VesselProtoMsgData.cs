@@ -19,7 +19,7 @@ namespace LmpCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            if (!CachedQlz.IsCompressed(Data, NumBytes))
+            if (!Common.ThreadSafeIsArrayCompressed(Data, NumBytes))
                 CachedQlz.Compress(ref Data, ref NumBytes);
 
             lidgrenMsg.Write(NumBytes);
@@ -36,7 +36,7 @@ namespace LmpCommon.Message.Data.Vessel
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
 
-            if (CachedQlz.IsCompressed(Data, NumBytes))
+            if (Common.ThreadSafeIsArrayCompressed(Data, NumBytes))
                 CachedQlz.Decompress(ref Data, out NumBytes);
         }
 
