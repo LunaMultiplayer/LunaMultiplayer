@@ -9,13 +9,8 @@ namespace LmpClient.Windows.Locks
         {
             GUI.DragWindow(MoveRect);
 
-            GUILayout.BeginHorizontal();
-            GUILayout.EndHorizontal();
-
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth), GUILayout.Height(WindowHeight));
-
             PrintLocks();
-
             GUILayout.EndScrollView();
         }
 
@@ -26,7 +21,7 @@ namespace LmpClient.Windows.Locks
             GUILayout.Space(10);
             for (var i = 0; i < VesselLocks.Count; i++)
             {
-                GUILayout.BeginVertical(skin.box);
+                GUILayout.BeginVertical(Skin.box);
                 VesselLocks[i].Selected = GUILayout.Toggle(VesselLocks[i].Selected, VesselLocks[i].VesselId.ToString());
                 GUILayout.Label(VesselLocks[i].VesselName);
                 

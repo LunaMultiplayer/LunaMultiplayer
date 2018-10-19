@@ -6,13 +6,15 @@ using UnityEngine;
 namespace LmpClient.Base
 {
     public abstract class StyleLibrary
-    {       
+    {
+        public static GUISkin DefaultSkin;
+
         //Simple flashing flag. 
-        protected bool flash => Time.time % 0.7f < 0.25f;
+        protected bool Flash => Time.time % 0.7f < 0.25f;
 
         protected const int TitleHeight = 30;
 
-        protected static GUISkin skin;
+        protected static GUISkin Skin;
 
         //Custom styles used by LMP
         protected static GUIStyle RedFontButtonStyle;
@@ -82,10 +84,10 @@ namespace LmpClient.Base
 
         protected void InitializeStyles()
         {
-            if (skin == null)
+            if (Skin == null)
             {
                 //We copy the original KSP skin, it's a ScriptableObject descendant.
-                skin = Object.Instantiate(HighLogic.Skin);
+                Skin = Object.Instantiate(HighLogic.Skin);
 
                 SettingsIcon = new GUIContent(
                     WindowUtil.LoadIcon(
@@ -291,14 +293,14 @@ namespace LmpClient.Base
                             "downloadBig.png"), 32, 32),
                     LocalizationContainer.ButtonTooltips.RestartServerIcon);
 
-                RedFontButtonStyle = new GUIStyle(skin.button)
+                RedFontButtonStyle = new GUIStyle(Skin.button)
                 {
                     normal = {textColor = Color.red}, active = {textColor = Color.red}, hover = {textColor = Color.red}
                 };
                 
-                CloseButtonStyle = new GUIStyle(skin.button) {padding = new RectOffset(2, 2, 2, 2), margin = new RectOffset(2,2,2,2)};
+                CloseButtonStyle = new GUIStyle(Skin.button) {padding = new RectOffset(2, 2, 2, 2), margin = new RectOffset(2,2,2,2)};
                 
-                ResizeButtonStyle = new GUIStyle(skin.button)
+                ResizeButtonStyle = new GUIStyle(Skin.button)
                 {
                     padding = new RectOffset(0, 0, 0, 0),
                     border = new RectOffset(0, 0, 0, 0),
@@ -312,7 +314,7 @@ namespace LmpClient.Base
                     onHover = new GUIStyleState {background = ResizeIcon}
                 };
 
-                HyperlinkLabelStyle = new GUIStyle(skin.button)
+                HyperlinkLabelStyle = new GUIStyle(Skin.button)
                 {
                     fontStyle = FontStyle.Bold,
                     padding = new RectOffset(0, 0, 0, 0),
@@ -327,27 +329,27 @@ namespace LmpClient.Base
                     onHover = new GUIStyleState()
                 };
 
-                BoldGreenLabelStyle = new GUIStyle(skin.label)
+                BoldGreenLabelStyle = new GUIStyle(Skin.label)
                     {fontStyle = FontStyle.Bold, normal = new GUIStyleState {textColor = XKCDColors.KSPBadassGreen}};
                 
-                BoldRedLabelStyle = new GUIStyle(skin.label)
+                BoldRedLabelStyle = new GUIStyle(Skin.label)
                 {
                     fontStyle = FontStyle.Bold, normal = new GUIStyleState {textColor = XKCDColors.KSPNotSoGoodOrange}
                 };
 
-                BigLabelStyle = new GUIStyle(skin.label)
+                BigLabelStyle = new GUIStyle(Skin.label)
                 {
                     fontSize = 60,
                     normal = {textColor = XKCDColors.KSPNotSoGoodOrange}
                 };
 
-                ToolTipStyle = new GUIStyle(skin.box)
+                ToolTipStyle = new GUIStyle(Skin.box)
                 {
                     padding = new RectOffset(2,2,2,2)
                 };
 
                 //Custom style used by the "folder" type buttons.
-                ToggleButtonStyle = skin.button;
+                ToggleButtonStyle = Skin.button;
             }
         }
     }

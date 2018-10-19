@@ -1,6 +1,5 @@
 ﻿using LmpClient.Base.Interface;
 using LmpClient.Systems.SettingsSys;
-using LmpClient.Windows;
 using System;
 using UnityEngine;
 
@@ -106,10 +105,10 @@ namespace LmpClient.Base
             if (!Display)
             {
                 return;
-            };
+            }
             
             //Use our standard skin for rendering.
-            GUI.skin = skin;
+            GUI.skin = Skin;
 
             //Delegate to children
             DrawGui();

@@ -272,6 +272,9 @@ namespace LmpClient
             //Admin window: 6723
             //Update window: 6724
 
+            if (StyleLibrary.DefaultSkin == null)
+                StyleLibrary.DefaultSkin = GUI.skin;
+
             WindowsHandler.OnGui();
         }
 

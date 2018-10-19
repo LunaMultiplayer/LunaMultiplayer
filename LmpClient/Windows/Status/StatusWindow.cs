@@ -78,13 +78,13 @@ namespace LmpClient.Windows.Status
                 hover = { textColor = XKCDColors.KSPNotSoGoodOrange }
             };
 
-            _subspaceStyle = new GUIStyle(skin.box)
+            _subspaceStyle = new GUIStyle(Skin.box)
             {
                 padding = new RectOffset(2, 2, 0, 0),
                 margin = new RectOffset(0, 0, 0, 0)
             };
 
-            _subspaceListStyle = new GUIStyle(skin.scrollView)
+            _subspaceListStyle = new GUIStyle(Skin.scrollView)
             {
                 padding = new RectOffset(0, 0, 0, 0),
                 margin = new RectOffset(0, 0, 0, 0)

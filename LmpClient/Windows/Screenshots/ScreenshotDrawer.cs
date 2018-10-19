@@ -76,7 +76,7 @@ namespace LmpClient.Windows.Screenshots
 
         private GUIStyle GetFolderStyle(string folderName)
         {
-            return System.FoldersWithNewContent.Contains(folderName) ? RedFontButtonStyle : skin.button;
+            return System.FoldersWithNewContent.Contains(folderName) ? RedFontButtonStyle : Skin.button;
         }
 
         #endregion

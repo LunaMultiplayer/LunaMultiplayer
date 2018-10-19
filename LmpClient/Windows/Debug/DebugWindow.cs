@@ -280,6 +280,7 @@ namespace LmpClient.Windows.Debug
 
         protected override void DrawGui()
         {
+            GUI.skin = DefaultSkin;
             WindowRect = FixWindowPos(GUILayout.Window(6705 + MainSystem.WindowOffset, WindowRect, DrawContent, "Debug", LayoutOptions));
         }
 

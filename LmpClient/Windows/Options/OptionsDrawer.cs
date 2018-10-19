@@ -33,7 +33,7 @@ namespace LmpClient.Windows.Options
             
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Color);
             
-            GUILayout.BeginHorizontal(skin.box, GUILayout.ExpandWidth(true));
+            GUILayout.BeginHorizontal(Skin.box, GUILayout.ExpandWidth(true));
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, _tempColorLabelStyle);
             GUILayout.EndHorizontal();
 

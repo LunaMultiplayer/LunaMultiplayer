@@ -6,8 +6,17 @@ namespace LmpClient.Windows.Debug
     {
         protected override void DrawWindowContent(int windowId)
         {
-            GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
+
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth), GUILayout.Height(WindowHeight));
+            DrawDebugButtons();
+            GUILayout.EndScrollView();
+        }
+
+        private static void DrawDebugButtons()
+        {
+            GUILayout.BeginVertical();
+
             _displayFast = GUILayout.Toggle(_displayFast, "Fast debug update");
 
             _displayVectors = GUILayout.Toggle(_displayVectors, "Display vessel vectors");

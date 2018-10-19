@@ -81,7 +81,8 @@ namespace LmpClient.Windows.Locks
 
         protected override void DrawGui()
         {
-            WindowRect = FixWindowPos(GUILayout.Window(6717 + MainSystem.WindowOffset, WindowRect, DrawContent, "Locks", skin.window, LayoutOptions));
+            GUI.skin = DefaultSkin;
+            WindowRect = FixWindowPos(GUILayout.Window(6717 + MainSystem.WindowOffset, WindowRect, DrawContent, "Locks", Skin.window, LayoutOptions));
         }
 
         public override void SetStyles()
