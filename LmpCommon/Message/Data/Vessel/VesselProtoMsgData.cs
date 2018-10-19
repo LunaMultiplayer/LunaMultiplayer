@@ -18,9 +18,8 @@ namespace LmpCommon.Message.Data.Vessel
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);
-
-            if (!Common.ThreadSafeIsArrayCompressed(Data, NumBytes))
-                CachedQlz.Compress(ref Data, ref NumBytes);
+            
+            Common.ThreadSafeCompress(this, ref Data, ref NumBytes);
 
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
@@ -36,8 +35,7 @@ namespace LmpCommon.Message.Data.Vessel
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
 
-            if (Common.ThreadSafeIsArrayCompressed(Data, NumBytes))
-                CachedQlz.Decompress(ref Data, out NumBytes);
+            CachedQlz.Decompress(ref Data, out NumBytes);
         }
 
         internal override int InternalGetMessageSize()

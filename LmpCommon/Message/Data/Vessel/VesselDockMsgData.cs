@@ -30,8 +30,7 @@ namespace LmpCommon.Message.Data.Vessel
             GuidUtil.Serialize(DominantVesselId, lidgrenMsg);
             GuidUtil.Serialize(WeakVesselId, lidgrenMsg);
 
-            if (!Common.ThreadSafeIsArrayCompressed(FinalVesselData, NumBytes))
-                CachedQlz.Compress(ref FinalVesselData, ref NumBytes);
+            Common.ThreadSafeCompress(this, ref FinalVesselData, ref NumBytes);
 
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(FinalVesselData, 0, NumBytes);
@@ -51,8 +50,7 @@ namespace LmpCommon.Message.Data.Vessel
 
             lidgrenMsg.ReadBytes(FinalVesselData, 0, NumBytes);
 
-            if (Common.ThreadSafeIsArrayCompressed(FinalVesselData, NumBytes))
-                CachedQlz.Decompress(ref FinalVesselData, out NumBytes);
+            CachedQlz.Decompress(ref FinalVesselData, out NumBytes);
         }
         
         internal override int InternalGetMessageSize()

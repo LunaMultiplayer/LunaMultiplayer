@@ -1,11 +1,11 @@
 ﻿using CachedQuickLz;
+using LmpCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -13,8 +13,16 @@ namespace LmpCommon
 {
     public class Common
     {
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static bool ThreadSafeIsArrayCompressed(byte[] data, int numBytes) => CachedQlz.IsCompressed(data, numBytes);
+        public static void ThreadSafeCompress(object lockObj, ref byte[] data, ref int numBytes)
+        {
+            lock (lockObj)
+            {
+                if (!CachedQlz.IsCompressed(data, numBytes))
+                {
+                    CachedQlz.Compress(ref data, ref numBytes);
+                }
+            }
+        }
 
         public static T[] TrimArray<T>(T[] array, int size)
         {
