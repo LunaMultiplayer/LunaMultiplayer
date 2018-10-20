@@ -85,6 +85,8 @@
     <Compile Include="Command\Command\ClearVesselsCommand.cs" />
     <Compile Include="Command\Command\NukeCommand.cs" />
     <Compile Include="Command\Command\SayCommand.cs" />
+    <Compile Include="Command\Command\SetScienceCommand.cs" />
+    <Compile Include="Command\Command\SetFundsCommand.cs" />
     <Compile Include="Command\Common\CommandSystemHelperMethods.cs" />
     <Compile Include="Context\Constants.cs" />
     <Compile Include="Context\ServerContext.cs" />
