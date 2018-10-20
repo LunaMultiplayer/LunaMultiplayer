@@ -16,8 +16,8 @@
   <ScreenshotTaken>Screenshot wurde hochgeladen!</ScreenshotTaken>
   <ImageSaved>Bild wurde gespeichert unter GameData/LunaMultiplayer/Screenshots</ImageSaved>
   <IncreasedInterpolationOffset>Achtung! Dein Interpolations-Versatz wurde erhöht, weil es zu niedrig für den Server war</IncreasedInterpolationOffset>
-  <SackingKerbalsNotAllowed>This server does not allow firing kerbals</SackingKerbalsNotAllowed>
-  <CannotLoadGames>LMP does not allow loading savegames</CannotLoadGames>
-  <KerbalNotYours>Another player is using this kerbal</KerbalNotYours>
-  <UnsafeToSync>Cannot sync while in unstable orbit as you might crash! You can turn off this check in settings</UnsafeToSync>
+  <SackingKerbalsNotAllowed>Auf diesem Server ist das Feuern von Kerbals nicht erlaubt</SackingKerbalsNotAllowed>
+  <CannotLoadGames>LMP erlaubt nicht das Laden von Spielständen</CannotLoadGames>
+  <KerbalNotYours>Ein anderer Spieler kontrolliert diesen Kerbal</KerbalNotYours>
+  <UnsafeToSync>Synchronisieren ist während eines instabilen Orbits nicht möglich, weil es zu einem Absturz führen kann! Diese Einstellung kann in den Optionen deaktiviert werden</UnsafeToSync>
 </ScreenText>

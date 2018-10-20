@@ -19,6 +19,6 @@
   <Mtu>MTU (Standard: 1408):</Mtu>
   <AutoExpandMtu>Automatisches Erweitern der MTU</AutoExpandMtu>
   <ConnectionTimeout>Verbindungsabbruch, Timeout (Standard: 15):</ConnectionTimeout>
-  <GeneralSettings>General settings</GeneralSettings>
-  <IgnoreSyncChecks>Ignore sync checks</IgnoreSyncChecks>
+  <GeneralSettings>Generelle Einstellungen</GeneralSettings>
+  <IgnoreSyncChecks>Ignoriere die Synchronisations-Prüfung</IgnoreSyncChecks>
 </OptionsWindowText>
