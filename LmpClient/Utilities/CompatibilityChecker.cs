@@ -1,18 +1,22 @@
-﻿using System;
-using LmpClient.Localization;
+﻿using LmpClient.Localization;
 using LmpGlobal;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Utilities
 {
-    public class CompatibilityHandler
+    internal class CompatibilityChecker
     {
         private static readonly Version KspVersion = new Version(Versioning.version_major, Versioning.version_minor, Versioning.Revision);
 
-        public static bool CheckKspVersion()
+        public static bool IsCompatible()
         {
-            var compatible = KspVersion >= KspCompatible.MinKspVersion && KspVersion <= KspCompatible.MaxKspVersion;
-            if (compatible) return true;
+            return KspVersion >= KspCompatible.MinKspVersion && KspVersion <= KspCompatible.MaxKspVersion;
+        }
+
+        public static void SpawnDialog()
+        {
+            if (IsCompatible()) return;
 
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog("CompatibilityWindow", string.Empty, LocalizationContainer.CompatibleDialogText.Title,
@@ -32,8 +36,6 @@ namespace LmpClient.Utilities
                 true,
                 HighLogic.UISkin
             );
-
-            return false;
         }
     }
 }

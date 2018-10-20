@@ -188,6 +188,9 @@ namespace LmpClient
 
         public void Start()
         {
+            CompatibilityChecker.SpawnDialog();
+            InstallChecker.SpawnDialog();
+
             LocalizationContainer.LoadLanguages();
             LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
 
@@ -221,12 +224,12 @@ namespace LmpClient
             LunaLog.Log($"[LMP]: LMP {LmpVersioning.CurrentVersion} Starting at: {KspPath}");
             LunaLog.Log($"[LMP]: Debug port: {CommonUtil.DebugPort}");
 
-            if (!CompatibilityHandler.CheckKspVersion() || !InstallChecker.IsCorrectlyInstalled())
+            if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
             {
                 Enabled = false;
                 return;
             }
-            
+
             FieldModuleStore.ReadCustomizationXml();
             LmpBaseEvent.Awake();
             HarmonyPatcher.Awake();
