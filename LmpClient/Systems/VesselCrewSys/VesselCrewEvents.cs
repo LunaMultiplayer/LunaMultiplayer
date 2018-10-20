@@ -1,6 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.Lock;
+using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
 using System;
@@ -58,7 +59,7 @@ namespace LmpClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewModified(Vessel vessel)
         {
-            if(!vessel.isEVA)
+            if(!vessel.isEVA && LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
         }
     }
