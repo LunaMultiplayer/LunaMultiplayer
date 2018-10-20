@@ -7,7 +7,7 @@ using System;
 namespace LmpClient.Harmony
 {
     /// <summary>
-    /// This harmony patch is intended to trigger an event when a strategy has been activated
+    /// This harmony patch is intended to trigger an event when boarding a vessel
     /// </summary>
     [HarmonyPatch(typeof(KerbalEVA))]
     [HarmonyPatch("proceedAndBoard")]
