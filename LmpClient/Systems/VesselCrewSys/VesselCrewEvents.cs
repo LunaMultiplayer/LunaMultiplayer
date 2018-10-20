@@ -48,7 +48,6 @@ namespace LmpClient.Systems.VesselCrewSys
         /// <summary>
         /// Kerbal in eva is initialized with orbit data and ready to be sent to the server
         /// </summary>
-        /// <param name="evaVessel"></param>
         public void CrewEvaReady(Vessel evaVessel)
         {
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(evaVessel);
