@@ -335,9 +335,9 @@ namespace LmpClient.Systems.VesselPositionSys
                  *
                  */
 
-                if (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec && MessageCount > VesselPositionSystem.MinRecommendedMessageCount)
+                if (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs))
                 {
-                    CurrentFrame = NumFrames;
+                    CurrentFrame = float.MaxValue;
                 }
 
                 ExtraInterpolationTime = Time.fixedDeltaTime;
@@ -359,7 +359,7 @@ namespace LmpClient.Systems.VesselPositionSys
                     TimeDifference -= timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs) ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
 
@@ -370,7 +370,7 @@ namespace LmpClient.Systems.VesselPositionSys
         {
             //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 s
 
-            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - VesselCommon.PositionAndFlightStateMessageOffsetSec);
+            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs));
             var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
 
             //We cannot fix errors that are below the delta time!

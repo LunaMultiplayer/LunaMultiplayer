@@ -1,5 +1,4 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.TimeSync;
@@ -7,6 +6,7 @@ using LmpClient.Systems.Warp;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPositionSys
@@ -33,6 +33,7 @@ namespace LmpClient.Systems.VesselPositionSys
             if (!OrbitParametersAreOk(vessel)) return null;
 
             var msgData = MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
+            msgData.PingMs = NetworkStatistics.PingMs;
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
             msgData.GameTime = TimeSyncSystem.UniversalTime;
             try

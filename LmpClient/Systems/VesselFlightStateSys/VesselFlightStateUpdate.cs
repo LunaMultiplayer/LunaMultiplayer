@@ -1,11 +1,11 @@
-﻿using System;
-using LmpClient.Extensions;
+﻿using LmpClient.Extensions;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
 using LmpCommon.Message.Data.Vessel;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselFlightStateSys
@@ -23,6 +23,8 @@ namespace LmpClient.Systems.VesselFlightStateSys
         public double GameTimeStamp { get; set; }
         public int SubspaceId { get; set; }
         public Guid VesselId { get; set; }
+
+        public float PingMs { get; set; }
 
         #endregion
 
@@ -54,6 +56,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             VesselId = msgData.VesselId;
             GameTimeStamp = msgData.GameTime;
             SubspaceId = msgData.SubspaceId;
+            PingMs = msgData.PingMs;
 
             CtrlState.CopyFrom(msgData);
         }
@@ -63,8 +66,16 @@ namespace LmpClient.Systems.VesselFlightStateSys
             VesselId = update.VesselId;
             GameTimeStamp = update.GameTimeStamp;
             SubspaceId = update.SubspaceId;
+            PingMs = update.PingMs;
 
             CtrlState.CopyFrom(update.CtrlState);
+        }
+
+        public void CopyFrom(Vessel vessel)
+        {
+            if (vessel == null) return;
+
+            CtrlState.CopyFrom(vessel.ctrlState);
         }
 
         #endregion
@@ -85,10 +96,21 @@ namespace LmpClient.Systems.VesselFlightStateSys
 
             if (InterpolationFinished && VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
-                if (Target == null) //This is the case of first iteration
+                if (Target == null)
+                {
+                    //This is the case of first iteration
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds;
 
-                ProcessRestart();
+                    CopyFrom(FlightGlobals.fetch.LmpFindVessel(VesselId));
+                }
+                else
+                {
+                    GameTimeStamp = Target.GameTimeStamp;
+                    SubspaceId = Target.SubspaceId;
+
+                    CtrlState.CopyFrom(Target.CtrlState);
+                }
+
                 LerpPercentage = 0;
 
                 if (Target != null)
@@ -143,7 +165,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
                  *
                  */
 
-                if (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec && MessageCount > VesselFlightStateSystem.MinRecommendedMessageCount)
+                if (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs))
                 {
                     LerpPercentage = 1;
                 }
@@ -167,7 +189,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
                     TimeDifference -= timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs) ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
 
@@ -178,7 +200,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         {
             //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 seconds
 
-            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - VesselCommon.PositionAndFlightStateMessageOffsetSec);
+            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs));
             var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
 
             //We cannot fix errors that are below the fixed delta time!
@@ -206,26 +228,5 @@ namespace LmpClient.Systems.VesselFlightStateSys
         }
 
         #endregion
-
-        /// <summary>
-        /// Here we apply the CURRENT vessel flight state to this update.
-        /// </summary>
-        private void ProcessRestart()
-        {
-            if (Target != null)
-            {
-                GameTimeStamp = Target.GameTimeStamp;
-                SubspaceId = Target.SubspaceId;
-
-                CtrlState.CopyFrom(Target.CtrlState);
-            }
-            else
-            {
-                var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
-                if (vessel == null) return;
-
-                CtrlState.CopyFrom(vessel.ctrlState);
-            }
-        }
     }
 }

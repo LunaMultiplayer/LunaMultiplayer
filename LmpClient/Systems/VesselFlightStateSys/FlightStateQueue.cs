@@ -11,6 +11,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             value.VesselId = msgData.VesselId;
             value.GameTimeStamp = msgData.GameTime;
             value.SubspaceId = msgData.SubspaceId;
+            value.PingMs = msgData.PingMs;
 
             value.CtrlState.CopyFrom(msgData);
         }

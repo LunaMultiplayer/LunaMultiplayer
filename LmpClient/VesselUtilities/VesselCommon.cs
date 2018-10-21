@@ -15,7 +15,6 @@ using LmpClient.Systems.VesselResourceSys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace LmpClient.VesselUtilities
 {
@@ -24,11 +23,8 @@ namespace LmpClient.VesselUtilities
     /// </summary>
     public class VesselCommon
     {
-        private const int MaxPositionAndFlightStateMsgOffsetMs = 1000;
-        private const int MinPositionAndFlightStateMsgOffsetMs = 100;
-
-        public static float PositionAndFlightStateMessageOffsetSec => (float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs).TotalSeconds;
-        public static int PositionAndFlightStateMessageOffsetMs => (int)Mathf.Clamp(NetworkStatistics.PingMs * 1.5f, MinPositionAndFlightStateMsgOffsetMs, MaxPositionAndFlightStateMsgOffsetMs);
+        public static float PositionAndFlightStateMessageOffsetSec(float targetPingMs) => (float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs(targetPingMs)).TotalSeconds;
+        public static int PositionAndFlightStateMessageOffsetMs(float targetPingMs) => (int)(NetworkStatistics.PingMs * 1.5f + targetPingMs);
 
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {

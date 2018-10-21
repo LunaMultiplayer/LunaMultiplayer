@@ -4,7 +4,6 @@ using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
-using LmpCommon;
 using LmpCommon.Time;
 using System;
 using System.Collections.Concurrent;
@@ -20,10 +19,7 @@ namespace LmpClient.Systems.VesselPositionSys
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
         #region Fields & properties
-
-        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(VesselCommon.PositionAndFlightStateMessageOffsetMs, 
-            SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
-
+        
         private static DateTime LastVesselUpdatesSentTime { get; set; } = LunaComputerTime.UtcNow;
 
         private static int UpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval 
