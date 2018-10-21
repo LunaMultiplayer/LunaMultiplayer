@@ -1,13 +1,15 @@
-﻿using System.Reflection;
+﻿using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpCommon.Locks;
+using System.Reflection;
+using UnityEngine;
 
 namespace LmpClient.Systems.KscScene
 {
     public class KscSceneEvents: SubSystem<KscSceneSystem>
     {
-        private static readonly MethodInfo ClearVesselMarkers = typeof(KSCVesselMarkers).GetMethod("ClearVesselMarkers", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo ClearVesselMarkers = typeof(KSCVesselMarkers).GetMethod("ClearVesselMarkers", AccessTools.all);
 
         public void OnLockAcquire(LockDefinition lockdefinition)
         {
@@ -24,9 +26,9 @@ namespace LmpClient.Systems.KscScene
         /// </summary>
         public void OnSceneRequested(GameScenes requestedScene)
         {
-            if (requestedScene > GameScenes.SPACECENTER && KSCVesselMarkers.fetch != null)
+            if (requestedScene > GameScenes.SPACECENTER)
             {
-                ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
+                ClearMarkers();
             }
         }
 
@@ -35,9 +37,22 @@ namespace LmpClient.Systems.KscScene
         /// </summary>
         public void LevelLoaded(GameScenes data)
         {
-            if (data == GameScenes.SPACECENTER && KSCVesselMarkers.fetch)
+            if (data == GameScenes.SPACECENTER)
             {
+                ClearMarkers();
                 KSCVesselMarkers.fetch.RefreshMarkers();
+            }
+        }
+
+        private static void ClearMarkers()
+        {
+            if (KSCVesselMarkers.fetch)
+                ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
+
+            foreach (var kscVesselMarker in Object.FindObjectsOfType<KSCVesselMarker>())
+            {
+                kscVesselMarker.Terminate();
+                Object.DestroyImmediate(kscVesselMarker);
             }
         }
     }
