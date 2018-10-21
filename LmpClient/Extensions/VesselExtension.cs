@@ -1,5 +1,4 @@
-﻿using Harmony;
-using LmpClient.Events;
+﻿using LmpClient.Events;
 using UnityEngine;
 
 namespace LmpClient.Extensions
@@ -68,10 +67,10 @@ namespace LmpClient.Extensions
 
             LunaLog.Log($"Making vessel {vessel.id} {(immortal ? "immortal" : "mortal")}");
 
-            //Do not calculate orbits for vessels that are controlled by other players
-            //If you don't stop the orbit driver then when spectating you might see shaking and also if you're in EVA and try to grab a
-            //ladder of a vessel that is controlled by another player your kerbal will be propelled
-            Traverse.Create(vessel.orbitDriver).Field<bool>("ready").Value = !immortal;
+            ////Do not calculate orbits for vessels that are controlled by other players
+            ////If you don't stop the orbit driver then when spectating you might see shaking and also if you're in EVA and try to grab a
+            ////ladder of a vessel that is controlled by another player your kerbal will be propelled
+            //Traverse.Create(vessel.orbitDriver).Field<bool>("ready").Value = !immortal;
 
             foreach (var part in vessel.Parts)
             {
