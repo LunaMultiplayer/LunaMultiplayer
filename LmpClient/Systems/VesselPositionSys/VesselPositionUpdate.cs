@@ -1,5 +1,4 @@
-﻿using System;
-using LmpClient.Extensions;
+﻿using LmpClient.Extensions;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselPositionSys.ExtensionMethods;
@@ -7,6 +6,7 @@ using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon;
 using LmpCommon.Message.Data.Vessel;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPositionSys
@@ -45,6 +45,7 @@ namespace LmpClient.Systems.VesselPositionSys
         public double[] NormalVector { get; set; } = new double[3];
         public double[] Orbit { get; set; } = new double[8];
         public float[] SrfRelRotation { get; set; } = new float[4];
+        public float PingMs { get; set; }
         public float HeightFromTerrain { get; set; }
         public double GameTimeStamp { get; set; }
         public int SubspaceId { get; set; }
@@ -91,6 +92,7 @@ namespace LmpClient.Systems.VesselPositionSys
             VesselId = msgData.VesselId;
             BodyIndex = msgData.BodyIndex;
             SubspaceId = msgData.SubspaceId;
+            PingMs = msgData.PingMs;
             HeightFromTerrain = msgData.HeightFromTerrain;
             Landed = msgData.Landed;
             Splashed = msgData.Splashed;
@@ -109,6 +111,7 @@ namespace LmpClient.Systems.VesselPositionSys
             VesselId = update.VesselId;
             BodyIndex = update.BodyIndex;
             SubspaceId = update.SubspaceId;
+            PingMs = update.PingMs;
             HeightFromTerrain = update.HeightFromTerrain;
             Landed = update.Landed;
             Splashed = update.Splashed;
@@ -120,6 +123,44 @@ namespace LmpClient.Systems.VesselPositionSys
             Array.Copy(update.VelocityVector, VelocityVector, 3);
             Array.Copy(update.NormalVector, NormalVector, 3);
             Array.Copy(update.Orbit, Orbit, 8);
+        }
+
+        public void CopyFrom(Vessel vessel)
+        {
+            if (Vessel == null) return;
+
+            BodyIndex = Vessel.mainBody.flightGlobalsIndex;
+            Landed = Vessel.Landed;
+            Splashed = Vessel.Splashed;
+
+            SrfRelRotation[0] = Vessel.srfRelRotation.x;
+            SrfRelRotation[1] = Vessel.srfRelRotation.y;
+            SrfRelRotation[2] = Vessel.srfRelRotation.z;
+            SrfRelRotation[3] = Vessel.srfRelRotation.w;
+
+            LatLonAlt[0] = Vessel.latitude;
+            LatLonAlt[1] = Vessel.longitude;
+            LatLonAlt[2] = Vessel.altitude;
+
+            var velVector = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.srf_velocity;
+            VelocityVector[0] = velVector.x;
+            VelocityVector[1] = velVector.y;
+            VelocityVector[2] = velVector.z;
+
+            NormalVector[0] = Vessel.terrainNormal.x;
+            NormalVector[1] = Vessel.terrainNormal.y;
+            NormalVector[2] = Vessel.terrainNormal.z;
+
+            Orbit[0] = Vessel.orbit.inclination;
+            Orbit[1] = Vessel.orbit.eccentricity;
+            Orbit[2] = Vessel.orbit.semiMajorAxis;
+            Orbit[3] = Vessel.orbit.LAN;
+            Orbit[4] = Vessel.orbit.argumentOfPeriapsis;
+            Orbit[5] = Vessel.orbit.meanAnomalyAtEpoch;
+            Orbit[6] = Vessel.orbit.epoch;
+            Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
+
+            HeightFromTerrain = Vessel.heightFromTerrain;
         }
 
         #endregion
@@ -135,10 +176,19 @@ namespace LmpClient.Systems.VesselPositionSys
             
             if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
-                if (Target == null) //This is the case of first iteration
+                if (Target == null)
+                {
+                    //We enter in this clause when it's the first iteration
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds;
+                    PingMs = 0;
 
-                ProcessRestart();
+                    CopyFrom(Vessel);
+                }
+                else
+                {
+                    CopyFrom(Target);
+                }
+
                 CurrentFrame = 0;
 
                 if (Target != null)
@@ -350,67 +400,6 @@ namespace LmpClient.Systems.VesselPositionSys
         #endregion
 
         #region Private
-
-        /// <summary>
-        /// Here we apply the CURRENT vessel position to this update.
-        /// </summary>
-        private void ProcessRestart()
-        {
-            if (Target != null)
-            {
-                GameTimeStamp = Target.GameTimeStamp;
-                BodyIndex = Target.BodyIndex;
-                Landed = Target.Landed;
-                Splashed = Target.Splashed;
-                SubspaceId = Target.SubspaceId;
-
-                Array.Copy(Target.SrfRelRotation, SrfRelRotation, 4);
-                Array.Copy(Target.LatLonAlt, LatLonAlt, 3);
-                Array.Copy(Target.VelocityVector, VelocityVector, 3);
-                Array.Copy(Target.NormalVector, NormalVector, 3);
-                Array.Copy(Target.Orbit, Orbit, 8);
-
-                HeightFromTerrain = Target.HeightFromTerrain;
-                HackingGravity = Target.HackingGravity;
-            }
-            else
-            {
-                if (Vessel == null) return;
-
-                BodyIndex = Vessel.mainBody.flightGlobalsIndex;
-                Landed = Vessel.Landed;
-                Splashed = Vessel.Splashed;
-
-                SrfRelRotation[0] = Vessel.srfRelRotation.x;
-                SrfRelRotation[1] = Vessel.srfRelRotation.y;
-                SrfRelRotation[2] = Vessel.srfRelRotation.z;
-                SrfRelRotation[3] = Vessel.srfRelRotation.w;
-
-                LatLonAlt[0] = Vessel.latitude;
-                LatLonAlt[1] = Vessel.longitude;
-                LatLonAlt[2] = Vessel.altitude;
-
-                var velVector = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.srf_velocity;
-                VelocityVector[0] = velVector.x;
-                VelocityVector[1] = velVector.y;
-                VelocityVector[2] = velVector.z;
-
-                NormalVector[0] = Vessel.terrainNormal.x;
-                NormalVector[1] = Vessel.terrainNormal.y;
-                NormalVector[2] = Vessel.terrainNormal.z;
-
-                Orbit[0] = Vessel.orbit.inclination;
-                Orbit[1] = Vessel.orbit.eccentricity;
-                Orbit[2] = Vessel.orbit.semiMajorAxis;
-                Orbit[3] = Vessel.orbit.LAN;
-                Orbit[4] = Vessel.orbit.argumentOfPeriapsis;
-                Orbit[5] = Vessel.orbit.meanAnomalyAtEpoch;
-                Orbit[6] = Vessel.orbit.epoch;
-                Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
-
-                HeightFromTerrain = Vessel.heightFromTerrain;
-            }
-        }
 
         #region Helper methods
 
