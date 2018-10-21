@@ -21,19 +21,31 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.staticPressurekPa = FlightGlobals.getStaticPressure(target.LatLonAlt[2], lerpedBody);
             vessel.heightFromTerrain = target.HeightFromTerrain;
 
+            var currentSurfaceRelRotation = Quaternion.Slerp(update.SurfaceRelRotation, target.SurfaceRelRotation, percentage);
+
+            //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
+            vessel.srfRelRotation = currentSurfaceRelRotation;
+
+            vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
+            vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
+
+            vessel.latitude = LunaMath.Lerp(update.LatLonAlt[0], target.LatLonAlt[0], percentage);
+            vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
+            vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
+
+            var rotation = (Quaternion)lerpedBody.rotation * currentSurfaceRelRotation;
+            var position = vessel.situation <= Vessel.Situations.SUB_ORBITAL ?
+                lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) :
+                vessel.orbit.getPositionAtUT(TimeSyncSystem.UniversalTime);
+            
             if (!vessel.loaded)
             {
-                //DO NOT lerp the latlonalt as otherwise if you are in orbit you will see landed vessels in the map view with weird jittering
-                vessel.latitude = target.LatLonAlt[0];
-                vessel.longitude = target.LatLonAlt[1];
-                vessel.altitude = target.LatLonAlt[2];
-
-                if (vessel.LandedOrSplashed)
-                    vessel.SetPosition(lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude));
+                vessel.SetPosition(position);
+                vessel.SetRotation(rotation);
             }
             else
             {
-                ApplyInterpolationsToLoadedVessel(vessel, update, target, lerpedBody, percentage);
+                SetLoadedVesselPositionAndRotation(vessel, position, rotation);
             }
         }
 
@@ -49,28 +61,6 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, percentage);
 
             vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpedBody, TimeSyncSystem.UniversalTime);
-        }
-
-        private static void ApplyInterpolationsToLoadedVessel(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
-        {
-            var currentSurfaceRelRotation = Quaternion.Slerp(update.SurfaceRelRotation, target.SurfaceRelRotation, percentage);
-
-            //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
-            vessel.srfRelRotation = currentSurfaceRelRotation;
-
-            vessel.Landed = percentage < 0.5 ? update.Landed : target.Landed;
-            vessel.Splashed = percentage < 0.5 ? update.Splashed : target.Splashed;
-
-            vessel.latitude = LunaMath.Lerp(update.LatLonAlt[0], target.LatLonAlt[0], percentage);
-            vessel.longitude = LunaMath.Lerp(update.LatLonAlt[1], target.LatLonAlt[1], percentage);
-            vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
-
-            var rotation = (Quaternion)lerpedBody.rotation * currentSurfaceRelRotation;
-            var position = vessel.situation <= Vessel.Situations.SUB_ORBITAL ? 
-                lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) : 
-                vessel.orbit.getPositionAtUT(TimeSyncSystem.UniversalTime);
-            
-            SetLoadedVesselPositionAndRotation(vessel, position, rotation);
         }
 
         /// <summary>
@@ -90,7 +80,7 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                         vessel.parts[i].partTransform.position = vessel.vesselTransform.rotation * vessel.parts[i].orgPos + position;
                         //Always run this at the end!!
                         //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                        vessel.parts[i].ResumeVelocity();
+                        //vessel.parts[i].ResumeVelocity();
                     }
                 }
             }
@@ -102,7 +92,7 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                     vessel.parts[i].partTransform.position = position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
                     //Always run this at the end!!
                     //Otherwise during docking, the orbital speeds are not displayed correctly and you won't be able to dock
-                    vessel.parts[i].ResumeVelocity();
+                    //vessel.parts[i].ResumeVelocity();
                 }
             }
         }
