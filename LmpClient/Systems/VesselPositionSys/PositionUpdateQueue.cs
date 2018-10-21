@@ -1,6 +1,6 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpCommon.Message.Data.Vessel;
+using System;
 
 namespace LmpClient.Systems.VesselPositionSys
 {
@@ -12,6 +12,7 @@ namespace LmpClient.Systems.VesselPositionSys
             value.SubspaceId = msgData.SubspaceId;
             value.BodyIndex = msgData.BodyIndex;
             value.HeightFromTerrain = msgData.HeightFromTerrain;
+            value.PingMs = msgData.PingMs;
             value.Landed = msgData.Landed;
             value.Splashed = msgData.Splashed;
             value.GameTimeStamp = msgData.GameTime;
