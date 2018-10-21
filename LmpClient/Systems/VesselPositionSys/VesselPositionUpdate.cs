@@ -313,7 +313,7 @@ namespace LmpClient.Systems.VesselPositionSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp;
+            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs);
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
@@ -335,8 +335,9 @@ namespace LmpClient.Systems.VesselPositionSys
                  *
                  */
 
-                if (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs))
+                if (TimeDifference > 0)
                 {
+                    //This means that we are behind and we must consume the message fast
                     CurrentFrame = float.MaxValue;
                 }
 
@@ -359,7 +360,7 @@ namespace LmpClient.Systems.VesselPositionSys
                     TimeDifference -= timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs) ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > 0 ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
 
@@ -370,7 +371,7 @@ namespace LmpClient.Systems.VesselPositionSys
         {
             //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 s
 
-            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs));
+            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference));
             var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
 
             //We cannot fix errors that are below the delta time!
