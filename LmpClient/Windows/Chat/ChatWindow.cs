@@ -22,7 +22,6 @@ namespace LmpClient.Windows.Chat
         
         private static Vector2 _chatScrollPos;
 
-        private GUIStyle HighlightStyle;
         private static GUIStyle _playerNameStyle;
         private static GUIStyle _chatMessageStyle;
 
@@ -39,13 +38,6 @@ namespace LmpClient.Windows.Chat
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
             
             _chatScrollPos = new Vector2(0, 0);
-            HighlightStyle = new GUIStyle(GUI.skin.button)
-            {
-                normal = { textColor = Color.red },
-                active = { textColor = Color.red },
-                hover = { textColor = Color.red }
-            };
-
             _playerNameStyle = new GUIStyle(GUI.skin.label)
             {
                 fontStyle = FontStyle.Normal,
