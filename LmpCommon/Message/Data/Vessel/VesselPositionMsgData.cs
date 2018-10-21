@@ -12,6 +12,7 @@ namespace LmpCommon.Message.Data.Vessel
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often.
         public int BodyIndex;
         public int SubspaceId;
+        public float PingMs;
         public float HeightFromTerrain;
         public bool Landed;
         public bool Splashed;
@@ -30,6 +31,7 @@ namespace LmpCommon.Message.Data.Vessel
 
             lidgrenMsg.Write(BodyIndex);
             lidgrenMsg.Write(SubspaceId);
+            lidgrenMsg.Write(PingMs);
             lidgrenMsg.Write(HeightFromTerrain);
             lidgrenMsg.Write(Landed);
             lidgrenMsg.Write(Splashed);
@@ -57,6 +59,7 @@ namespace LmpCommon.Message.Data.Vessel
 
             BodyIndex = lidgrenMsg.ReadInt32();
             SubspaceId = lidgrenMsg.ReadInt32();
+            PingMs = lidgrenMsg.ReadFloat();
             HeightFromTerrain = lidgrenMsg.ReadFloat();
             Landed = lidgrenMsg.ReadBoolean();
             Splashed = lidgrenMsg.ReadBoolean();
@@ -80,7 +83,7 @@ namespace LmpCommon.Message.Data.Vessel
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(float) + sizeof(bool) * 3 + sizeof(double) * 3 * 3 + 
+            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(float) * 2 + sizeof(bool) * 3 + sizeof(double) * 3 * 3 + 
                 sizeof(float) * 4 * 1 + sizeof(double) * 8;
         }
     }
