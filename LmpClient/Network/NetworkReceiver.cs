@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpClient.Systems.Admin;
 using LmpClient.Systems.Chat;
 using LmpClient.Systems.CraftLibrary;
@@ -48,6 +46,8 @@ using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using LmpCommon.Time;
+using System;
+using System.Threading;
 
 namespace LmpClient.Network
 {
@@ -68,10 +68,10 @@ namespace LmpClient.Network
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.DebugMessage:
-                                LunaLog.Log("[Lidgen DEBUG] " + msg.ReadString());
+                                LunaLog.Log($"[Lidgren DEBUG] {msg.ReadString()}");
                                 break;
                             case NetIncomingMessageType.VerboseDebugMessage:
-                                LunaLog.Log("[Lidgen VERBOSE] " + msg.ReadString());
+                                LunaLog.Log($"[Lidgren VERBOSE] {msg.ReadString()}");
                                 break;
                             case NetIncomingMessageType.NatIntroductionSuccess:
                                 NetworkServerList.HandleNatIntroduction(msg);
