@@ -340,8 +340,10 @@ namespace LmpClient.Systems.VesselPositionSys
                     //This means that we are behind and we must consume the message fast
                     CurrentFrame = float.MaxValue;
                 }
-
-                ExtraInterpolationTime = Time.fixedDeltaTime;
+                else
+                {
+                    ExtraInterpolationTime = GetInterpolationFixFactor();
+                }
             }
             else
             {
