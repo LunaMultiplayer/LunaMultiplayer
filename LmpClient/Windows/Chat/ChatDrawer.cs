@@ -1,5 +1,6 @@
 ﻿using LmpClient.Localization;
 using LmpClient.Systems.Chat;
+using LmpClient.Systems.PlayerColorSys;
 using UnityEngine;
 
 namespace LmpClient.Windows.Chat
@@ -22,15 +23,27 @@ namespace LmpClient.Windows.Chat
 
         private static void DrawChatMessageBox()
         {
-            GUILayout.BeginHorizontal();
             _chatScrollPos = GUILayout.BeginScrollView(_chatScrollPos);
             GUILayout.BeginVertical();
             GUILayout.FlexibleSpace();
-            foreach (var channelMessage in ChatSystem.Singleton.ChatMessages)
-                GUILayout.Label(channelMessage);
+
+            foreach (var channelMessageTuple in ChatSystem.Singleton.ChatMessages)
+            {
+                var playerName = channelMessageTuple.Item1;
+                var chatMessage = channelMessageTuple.Item2;
+
+                _playerNameStyle.normal.textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerName);
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(playerName, _playerNameStyle);
+                // Make a separate Label for the ": " because it gives weird word wrapping if it's together with the chatMessage
+                GUILayout.Label(": ", _chatMessageStyle);
+                GUILayout.Label(chatMessage, _chatMessageStyle);
+                GUILayout.EndHorizontal();
+            }
+
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
-            GUILayout.EndHorizontal();
         }
         
         private static void DrawTextInput(bool pressedEnter)

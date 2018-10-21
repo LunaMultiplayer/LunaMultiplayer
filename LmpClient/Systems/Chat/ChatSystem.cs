@@ -15,7 +15,7 @@ namespace LmpClient.Systems.Chat
         public bool SendEventHandled { get; set; } = true;
 
         //State tracking
-        public List<string> ChatMessages { get; } = new List<string>();
+        public List<Tuple<string, string>> ChatMessages { get; } = new List<Tuple<string, string>>();
 
         #endregion
 
@@ -69,7 +69,7 @@ namespace LmpClient.Systems.Chat
                         ChatWindow.Singleton.ScrollToBottom();
                     }
 
-                    ChatMessages.Add($"{chatMsg.Item1}: {chatMsg.Item2}");
+                    ChatMessages.Add(chatMsg);
                 }
             }
         }
