@@ -1,7 +1,6 @@
 ﻿using CommNet;
 using KSP.UI.Screens;
 using LmpClient.Base;
-using LmpClient.Events;
 using LmpClient.Events.Base;
 using LmpClient.Localization;
 using LmpClient.ModuleStore;
@@ -49,7 +48,7 @@ namespace LmpClient
                     NetworkMain.ResetNetworkSystem();
                 }
                 _networkState = value;
-                NetworkEvent.onNetworkStatusChanged.Fire(value);
+                NetworkSystem.NetworkStatus = value;
             }
         }
         

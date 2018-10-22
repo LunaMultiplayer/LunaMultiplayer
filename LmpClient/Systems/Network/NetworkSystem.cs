@@ -1,5 +1,5 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
+using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Network;
 using LmpClient.Systems.Flag;
@@ -17,6 +17,7 @@ using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
 using LmpCommon.Enums;
 using LmpCommon.Time;
+using System;
 
 namespace LmpClient.Systems.Network
 {
@@ -33,8 +34,15 @@ namespace LmpClient.Systems.Network
         public NetworkSystem()
         {
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, NetworkUpdate));
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessNetworkStatusChanges));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
+
+        #endregion
+
+        #region Fields and properties
+
+        public static ClientState? NetworkStatus { private get; set; }
 
         #endregion
 
@@ -43,12 +51,24 @@ namespace LmpClient.Systems.Network
         public override string SystemName { get; } = nameof(NetworkSystem);
 
         protected override bool AlwaysEnabled => true;
-        
+
         public override int ExecutionOrder => int.MinValue;
 
         #endregion
 
-        #region Update method
+        #region Routines
+
+        /// <summary>
+        /// This routine checks if the network status has changed and triggers the event in the UNITY thread
+        /// </summary>
+        private static void ProcessNetworkStatusChanges()
+        {
+            if (NetworkStatus.HasValue)
+            {
+                NetworkEvent.onNetworkStatusChanged.Fire(NetworkStatus.Value);
+                NetworkStatus = null;
+            }
+        }
 
         private void NetworkUpdate()
         {
