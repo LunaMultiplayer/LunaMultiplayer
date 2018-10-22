@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.Lock;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LmpClient.Systems.Asteroid
 {
@@ -27,6 +27,7 @@ namespace LmpClient.Systems.Asteroid
             GameEvents.onLevelWasLoadedGUIReady.Add(AsteroidEvents.LevelLoaded);
             TrackingEvent.onStartTrackingAsteroid.Add(AsteroidEvents.StartTrackingAsteroid);
             TrackingEvent.onStopTrackingAsteroid.Add(AsteroidEvents.StopTrackingAsteroid);
+            GameEvents.onNewVesselCreated.Add(AsteroidEvents.NewVesselCreated);
         }
 
         protected override void OnDisabled()
@@ -37,6 +38,7 @@ namespace LmpClient.Systems.Asteroid
             GameEvents.onLevelWasLoadedGUIReady.Remove(AsteroidEvents.LevelLoaded);
             TrackingEvent.onStartTrackingAsteroid.Remove(AsteroidEvents.StartTrackingAsteroid);
             TrackingEvent.onStopTrackingAsteroid.Remove(AsteroidEvents.StopTrackingAsteroid);
+            GameEvents.onNewVesselCreated.Remove(AsteroidEvents.NewVesselCreated);
         }
 
         #endregion

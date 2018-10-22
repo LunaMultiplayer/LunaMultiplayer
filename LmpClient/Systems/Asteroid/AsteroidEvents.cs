@@ -36,5 +36,14 @@ namespace LmpClient.Systems.Asteroid
             LunaLog.Log($"Stopped to track asteroid {asteroid.id}");
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid);
         }
+        
+        /// <summary>
+        /// This event is called when accepting a recoverasset contract or when an asteroid spawns
+        /// </summary>
+        public void NewVesselCreated(Vessel vessel)
+        {
+            if (AsteroidSystem.Singleton.VesselIsAsteroid(vessel))
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
+        }
     }
 }
