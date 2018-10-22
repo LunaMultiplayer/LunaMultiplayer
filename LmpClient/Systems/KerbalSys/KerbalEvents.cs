@@ -140,7 +140,8 @@ namespace LmpClient.Systems.KerbalSys
             if (dyingVessel == null) return;
 
             //Only send the vessel remove msg if we own the unloaded update lock
-            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) || dyingVessel.id == _recoveringTerminatingVesselId)
+            if (!LockSystem.LockQuery.UnloadedUpdateLockExists(dyingVessel.id) ||
+                LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) || dyingVessel.id == _recoveringTerminatingVesselId)
             {
                 foreach (var protoCrew in dyingVessel.GetVesselCrew())
                 {
