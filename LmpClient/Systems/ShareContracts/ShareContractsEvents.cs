@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Contracts.Templates;
 using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
@@ -103,6 +104,13 @@ namespace LmpClient.Systems.ShareContracts
             if (!LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
             {
                 //We don't have the contract lock so remove the contract that spawned
+                contract.Kill();
+                return;
+            }
+
+            if(contract.GetType() == typeof(RecoverAsset))
+            {
+                //We don't support rescue contracts. See: https://github.com/LunaMultiplayer/LunaMultiplayer/issues/226#issuecomment-431831526
                 contract.Kill();
                 return;
             }
