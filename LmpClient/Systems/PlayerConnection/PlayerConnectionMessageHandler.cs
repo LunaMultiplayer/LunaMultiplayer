@@ -1,13 +1,12 @@
-﻿using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
-using LmpClient.Systems.Chat;
 using LmpClient.Systems.Status;
 using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
 using LmpCommon.Message.Data.PlayerConnection;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.PlayerConnection
 {
@@ -23,13 +22,13 @@ namespace LmpClient.Systems.PlayerConnection
             switch (msgData.PlayerConnectionMessageType)
             {
                 case PlayerConnectionMessageType.Join:
-                    ChatSystem.Singleton.PrintToChat($"{playerName} has joined the server");
+                    LunaScreenMsg.PostScreenMessage($"{playerName} has joined the server", 3f, ScreenMessageStyle.UPPER_CENTER);
                     CommonUtil.Reserve20Mb();
                     break;
                 case PlayerConnectionMessageType.Leave:
                     WarpSystem.Singleton.RemovePlayer(playerName);
                     StatusSystem.Singleton.RemovePlayer(playerName);
-                    ChatSystem.Singleton.PrintToChat($"{playerName} has left the server");
+                    LunaScreenMsg.PostScreenMessage($"{playerName} has left the server", 3f, ScreenMessageStyle.UPPER_CENTER);
                     break;
             }
         }
