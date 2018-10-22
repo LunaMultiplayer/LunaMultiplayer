@@ -33,6 +33,11 @@ namespace LmpClient.Systems.VesselImmortalSys
             SpectateEvent.onFinishedSpectating.Add(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Add(VesselImmortalEvents.OnLockAcquire);
             LockEvent.onLockReleaseUnityThread.Add(VesselImmortalEvents.OnLockRelease);
+
+            foreach (var vessel in FlightGlobals.VesselsLoaded)
+            {
+                SetImmortalStateBasedOnLock(vessel);
+            }
         }
 
         protected override void OnDisabled()
@@ -46,6 +51,11 @@ namespace LmpClient.Systems.VesselImmortalSys
             SpectateEvent.onFinishedSpectating.Remove(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquireUnityThread.Remove(VesselImmortalEvents.OnLockAcquire);
             LockEvent.onLockReleaseUnityThread.Remove(VesselImmortalEvents.OnLockRelease);
+
+            foreach (var vessel in FlightGlobals.VesselsLoaded)
+            {
+                vessel.SetImmortal(false);
+            }
         }
 
         #endregion
