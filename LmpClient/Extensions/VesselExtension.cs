@@ -50,8 +50,23 @@ namespace LmpClient.Extensions
 
             return null;
         }
-
         
+        public static void RemoveAllCrew(this Vessel vessel)
+        {
+            foreach (var part in vessel.Parts)
+            {
+                foreach (var crew in part.protoModuleCrew)
+                {
+                    vessel.RemoveCrew(crew);
+                }
+            }
+
+            foreach (var crew in vessel.GetVesselCrew())
+            {
+                vessel.RemoveCrew(crew);
+            }
+        }
+
         /// <summary>
         /// Set all vessel parts to unbreakable or not (makes the vessel immortal or not)
         /// </summary>

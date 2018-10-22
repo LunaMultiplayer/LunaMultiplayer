@@ -35,9 +35,8 @@
 
         public static void RemoveCrew(this Part part, ProtoCrewMember crew)
         {
-            crew.UnregisterExperienceTraits(part);
+            part.RemoveCrewmember(crew);
             part.protoModuleCrew.Remove(crew);
-            part.vessel.RemoveCrew(crew);
             if (part.internalModel != null)
             {
                 part.internalModel.UnseatKerbal(crew);
