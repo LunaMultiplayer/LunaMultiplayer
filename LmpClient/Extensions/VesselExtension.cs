@@ -65,6 +65,8 @@ namespace LmpClient.Extensions
             {
                 vessel.RemoveCrew(crew);
             }
+
+            vessel.DespawnCrew();
         }
 
         /// <summary>

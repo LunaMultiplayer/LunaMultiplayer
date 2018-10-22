@@ -5,6 +5,7 @@ using LmpClient.Systems.Flag;
 using LmpClient.Systems.KscScene;
 using LmpClient.Systems.PlayerColorSys;
 using LmpClient.Systems.VesselPositionSys;
+using LmpClient.Utilities;
 using System;
 using UniLinq;
 using Object = UnityEngine.Object;
@@ -125,27 +126,14 @@ namespace LmpClient.VesselUtilities
             if (HighLogic.CurrentGame?.flightState == null)
                 return false;
 
-            var reloadingOwnVessel = FlightGlobals.ActiveVessel && vesselProto.vesselID == FlightGlobals.ActiveVessel.id && HighLogic.LoadedSceneIsFlight;
+            var reloadingOwnVessel = FlightGlobals.ActiveVessel && vesselProto.vesselID == FlightGlobals.ActiveVessel.id;
 
             //In case the vessel exists, silently remove them from unity and recreate it again
             var existingVessel = FlightGlobals.fetch.LmpFindVessel(vesselProto.vesselID);
             if (existingVessel != null)
             {
-                if (reloadingOwnVessel)
-                {
-                    foreach (var part in existingVessel.Parts)
-                    {
-                        if (part.protoModuleCrew.Any())
-                        {
-                            //Serialize to avoid modifying the collection
-                            var crewMembers = part.protoModuleCrew.ToArray();
-                            foreach (var crew in crewMembers)
-                            {
-                                part.RemoveCrew(crew);
-                            }
-                        }
-                    }
-                }
+                if(reloadingOwnVessel)
+                    existingVessel.RemoveAllCrew();
 
                 FlightGlobals.RemoveVessel(existingVessel);
                 foreach (var part in existingVessel.parts)
@@ -196,26 +184,25 @@ namespace LmpClient.VesselUtilities
                 //Do not do the setting of the active vessel manually, too many systems are dependant of the events triggered by KSP
                 FlightGlobals.ForceSetActiveVessel(vesselProto.vesselRef);
 
-                if (vesselProto.vesselRef.GetCrewCount() > 0)
+                vesselProto.vesselRef.SpawnCrew();
+                foreach (var crew in vesselProto.vesselRef.GetVesselCrew())
                 {
-                    foreach (var part in vesselProto.vesselRef.Parts)
-                    {
-                        if (part.protoModuleCrew.Any())
-                        {
-                            //Serialize to avoid modifying the collection
-                            var crewMembers = part.protoModuleCrew.ToArray();
-                            foreach (var crew in crewMembers)
-                            {
-                                part.RemoveCrew(crew);
-                                part.AddCrew(crew);
-                            }
-                        }
-                    }
-
-                    vesselProto.vesselRef.SpawnCrew();
-                    if (KerbalPortraitGallery.Instance)
-                        KerbalPortraitGallery.Instance.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel);
+                    if (crew.KerbalRef)
+                        crew.KerbalRef.state = Kerbal.States.ALIVE;
                 }
+
+                CoroutineUtil.StartDelayedRoutine("ReloadOwnVessel", () =>
+                {
+                    if (KerbalPortraitGallery.Instance.ActiveCrew.Count == 0)
+                    {
+                        FlightGlobals.ActiveVessel.SpawnCrew();
+                        foreach (var kerbal in KerbalPortraitGallery.Instance.ActiveCrew)
+                        {
+                            kerbal.state = Kerbal.States.ALIVE;
+                        }
+                        KerbalPortraitGallery.Instance.StartRefresh(FlightGlobals.ActiveVessel);
+                    }
+                }, 0.5f);
             }
 
             return true;
