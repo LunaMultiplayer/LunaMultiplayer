@@ -57,7 +57,7 @@ namespace LmpClient.Systems.VesselLockSys
             }
 
             if (data == GameScenes.FLIGHT || data == GameScenes.TRACKSTATION)
-            {                
+            {
                 //If we are going to flight scene or tracking station try to get as many unloaded update locks as possible
                 foreach (var vessel in FlightGlobals.Vessels)
                 {
@@ -92,35 +92,41 @@ namespace LmpClient.Systems.VesselLockSys
             switch (lockDefinition.Type)
             {
                 case LockType.Control:
+                    KscSceneSystem.Singleton.RefreshTrackingStationVessels();
+                    if (lockDefinition.PlayerName == SettingsSystem.CurrentSettings.PlayerName)
                     {
-                        KscSceneSystem.Singleton.RefreshTrackingStationVessels();
-
-                        if (lockDefinition.PlayerName == SettingsSystem.CurrentSettings.PlayerName)
-                        {
-                            VesselLockSystem.Singleton.StopSpectating();
-                            LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
-                            LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
-                            LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
-
-                            //As we got control of that vessel, remove its FS and position updates
-                            VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
-                        }
-                        else if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
-                        {
-                            System.StartSpectating(lockDefinition.VesselId);
-                        }
-
-                        break;
-                    }
-                case LockType.Update:
-                    {
-                        if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
-                            return;
-
+                        VesselLockSystem.Singleton.StopSpectating();
+                        LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
                         LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                         LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
-                        break;
+
+                        //As we got the lock of that vessel, remove its FS and position updates
+                        VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                     }
+                    else if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
+                    {
+                        System.StartSpectating(lockDefinition.VesselId);
+                    }
+                    break;
+                case LockType.Update:
+                    if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
+                        return;
+
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
+                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+
+                    //As we got the lock of that vessel, remove its FS and position updates
+                    VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
+
+                    break;
+                case LockType.UnloadedUpdate:
+                    if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
+                        return;
+
+                    //As we got the lock of that vessel, remove its FS and position updates
+                    VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
+
+                    break;
             }
         }
 
