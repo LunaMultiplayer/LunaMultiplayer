@@ -116,6 +116,12 @@ namespace LmpClient.Systems.VesselLockSys
             LockSystem.Singleton.ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
 
+            foreach (var vessel in FlightGlobals.Vessels)
+            {
+                if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id);
+            }
+
             if (HighLogic.CurrentGame?.Parameters?.Flight != null)
                 HighLogic.CurrentGame.Parameters.Flight.CanEVA = true;
 
