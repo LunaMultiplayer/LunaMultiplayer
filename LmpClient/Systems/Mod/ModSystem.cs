@@ -133,6 +133,8 @@ namespace LmpClient.Systems.Mod
             var missingPartsCount = 0;
             LunaLog.Log("[LMP]: Missing parts start");
             var modFile = new ModControlStructure();
+            modFile.SetDefaultAllowedParts();
+
             var missingParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name));
 
             foreach (var part in missingParts)
