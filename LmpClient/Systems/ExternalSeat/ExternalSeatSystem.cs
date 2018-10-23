@@ -23,6 +23,7 @@ namespace LmpClient.Systems.ExternalSeat
             base.OnEnabled();
             ExternalSeatEvent.onExternalSeatBoard.Add(ExternalSeatEvents.ExternalSeatBoard);
             ExternalSeatEvent.onExternalSeatUnboard.Add(ExternalSeatEvents.ExternalSeatUnboard);
+            EvaEvent.onCrewEvaReady.Add(ExternalSeatEvents.CrewEvaReady);
         }
 
         protected override void OnDisabled()
@@ -30,6 +31,7 @@ namespace LmpClient.Systems.ExternalSeat
             base.OnDisabled();
             ExternalSeatEvent.onExternalSeatBoard.Remove(ExternalSeatEvents.ExternalSeatBoard);
             ExternalSeatEvent.onExternalSeatUnboard.Remove(ExternalSeatEvents.ExternalSeatUnboard);
+            EvaEvent.onCrewEvaReady.Remove(ExternalSeatEvents.CrewEvaReady);
         }
 
         #endregion
