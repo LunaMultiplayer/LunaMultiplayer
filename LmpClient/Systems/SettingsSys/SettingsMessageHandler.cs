@@ -1,10 +1,10 @@
-﻿using System.Collections.Concurrent;
-using CommNet;
+﻿using CommNet;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Settings;
 using LmpCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.SettingsSys
 {
@@ -27,7 +27,6 @@ namespace LmpClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
             SettingsSystem.ServerSettings.VesselUpdatesMsInterval = msgData.VesselUpdatesMsInterval;
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval = msgData.SecondaryVesselUpdatesMsInterval;
-            SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
             SettingsSystem.ServerSettings.MinScreenshotIntervalMs = msgData.MinScreenshotIntervalMs;
             SettingsSystem.ServerSettings.MaxScreenshotWidth = msgData.MaxScreenshotWidth;

@@ -61,7 +61,6 @@ namespace LmpCommon.Message.Data.Settings
         public bool PressurePartLimits;
         public float KerbalGToleranceMult;
         public bool AllowNegativeCurrency;
-        public string WarpMaster;
         public int MinScreenshotIntervalMs;
         public int MaxScreenshotWidth;
         public int MaxScreenshotHeight;
@@ -123,7 +122,6 @@ namespace LmpCommon.Message.Data.Settings
             lidgrenMsg.Write(PressurePartLimits);
             lidgrenMsg.Write(KerbalGToleranceMult);
             lidgrenMsg.Write(AllowNegativeCurrency);
-            lidgrenMsg.Write(WarpMaster);
             lidgrenMsg.Write(MinScreenshotIntervalMs);
             lidgrenMsg.Write(MaxScreenshotWidth);
             lidgrenMsg.Write(MaxScreenshotHeight);
@@ -184,7 +182,6 @@ namespace LmpCommon.Message.Data.Settings
             PressurePartLimits = lidgrenMsg.ReadBoolean();
             KerbalGToleranceMult = lidgrenMsg.ReadFloat();
             AllowNegativeCurrency = lidgrenMsg.ReadBoolean();
-            WarpMaster = lidgrenMsg.ReadString();
             MinScreenshotIntervalMs = lidgrenMsg.ReadInt32();
             MaxScreenshotWidth = lidgrenMsg.ReadInt32();
             MaxScreenshotHeight = lidgrenMsg.ReadInt32();
@@ -194,7 +191,7 @@ namespace LmpCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) +
-                sizeof(bool) * 22 + sizeof(int) * 7 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 22 + sizeof(int) * 7 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount();
         }
     }
 }

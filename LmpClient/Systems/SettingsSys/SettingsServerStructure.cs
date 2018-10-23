@@ -20,7 +20,6 @@ namespace LmpClient.Systems.SettingsSys
         public float SafetyBubbleDistance { get; set; } = 100f;
         public int VesselUpdatesMsInterval { get; set; }
         public int SecondaryVesselUpdatesMsInterval { get; set; }
-        public string WarpMaster { get; set; }
         public int MinScreenshotIntervalMs { get; set; }
         public int MaxScreenshotWidth { get; set; }
         public int MaxScreenshotHeight { get; set; }
