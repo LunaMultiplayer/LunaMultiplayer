@@ -323,6 +323,7 @@
     <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupSystem.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdate.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateQueue.cs" />
+    <Compile Include="Utilities\EvaReady.cs" />
     <Compile Include="Utilities\UpdateHandler.cs" />
     <Compile Include="Utilities\CompatibilityChecker.cs" />
     <Compile Include="Utilities\CoroutineUtil.cs" />

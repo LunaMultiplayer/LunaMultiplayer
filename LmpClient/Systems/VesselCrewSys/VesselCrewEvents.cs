@@ -1,11 +1,10 @@
 ﻿using LmpClient.Base;
-using LmpClient.Events;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
+using LmpClient.Utilities;
 using System;
-using System.Collections;
 
 namespace LmpClient.Systems.VesselCrewSys
 {
@@ -30,19 +29,7 @@ namespace LmpClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {
-            MainSystem.Singleton.StartCoroutine(OnCrewEvaReady(data.to.FindModuleImplementing<KerbalEVA>()));
-
-            IEnumerator OnCrewEvaReady(KerbalEVA eva)
-            {
-                while (eva != null && !eva.Ready)
-                {
-                    yield return null;
-                }
-                if (eva != null && eva.Ready)
-                {
-                    EvaEvent.onCrewEvaReady.Fire(eva.vessel);
-                }
-            }
+            EvaReady.FireOnCrewEvaReady(data.to.FindModuleImplementing<KerbalEVA>());
         }
 
         /// <summary>
