@@ -179,7 +179,6 @@ namespace LmpClient.Base
             }
         }
 
-
         protected abstract void DrawWindowContent(int windowId);
 
         protected virtual void OnCloseButton()
