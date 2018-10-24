@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-16"?>
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Options</Title>
+  <Title>Optionen</Title>
   <Language>Sprache:</Language>
   <Color>Spielerfarbe:</Color>
   <Red>R:</Red>
@@ -20,5 +20,5 @@
   <AutoExpandMtu>Automatisches Erweitern der MTU</AutoExpandMtu>
   <ConnectionTimeout>Verbindungsabbruch, Timeout (Standard: 15):</ConnectionTimeout>
   <GeneralSettings>Generelle Einstellungen</GeneralSettings>
-  <IgnoreSyncChecks>Ignoriere die Synchronisations-Prüfung</IgnoreSyncChecks>
+  <IgnoreSyncChecks>Ignoriere die Zeitraffer-Synchronisations-Prüfung</IgnoreSyncChecks>
 </OptionsWindowText>
