@@ -13,7 +13,7 @@ namespace Server.Command.Command
 {
     public class SetScienceCommand : SimpleCommand
     {
-        //Executes the RestartServerCommand
+        //Executes the SetScienceCommand
         public override bool Execute(string commandArgs)
         {
             //Check parameter
