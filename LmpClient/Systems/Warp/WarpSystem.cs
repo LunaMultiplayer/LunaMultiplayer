@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using FinePrint.Utilities;
+﻿using FinePrint.Utilities;
 using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Localization;
+using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
 using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UniLinq;
 
 namespace LmpClient.Systems.Warp
@@ -95,6 +96,7 @@ namespace LmpClient.Systems.Warp
             if (SettingsSystem.ServerSettings.WarpMode != WarpMode.None)
             {
                 SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, CheckWarpStopped));
+                SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, WarpIfSpectatingToController));
                 SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckStuckAtWarp));
             }
         }
@@ -102,6 +104,21 @@ namespace LmpClient.Systems.Warp
         #endregion
 
         #region Update methods
+
+        /// <summary>
+        /// If we are spectating this routine checks if the controller has a different subspace and then we warp to it
+        /// </summary>
+        private void WarpIfSpectatingToController()
+        {
+            if (VesselCommon.IsSpectating)
+            {
+                //Do auto sync to subspace of target the player is spectating
+                var targetPlayerSubspace = Singleton.GetPlayerSubspace(LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id));
+                if (targetPlayerSubspace != -1 && CurrentSubspace != targetPlayerSubspace)
+                    Singleton.SyncToSubspace(targetPlayerSubspace);
+            }
+        }
+
 
         /// <summary>
         /// This routine checks if we are stuck at warping and if that's the case it request a new subspace again
@@ -164,6 +181,12 @@ namespace LmpClient.Systems.Warp
             if (WaitingSubspaceIdFromServer && TimeWarp.CurrentRateIndex > 0)
             {
                 DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
+                return false;
+            }
+
+            if (VesselCommon.IsSpectating && TimeWarp.CurrentRateIndex > 0)
+            {
+                DisplayMessage(LocalizationContainer.ScreenText.CannotWarpWhileSpectating, 5f);
                 return false;
             }
 

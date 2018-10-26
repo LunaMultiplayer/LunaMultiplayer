@@ -13,6 +13,7 @@
         public string SpectatingRemoved { get; set; } = "The vessel you were spectating was removed";
         public string WarpDisabled { get; set; } = "Cannot warp, warping is disabled on this server";
         public string WaitingSubspace { get; set; } = "Cannot warp, waiting subspace id from the server";
+        public string CannotWarpWhileSpectating { get; set; } = "Cannot warp while spectating";
         public string ScreenshotInterval { get; set; } = "Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment";
         public string CraftLibraryInterval { get; set; } = "Interval between craft library requests is $1 seconds. Cannot process the request at this moment";
         public string ScreenshotTaken { get; set; } = "Screenshot uploaded!";

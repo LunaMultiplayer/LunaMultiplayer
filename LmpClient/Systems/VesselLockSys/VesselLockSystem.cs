@@ -75,9 +75,6 @@ namespace LmpClient.Systems.VesselLockSys
                 if (_spectateMessage != null)
                     _spectateMessage.duration = 0f;
                 _spectateMessage = LunaScreenMsg.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
-                //Do auto sync to subspace of target the player is spectating
-                var targetPlayerSubspace = Warp.WarpSystem.Singleton.GetPlayerSubspace($"{GetVesselOwner}");
-                Warp.WarpSystem.Singleton.SyncToSubspace(targetPlayerSubspace);
             }
             else
             {
