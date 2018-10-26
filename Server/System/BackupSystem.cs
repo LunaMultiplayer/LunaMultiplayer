@@ -12,10 +12,18 @@ namespace Server.System
         {
             while (ServerContext.ServerRunning)
             {
-                LunaLog.Debug("Performing backups...");
-                VesselStoreSystem.BackupVessels();
-                WarpSystem.SaveLatestSubspaceToFile();
-                ScenarioStoreSystem.BackupScenarios();
+                if (ServerContext.PlayerCount > 0)
+                {
+                    LunaLog.Debug("Performing backups...");
+                    VesselStoreSystem.BackupVessels();
+                    WarpSystem.SaveLatestSubspaceToFile();
+                    ScenarioStoreSystem.BackupScenarios();
+                }
+                else
+                {
+                    LunaLog.Debug("Skipping backups: No players online.");
+                }
+
                 try
                 {
                     await Task.Delay(IntervalSettings.SettingsStore.BackupIntervalMs, token);
