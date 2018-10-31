@@ -17,7 +17,7 @@
   <AdminIcon>Admin</AdminIcon>
   <KickIcon>Expulser</KickIcon>
   <BanIcon>Bannir</BanIcon>
-  <DekesslerIcon>Dekessler</DekesslerIcon>
-  <NukeIcon>Nuke KSC</NukeIcon>
+  <DekesslerIcon>Dekessler (efface les débris)</DekesslerIcon>
+  <NukeIcon>Nuke CSK (efface les véhicules présents au CSK)</NukeIcon>
   <RestartServerIcon>Redémarrer le serveur</RestartServerIcon>
 </ButtonTooltips>
