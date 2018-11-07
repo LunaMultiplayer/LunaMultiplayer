@@ -100,6 +100,7 @@ namespace LmpClient.Windows.Debug
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
 
+                        StringBuilder.AppendLine($"Id: {ourVessel.id}");
                         StringBuilder.AppendLine($"Situation: {ourVessel.situation}");
                         StringBuilder.AppendLine($"Orbit Pos: {ourVessel.orbit.pos}");
                         StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}");
@@ -130,6 +131,7 @@ namespace LmpClient.Windows.Debug
 
                         if (vessel.id != FlightGlobals.ActiveVessel.id)
                         {
+                            StringBuilder.AppendLine($"Id: {vessel.id}");
                             StringBuilder.AppendLine($"Situation: {vessel.situation}");
                             StringBuilder.AppendLine($"Orbit Pos: {vessel.orbit.pos}");
                             StringBuilder.AppendLine($"Transform Pos: {vessel.vesselTransform.position}");
