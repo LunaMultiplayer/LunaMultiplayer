@@ -50,7 +50,7 @@ namespace LmpClient.Extensions
 
             return null;
         }
-        
+
         public static void RemoveAllCrew(this Vessel vessel)
         {
             foreach (var part in vessel.Parts)
@@ -76,19 +76,24 @@ namespace LmpClient.Extensions
         {
             if (vessel == null) return;
 
+            if (vessel.orbitDriver)
+            { 
+                if (immortal)
+                {
+                    vessel.orbitDriver.SetOrbitMode(vessel.LandedOrSplashed ? OrbitDriver.UpdateMode.IDLE : OrbitDriver.UpdateMode.UPDATE);
+                }
+                else if (!vessel.packed)
+                {
+                    vessel.orbitDriver.SetOrbitMode(OrbitDriver.UpdateMode.TRACK_Phys);
+                }
+            }
+
             if (vessel.rootPart)
             {
                 var isCurrentlyImmortal = float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
                 if (isCurrentlyImmortal == immortal) return;
             }
-
-            LunaLog.Log($"Making vessel {vessel.id} {(immortal ? "immortal" : "mortal")}");
-
-            foreach (var part in vessel.Parts)
-            {
-                part.SetImmortal(immortal);
-            }
-
+            
             var buoyancy = vessel.GetComponent<PartBuoyancy>();
             if (buoyancy)
             {
@@ -105,6 +110,15 @@ namespace LmpClient.Extensions
             if (flightIntegrator)
             {
                 flightIntegrator.enabled = !immortal;
+            }
+
+            if (vessel.loaded)
+            {
+                LunaLog.Log($"Making vessel {vessel.id} {(immortal ? "immortal" : "mortal")}");
+                foreach (var part in vessel.Parts)
+                {
+                    part.SetImmortal(immortal);
+                }
             }
 
             if (immortal)
