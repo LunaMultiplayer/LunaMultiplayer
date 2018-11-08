@@ -1,6 +1,6 @@
-﻿using System;
-using LmpClient.Extensions;
+﻿using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
+using System;
 
 namespace LmpClient.Systems.VesselUpdateSys
 {
@@ -42,17 +42,21 @@ namespace LmpClient.Systems.VesselUpdateSys
             if (!VesselCommon.DoVesselChecks(vessel.id))
                 return;
 
-            var previousSituation = vessel.situation;
             var previousStage = vessel.currentStage;
 
             UpdateVesselFields(vessel);
             UpdateProtoVesselValues(vessel.protoVessel);
 
-            //Reload the vessel when the situation changes and vessel is unloaded.
-            //This will also fix the Landed and Splashed fields
-            if (!vessel.loaded && previousSituation != (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation))
+            if (vessel.orbitDriver)
             {
-                VesselLoader.LoadVessel(vessel.protoVessel);
+                if (vessel.situation < Vessel.Situations.FLYING && vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.IDLE)
+                {
+                    vessel.orbitDriver.SetOrbitMode(OrbitDriver.UpdateMode.IDLE);
+                }
+                else if (vessel.situation >= Vessel.Situations.FLYING && vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+                {
+                    vessel.orbitDriver.SetOrbitMode(OrbitDriver.UpdateMode.UPDATE);
+                }
             }
 
             //Trigger a reload when staging!
@@ -68,13 +72,9 @@ namespace LmpClient.Systems.VesselUpdateSys
 
             vessel.protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
 
-            //Only change this value if vessel is loaded. When vessel is not loaded we reload it
-            if (vessel.loaded)
-            {
-                vessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
-                vessel.Landed = Landed;
-                vessel.Splashed = Splashed;
-            }
+            vessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), Situation);
+            vessel.Landed = Landed;
+            vessel.Splashed = Splashed;
 
             vessel.landedAt = LandedAt;
             vessel.displaylandedAt = DisplayLandedAt;
