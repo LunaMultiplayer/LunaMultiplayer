@@ -1,6 +1,5 @@
 ﻿using Harmony;
-using LmpClient.Systems.Lock;
-using LmpClient.Systems.SettingsSys;
+using LmpClient.Extensions;
 using LmpCommon.Enums;
 using UnityEngine;
 
@@ -24,11 +23,7 @@ namespace LmpClient.Harmony
             var crashingVessel = c.gameObject.GetComponentUpwards<Part>()?.vessel;
             if (crashingVessel != null)
             {
-                if (crashingVessel.rootPart != null)
-                    return !float.IsPositiveInfinity(crashingVessel.rootPart.crashTolerance);
-
-                if (!LockSystem.LockQuery.UpdateLockExists(crashingVessel.id)) return true;
-                return LockSystem.LockQuery.UpdateLockBelongsToPlayer(crashingVessel.id, SettingsSystem.CurrentSettings.PlayerName);
+                return !crashingVessel.IsImmortal();
             }
 
             return true;

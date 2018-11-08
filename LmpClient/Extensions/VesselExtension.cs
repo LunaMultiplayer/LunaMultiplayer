@@ -1,4 +1,6 @@
 ﻿using LmpClient.Events;
+using LmpClient.Systems.Lock;
+using LmpClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LmpClient.Extensions
@@ -67,6 +69,16 @@ namespace LmpClient.Extensions
             }
 
             vessel.DespawnCrew();
+        }
+
+        public static bool IsImmortal(this Vessel vessel)
+        {
+            if (vessel.rootPart)
+                return float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
+
+            if (!LockSystem.LockQuery.UpdateLockExists(vessel.id)) return false;
+
+            return !LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName);
         }
 
         /// <summary>
