@@ -88,18 +88,6 @@ namespace LmpClient.Extensions
         {
             if (vessel == null) return;
 
-            if (vessel.orbitDriver)
-            { 
-                if (immortal)
-                {
-                    vessel.orbitDriver.SetOrbitMode(vessel.LandedOrSplashed ? OrbitDriver.UpdateMode.IDLE : OrbitDriver.UpdateMode.UPDATE);
-                }
-                else if (!vessel.packed)
-                {
-                    vessel.orbitDriver.SetOrbitMode(OrbitDriver.UpdateMode.TRACK_Phys);
-                }
-            }
-
             if (vessel.rootPart)
             {
                 var isCurrentlyImmortal = float.IsPositiveInfinity(vessel.rootPart.crashTolerance);

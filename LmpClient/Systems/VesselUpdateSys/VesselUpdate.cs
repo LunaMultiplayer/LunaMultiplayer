@@ -47,7 +47,7 @@ namespace LmpClient.Systems.VesselUpdateSys
             UpdateVesselFields(vessel);
             UpdateProtoVesselValues(vessel.protoVessel);
 
-            if (vessel.orbitDriver)
+            if (vessel.orbitDriver && !vessel.loaded)
             {
                 if (vessel.situation < Vessel.Situations.FLYING && vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.IDLE)
                 {
