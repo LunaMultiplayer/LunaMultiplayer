@@ -14,9 +14,9 @@
   <GenerateLmpModControl>Générer le fichier serveur "LMPModControl.xml"</GenerateLmpModControl>
   <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
   <NetworkSettings>Paramètres du réseau</NetworkSettings>
-  <CannotChangeWhileConnected>Impossible de modifier ces valeurs lorsque vous êtes connecté</CannotChangeWhileConnected>
+  <CannotChangeWhileConnected>Impossible de modifier ces valeurs lorsque vous êtes connecté.</CannotChangeWhileConnected>
   <ResetNetwork>Réinitialisation du réseau</ResetNetwork>
-  <Mtu>MTU (défaut : 1408):</Mtu>
+  <Mtu>MTU (défaut : 1408) :</Mtu>
   <AutoExpandMtu>Extension automatique du MTU</AutoExpandMtu>
   <ConnectionTimeout>Délai de connexion (défaut : 15):</ConnectionTimeout>
   <GeneralSettings>Paramètres généraux</GeneralSettings>
