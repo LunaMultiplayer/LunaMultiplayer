@@ -11,14 +11,14 @@
   <SpectatingRemoved>Le vaisseau que vous observiez a été supprimé.</SpectatingRemoved>
   <WarpDisabled>Warp impossible, le warp a été désactivé sur ce serveur.</WarpDisabled>
   <WaitingSubspace>Warp impossible, attente de l'ID de sous-espace du serveur.</WaitingSubspace>
-  <CannotWarpWhileSpectating>Impossible de warper lorsque vous êtes spectateur</CannotWarpWhileSpectating>
+  <CannotWarpWhileSpectating>Impossible de warper lorsque vous êtes spectateur.</CannotWarpWhileSpectating>
   <ScreenshotInterval>Intervalle entre les captures d'écran : $1 secondes. Partage momentanément indisponible.</ScreenshotInterval>
   <CraftLibraryInterval>Intervalle entre les requêtes d'accès à la bibliothèque de crafts : $1 secondes. Action momentanément indisponible.</CraftLibraryInterval>
   <ScreenshotTaken>Capture d'écran partagée !</ScreenshotTaken>
   <ImageSaved>Image sauvegardée dans GameData/LunaMultiplayer/Screenshots</ImageSaved>
   <IncreasedInterpolationOffset>Attention ! Votre décalage d'interpolation a été augmenté car il était trop bas pour ce serveur.</IncreasedInterpolationOffset>
-  <SackingKerbalsNotAllowed>Ce serveur n'autorise pas le renvoi des kerbals</SackingKerbalsNotAllowed>
-  <CannotLoadGames>LMP n'autorise pas le chargement de sauvegardes</CannotLoadGames>
-  <KerbalNotYours>Un autre joueur contrôle ce kerbal</KerbalNotYours>
-  <UnsafeToSync>Synchronisation impossible : orbite instable, vous pourriez vous crasher ! Vous pouvez désactiver cette vérification via le menu "Options".</UnsafeToSync>
+  <SackingKerbalsNotAllowed>Ce serveur n'autorise pas le renvoi des kerbals.</SackingKerbalsNotAllowed>
+  <CannotLoadGames>LMP n'autorise pas le chargement de sauvegardes.</CannotLoadGames>
+  <KerbalNotYours>Un autre joueur contrôle ce kerbal.</KerbalNotYours>
+  <UnsafeToSync>Synchronisation impossible : orbite instable, vous pourriez vous écraser ! Vous pouvez désactiver cette vérification via le menu "Options".</UnsafeToSync>
 </ScreenText>
