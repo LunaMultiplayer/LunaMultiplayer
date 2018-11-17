@@ -2,7 +2,6 @@
 using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
-using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon.Time;
 using System;
@@ -195,9 +194,10 @@ namespace LmpClient.Systems.VesselPositionSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
+            //Remove the target of the current update so basically the interpolation is stopped and on the next frame we pick a new one
             foreach (var keyVal in CurrentVesselUpdate)
             {
-                keyVal.Value.AdjustExtraInterpolationTimes();
+                keyVal.Value.Target = null;
             }
 
             //Now cleanup the target dictionary of old positions
@@ -214,11 +214,7 @@ namespace LmpClient.Systems.VesselPositionSys
 
         private static bool PositionUpdateIsTooOld(VesselPositionUpdate update)
         {
-            var maxInterpolationTime = WarpSystem.Singleton.SubspaceIsEqualOrInThePast(update.SubspaceId) ?
-                TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
-                : double.MaxValue;
-
-            return update.GameTimeStamp < TimeSyncSystem.UniversalTime - maxInterpolationTime;
+            return update.GameTimeStamp < TimeSyncSystem.UniversalTime - VesselCommon.PositionAndFlightStateMessageOffsetSec(update.PingMs);
         }
 
         /// <summary>
