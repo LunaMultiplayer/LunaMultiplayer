@@ -15,9 +15,9 @@
   <CameraIcon>Captures d'écran</CameraIcon>
   <RocketIcon>Vaisseaux</RocketIcon>
   <AdminIcon>Admin</AdminIcon>
-  <KickIcon>Kick</KickIcon>
-  <BanIcon>Ban</BanIcon>
-  <DekesslerIcon>Dekessler</DekesslerIcon>
-  <NukeIcon>Nuke KSC</NukeIcon>
+  <KickIcon>Expulser</KickIcon>
+  <BanIcon>Bannir</BanIcon>
+  <DekesslerIcon>Dekessler (efface les débris)</DekesslerIcon>
+  <NukeIcon>Atomiser le CSK (efface les véhicules présents au centre spatial)</NukeIcon>
   <RestartServerIcon>Redémarrer le serveur</RestartServerIcon>
 </ButtonTooltips>
