@@ -84,6 +84,7 @@
     <Compile Include="Events\NetworkEvent.cs" />
     <Compile Include="Events\PartModuleEvent.cs" />
     <Compile Include="Events\RailEvent.cs" />
+    <Compile Include="Events\RemoveEvent.cs" />
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />

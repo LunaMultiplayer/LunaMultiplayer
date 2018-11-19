@@ -19,7 +19,7 @@ namespace LmpClient.Systems.VesselCrewSys
 
             VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalId, false);
             LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalId);
-            VesselRemoveSystem.Singleton.AddToKillList(kerbalId, "Killing kerbal as it boarded a vessel");
+            VesselRemoveSystem.Singleton.KillVessel(kerbalId, true, "Killing kerbal-vessel as it boarded a vessel");
 
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
         }

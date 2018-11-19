@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
-using LmpClient.Extensions;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselDockSys
 {
@@ -50,7 +49,7 @@ namespace LmpClient.Systems.VesselDockSys
                 LunaLog.Log("Docking NOT detected. We OWN the dominant vessel");
             }
 
-            VesselRemoveSystem.Singleton.KillVessel(msgData.WeakVesselId, "Killing weak (active) vessel during a docking that was not detected");
+            VesselRemoveSystem.Singleton.KillVessel(msgData.WeakVesselId, true, "Killing weak (active) vessel during a docking that was not detected");
             CurrentDockEvent.Reset();
         }
     }

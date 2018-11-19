@@ -40,8 +40,7 @@ namespace LmpClient.Systems.VesselProtoSys
             //This happens when the vessel you're spectating crashes
             if (VesselCommon.IsSpectating)
             {
-                VesselRemoveSystem.Singleton.AddToKillList(vessel, "Tried to create a new vessel while spectating");
-                VesselRemoveSystem.Singleton.KillVessel(vessel, "Tried to create a new vessel while spectating");
+                VesselRemoveSystem.Singleton.KillVessel(vessel.id, true, "Tried to create a new vessel while spectating");
                 return;
             }
 

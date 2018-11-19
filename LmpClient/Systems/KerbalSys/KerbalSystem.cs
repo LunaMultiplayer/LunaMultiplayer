@@ -64,9 +64,9 @@ namespace LmpClient.Systems.KerbalSys
             GameEvents.onKerbalStatusChange.Add(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Add(KerbalEvents.TypeChange);
             RevertEvent.onReturningToEditor.Add(KerbalEvents.ReturningToEditor);
-            GameEvents.onVesselTerminated.Add(KerbalEvents.OnVesselTerminated);
-            GameEvents.onVesselRecovered.Add(KerbalEvents.OnVesselRecovered);
-            GameEvents.onVesselWillDestroy.Add(KerbalEvents.OnVesselWillDestroy);
+            RemoveEvent.onLmpTerminatedVessel.Add(KerbalEvents.OnVesselTerminated);
+            RemoveEvent.onLmpRecoveredVessel.Add(KerbalEvents.OnVesselRecovered);
+            RemoveEvent.onLmpDestroyVessel.Add(KerbalEvents.OnVesselWillDestroy);
 
             VesselLoadEvent.onLmpVesselLoaded.Add(KerbalEvents.OnVesselLoaded);
         }
@@ -80,9 +80,9 @@ namespace LmpClient.Systems.KerbalSys
             GameEvents.onKerbalStatusChange.Remove(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Remove(KerbalEvents.TypeChange);
             RevertEvent.onReturningToEditor.Remove(KerbalEvents.ReturningToEditor);
-            GameEvents.onVesselTerminated.Remove(KerbalEvents.OnVesselTerminated);
-            GameEvents.onVesselRecovered.Remove(KerbalEvents.OnVesselRecovered);
-            GameEvents.onVesselWillDestroy.Remove(KerbalEvents.OnVesselWillDestroy);
+            RemoveEvent.onLmpTerminatedVessel.Remove(KerbalEvents.OnVesselTerminated);
+            RemoveEvent.onLmpRecoveredVessel.Remove(KerbalEvents.OnVesselRecovered);
+            RemoveEvent.onLmpDestroyVessel.Remove(KerbalEvents.OnVesselWillDestroy);
 
             VesselLoadEvent.onLmpVesselLoaded.Remove(KerbalEvents.OnVesselLoaded);
         }

@@ -82,7 +82,7 @@ namespace LmpClient.Systems.VesselProtoSys
                     if (protoVessel.vesselType == VesselType.Debris)
                     {
                         LunaLog.Log($"Serialization of debris vessel: {protoVessel.vesselID} name: {protoVessel.vesselName} failed. Adding to kill list");
-                        VesselRemoveSystem.Singleton.AddToKillList(protoVessel, "Serialization of debris failed");
+                        VesselRemoveSystem.Singleton.KillVessel(protoVessel.vesselID, true, "Serialization of debris failed");
                     }
                 }
             }
