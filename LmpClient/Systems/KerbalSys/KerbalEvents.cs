@@ -103,7 +103,7 @@ namespace LmpClient.Systems.KerbalSys
             {
                 KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Missing);
                 System.MessageSender.SendKerbal(kerbal);
-                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name);
+                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name, 1000);
             }
         }
 
@@ -120,7 +120,7 @@ namespace LmpClient.Systems.KerbalSys
             {
                 KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Available);
                 System.MessageSender.SendKerbal(kerbal);
-                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name);
+                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name, 1000);
             }
         }
 
@@ -134,7 +134,7 @@ namespace LmpClient.Systems.KerbalSys
             foreach (var kerbal in dyingVessel.GetVesselCrew())
             {
                 System.MessageSender.SendKerbal(kerbal);
-                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name);
+                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name, 500);
             }
         }
 
