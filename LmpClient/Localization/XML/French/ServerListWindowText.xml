@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-16"?>
 <ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Liste de serveurs</Title>
+  <Title>Liste de Serveurs</Title>
   <NoServers>Aucun serveur !</NoServers>
   <Ping>Ping</Ping>
   <Players>Joueurs</Players>
