@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Extensions;
 using LmpClient.ModuleStore;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
@@ -18,7 +19,7 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
                 return false;
 
             //The vessel is immortal so we are sure that it's not ours
-            if (float.IsPositiveInfinity(part.crashTolerance))
+            if (module.vessel.IsImmortal())
                 return false;
 
             return true;

@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Extensions;
 
 namespace LmpClient.Systems.VesselPartSyncCallSys
 {
@@ -15,7 +16,7 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
                 return false;
 
             //The vessel is immortal so we are sure that it's not ours
-            if (float.IsPositiveInfinity(part.crashTolerance))
+            if (part.vessel.IsImmortal())
                 return false;
 
             return true;

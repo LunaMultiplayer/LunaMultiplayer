@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -59,9 +59,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
     </Reference>
@@ -300,9 +297,6 @@
     <Folder Include="Structures\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(OS)' != 'Unix'">
-    <PostBuildEvent>del "$(TargetDir)LiteDB.xml"</PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(OS)' != 'Unix'">
     <PostBuildEvent>del "$(TargetDir)LiteDB.xml"</PostBuildEvent>
   </PropertyGroup>

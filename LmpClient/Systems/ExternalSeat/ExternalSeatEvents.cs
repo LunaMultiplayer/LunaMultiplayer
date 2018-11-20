@@ -20,7 +20,7 @@ namespace LmpClient.Systems.ExternalSeat
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
 
             VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(kerbalVesselId);
-            VesselRemoveSystem.Singleton.AddToKillList(kerbalVesselId, "Killing kerbal as it boarded a external seat");
+            VesselRemoveSystem.Singleton.KillVessel(kerbalVesselId, true, "Killing kerbal-vessel as it boarded a external seat");
             LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalVesselId);
 
             VesselCommon.RemoveVesselFromSystems(kerbalVesselId);

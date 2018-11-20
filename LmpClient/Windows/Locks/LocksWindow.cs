@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using LmpCommon.Enums;
 using LmpCommon.Time;
@@ -56,7 +57,7 @@ namespace LmpClient.Windows.Locks
                             VesselId = FlightGlobals.Vessels[i].id,
                             Loaded = FlightGlobals.Vessels[i].loaded,
                             Packed = FlightGlobals.Vessels[i].packed,
-                            Immortal = float.IsPositiveInfinity(FlightGlobals.Vessels[i].rootPart?.crashTolerance ?? 0),
+                            Immortal = FlightGlobals.Vessels[i].IsImmortal(),
                             VesselName = FlightGlobals.Vessels[i].name,
                             ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id),
                             UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id),
@@ -67,7 +68,7 @@ namespace LmpClient.Windows.Locks
                     {
                         existingVesselLock.Loaded = FlightGlobals.Vessels[i].loaded;
                         existingVesselLock.Packed = FlightGlobals.Vessels[i].packed;
-                        existingVesselLock.Immortal = float.IsPositiveInfinity(FlightGlobals.Vessels[i].rootPart?.crashTolerance ?? 0);
+                        existingVesselLock.Immortal = FlightGlobals.Vessels[i].IsImmortal();
                         existingVesselLock.VesselName = FlightGlobals.Vessels[i].name;
                         existingVesselLock.ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id);
                         existingVesselLock.UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id);

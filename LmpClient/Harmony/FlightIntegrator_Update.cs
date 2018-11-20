@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using LmpClient.Extensions;
 using LmpCommon.Enums;
 
 // ReSharper disable All
@@ -18,7 +19,7 @@ namespace LmpClient.Harmony
             if (MainSystem.NetworkState < ClientState.Connected) return true;
             if (__instance.Vessel == FlightGlobals.ActiveVessel) return true;
 
-            return __instance.Vessel.rootPart == null || !float.IsPositiveInfinity(__instance.Vessel.rootPart.crashTolerance);
+            return !__instance.Vessel.IsImmortal();
         }
     }
 }

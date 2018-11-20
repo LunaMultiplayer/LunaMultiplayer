@@ -23,7 +23,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
                 return false;
 
             //The vessel is immortal so we are sure that it's not ours
-            if (float.IsPositiveInfinity(part.crashTolerance))
+            if (part.vessel.IsImmortal())
                 return false;
 
             if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(module.moduleName, out var customization))

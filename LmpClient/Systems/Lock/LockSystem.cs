@@ -182,9 +182,15 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Release the given kerbal lock
         /// </summary>
-        public void ReleaseKerbalLock(string kerbalName)
+        public void ReleaseKerbalLock(string kerbalName, int msDelay = 0)
         {
-            ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName));
+            TaskFactory.StartNew(() =>
+            {
+                if (msDelay > 0)
+                    Thread.Sleep(msDelay);
+
+                ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName));
+            });
         }
 
         /// <summary>

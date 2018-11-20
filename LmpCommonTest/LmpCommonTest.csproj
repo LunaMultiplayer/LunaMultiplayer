@@ -43,9 +43,6 @@
       <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\TiltEm\External\KSPLibraries\UnityEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MessageStoreTest.cs" />

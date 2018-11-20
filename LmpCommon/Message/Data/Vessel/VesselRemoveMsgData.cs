@@ -10,6 +10,7 @@ namespace LmpCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.Remove;
         
         public bool AddToKillList;
+        public bool KillOnReceive;
 
         public override string ClassName { get; } = nameof(VesselRemoveMsgData);
 
@@ -18,6 +19,7 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
             
             lidgrenMsg.Write(AddToKillList);
+            lidgrenMsg.Write(KillOnReceive);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -25,11 +27,12 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
             
             AddToKillList = lidgrenMsg.ReadBoolean();
+            KillOnReceive = lidgrenMsg.ReadBoolean();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(bool);
+            return base.InternalGetMessageSize() + sizeof(bool) * 2;
         }
     }
 }

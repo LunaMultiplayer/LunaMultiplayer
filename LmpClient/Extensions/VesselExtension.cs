@@ -1,4 +1,6 @@
 ﻿using LmpClient.Events;
+using LmpClient.Systems.Lock;
+using LmpClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LmpClient.Extensions
@@ -50,7 +52,7 @@ namespace LmpClient.Extensions
 
             return null;
         }
-        
+
         public static void RemoveAllCrew(this Vessel vessel)
         {
             foreach (var part in vessel.Parts)
@@ -69,6 +71,16 @@ namespace LmpClient.Extensions
             vessel.DespawnCrew();
         }
 
+        public static bool IsImmortal(this Vessel vessel)
+        {
+            if (vessel.rootPart)
+                return float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
+
+            if (!LockSystem.LockQuery.UpdateLockExists(vessel.id)) return false;
+
+            return !LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName);
+        }
+
         /// <summary>
         /// Set all vessel parts to unbreakable or not (makes the vessel immortal or not)
         /// </summary>
@@ -81,14 +93,7 @@ namespace LmpClient.Extensions
                 var isCurrentlyImmortal = float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
                 if (isCurrentlyImmortal == immortal) return;
             }
-
-            LunaLog.Log($"Making vessel {vessel.id} {(immortal ? "immortal" : "mortal")}");
-
-            foreach (var part in vessel.Parts)
-            {
-                part.SetImmortal(immortal);
-            }
-
+            
             var buoyancy = vessel.GetComponent<PartBuoyancy>();
             if (buoyancy)
             {
@@ -105,6 +110,15 @@ namespace LmpClient.Extensions
             if (flightIntegrator)
             {
                 flightIntegrator.enabled = !immortal;
+            }
+
+            if (vessel.loaded)
+            {
+                LunaLog.Log($"Making vessel {vessel.id} {(immortal ? "immortal" : "mortal")}");
+                foreach (var part in vessel.Parts)
+                {
+                    part.SetImmortal(immortal);
+                }
             }
 
             if (immortal)

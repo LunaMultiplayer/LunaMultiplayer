@@ -3,14 +3,11 @@ using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.VesselUtilities;
-using System;
 
 namespace LmpClient.Systems.KerbalSys
 {
     public class KerbalEvents : SubSystem<KerbalSystem>
     {
-        private static Guid _recoveringTerminatingVesselId = Guid.Empty;
-
         /// <summary>
         /// Use this event to send the kerbals just when we start a flight.
         /// We use this event instead of onFlightReady as the latter is triggered once UI and everythign is ready and this one is triggered
@@ -94,59 +91,50 @@ namespace LmpClient.Systems.KerbalSys
         }
 
         /// <summary>
-        /// Force setting the kerbals as missing in a terminated vessel
+        /// Force setting the kerbals as missing in a terminated vessel. We are sure that we have the locks as this event is triggered by LMP
         /// </summary>
         public void OnVesselTerminated(ProtoVessel terminatedVessel)
         {
             if (terminatedVessel == null) return;
-
-            if (LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(terminatedVessel.vesselID, SettingsSystem.CurrentSettings.PlayerName))
+            
+            //Force setting the kerbals as missing as we don't have their kerbal lock
+            var kerbals = terminatedVessel.GetVesselCrew();
+            foreach (var kerbal in kerbals)
             {
-                _recoveringTerminatingVesselId = terminatedVessel.vesselID;
-
-                //Force setting the kerbals as missing as we don't have their kerbal lock
-                var kerbals = terminatedVessel.GetVesselCrew();
-                foreach (var kerbal in kerbals)
-                {
-                    KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Missing);
-                    System.MessageSender.SendKerbal(kerbal);
-                }
+                KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Missing);
+                System.MessageSender.SendKerbal(kerbal);
+                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name, 1000);
             }
         }
 
         /// <summary>
-        /// Force setting the kerbals as available in a recovered vessel
+        /// Force setting the kerbals as available in a recovered vessel. We are sure that we have the locks as this event is triggered by LMP
         /// </summary>
-        public void OnVesselRecovered(ProtoVessel recoveredVessel, bool quick)
+        public void OnVesselRecovered(ProtoVessel recoveredVessel)
         {
             if (recoveredVessel == null) return;
 
-            if (LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(recoveredVessel.vesselID, SettingsSystem.CurrentSettings.PlayerName))
+            //Force setting the kerbals as missing as we don't have their kerbal lock
+            var kerbals = recoveredVessel.GetVesselCrew();
+            foreach (var kerbal in kerbals)
             {
-                _recoveringTerminatingVesselId = recoveredVessel.vesselID;
-
-                //Force setting the kerbals as missing as we don't have their kerbal lock
-                var kerbals = recoveredVessel.GetVesselCrew();
-                foreach (var kerbal in kerbals)
-                {
-                    KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Available);
-                    System.MessageSender.SendKerbal(kerbal);
-                }
+                KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Available);
+                System.MessageSender.SendKerbal(kerbal);
+                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name, 1000);
             }
         }
 
+        /// <summary>
+        /// Event triggered by LMP when the vessel will be destroyed. We are sure that we have the locks as this event is triggered by LMP
+        /// </summary>
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
             if (dyingVessel == null) return;
 
-            //Only send the vessel remove msg if we own the unloaded update lock
-            if (!LockSystem.LockQuery.UnloadedUpdateLockExists(dyingVessel.id) ||
-                LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) || dyingVessel.id == _recoveringTerminatingVesselId)
+            foreach (var kerbal in dyingVessel.GetVesselCrew())
             {
-                foreach (var protoCrew in dyingVessel.GetVesselCrew())
-                {
-                    System.MessageSender.SendKerbal(protoCrew);
-                }
+                System.MessageSender.SendKerbal(kerbal);
+                LockSystem.Singleton.ReleaseKerbalLock(kerbal.name, 500);
             }
         }
 

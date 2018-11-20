@@ -18,22 +18,9 @@ namespace LmpClient.Systems.VesselRemoveSys
     /// </summary>
     public class VesselRemoveSystem : MessageSystem<VesselRemoveSystem, VesselRemoveMessageSender, VesselRemoveMessageHandler>
     {
-        private class VesselRemoveEntry
-        {
-            public Vessel Vessel { get; }
-            public string Reason { get; }
-
-            public VesselRemoveEntry(Vessel vessel, string reason)
-            {
-                Vessel = vessel;
-                Reason = "Queued: " + reason;
-            }
-        }
-
         #region Fields & properties
 
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
-        private static ConcurrentQueue<VesselRemoveEntry> VesselsToRemove { get; set; } = new ConcurrentQueue<VesselRemoveEntry>();
         public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
         #endregion
@@ -53,8 +40,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             RevertEvent.onRevertedToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onReturnedToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
 
-            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
-            SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, FlushRemovedVessels));
         }
 
         protected override void OnDisabled()
@@ -79,61 +65,37 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// </summary>
         public void ClearSystem()
         {
-            VesselsToRemove = new ConcurrentQueue<VesselRemoveEntry>();
             RemovedVessels.Clear();
         }
-
-        /// <summary>
-        /// Add a vessel so it will be killed later
-        /// </summary>
-        public void AddToKillList(Guid vesselId, string reason)
-        {
-            var vesselToKill = FlightGlobals.fetch.LmpFindVessel(vesselId);
-            if (vesselToKill != null)
-            {
-                AddToKillList(vesselToKill, reason);
-            }
-        }
-
-        /// <summary>
-        /// Add a protoVessel related vessel so it will be killed later
-        /// </summary>
-        public void AddToKillList(ProtoVessel protoVessel, string reason)
-        {
-            AddToKillList(protoVessel.vesselID, reason);
-        }
-
-        /// <summary>
-        /// Add a vessel so it will be killed later
-        /// </summary>
-        public void AddToKillList(Vessel vessel, string reason)
-        {
-            if (vessel == null) return;
-
-            VesselsToRemove.Enqueue(new VesselRemoveEntry(vessel, reason));
-        }
-
+        
         /// <summary>
         /// Check if vessel is in the kill list
         /// </summary>
         public bool VesselWillBeKilled(Guid vesselId)
         {
-            return VesselsToRemove.Any(v => v.Vessel && v.Vessel.id == vesselId) || RemovedVessels.ContainsKey(vesselId);
+            return RemovedVessels.ContainsKey(vesselId);
         }
 
         /// <summary>
         /// Kills a vessel.
         /// </summary>
-        public void KillVessel(Guid vesselId, string reason)
+        public void KillVessel(Guid vesselId, bool addToKilledList, string reason)
         {
             VesselCommon.RemoveVesselFromSystems(vesselId);
+
+            if (addToKilledList)
+            {
+                //Always add to the killed list even if it exists that vessel or not.
+                RemovedVessels.TryAdd(vesselId, LunaNetworkTime.UtcNow);
+            }
+
             KillVessel(FlightGlobals.fetch.LmpFindVessel(vesselId), reason);
         }
 
         /// <summary>
         /// Kills a vessel.
         /// </summary>
-        public void KillVessel(Vessel killVessel, string reason)
+        private void KillVessel(Vessel killVessel, string reason)
         {
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
@@ -182,22 +144,6 @@ namespace LmpClient.Systems.VesselRemoveSys
             foreach (var vesselId in vesselsToFlush)
             {
                 RemovedVessels.TryRemove(vesselId, out _);
-            }
-        }
-
-        /// <summary>
-        /// Unload or kills the vessels in the queue
-        /// </summary>
-        private void RemoveQueuedVessels()
-        {
-            if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
-
-            while (VesselsToRemove.TryDequeue(out var vesselRemoveEntry))
-            {
-                //Always add to the killed list even if it exists that vessel or not.
-                RemovedVessels.TryAdd(vesselRemoveEntry.Vessel.id, LunaNetworkTime.UtcNow);
-
-                KillVessel(vesselRemoveEntry.Vessel, vesselRemoveEntry.Reason);
             }
         }
 
