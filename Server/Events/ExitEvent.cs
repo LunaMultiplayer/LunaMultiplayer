@@ -1,7 +1,7 @@
 ﻿namespace Server.Events
 {
     /// <summary>
-    /// Subscribe to this event if you want to do some functionallity before closing
+    /// Subscribe to this event if you want to do some functionality before closing
     /// </summary>
     public static class ExitEvent
     {

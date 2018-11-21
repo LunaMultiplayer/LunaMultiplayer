@@ -8,7 +8,7 @@ namespace Server.Exit
         public event EventHandler Exit;
 
         [DllImport("Kernel32")]
-        public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
+        public static extern bool SetConsoleCtrlHandler(HandlerRoutine handler, bool add);
 
         // A delegate type to be used as the handler routine
         // for SetConsoleCtrlHandler.

@@ -1,6 +1,5 @@
 ﻿using LunaConfigNode;
 using LunaConfigNode.CfgNode;
-using Server.Events;
 using Server.Settings.Structures;
 using Server.System.Scenario;
 using System.Collections.Concurrent;
@@ -19,9 +18,7 @@ namespace Server.System
         public static ConcurrentDictionary<string, ConfigNode> CurrentScenarios = new ConcurrentDictionary<string, ConfigNode>();
 
         private static readonly object BackupLock = new object();
-
-        static ScenarioStoreSystem() => ExitEvent.ServerClosing += BackupScenarios;
-
+        
         /// <summary>
         /// Returns a scenario in the standard KSP format
         /// </summary>

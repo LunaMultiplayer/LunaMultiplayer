@@ -1,6 +1,5 @@
 ﻿using LmpCommon.Time;
 using Server.Context;
-using Server.Events;
 using Server.Log;
 using System;
 using System.Collections.Generic;
@@ -11,8 +10,6 @@ namespace Server.System
 {
     public static class WarpSystem
     {
-        static WarpSystem() => ExitEvent.ServerClosing += SaveLatestSubspaceToFile;
-
         private static string SubspaceFile { get; } = Path.Combine(ServerContext.UniverseDirectory, "Subspace.txt");
 
         public static void Reset()
@@ -21,7 +18,7 @@ namespace Server.System
             LoadSavedSubspace();
         }
 
-        public static void SaveLatestSubspaceToFile()
+        public static void BackupSubspaces()
         {
             var content = $"#Incorrectly editing this file will cause weirdness. If there is any errors, the universe time will be reset.{Environment.NewLine}";
             content += $"#This file can only be edited if the server is stopped.{Environment.NewLine}";

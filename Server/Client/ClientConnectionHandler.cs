@@ -58,6 +58,12 @@ namespace Server.Client
                     LunaLog.Error($"Error closing client Connection: {e.Message}");
                 }
             }
+
+            //As this is the last client that is connected to the server, run a safety backup once he disconnects
+            if (ServerContext.Clients.Count == 0)
+            {
+                BackupSystem.RunBackup();
+            }
         }
     }
 }

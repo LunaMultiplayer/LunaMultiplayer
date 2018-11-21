@@ -1,6 +1,5 @@
 ﻿using LunaConfigNode;
 using Server.Context;
-using Server.Events;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -20,8 +19,6 @@ namespace Server.System
         public static ConcurrentDictionary<Guid, Vessel.Classes.Vessel> CurrentVessels = new ConcurrentDictionary<Guid, Vessel.Classes.Vessel>();
 
         private static readonly object BackupLock = new object();
-
-        static VesselStoreSystem() => ExitEvent.ServerClosing += BackupVessels;
 
         public static bool VesselExists(Guid vesselId) => CurrentVessels.ContainsKey(vesselId);
 

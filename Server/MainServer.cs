@@ -46,8 +46,7 @@ namespace Server
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaNetworkTime.UtcNow.Ticks;
 
-                if (!Common.PlatformIsWindows()) LunaLog.Warning("Remember! Quit the server by using Control+C so the vessels are saved to the hard drive!");
-
+                 LunaLog.Warning("Remember! Quit the server by using 'Control + C' so a backup is properly made before closing!");
 
                 if (Common.PlatformIsWindows())
                     ExitSignal.Exit += (sender, args) => Exit();
