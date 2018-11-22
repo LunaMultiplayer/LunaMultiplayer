@@ -2,13 +2,9 @@
 {
     public enum LogLevels
     {
-        VerboseNetworkDebug,
-        NetworkDebug,
+        Normal,
         Debug,
-        Info,
-        Chat,
-        Warning,
-        Error,
-        Fatal
+        NetworkDebug,
+        VerboseNetworkDebug
     }
 }
