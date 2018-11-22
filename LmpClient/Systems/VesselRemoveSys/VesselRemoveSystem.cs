@@ -95,7 +95,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         /// <summary>
         /// Kills a vessel.
         /// </summary>
-        private void KillVessel(Vessel killVessel, string reason)
+        private static void KillVessel(Vessel killVessel, string reason)
         {
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
