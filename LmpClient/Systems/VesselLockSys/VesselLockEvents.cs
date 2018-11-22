@@ -101,6 +101,7 @@ namespace LmpClient.Systems.VesselLockSys
                         LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
 
                         //As we got the lock of that vessel, remove its FS and position updates
+                        //This is done so even if the vessel has queued updates, we ignore them as we are controlling it
                         VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                     }
                     else if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
@@ -114,17 +115,6 @@ namespace LmpClient.Systems.VesselLockSys
 
                     LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                     LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
-
-                    //As we got the lock of that vessel, remove its FS and position updates
-                    VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
-
-                    break;
-                case LockType.UnloadedUpdate:
-                    if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
-                        return;
-
-                    //As we got the lock of that vessel, remove its FS and position updates
-                    VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
 
                     break;
             }
