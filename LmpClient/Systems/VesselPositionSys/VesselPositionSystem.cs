@@ -162,7 +162,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 {
                     //This is the case when you've got an update lock from a vessel that was controlled by a player in a future subspace.
                     //You don't need to send position updates for it as you're replaying them from the past
-                    if (VesselHavePositionUpdatesQueued(SecondaryVesselsToUpdate[i].id))
+                    if (VesselHavePositionUpdatesQueued(AbandonedVesselsToUpdate[i].id))
                         continue;
 
                     UpdateUnloadedVesselValues(AbandonedVesselsToUpdate[i]);
