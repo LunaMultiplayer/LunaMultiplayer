@@ -1,10 +1,10 @@
-﻿using System;
+﻿using LmpClient.Localization.Structures;
+using LmpClient.Utilities;
+using LmpCommon.Xml;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LmpClient.Localization.Structures;
-using LmpClient.Utilities;
-using LmpCommon.Xml;
 
 namespace LmpClient.Localization
 {
@@ -29,6 +29,7 @@ namespace LmpClient.Localization
         public static ButtonTooltips ButtonTooltips = new ButtonTooltips();
         public static UpdateWindowText UpdateWindowText = new UpdateWindowText();
         public static CompatibleDialogText CompatibleDialogText = new CompatibleDialogText();
+        public static RevertDialogText RevertDialogText = new RevertDialogText();
 
         private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Localization");
 
@@ -88,6 +89,7 @@ namespace LmpClient.Localization
             LoadWindowTexts(language, ref ButtonTooltips);
             LoadWindowTexts(language, ref UpdateWindowText);
             LoadWindowTexts(language, ref CompatibleDialogText);
+            LoadWindowTexts(language, ref RevertDialogText);
         }
 
         /// <summary>
@@ -118,6 +120,7 @@ namespace LmpClient.Localization
                 LunaXmlSerializer.WriteToXmlFile(ButtonTooltips, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ButtonTooltips)}.xml"));
                 LunaXmlSerializer.WriteToXmlFile(UpdateWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(UpdateWindowText)}.xml"));
                 LunaXmlSerializer.WriteToXmlFile(CompatibleDialogText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(CompatibleDialogText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(RevertDialogText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(RevertDialogText)}.xml"));
             }
 
             LoadLanguage(currentLanguage);

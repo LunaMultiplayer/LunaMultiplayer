@@ -109,6 +109,7 @@
     <Compile Include="Harmony\FlightDriver_SetStartupNewVessel.cs" />
     <Compile Include="Harmony\FlightDriver_Start.cs" />
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
+    <Compile Include="Harmony\FlightResultsDialog_SetupGUI.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
     <Compile Include="Harmony\FlightIntegrator_FixedUpdate.cs" />
@@ -127,6 +128,8 @@
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
     <Compile Include="Harmony\Vessel_GoOnRails.cs" />
     <Compile Include="Harmony\Vessel_GoOffRails.cs" />
+    <Compile Include="Harmony\PauseMenu_DrawRevertOptions.cs" />
+    <Compile Include="Localization\Structures\RevertDialogText.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_OnDeboardSeat.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_BoardSeat.cs" />
     <Compile Include="Harmony\KerbalRoster_SackAvailable.cs" />
@@ -190,6 +193,8 @@
     <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
     <Compile Include="Systems\Label\LabelEvents.cs" />
     <Compile Include="Systems\Label\LabelSystem.cs" />
+    <Compile Include="Systems\Revert\RevertEvents.cs" />
+    <Compile Include="Systems\Revert\RevertSystem.cs" />
     <Compile Include="Systems\SafetyBubble\SpawnPointLocation.cs" />
     <Compile Include="Systems\SafetyBubble\SafetyBubbleEvents.cs" />
     <Compile Include="Systems\SafetyBubble\SafetyBubbleSystem.cs" />
@@ -483,6 +488,7 @@
     <Content Include="Localization\XML\Danish\InstallDialogText.xml" />
     <Content Include="Localization\XML\Danish\ModWindowText.xml" />
     <Content Include="Localization\XML\Danish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Danish\RevertDialogText.xml" />
     <Content Include="Localization\XML\Danish\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Danish\ScreenText.xml" />
     <Content Include="Localization\XML\Danish\ServerListWindowText.xml" />
@@ -499,6 +505,7 @@
     <Content Include="Localization\XML\Dutch\InstallDialogText.xml" />
     <Content Include="Localization\XML\Dutch\ModWindowText.xml" />
     <Content Include="Localization\XML\Dutch\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\RevertDialogText.xml" />
     <Content Include="Localization\XML\Dutch\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Dutch\ScreenText.xml" />
     <Content Include="Localization\XML\Dutch\ServerListWindowText.xml" />
@@ -515,6 +522,7 @@
     <Content Include="Localization\XML\English\InstallDialogText.xml" />
     <Content Include="Localization\XML\English\ModWindowText.xml" />
     <Content Include="Localization\XML\English\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\English\RevertDialogText.xml" />
     <Content Include="Localization\XML\English\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\English\ScreenText.xml" />
     <Content Include="Localization\XML\English\ServerListWindowText.xml" />
@@ -531,6 +539,7 @@
     <Content Include="Localization\XML\French\InstallDialogText.xml" />
     <Content Include="Localization\XML\French\ModWindowText.xml" />
     <Content Include="Localization\XML\French\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\French\RevertDialogText.xml" />
     <Content Include="Localization\XML\French\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\French\ScreenText.xml" />
     <Content Include="Localization\XML\French\ServerListWindowText.xml" />
@@ -547,6 +556,7 @@
     <Content Include="Localization\XML\German\InstallDialogText.xml" />
     <Content Include="Localization\XML\German\ModWindowText.xml" />
     <Content Include="Localization\XML\German\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\German\RevertDialogText.xml" />
     <Content Include="Localization\XML\German\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\German\ScreenText.xml" />
     <Content Include="Localization\XML\German\ServerListWindowText.xml" />
@@ -563,6 +573,7 @@
     <Content Include="Localization\XML\Italian\InstallDialogText.xml" />
     <Content Include="Localization\XML\Italian\ModWindowText.xml" />
     <Content Include="Localization\XML\Italian\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Italian\RevertDialogText.xml" />
     <Content Include="Localization\XML\Italian\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Italian\ScreenText.xml" />
     <Content Include="Localization\XML\Italian\ServerListWindowText.xml" />
@@ -579,6 +590,7 @@
     <Content Include="Localization\XML\Japanese\InstallDialogText.xml" />
     <Content Include="Localization\XML\Japanese\ModWindowText.xml" />
     <Content Include="Localization\XML\Japanese\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\RevertDialogText.xml" />
     <Content Include="Localization\XML\Japanese\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Japanese\ScreenText.xml" />
     <Content Include="Localization\XML\Japanese\ServerListWindowText.xml" />
@@ -595,6 +607,7 @@
     <Content Include="Localization\XML\Polish\InstallDialogText.xml" />
     <Content Include="Localization\XML\Polish\ModWindowText.xml" />
     <Content Include="Localization\XML\Polish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Polish\RevertDialogText.xml" />
     <Content Include="Localization\XML\Polish\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Polish\ScreenText.xml" />
     <Content Include="Localization\XML\Polish\ServerListWindowText.xml" />
@@ -611,6 +624,7 @@
     <Content Include="Localization\XML\Russian\InstallDialogText.xml" />
     <Content Include="Localization\XML\Russian\ModWindowText.xml" />
     <Content Include="Localization\XML\Russian\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Russian\RevertDialogText.xml" />
     <Content Include="Localization\XML\Russian\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Russian\ScreenText.xml" />
     <Content Include="Localization\XML\Russian\ServerListWindowText.xml" />
@@ -627,6 +641,7 @@
     <Content Include="Localization\XML\Simplified Chinese\InstallDialogText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\ModWindowText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\RevertDialogText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\ScreenText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\ServerListWindowText.xml" />
@@ -643,6 +658,7 @@
     <Content Include="Localization\XML\Spanish\InstallDialogText.xml" />
     <Content Include="Localization\XML\Spanish\ModWindowText.xml" />
     <Content Include="Localization\XML\Spanish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\RevertDialogText.xml" />
     <Content Include="Localization\XML\Spanish\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Spanish\ScreenText.xml" />
     <Content Include="Localization\XML\Spanish\ServerListWindowText.xml" />
@@ -659,6 +675,7 @@
     <Content Include="Localization\XML\Swedish\InstallDialogText.xml" />
     <Content Include="Localization\XML\Swedish\ModWindowText.xml" />
     <Content Include="Localization\XML\Swedish\OptionsWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\RevertDialogText.xml" />
     <Content Include="Localization\XML\Swedish\ScreenshotWindowText.xml" />
     <Content Include="Localization\XML\Swedish\ScreenText.xml" />
     <Content Include="Localization\XML\Swedish\ServerListWindowText.xml" />
