@@ -20,7 +20,7 @@ namespace LmpClient.ModuleStore
         private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "PartSync");
 
         /// <summary>
-        /// Here we store our customized part modules behaviours
+        /// Here we store our customized part modules behaviors
         /// </summary>
         public static Dictionary<string, ModuleDefinition> CustomizedModuleBehaviours = new Dictionary<string, ModuleDefinition>();
         
