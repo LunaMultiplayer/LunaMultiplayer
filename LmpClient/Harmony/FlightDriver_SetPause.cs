@@ -17,7 +17,10 @@ namespace LmpClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
 
-            return !pauseState;
+            if (pauseState)
+                return false;
+
+            return true;
         }
     }
 }
