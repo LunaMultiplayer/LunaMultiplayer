@@ -137,6 +137,11 @@ namespace LmpClient.Systems.VesselPositionSys
 
                 for (var i = 0; i < SecondaryVesselsToUpdate.Count; i++)
                 {
+                    //This is the case when you've got an update lock from a vessel that was controlled by a player in a future subspace.
+                    //You don't need to send position updates for it as you're replaying them from the past
+                    if (VesselHavePositionUpdatesQueued(SecondaryVesselsToUpdate[i].id))
+                        continue;
+
                     UpdateSecondaryVesselValues(SecondaryVesselsToUpdate[i]);
                     MessageSender.SendVesselPositionUpdate(SecondaryVesselsToUpdate[i]);
                 }
@@ -155,6 +160,11 @@ namespace LmpClient.Systems.VesselPositionSys
 
                 for (var i = 0; i < AbandonedVesselsToUpdate.Count; i++)
                 {
+                    //This is the case when you've got an update lock from a vessel that was controlled by a player in a future subspace.
+                    //You don't need to send position updates for it as you're replaying them from the past
+                    if (VesselHavePositionUpdatesQueued(SecondaryVesselsToUpdate[i].id))
+                        continue;
+
                     UpdateUnloadedVesselValues(AbandonedVesselsToUpdate[i]);
                     MessageSender.SendVesselPositionUpdate(AbandonedVesselsToUpdate[i]);
                 }
@@ -164,6 +174,19 @@ namespace LmpClient.Systems.VesselPositionSys
         #endregion
 
         #region Public methods
+
+        /// <summary>
+        /// Checks if the given vessel id has position messages stored to be replayed
+        /// </summary>
+        public bool VesselHavePositionUpdatesQueued(Guid vesselId)
+        {
+            if (TargetVesselUpdateQueue.TryGetValue(vesselId, out var positionQueue))
+            {
+                return positionQueue.Count > 0;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Gets the latest received position of a vessel
@@ -221,7 +244,7 @@ namespace LmpClient.Systems.VesselPositionSys
         /// Unloaded vessels don't update their lat/lon/alt and it's orbit params.
         /// As we have the unloadedupdate lock of that vessel we need to refresh those values manually
         /// </summary>
-        public static void UpdateUnloadedVesselValues(Vessel vessel)
+        private static void UpdateUnloadedVesselValues(Vessel vessel)
         {
             if (vessel.orbit != null)
             {
@@ -238,7 +261,7 @@ namespace LmpClient.Systems.VesselPositionSys
         /// Secondary vessels (vessels that are loaded and we have the update lock) don't get their lat/lon/alt values updated by the game engine
         /// Here we manually update them so we send updateded lat/lon/alt values
         /// </summary>
-        public static void UpdateSecondaryVesselValues(Vessel vessel)
+        private static void UpdateSecondaryVesselValues(Vessel vessel)
         {
             vessel.UpdateLandedSplashed();
             vessel.UpdatePosVel();

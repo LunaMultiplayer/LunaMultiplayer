@@ -137,7 +137,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         #region Update methods
 
         /// <summary>
-        /// Sends our current flight state
+        /// Sends our current flight state. We only send flight states of the ACTIVE vessel if we are not spectating and also if that vessel is not an EVA
         /// </summary>
         private void SendFlightState()
         {
