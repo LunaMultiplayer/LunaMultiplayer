@@ -1,4 +1,5 @@
-﻿using LmpClient.ModuleStore.Structures;
+﻿using LmpClient.Extensions;
+using LmpClient.ModuleStore.Structures;
 using LmpClient.Utilities;
 using LmpCommon.Xml;
 using System;
@@ -27,7 +28,7 @@ namespace LmpClient.ModuleStore
         /// Here we store all the types that inherit from PartModule including the mod files
         /// </summary>
         private static IEnumerable<Type> PartModuleTypes { get; } = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a => a.GetTypes())
+            .SelectMany(a => a.GetLoadableTypes())
             .Where(t => t.IsClass && t.IsSubclassOf(typeof(PartModule)));
 
         /// <summary>

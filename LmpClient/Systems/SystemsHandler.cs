@@ -1,8 +1,9 @@
-﻿using System;
+﻿using LmpClient.Base.Interface;
+using LmpClient.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LmpClient.Base.Interface;
 using UnityEngine.Profiling;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -23,7 +24,7 @@ namespace LmpClient.Systems
         {
             var systemsList = new List<ISystem>();
             
-            var systems = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+            var systems = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
             foreach (var system in systems)
             {
                 try

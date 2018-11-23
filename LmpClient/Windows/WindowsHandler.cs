@@ -1,8 +1,9 @@
-﻿using System;
+﻿using LmpClient.Base.Interface;
+using LmpClient.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LmpClient.Base.Interface;
 using UnityEngine.Profiling;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -20,7 +21,7 @@ namespace LmpClient.Windows
         {
             var windowsList = new List<IWindow>();
 
-            var windows = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+            var windows = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
             foreach (var window in windows)
             {
                 try

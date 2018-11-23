@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Extensions;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
 using LmpCommon;
@@ -25,7 +26,7 @@ namespace LmpClient.Systems.Scenario
                 if (!_allScenarioTypesInAssemblies.Any())
                 {
                     var scenarioTypes = AssemblyLoader.loadedAssemblies
-                        .SelectMany(a => a.assembly.GetTypes())
+                        .SelectMany(a => a.assembly.GetLoadableTypes())
                         .Where(s => s.IsSubclassOf(typeof(ScenarioModule)) && !_allScenarioTypesInAssemblies.ContainsKey(s.Name));
 
                     foreach (var scenarioType in scenarioTypes)

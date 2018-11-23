@@ -94,6 +94,7 @@
     <Compile Include="Events\VesselInitializeEvent.cs" />
     <Compile Include="Events\VesselUnloadEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
+    <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\FlightGlobalExtension.cs" />
