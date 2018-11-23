@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Events;
 using System;
 
 namespace LmpClient.Systems.Revert
@@ -23,13 +24,15 @@ namespace LmpClient.Systems.Revert
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onFlightReady.Add(RevertEvents.FlightReady);
+            VesselAssemblyEvent.onAssembledVessel.Add(RevertEvents.VesselAssembled);
+            GameEvents.onVesselChange.Add(RevertEvents.OnVesselChange);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onFlightReady.Remove(RevertEvents.FlightReady);
+            VesselAssemblyEvent.onAssembledVessel.Remove(RevertEvents.VesselAssembled);
+            GameEvents.onVesselChange.Remove(RevertEvents.OnVesselChange);
         }
 
         #endregion

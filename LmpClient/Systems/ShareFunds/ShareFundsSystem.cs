@@ -34,7 +34,7 @@ namespace LmpClient.Systems.ShareFunds
             RevertEvent.onReturningToEditor.Add(ShareFundsEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Add(ShareFundsEvents.LevelLoaded);
             GameEvents.onVesselSwitching.Add(ShareFundsEvents.VesselSwitching);
-            GameEvents.onFlightReady.Add(ShareFundsEvents.FlightReady);
+            VesselAssemblyEvent.onAssembledVessel.Remove(ShareFundsEvents.VesselAssembled);
         }
 
         protected override void OnDisabled()
@@ -48,7 +48,7 @@ namespace LmpClient.Systems.ShareFunds
             RevertEvent.onReturningToEditor.Remove(ShareFundsEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Remove(ShareFundsEvents.LevelLoaded);
             GameEvents.onVesselSwitching.Remove(ShareFundsEvents.VesselSwitching);
-            GameEvents.onFlightReady.Remove(ShareFundsEvents.FlightReady);
+            VesselAssemblyEvent.onAssembledVessel.Remove(ShareFundsEvents.VesselAssembled);
 
             _lastFunds = 0;
             Reverting = false;

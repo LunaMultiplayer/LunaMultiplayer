@@ -90,6 +90,7 @@
     <Compile Include="Events\StrategyEvent.cs" />
     <Compile Include="Events\TrackingEvent.cs" />
     <Compile Include="Events\VesselLoadEvent.cs" />
+    <Compile Include="Events\VesselAssemblyEvent.cs" />
     <Compile Include="Events\VesselReloadEvent.cs" />
     <Compile Include="Events\VesselInitializeEvent.cs" />
     <Compile Include="Events\VesselUnloadEvent.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
     <Compile Include="Harmony\FlightIntegrator_FixedUpdate.cs" />
     <Compile Include="Harmony\FlightIntegrator_Update.cs" />
+    <Compile Include="Harmony\ShipConstruction_AssembleForLaunch.cs" />
     <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />
     <Compile Include="Harmony\SpaceTracking_StartTrackingObject.cs" />
     <Compile Include="Harmony\KerbalEVA_proceedAndBoard.cs" />

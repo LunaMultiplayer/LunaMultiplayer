@@ -1,5 +1,4 @@
 ﻿using LmpClient.Base;
-using LmpClient.Extensions;
 using System;
 
 namespace LmpClient.Systems.ShareFunds
@@ -41,14 +40,14 @@ namespace LmpClient.Systems.ShareFunds
             }
         }
         
-        public void FlightReady()
-        {
-            System.CurrentShipCost = new Tuple<Guid, float>(FlightGlobals.ActiveVessel.id, FlightGlobals.ActiveVessel.GetShipCosts(out _, out _));
-        }
-
         public void VesselSwitching(Vessel data0, Vessel data1)
         {
             System.CurrentShipCost = null;
+        }
+
+        public void VesselAssembled(Vessel vessel, ShipConstruct construct)
+        {
+            System.CurrentShipCost = new Tuple<Guid, float>(vessel.id, construct.GetShipCosts(out _, out _));
         }
     }
 }

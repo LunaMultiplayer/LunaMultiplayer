@@ -5,9 +5,14 @@ namespace LmpClient.Systems.Revert
 {
     public class RevertEvents : SubSystem<RevertSystem>
     {
-        public void FlightReady()
+        public void OnVesselChange(Vessel data)
         {
-            System.StartingVesselId = FlightGlobals.ActiveVessel ? FlightGlobals.ActiveVessel.id : Guid.Empty;
+            System.StartingVesselId = Guid.Empty;
+        }
+        
+        public void VesselAssembled(Vessel vessel, ShipConstruct construct)
+        {
+            System.StartingVesselId = vessel.id;
         }
     }
 }
