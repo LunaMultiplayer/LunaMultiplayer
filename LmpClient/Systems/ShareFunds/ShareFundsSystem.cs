@@ -1,6 +1,8 @@
 ﻿using LmpClient.Events;
 using LmpClient.Systems.ShareProgress;
 using LmpCommon.Enums;
+using System;
+using Guid = System.Guid;
 
 namespace LmpClient.Systems.ShareFunds
 {
@@ -19,6 +21,8 @@ namespace LmpClient.Systems.ShareFunds
 
         public bool Reverting { get; set; }
 
+        public Tuple<Guid, float> CurrentShipCost { get; set; }
+
         protected override void OnEnabled()
         {
             base.OnEnabled();
@@ -29,6 +33,8 @@ namespace LmpClient.Systems.ShareFunds
             RevertEvent.onRevertingToLaunch.Add(ShareFundsEvents.RevertingDetected);
             RevertEvent.onReturningToEditor.Add(ShareFundsEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Add(ShareFundsEvents.LevelLoaded);
+            GameEvents.onVesselSwitching.Add(ShareFundsEvents.VesselSwitching);
+            GameEvents.onFlightReady.Add(ShareFundsEvents.FlightReady);
         }
 
         protected override void OnDisabled()
@@ -41,6 +47,8 @@ namespace LmpClient.Systems.ShareFunds
             RevertEvent.onRevertingToLaunch.Remove(ShareFundsEvents.RevertingDetected);
             RevertEvent.onReturningToEditor.Remove(ShareFundsEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Remove(ShareFundsEvents.LevelLoaded);
+            GameEvents.onVesselSwitching.Remove(ShareFundsEvents.VesselSwitching);
+            GameEvents.onFlightReady.Remove(ShareFundsEvents.FlightReady);
 
             _lastFunds = 0;
             Reverting = false;

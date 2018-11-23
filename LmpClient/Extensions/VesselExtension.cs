@@ -8,6 +8,31 @@ namespace LmpClient.Extensions
     public static class VesselExtension
     {
         /// <summary>
+        /// Get vessel cost
+        /// </summary>
+        public static float GetShipCosts(this Vessel vessel, out float dryCost, out float fuelCost)
+        {
+            dryCost = 0f;
+            fuelCost = 0f;
+
+            foreach (var part in vessel.parts)
+            {
+                var partPrice = part.partInfo.cost + part.GetModuleCosts(part.partInfo.cost);
+                var partResourcePrice = 0f;
+                foreach (var resource in part.Resources)
+                {
+                    partPrice -= resource.info.unitCost * (float)resource.maxAmount;
+                    partResourcePrice += resource.info.unitCost * (float)resource.amount;
+                }
+                
+                dryCost += partPrice;
+                fuelCost += partResourcePrice;
+            }
+
+            return dryCost + fuelCost;
+        }
+
+        /// <summary>
         /// Freeze a vessel position
         /// </summary>
         public static void FreezePosition(this Vessel vessel)
