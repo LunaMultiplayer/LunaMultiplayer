@@ -20,7 +20,7 @@ namespace LmpClient.Harmony
         }
 
         [HarmonyPostfix]
-        private static void PostfixUnload(Vessel __instance, bool fromShipAssembly)
+        private static void PostfixInitialize(Vessel __instance, bool fromShipAssembly)
         {
             VesselInitializeEvent.onVesselInitialized.Fire(__instance, fromShipAssembly);
         }
