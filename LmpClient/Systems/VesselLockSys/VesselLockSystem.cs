@@ -2,6 +2,7 @@
 using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
+using LmpClient.Systems.SettingsSys;
 using LmpClient.VesselUtilities;
 using LmpCommon.Locks;
 using System;
@@ -92,18 +93,13 @@ namespace LmpClient.Systems.VesselLockSys
 
         public void StartSpectating(Guid spectatingVesselId)
         {
+            VesselCommon.IsSpectating = true;
+
             //Lock all vessel controls
             InputLockManager.SetControlLock(BlockAllControls, SpectateLock);
 
-            LockSystem.Singleton.ReleasePlayerLocks(LockType.Spectator);
-            LockSystem.Singleton.ReleasePlayerLocks(LockType.Kerbal);
-            LockSystem.Singleton.ReleasePlayerLocks(LockType.Update);
-            LockSystem.Singleton.ReleasePlayerLocks(LockType.UnloadedUpdate);
-
             LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
-
-            VesselCommon.IsSpectating = true;
-            VesselCommon.SpectatingVesselId = spectatingVesselId;
+            LockSystem.Singleton.ReleaseAllPlayerSpecifiedLocks(LockType.Control, LockType.Update, LockType.Kerbal, LockType.UnloadedUpdate);
 
             //Disable "EVA" button
             HighLogic.CurrentGame.Parameters.Flight.CanEVA = false;
@@ -112,10 +108,15 @@ namespace LmpClient.Systems.VesselLockSys
 
         public void StopSpectating()
         {
-            InputLockManager.RemoveControlLock(SpectateLock);
-            LockSystem.Singleton.ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
+            
+            //Unlock all vessel controls
+            InputLockManager.RemoveControlLock(SpectateLock);
 
+            if (LockSystem.LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName))
+                LockSystem.Singleton.ReleaseSpectatorLock();
+            
+            //We are not spectating anymore so try to get as many unloaded update locks as possible
             foreach (var vessel in FlightGlobals.Vessels)
             {
                 if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))

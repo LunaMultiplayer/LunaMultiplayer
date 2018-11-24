@@ -8,7 +8,6 @@ using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using UniLinq;
 
 namespace LmpClient.Systems.Lock
 {
@@ -27,21 +26,9 @@ namespace LmpClient.Systems.Lock
                 case LockMessageType.ListReply:
                     {
                         var data = (LockListReplyMsgData)msgData;
-
-                        var currentLocks = LockSystem.LockQuery.GetAllLocks().ToList();
-                        var missingLocks = data.Locks.Except(currentLocks);
-
-                        foreach (var missingLock in missingLocks)
+                        for (var i = 0; i < data.LocksCount; i++)
                         {
-                            LockSystem.LockStore.AddOrUpdateLock(missingLock);
-                            LockEvent.onLockAcquire.Fire(missingLock);
-                        }
-
-                        var corruptLocks = currentLocks.Except(data.Locks);
-                        foreach (var corruptLock in corruptLocks)
-                        {
-                            LockSystem.LockStore.AddOrUpdateLock(corruptLock);
-                            LockEvent.onLockAcquire.Fire(corruptLock);
+                            LockSystem.LockStore.AddOrUpdateLock(data.Locks[i]);
                         }
 
                         if (MainSystem.NetworkState < ClientState.LocksSynced)

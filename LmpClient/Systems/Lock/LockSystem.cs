@@ -24,12 +24,6 @@ namespace LmpClient.Systems.Lock
 
         public override string SystemName { get; } = nameof(LockSystem);
 
-        protected override void OnEnabled()
-        {
-            base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageSender.SendLocksRequest));
-        }
-
         protected override void OnDisabled()
         {
             base.OnDisabled();
@@ -119,7 +113,8 @@ namespace LmpClient.Systems.Lock
         /// </summary>
         public void AcquireSpectatorLock(Guid vesselId)
         {
-            AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+            if (!LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName))
+                AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName, vesselId));
         }
 
         /// <summary>
@@ -184,8 +179,7 @@ namespace LmpClient.Systems.Lock
         /// </summary>
         public void ReleaseSpectatorLock()
         {
-            if (LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName))
-                ReleaseLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName));
+            ReleaseLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName));
         }
 
         /// <summary>

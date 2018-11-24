@@ -1,21 +1,10 @@
-﻿using System;
-using System.Linq;
-
-namespace LmpCommon.Locks
+﻿namespace LmpCommon.Locks
 {
     /// <summary>
     /// Class that retrieve locks specific for spectators
     /// </summary>
     public partial class LockQuery
     {
-        /// <summary>
-        /// Checks if there's an spectator for given vessel
-        /// </summary>
-        public bool SpectatorLockExists(Guid vesselId)
-        {
-            return LockStore.SpectatorLocks.Any(v => v.Value.VesselId == vesselId);
-        }
-
         /// <summary>
         /// Checks if given user is spectating
         /// </summary>

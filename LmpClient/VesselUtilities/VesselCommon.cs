@@ -40,20 +40,6 @@ namespace LmpClient.VesselUtilities
             set => _isSpectating = value;
         }
 
-        private static Guid _spectatingVesselId;
-        public static Guid SpectatingVesselId
-        {
-            get => IsSpectating ? _spectatingVesselId : Guid.Empty;
-            set => _spectatingVesselId = value;
-        }
-
-        /// <summary>
-        /// Check if someone is spectating current vessel
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null &&
-            LockSystem.LockQuery.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
-
         /// <summary>
         /// Return the controlled vessel ids
         /// </summary>
