@@ -20,6 +20,8 @@ namespace LmpClient.Systems.VesselRemoveSys
     {
         #region Fields & properties
 
+        private const int MaxTimeToKeepVesselsInRemoveListMs = 2500;
+
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
         public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
@@ -133,12 +135,12 @@ namespace LmpClient.Systems.VesselRemoveSys
         #region Update methods
 
         /// <summary>
-        /// Flush vessels older than 20 seconds
+        /// Flush vessels older than <see cref="MaxTimeToKeepVesselsInRemoveListMs"/> seconds
         /// </summary>
         private void FlushRemovedVessels()
         {
             var vesselsToFlush = RemovedVessels
-                .Where(v => (LunaNetworkTime.UtcNow - v.Value) > TimeSpan.FromSeconds(20))
+                .Where(v => (LunaNetworkTime.UtcNow - v.Value) > TimeSpan.FromMilliseconds(MaxTimeToKeepVesselsInRemoveListMs))
                 .Select(v => v.Key);
 
             foreach (var vesselId in vesselsToFlush)
