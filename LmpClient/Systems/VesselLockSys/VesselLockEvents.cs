@@ -35,7 +35,8 @@ namespace LmpClient.Systems.VesselLockSys
             }
             else
             {
-                VesselLockSystem.Singleton.StopSpectating();
+                if (VesselCommon.IsSpectating)
+                    VesselLockSystem.Singleton.StopSpectating();
                 if (FlightDriver.flightStarted)
                 {
                     LockSystem.Singleton.AcquireControlLock(vessel.id);
@@ -95,7 +96,8 @@ namespace LmpClient.Systems.VesselLockSys
                     KscSceneSystem.Singleton.RefreshTrackingStationVessels();
                     if (lockDefinition.PlayerName == SettingsSystem.CurrentSettings.PlayerName)
                     {
-                        VesselLockSystem.Singleton.StopSpectating();
+                        if (VesselCommon.IsSpectating)
+                            VesselLockSystem.Singleton.StopSpectating();
                         LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
                         LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                         LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
