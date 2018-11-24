@@ -127,7 +127,7 @@ namespace LmpClient.Harmony
                 MonoBehaviour.print(string.Concat(new object[] { "ObT : ", driver.orbit.ObT, "\nM : ", driver.orbit.meanAnomaly, "\nE : ", driver.orbit.eccentricAnomaly, "\nV : ", driver.orbit.trueAnomaly, "\nRadius: ", driver.orbit.radius, "\nvel: ", driver.vel.ToString(), "\nAN: ", driver.orbit.an.ToString(), "\nperiod: ", driver.orbit.period, "\n" }));
                 if (driver.vessel)
                 {
-                    Debug.LogWarning(string.Concat("[OrbitDriver Warning!]: ", driver.vessel.vesselName, " had a NaN Orbit and was removed."));
+                    Debug.LogWarning(string.Concat("[LMP - OrbitDriver Warning!]: ", driver.vessel.vesselName, " had a NaN Orbit and was removed."));
                     driver.vessel.Unload();
                     Object.Destroy(driver.vessel.gameObject);
                     return;
