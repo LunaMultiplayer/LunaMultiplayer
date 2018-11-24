@@ -112,8 +112,11 @@ namespace LmpClient.Systems.Warp
         {
             if (VesselCommon.IsSpectating)
             {
-                //Do auto sync to subspace of target the player is spectating
-                var targetPlayerSubspace = Singleton.GetPlayerSubspace(LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id));
+                //Sync to the subspace of the controller in case we are spectating
+                var controller = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id);
+                if (string.IsNullOrEmpty(controller)) return;
+
+                var targetPlayerSubspace = Singleton.GetPlayerSubspace(controller);
                 if (targetPlayerSubspace != -1 && CurrentSubspace != targetPlayerSubspace)
                     Singleton.SyncToSubspace(targetPlayerSubspace);
             }
