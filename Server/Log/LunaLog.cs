@@ -25,10 +25,7 @@ namespace Server.Log
             if (level <= LogSettings.SettingsStore.LogLevel)
             {
                 var output = LogSettings.SettingsStore.UseUtcTimeInLog
-                    ? $"[{DateTime.UtcNow:HH:mm:ss}]" : $"[{DateTime.Now:HH:mm:ss}]";
-
-                if (!string.IsNullOrEmpty(type))
-                    output += $"[{type}]";
+                    ? $"[{DateTime.UtcNow:HH:mm:ss}][{type}]" : $"[{DateTime.Now:HH:mm:ss}][{type}]";
 
                 output += $": {message}";
 
@@ -86,7 +83,7 @@ namespace Server.Log
         public static void Normal(string message)
         {
             Console.ForegroundColor = ConsoleColor.Gray;
-            WriteLog(LogLevels.Normal, string.Empty, message, true);
+            WriteLog(LogLevels.Normal, "LMP", message, true);
             Console.ResetColor();
         }
 
