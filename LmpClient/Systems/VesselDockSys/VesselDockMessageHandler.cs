@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
@@ -20,7 +21,9 @@ namespace LmpClient.Systems.VesselDockSys
         {
             if (!(msg.Data is VesselDockMsgData msgData)) return;
 
-            LunaLog.Log("Docking message received!");
+            LunaLog.Log(FlightGlobals.ActiveVessel
+                ? $"Docking message received! Dominant: {msgData.DominantVesselId} Weak: {msgData.WeakVesselId} Current {FlightGlobals.ActiveVessel.id}"
+                : $"Docking message received! Dominant: {msgData.DominantVesselId} Weak: {msgData.WeakVesselId}");
 
             if (msgData.WeakVesselId == CurrentDockEvent.WeakVesselId && msgData.DominantVesselId == CurrentDockEvent.DominantVesselId && 
                 (LunaNetworkTime.UtcNow - CurrentDockEvent.DockingTime) < TimeSpan.FromSeconds(5))
@@ -43,10 +46,16 @@ namespace LmpClient.Systems.VesselDockSys
                     dominantProto.vesselRef.GoOffRails();
                     FlightGlobals.ForceSetActiveVessel(dominantProto.vesselRef);
                 }
+
+                LockSystem.Singleton.ReleaseAllVesselLocks(null, msgData.WeakVesselId);
             }
             else if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.DominantVesselId)
             {
                 LunaLog.Log("Docking NOT detected. We OWN the dominant vessel");
+                foreach (var kerbal in FlightGlobals.ActiveVessel.GetVesselCrew())
+                {
+                    LockSystem.Singleton.AcquireKerbalLock(kerbal.name, true);
+                }
             }
 
             VesselRemoveSystem.Singleton.KillVessel(msgData.WeakVesselId, true, "Killing weak (active) vessel during a docking that was not detected");
