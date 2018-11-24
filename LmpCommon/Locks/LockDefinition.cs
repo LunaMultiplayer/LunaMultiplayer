@@ -67,9 +67,9 @@ namespace LmpCommon.Locks
 
         public override string ToString()
         {
-            return VesselId != Guid.Empty ? $"{Type} - {VesselId}" : 
-                !string.IsNullOrEmpty(KerbalName) ? $"{Type} - {KerbalName}" :
-                $"{Type}";
+            return VesselId != Guid.Empty ? $"{Type} - {VesselId} - {PlayerName}" : 
+                !string.IsNullOrEmpty(KerbalName) ? $"{Type} - {KerbalName} - {PlayerName}" :
+                $"{Type} - {PlayerName}";
         }
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)

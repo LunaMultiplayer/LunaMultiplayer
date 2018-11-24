@@ -28,6 +28,7 @@ namespace Server.Command
             RegisterCommand("help", new DisplayHelpCommand().Execute, "Displays this help");
             RegisterCommand("kick", new KickCommand().Execute, "Kicks a player from the server");
             RegisterCommand("listclients", new ListClientsCommand().Execute, "Lists connected clients");
+            RegisterCommand("listlocks", new ListLocksCommand().Execute, "Lists current locks");
             RegisterCommand("nukeksc", new NukeCommand().Execute, "Clears ALL vessels from KSC and the runway");
             RegisterCommand("setfunds", new SetFundsCommand().Execute, "Set funds value");
             RegisterCommand("setscience", new SetScienceCommand().Execute, "Set science value");
