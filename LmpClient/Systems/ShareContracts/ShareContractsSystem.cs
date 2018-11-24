@@ -27,8 +27,8 @@ namespace LmpClient.Systems.ShareContracts
 
             ContractSystem.generateContractIterations = 0;
 
-            LockEvent.onLockAcquireUnityThread.Add(ShareContractsEvents.LockAcquire);
-            LockEvent.onLockReleaseUnityThread.Add(ShareContractsEvents.LockReleased);
+            LockEvent.onLockAcquire.Add(ShareContractsEvents.LockAcquire);
+            LockEvent.onLockRelease.Add(ShareContractsEvents.LockReleased);
             GameEvents.onLevelWasLoadedGUIReady.Add(ShareContractsEvents.LevelLoaded);
 
             GameEvents.Contract.onAccepted.Add(ShareContractsEvents.ContractAccepted);
@@ -51,8 +51,8 @@ namespace LmpClient.Systems.ShareContracts
 
             ContractSystem.generateContractIterations = DefaultContractGenerateIterations;
 
-            LockEvent.onLockAcquireUnityThread.Remove(ShareContractsEvents.LockAcquire);
-            LockEvent.onLockReleaseUnityThread.Remove(ShareContractsEvents.LockReleased);
+            LockEvent.onLockAcquire.Remove(ShareContractsEvents.LockAcquire);
+            LockEvent.onLockRelease.Remove(ShareContractsEvents.LockReleased);
             GameEvents.onLevelWasLoadedGUIReady.Remove(ShareContractsEvents.LevelLoaded);
 
             //Always try to remove the event, as when we disconnect from a server the server settings will get the default values

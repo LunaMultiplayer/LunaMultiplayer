@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
+using System.Collections.Generic;
 using UnityEngine;
-using Random = System.Random;
 
 namespace LmpClient.Systems.PlayerColorSys
 {
@@ -32,8 +31,8 @@ namespace LmpClient.Systems.PlayerColorSys
 
             GameEvents.onVesselCreate.Add(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Add(PlayerColorEvents.MapEntered);
-            LockEvent.onLockAcquireUnityThread.Add(PlayerColorEvents.OnLockAcquire);
-            LockEvent.onLockReleaseUnityThread.Add(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquire.Add(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Add(PlayerColorEvents.OnLockRelease);
         }
 
         protected override void OnDisabled()
@@ -41,8 +40,8 @@ namespace LmpClient.Systems.PlayerColorSys
             base.OnDisabled();
             GameEvents.onVesselCreate.Remove(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Remove(PlayerColorEvents.MapEntered);
-            LockEvent.onLockAcquireUnityThread.Remove(PlayerColorEvents.OnLockAcquire);
-            LockEvent.onLockReleaseUnityThread.Remove(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquire.Remove(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Remove(PlayerColorEvents.OnLockRelease);
             PlayerColors.Clear();
         }
 

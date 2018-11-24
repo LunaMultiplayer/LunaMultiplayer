@@ -23,7 +23,7 @@ namespace LmpClient.Systems.Asteroid
         {
             base.OnEnabled();
 
-            LockEvent.onLockReleaseUnityThread.Add(AsteroidEvents.LockReleased);
+            LockEvent.onLockRelease.Add(AsteroidEvents.LockReleased);
             GameEvents.onLevelWasLoadedGUIReady.Add(AsteroidEvents.LevelLoaded);
             TrackingEvent.onStartTrackingAsteroid.Add(AsteroidEvents.StartTrackingAsteroid);
             TrackingEvent.onStopTrackingAsteroid.Add(AsteroidEvents.StopTrackingAsteroid);
@@ -34,7 +34,7 @@ namespace LmpClient.Systems.Asteroid
         {
             base.OnDisabled();
 
-            LockEvent.onLockReleaseUnityThread.Remove(AsteroidEvents.LockReleased);
+            LockEvent.onLockRelease.Remove(AsteroidEvents.LockReleased);
             GameEvents.onLevelWasLoadedGUIReady.Remove(AsteroidEvents.LevelLoaded);
             TrackingEvent.onStartTrackingAsteroid.Remove(AsteroidEvents.StartTrackingAsteroid);
             TrackingEvent.onStopTrackingAsteroid.Remove(AsteroidEvents.StopTrackingAsteroid);

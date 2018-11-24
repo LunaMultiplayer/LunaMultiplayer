@@ -1,14 +1,13 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Events;
-using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
 using LmpCommon.Locks;
 using LmpCommon.Message.Data.Lock;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UniLinq;
 
 namespace LmpClient.Systems.Lock
@@ -29,12 +28,21 @@ namespace LmpClient.Systems.Lock
                     {
                         var data = (LockListReplyMsgData)msgData;
 
-                        for (var i = 0; i < data.LocksCount; i++)
+                        var currentLocks = LockSystem.LockQuery.GetAllLocks().ToList();
+                        var missingLocks = data.Locks.Except(currentLocks);
+
+                        foreach (var missingLock in missingLocks)
                         {
-                            LockSystem.LockStore.AddOrUpdateLock(data.Locks[i]);
+                            LockSystem.LockStore.AddOrUpdateLock(missingLock);
+                            LockEvent.onLockAcquire.Fire(missingLock);
                         }
 
-                        RemoveCorruptLocks(data);
+                        var corruptLocks = currentLocks.Except(data.Locks);
+                        foreach (var corruptLock in corruptLocks)
+                        {
+                            LockSystem.LockStore.AddOrUpdateLock(corruptLock);
+                            LockEvent.onLockAcquire.Fire(corruptLock);
+                        }
 
                         if (MainSystem.NetworkState < ClientState.LocksSynced)
                             MainSystem.NetworkState = ClientState.LocksSynced;
@@ -46,7 +54,6 @@ namespace LmpClient.Systems.Lock
                         LockSystem.LockStore.AddOrUpdateLock(data.Lock);
 
                         LockEvent.onLockAcquire.Fire(data.Lock);
-                        System.AcquiredLocks.Enqueue(data.Lock);
                     }
                     break;
                 case LockMessageType.Release:
@@ -55,27 +62,8 @@ namespace LmpClient.Systems.Lock
                         LockSystem.LockStore.RemoveLock(data.Lock);
 
                         LockEvent.onLockRelease.Fire(data.Lock);
-                        System.ReleasedLocks.Enqueue(data.Lock);
                     }
                     break;
-            }
-        }
-
-        /// <summary>
-        /// Here we run trough OUR lock list and if we find a lock that is not ours and it does not exist on the server, we remove it.
-        /// We don't remove OUR locks as perhaps we just acquired one and we are waiting for the server to receive it.
-        /// </summary>
-        private static void RemoveCorruptLocks(LockListReplyMsgData data)
-        {
-            LocksToRemove.Clear();
-            foreach (var existingLock in LockSystem.LockQuery.GetAllLocks())
-            {
-                if (existingLock.PlayerName != SettingsSystem.CurrentSettings.PlayerName && !data.Locks.Contains(existingLock))
-                    LocksToRemove.Add(existingLock);
-            }
-            foreach (var lockToRemove in LocksToRemove)
-            {
-                LockSystem.LockStore.RemoveLock(lockToRemove);
             }
         }
     }

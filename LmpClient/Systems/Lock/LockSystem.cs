@@ -6,7 +6,6 @@ using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
 using LmpCommon.Message.Data.Lock;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -21,9 +20,6 @@ namespace LmpClient.Systems.Lock
         public static LockStore LockStore { get; } = new LockStore();
         public static LockQuery LockQuery { get; } = new LockQuery(LockStore);
 
-        public ConcurrentQueue<LockDefinition> AcquiredLocks = new ConcurrentQueue<LockDefinition>();
-        public ConcurrentQueue<LockDefinition> ReleasedLocks = new ConcurrentQueue<LockDefinition>();
-
         #region Base overrides
 
         public override string SystemName { get; } = nameof(LockSystem);
@@ -31,7 +27,6 @@ namespace LmpClient.Systems.Lock
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, TriggerEvents));
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageSender.SendLocksRequest));
         }
 
@@ -42,15 +37,6 @@ namespace LmpClient.Systems.Lock
         }
 
         #endregion
-
-        private void TriggerEvents()
-        {
-            while (AcquiredLocks.TryDequeue(out var lockDef))
-                LockEvent.onLockAcquireUnityThread.Fire(lockDef);
-
-            while (ReleasedLocks.TryDequeue(out var lockDef))
-                LockEvent.onLockReleaseUnityThread.Fire(lockDef);
-        }
 
         #region Public methods
 

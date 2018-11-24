@@ -22,8 +22,8 @@ namespace LmpClient.Systems.KscScene
         
         protected override void OnEnabled()
         {
-            LockEvent.onLockAcquireUnityThread.Add(KscSceneEvents.OnLockAcquire);
-            LockEvent.onLockReleaseUnityThread.Add(KscSceneEvents.OnLockRelease);
+            LockEvent.onLockAcquire.Add(KscSceneEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Add(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Add(KscSceneEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Add(KscSceneEvents.LevelLoaded);
 
@@ -32,8 +32,8 @@ namespace LmpClient.Systems.KscScene
 
         protected override void OnDisabled()
         {
-            LockEvent.onLockAcquireUnityThread.Remove(KscSceneEvents.OnLockAcquire);
-            LockEvent.onLockReleaseUnityThread.Remove(KscSceneEvents.OnLockRelease);
+            LockEvent.onLockAcquire.Remove(KscSceneEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Remove(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Remove(KscSceneEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Remove(KscSceneEvents.LevelLoaded);
         }

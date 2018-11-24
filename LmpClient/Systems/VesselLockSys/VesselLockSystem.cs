@@ -41,8 +41,8 @@ namespace LmpClient.Systems.VesselLockSys
             GameEvents.onVesselChange.Add(VesselLockEvents.OnVesselChange);
             GameEvents.onLevelWasLoadedGUIReady.Add(VesselLockEvents.LevelLoaded);
             GameEvents.onVesselLoaded.Add(VesselLockEvents.VesselLoaded);
-            LockEvent.onLockAcquireUnityThread.Add(VesselLockEvents.LockAcquire);
-            LockEvent.onLockReleaseUnityThread.Add(VesselLockEvents.LockReleased);
+            LockEvent.onLockAcquire.Add(VesselLockEvents.LockAcquire);
+            LockEvent.onLockRelease.Add(VesselLockEvents.LockReleased);
             VesselUnloadEvent.onVesselUnloading.Add(VesselLockEvents.VesselUnloading);
             FlightDriverEvent.onFlightStarted.Add(VesselLockEvents.FlightStarted);
 
@@ -55,8 +55,8 @@ namespace LmpClient.Systems.VesselLockSys
             GameEvents.onVesselChange.Remove(VesselLockEvents.OnVesselChange);
             GameEvents.onLevelWasLoadedGUIReady.Remove(VesselLockEvents.LevelLoaded);
             GameEvents.onVesselLoaded.Remove(VesselLockEvents.VesselLoaded);
-            LockEvent.onLockAcquireUnityThread.Remove(VesselLockEvents.LockAcquire);
-            LockEvent.onLockReleaseUnityThread.Remove(VesselLockEvents.LockReleased);
+            LockEvent.onLockAcquire.Remove(VesselLockEvents.LockAcquire);
+            LockEvent.onLockRelease.Remove(VesselLockEvents.LockReleased);
             VesselUnloadEvent.onVesselUnloading.Remove(VesselLockEvents.VesselUnloading);
             FlightDriverEvent.onFlightStarted.Remove(VesselLockEvents.FlightStarted);
         }

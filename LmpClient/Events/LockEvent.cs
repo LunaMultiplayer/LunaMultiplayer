@@ -10,7 +10,5 @@ namespace LmpClient.Events
     {
         public static EventData<LockDefinition> onLockAcquire;
         public static EventData<LockDefinition> onLockRelease;
-        public static EventData<LockDefinition> onLockAcquireUnityThread;
-        public static EventData<LockDefinition> onLockReleaseUnityThread;
     }
 }

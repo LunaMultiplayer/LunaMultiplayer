@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.TimeSync;
+using System;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPartSyncUiFieldSys
@@ -32,7 +32,7 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
         {
             base.OnEnabled();
 
-            LockEvent.onLockAcquireUnityThread.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
+            LockEvent.onLockAcquire.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartUiFieldsSyncs));
         }
@@ -41,7 +41,7 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
         {
             base.OnDisabled();
 
-            LockEvent.onLockAcquireUnityThread.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
+            LockEvent.onLockAcquire.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
 
             VesselPartsUiFieldsSyncs.Clear();
         }
