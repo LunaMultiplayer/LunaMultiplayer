@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
@@ -76,13 +77,8 @@ namespace LmpClient.Systems.VesselDockSys
 
             if (_ownDominantVessel || _ownWeakVessel)
             {
-                CoroutineUtil.StartDelayedRoutine("OnDockingComplete", () =>
-                {
-                    VesselRemoveSystem.Singleton.KillVessel(CurrentDockEvent.WeakVesselId, true, "Killing weak vessel during a detected docking");
-                }, 3);
-
+                VesselRemoveSystem.Singleton.DelayedKillVessel(CurrentDockEvent.WeakVesselId, true, "Killing weak vessel during a detected docking", 3000);
                 LockSystem.Singleton.ReleaseAllVesselLocks(null, CurrentDockEvent.WeakVesselId);
-
                 VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(CurrentDockEvent.WeakVesselId, false);
             }
         }
@@ -109,24 +105,22 @@ namespace LmpClient.Systems.VesselDockSys
             //Send the definitions of the new vessels once their orbits are initialized
 
             LunaLog.Log($"Sending undocked vessel1 {vessel1.id}");
-            LockSystem.Singleton.AcquireUpdateLock(vessel1.id);
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1);
+            if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id != vessel1.id)
+            {
+                LockSystem.Singleton.AcquireUpdateLock(vessel1.id);
+                vessel1.SetImmortal(true);
+            }
 
             LunaLog.Log($"Sending undocked vessel2 {vessel2.id}");
-            LockSystem.Singleton.AcquireUpdateLock(vessel2.id);
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2);
+            if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id != vessel2.id)
+            {
+                LockSystem.Singleton.AcquireUpdateLock(vessel2.id);
+                vessel2.SetImmortal(true);
+            }
 
             LunaLog.Log("Undocking finished");
-        }
-
-        /// <summary>
-        /// After an undock, once both vessels have their orbits ready, send them to the server
-        /// </summary>
-        public void LmpVesselReady(Vessel vessel)
-        {
-            
-
-
         }
 
         #region Private
