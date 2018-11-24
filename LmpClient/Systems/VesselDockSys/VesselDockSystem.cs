@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselDockSys
             GameEvents.onVesselDocking.Remove(VesselDockEvents.OnVesselDocking);
             GameEvents.onDockingComplete.Remove(VesselDockEvents.OnDockingComplete);
 
-            GameEvents.onPartUndock.Add(VesselDockEvents.UndockingStart);
+            GameEvents.onPartUndock.Remove(VesselDockEvents.UndockingStart);
             GameEvents.onVesselsUndocking.Remove(VesselDockEvents.UndockingComplete);
         }
     }
