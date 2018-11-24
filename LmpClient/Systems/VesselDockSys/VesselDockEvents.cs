@@ -106,21 +106,31 @@ namespace LmpClient.Systems.VesselDockSys
                 ? $"Undock detected! Current {FlightGlobals.ActiveVessel.id} Vessel1 {vessel1.id} Vessel2 {vessel2.id}" 
                 : $"Undock detected! Vessel1 {vessel1.id} Vessel2 {vessel2.id}");
 
+            //Send the definitions of the new vessels once their orbits are initialized
+
+            LunaLog.Log($"Sending undocked vessel1 {vessel1.id}");
             LockSystem.Singleton.AcquireUpdateLock(vessel1.id);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1);
+
+            LunaLog.Log($"Sending undocked vessel2 {vessel2.id}");
             LockSystem.Singleton.AcquireUpdateLock(vessel2.id);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2);
 
-            //Send the definitions of the new vessels after 0.5 seconds so the orbits are initialized
-            CoroutineUtil.StartDelayedRoutine("UndockingComplete", () =>
-            {
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1);
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2);
+            LunaLog.Log("Undocking finished");
+        }
 
-                LunaLog.Log("Undocking finished");
-            }, 0.5f);
+        /// <summary>
+        /// After an undock, once both vessels have their orbits ready, send them to the server
+        /// </summary>
+        public void LmpVesselReady(Vessel vessel)
+        {
+            
+
+
         }
 
         #region Private
-        
+
         /// <summary>
         /// Jumps to the subspace of the controller vessel in case he is more advanced in time
         /// </summary>
