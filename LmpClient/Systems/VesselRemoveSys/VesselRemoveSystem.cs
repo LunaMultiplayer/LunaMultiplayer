@@ -3,6 +3,7 @@ using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Localization;
+using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Time;
 using System;
@@ -76,6 +77,18 @@ namespace LmpClient.Systems.VesselRemoveSys
         public bool VesselWillBeKilled(Guid vesselId)
         {
             return RemovedVessels.ContainsKey(vesselId);
+        }
+
+        /// <summary>
+        /// Kills a vessel.
+        /// </summary>
+        public void DelayedKillVessel(Guid vesselId, bool addToKilledList, string reason, int delayInMs)
+        {
+            CoroutineUtil.StartDelayedRoutine("DelayedKillVessel", () =>
+            {
+                LunaLog.Log($"Delayed attempt to kill vessel {vesselId}");
+                KillVessel(vesselId, addToKilledList, reason);
+            }, (float)TimeSpan.FromMilliseconds(delayInMs).TotalSeconds);
         }
 
         /// <summary>
