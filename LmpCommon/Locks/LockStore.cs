@@ -70,16 +70,32 @@ namespace LmpCommon.Locks
                     }
                     break;
                 case LockType.Kerbal:
-                    KerbalLocks.AddOrUpdate(lockDefinition.KerbalName, lockDefinition, (key, existingVal) => lockDefinition);
+                    KerbalLocks.AddOrUpdate(lockDefinition.KerbalName, lockDefinition, (key, existingVal) =>
+                    {
+                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        return existingVal;
+                    });
                     break;
                 case LockType.Update:
-                    UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
+                    UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) =>
+                    {
+                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        return existingVal;
+                    });
                     break;
                 case LockType.UnloadedUpdate:
-                    UnloadedUpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
+                    UnloadedUpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) =>
+                    {
+                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        return existingVal;
+                    });
                     break;
                 case LockType.Control:
-                    ControlLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
+                    ControlLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) =>
+                    {
+                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        return existingVal;
+                    });
                     break;
                 case LockType.Spectator:
                     SpectatorLocks.AddOrUpdate(lockDefinition.PlayerName, lockDefinition, (key, existingVal) => lockDefinition);

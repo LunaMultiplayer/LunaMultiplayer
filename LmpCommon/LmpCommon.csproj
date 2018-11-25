@@ -168,6 +168,7 @@
     <Compile Include="Message\Data\Kerbal\KerbalsRequestMsgData.cs" />
     <Compile Include="Message\Data\Lock\LockAcquireMsgData.cs" />
     <Compile Include="Message\Data\Lock\LockBaseMsgData.cs" />
+    <Compile Include="Message\Data\Lock\LockInfo.cs" />
     <Compile Include="Message\Data\Lock\LockListReplyMsgData.cs" />
     <Compile Include="Message\Data\Lock\LockListRequestMsgData.cs" />
     <Compile Include="Message\Data\Lock\LockReleaseMsgData.cs" />

@@ -98,7 +98,7 @@ namespace LmpClient.Systems.VesselLockSys
             //Lock all vessel controls
             InputLockManager.SetControlLock(BlockAllControls, SpectateLock);
 
-            LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
+            LockSystem.Singleton.AcquireSpectatorLock();
             LockSystem.Singleton.ReleaseAllPlayerSpecifiedLocks(LockType.Control, LockType.Update, LockType.Kerbal, LockType.UnloadedUpdate);
 
             //Disable "EVA" button

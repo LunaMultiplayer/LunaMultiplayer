@@ -1,5 +1,4 @@
-﻿using Lidgren.Network;
-using LmpCommon.Message.Base;
+﻿using LmpCommon.Message.Data.Lock;
 using System;
 using System.Collections.Generic;
 
@@ -15,17 +14,17 @@ namespace LmpCommon.Locks
         /// <summary>
         /// Kerbal name assigned to the lock. Can be null unless lock type is kerbal
         /// </summary>
-        public string KerbalName { get; internal set; } = string.Empty;
+        public string KerbalName { get; } = string.Empty;
 
         /// <summary>
         /// Vessel id assigned to the lock. Can be Guid.Empty for an asteroid lock
         /// </summary>
-        public Guid VesselId { get; internal set; } = Guid.Empty;
+        public Guid VesselId { get; } = Guid.Empty;
 
         /// <summary>
         /// The type of the lock. It should never be null
         /// </summary>
-        public LockType Type { get; internal set; }
+        public LockType Type { get; }
 
         /// <summary>
         /// Parameterless constructor should not be used except for deserialization
@@ -35,19 +34,36 @@ namespace LmpCommon.Locks
         }
 
         /// <summary>
-        /// Most basic constructor
+        /// LockInfo constructor
+        /// </summary>
+        public LockDefinition(LockInfo lockInfo)
+        {
+            PlayerName = lockInfo.PlayerName.Clone() as string;
+            KerbalName = lockInfo.KerbalName.Clone() as string;
+            VesselId = lockInfo.VesselId;
+            Type = lockInfo.Type;
+        }
+
+        /// <summary>
+        /// Contract/Asteroid/Spectator constructor
         /// </summary>
         public LockDefinition(LockType type, string playerName)
         {
+            if (type != LockType.Contract && type != LockType.Asteroid && type != LockType.Spectator)
+                throw new Exception("This constructor is only for Contract/Asteroid/Spectator type!");
+
             Type = type;
             PlayerName = playerName;
         }
 
         /// <summary>
-        /// Standard constructor
+        /// Control/Update/UnlUpdate constructor
         /// </summary>
         public LockDefinition(LockType type, string playerName, Guid vesselId)
         {
+            if (type != LockType.Control && type != LockType.Update && type != LockType.UnloadedUpdate)
+                throw new Exception("This constructor is only for Control/Update/UnlUpdate type!");
+
             Type = type;
             PlayerName = playerName;
             VesselId = vesselId;
@@ -72,33 +88,9 @@ namespace LmpCommon.Locks
                 $"{Type} - {PlayerName}";
         }
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg)
+        public LockInfo AsLockInfo()
         {
-            lidgrenMsg.Write(PlayerName);
-            lidgrenMsg.Write(KerbalName);
-            GuidUtil.Serialize(VesselId, lidgrenMsg);
-            lidgrenMsg.Write((int)Type);
-        }
-
-        public void Deserialize(NetIncomingMessage lidgrenMsg)
-        {
-            PlayerName = lidgrenMsg.ReadString();
-            KerbalName = lidgrenMsg.ReadString();
-            VesselId = GuidUtil.Deserialize(lidgrenMsg);
-            Type = (LockType)lidgrenMsg.ReadInt32();
-        }
-
-        public int GetByteCount()
-        {
-            return PlayerName.GetByteCount() + KerbalName.GetByteCount() + GuidUtil.ByteSize + sizeof(LockType) + sizeof(uint);
-        }
-
-        public void CopyFrom(LockDefinition lockDefinition)
-        {
-            PlayerName = lockDefinition.PlayerName.Clone() as string;
-            Type = lockDefinition.Type;
-            KerbalName = lockDefinition.KerbalName;
-            VesselId = lockDefinition.VesselId;
+            return new LockInfo(this);
         }
 
         #region Equatable

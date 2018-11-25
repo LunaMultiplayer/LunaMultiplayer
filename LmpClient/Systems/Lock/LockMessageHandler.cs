@@ -28,7 +28,7 @@ namespace LmpClient.Systems.Lock
                         var data = (LockListReplyMsgData)msgData;
                         for (var i = 0; i < data.LocksCount; i++)
                         {
-                            LockSystem.LockStore.AddOrUpdateLock(data.Locks[i]);
+                            LockSystem.LockStore.AddOrUpdateLock(data.Locks[i].AsLockDefinition());
                         }
 
                         if (MainSystem.NetworkState < ClientState.LocksSynced)
@@ -38,17 +38,17 @@ namespace LmpClient.Systems.Lock
                 case LockMessageType.Acquire:
                     {
                         var data = (LockAcquireMsgData)msgData;
-                        LockSystem.LockStore.AddOrUpdateLock(data.Lock);
+                        LockSystem.LockStore.AddOrUpdateLock(data.Lock.AsLockDefinition());
 
-                        LockEvent.onLockAcquire.Fire(data.Lock);
+                        LockEvent.onLockAcquire.Fire(data.Lock.AsLockDefinition());
                     }
                     break;
                 case LockMessageType.Release:
                     {
                         var data = (LockReleaseMsgData)msgData;
-                        LockSystem.LockStore.RemoveLock(data.Lock);
+                        LockSystem.LockStore.RemoveLock(data.Lock.AsLockDefinition());
 
-                        LockEvent.onLockRelease.Fire(data.Lock);
+                        LockEvent.onLockRelease.Fire(data.Lock.AsLockDefinition());
                     }
                     break;
             }

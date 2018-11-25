@@ -44,7 +44,7 @@ namespace LmpClient.Systems.Lock
         private void AcquireLock(LockDefinition lockDefinition, bool force = false)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockAcquireMsgData>();
-            msgData.Lock = lockDefinition;
+            msgData.Lock = lockDefinition.AsLockInfo();
             msgData.Force = force;
 
             MessageSender.SendMessage(msgData);
@@ -111,10 +111,10 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Aquire the spectator lock on the given vessel
         /// </summary>
-        public void AcquireSpectatorLock(Guid vesselId)
+        public void AcquireSpectatorLock()
         {
             if (!LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+                AcquireLock(new LockDefinition(LockType.Spectator, SettingsSystem.CurrentSettings.PlayerName));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace LmpClient.Systems.Lock
         private void ReleaseLock(LockDefinition lockDefinition)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
-            msgData.Lock.CopyFrom(lockDefinition);
+            msgData.Lock = lockDefinition.AsLockInfo();
 
             LockStore.RemoveLock(lockDefinition);
             LockEvent.onLockRelease.Fire(lockDefinition);
