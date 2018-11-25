@@ -126,7 +126,7 @@ namespace LmpClient.Systems.Lock
         }
 
         /// <summary>
-        /// Aquire the contract lock for the current player.
+        /// Acquire the contract lock for the current player.
         /// </summary>
         public void AcquireContractLock()
         {
@@ -140,7 +140,6 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Release the specified lock by sending a message to the server.
         /// </summary>
-        /// <param name="lockDefinition">The definition of the lock to release</param>
         private void ReleaseLock(LockDefinition lockDefinition)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
