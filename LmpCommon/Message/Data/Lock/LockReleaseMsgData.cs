@@ -10,7 +10,7 @@ namespace LmpCommon.Message.Data.Lock
         internal LockReleaseMsgData() { }
         public override LockMessageType LockMessageType => LockMessageType.Release;
 
-        public LockInfo Lock = new LockInfo();
+        public LockDefinition Lock = new LockDefinition();
         public bool LockResult;
 
         public override string ClassName { get; } = nameof(LockReleaseMsgData);

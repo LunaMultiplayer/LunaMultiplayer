@@ -14,7 +14,7 @@ namespace Server.System
         public static void SendAllLocks(ClientStructure client)
         {
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockListReplyMsgData>();
-            msgData.Locks = LockSystem.LockQuery.GetAllLocks().Select(l=> l.AsLockInfo()).ToArray();
+            msgData.Locks = LockSystem.LockQuery.GetAllLocks().ToArray();
             msgData.LocksCount = msgData.Locks.Length;
 
             MessageQueuer.SendToClient<LockSrvMsg>(client, msgData);
@@ -26,7 +26,7 @@ namespace Server.System
             if (lockReleaseResult)
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockReleaseMsgData>();
-                msgData.Lock = lockDefinition.AsLockInfo();
+                msgData.Lock = lockDefinition;
                 msgData.LockResult = true;
                 
                 MessageQueuer.RelayMessage<LockSrvMsg>(client, msgData);
@@ -44,7 +44,7 @@ namespace Server.System
             if (LockSystem.AcquireLock(lockDefinition, force, out var repeatedAcquire))
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockAcquireMsgData>();
-                msgData.Lock = lockDefinition.AsLockInfo();
+                msgData.Lock = lockDefinition;
                 msgData.Force = force;
 
                 MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
@@ -69,7 +69,7 @@ namespace Server.System
             if (storedLockDef != null)
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockAcquireMsgData>();
-                msgData.Lock = storedLockDef.AsLockInfo();
+                msgData.Lock = storedLockDef;
                 MessageQueuer.SendToClient<LockSrvMsg>(client, msgData);
             }
         }

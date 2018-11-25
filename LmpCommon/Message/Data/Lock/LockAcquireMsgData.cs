@@ -10,7 +10,7 @@ namespace LmpCommon.Message.Data.Lock
         internal LockAcquireMsgData() { }
         public override LockMessageType LockMessageType => LockMessageType.Acquire;
 
-        public LockInfo Lock = new LockInfo();
+        public LockDefinition Lock = new LockDefinition();
         public bool Force;
 
         public override string ClassName { get; } = nameof(LockAcquireMsgData);

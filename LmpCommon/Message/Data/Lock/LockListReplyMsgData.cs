@@ -11,7 +11,7 @@ namespace LmpCommon.Message.Data.Lock
         public override LockMessageType LockMessageType => LockMessageType.ListReply;
 
         public int LocksCount;
-        public LockInfo[] Locks = new LockInfo[0];
+        public LockDefinition[] Locks = new LockDefinition[0];
 
         public override string ClassName { get; } = nameof(LockListReplyMsgData);
 
@@ -32,12 +32,12 @@ namespace LmpCommon.Message.Data.Lock
 
             LocksCount = lidgrenMsg.ReadInt32();
             if (Locks.Length < LocksCount)
-                Locks = new LockInfo[LocksCount];
+                Locks = new LockDefinition[LocksCount];
 
             for (var i = 0; i < LocksCount; i++)
             {
                 if (Locks[i] == null)
-                    Locks[i] = new LockInfo();
+                    Locks[i] = new LockDefinition();
 
                 Locks[i].Deserialize(lidgrenMsg);
             }

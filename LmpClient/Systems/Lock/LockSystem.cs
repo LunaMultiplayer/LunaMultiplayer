@@ -44,7 +44,7 @@ namespace LmpClient.Systems.Lock
         private void AcquireLock(LockDefinition lockDefinition, bool force = false)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockAcquireMsgData>();
-            msgData.Lock = lockDefinition.AsLockInfo();
+            msgData.Lock = lockDefinition;
             msgData.Force = force;
 
             MessageSender.SendMessage(msgData);
@@ -143,7 +143,7 @@ namespace LmpClient.Systems.Lock
         private void ReleaseLock(LockDefinition lockDefinition)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
-            msgData.Lock = lockDefinition.AsLockInfo();
+            msgData.Lock = lockDefinition;
 
             LockStore.RemoveLock(lockDefinition);
             LockEvent.onLockRelease.Fire(lockDefinition);

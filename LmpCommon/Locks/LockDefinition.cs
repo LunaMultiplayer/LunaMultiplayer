@@ -1,10 +1,11 @@
-﻿using LmpCommon.Message.Data.Lock;
+﻿using Lidgren.Network;
+using LmpCommon.Message.Base;
 using System;
 using System.Collections.Generic;
 
 namespace LmpCommon.Locks
 {
-    public class LockDefinition : IEquatable<LockDefinition>
+    public class LockDefinition : IEquatable<LockDefinition>, ICloneable
     {
         /// <summary>
         /// Player who owns the lock. It should never be null
@@ -14,17 +15,17 @@ namespace LmpCommon.Locks
         /// <summary>
         /// Kerbal name assigned to the lock. Can be null unless lock type is kerbal
         /// </summary>
-        public string KerbalName { get; } = string.Empty;
+        public string KerbalName { get; private set; } = string.Empty;
 
         /// <summary>
         /// Vessel id assigned to the lock. Can be Guid.Empty for an asteroid lock
         /// </summary>
-        public Guid VesselId { get; } = Guid.Empty;
+        public Guid VesselId { get; private set; } = Guid.Empty;
 
         /// <summary>
         /// The type of the lock. It should never be null
         /// </summary>
-        public LockType Type { get; }
+        public LockType Type { get; private set; }
 
         /// <summary>
         /// Parameterless constructor should not be used except for deserialization
@@ -32,18 +33,7 @@ namespace LmpCommon.Locks
         internal LockDefinition()
         {
         }
-
-        /// <summary>
-        /// LockInfo constructor
-        /// </summary>
-        public LockDefinition(LockInfo lockInfo)
-        {
-            PlayerName = lockInfo.PlayerName.Clone() as string;
-            KerbalName = lockInfo.KerbalName.Clone() as string;
-            VesselId = lockInfo.VesselId;
-            Type = lockInfo.Type;
-        }
-
+        
         /// <summary>
         /// Contract/Asteroid/Spectator constructor
         /// </summary>
@@ -88,9 +78,36 @@ namespace LmpCommon.Locks
                 $"{Type} - {PlayerName}";
         }
 
-        public LockInfo AsLockInfo()
+        public object Clone()
         {
-            return new LockInfo(this);
+            return new LockDefinition
+            {
+                KerbalName = KerbalName.Clone() as string,
+                PlayerName = PlayerName.Clone() as string,
+                VesselId = VesselId,
+                Type = Type
+            };
+        }
+
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
+        {
+            lidgrenMsg.Write(PlayerName);
+            lidgrenMsg.Write(KerbalName);
+            GuidUtil.Serialize(VesselId, lidgrenMsg);
+            lidgrenMsg.Write((int)Type);
+        }
+
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
+        {
+            PlayerName = lidgrenMsg.ReadString();
+            KerbalName = lidgrenMsg.ReadString();
+            VesselId = GuidUtil.Deserialize(lidgrenMsg);
+            Type = (LockType)lidgrenMsg.ReadInt32();
+        }
+
+        public int GetByteCount()
+        {
+            return PlayerName.GetByteCount() + KerbalName.GetByteCount() + GuidUtil.ByteSize + sizeof(LockType);
         }
 
         #region Equatable

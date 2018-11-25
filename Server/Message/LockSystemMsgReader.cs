@@ -23,12 +23,12 @@ namespace Server.Message
                 case LockMessageType.Acquire:
                     var acquireData = (LockAcquireMsgData)data;
                     if (acquireData.Lock.PlayerName == client.PlayerName)
-                        LockSystemSender.SendLockAcquireMessage(client, acquireData.Lock.AsLockDefinition(), acquireData.Force);
+                        LockSystemSender.SendLockAcquireMessage(client, acquireData.Lock, acquireData.Force);
                     break;
                 case LockMessageType.Release:
                     var releaseData = (LockReleaseMsgData)data;
                     if (releaseData.Lock.PlayerName == client.PlayerName)
-                        LockSystemSender.ReleaseAndSendLockReleaseMessage(client, releaseData.Lock.AsLockDefinition());
+                        LockSystemSender.ReleaseAndSendLockReleaseMessage(client, releaseData.Lock);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

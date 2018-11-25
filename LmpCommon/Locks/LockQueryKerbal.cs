@@ -38,8 +38,7 @@ namespace LmpCommon.Locks
         /// </summary>
         public IEnumerable<LockDefinition> GetAllKerbalLocks(string playerName)
         {
-            return LockStore.KerbalLocks.Select(v => v.Value)
-                .Where(v => v.PlayerName == playerName);
+            return LockStore.KerbalLocks.Where(v => v.Value.PlayerName == playerName).Select(v => v.Value);
         }
 
         /// <summary>

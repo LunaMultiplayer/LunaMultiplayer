@@ -38,8 +38,8 @@ namespace LmpCommon.Locks
         /// </summary>
         public IEnumerable<LockDefinition> GetAllControlLocks(string playerName)
         {
-            return LockStore.ControlLocks.Select(v => v.Value)
-                .Where(v => v.PlayerName == playerName);
+            return LockStore.ControlLocks.Where(v => v.Value.PlayerName == playerName)
+                .Select(v => v.Value);
         }
 
         /// <summary>

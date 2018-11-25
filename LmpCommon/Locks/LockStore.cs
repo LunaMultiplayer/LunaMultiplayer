@@ -58,55 +58,58 @@ namespace LmpCommon.Locks
         /// </summary>
         public void AddOrUpdateLock(LockDefinition lockDefinition)
         {
-            switch (lockDefinition.Type)
+            //Be sure to clone the lock before storing to avoid any reference issue
+            var safeLockDefinition = (LockDefinition)lockDefinition.Clone();
+
+            switch (safeLockDefinition.Type)
             {
                 case LockType.Asteroid:
                     lock (_asteroidSyncLock)
                     {
                         if (AsteroidLock == null)
-                            AsteroidLock = new LockDefinition(LockType.Asteroid, lockDefinition.PlayerName);
+                            AsteroidLock = new LockDefinition(LockType.Asteroid, safeLockDefinition.PlayerName);
                         else
-                            AsteroidLock.PlayerName = lockDefinition.PlayerName;
+                            AsteroidLock.PlayerName = safeLockDefinition.PlayerName;
                     }
                     break;
                 case LockType.Kerbal:
-                    KerbalLocks.AddOrUpdate(lockDefinition.KerbalName, lockDefinition, (key, existingVal) =>
+                    KerbalLocks.AddOrUpdate(safeLockDefinition.KerbalName, safeLockDefinition, (key, existingVal) =>
                     {
-                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        existingVal.PlayerName = safeLockDefinition.PlayerName;
                         return existingVal;
                     });
                     break;
                 case LockType.Update:
-                    UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) =>
+                    UpdateLocks.AddOrUpdate(safeLockDefinition.VesselId, safeLockDefinition, (key, existingVal) =>
                     {
-                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        existingVal.PlayerName = safeLockDefinition.PlayerName;
                         return existingVal;
                     });
                     break;
                 case LockType.UnloadedUpdate:
-                    UnloadedUpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) =>
+                    UnloadedUpdateLocks.AddOrUpdate(safeLockDefinition.VesselId, safeLockDefinition, (key, existingVal) =>
                     {
-                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        existingVal.PlayerName = safeLockDefinition.PlayerName;
                         return existingVal;
                     });
                     break;
                 case LockType.Control:
-                    ControlLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) =>
+                    ControlLocks.AddOrUpdate(safeLockDefinition.VesselId, safeLockDefinition, (key, existingVal) =>
                     {
-                        existingVal.PlayerName = lockDefinition.PlayerName;
+                        existingVal.PlayerName = safeLockDefinition.PlayerName;
                         return existingVal;
                     });
                     break;
                 case LockType.Spectator:
-                    SpectatorLocks.AddOrUpdate(lockDefinition.PlayerName, lockDefinition, (key, existingVal) => lockDefinition);
+                    SpectatorLocks.AddOrUpdate(safeLockDefinition.PlayerName, safeLockDefinition, (key, existingVal) => safeLockDefinition);
                     break;
                 case LockType.Contract:
                     lock (_contractSyncLock)
                     {
                         if (ContractLock == null)
-                            ContractLock = new LockDefinition(LockType.Contract, lockDefinition.PlayerName);
+                            ContractLock = new LockDefinition(LockType.Contract, safeLockDefinition.PlayerName);
                         else
-                            ContractLock.PlayerName = lockDefinition.PlayerName;
+                            ContractLock.PlayerName = safeLockDefinition.PlayerName;
                     }
                     break;
                 default:
