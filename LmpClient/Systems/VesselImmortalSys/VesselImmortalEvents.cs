@@ -1,6 +1,5 @@
 ﻿using LmpClient.Base;
 using LmpClient.Extensions;
-using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
 
 namespace LmpClient.Systems.VesselImmortalSys
@@ -44,10 +43,9 @@ namespace LmpClient.Systems.VesselImmortalSys
         /// </summary>
         public void OnLockAcquire(LockDefinition lockDefinition)
         {
-            if(lockDefinition.Type < LockType.Update) return;
+            if(lockDefinition.Type != LockType.Control && lockDefinition.Type != LockType.Update && lockDefinition.Type != LockType.UnloadedUpdate) return;
 
             var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
-
             System.SetImmortalStateBasedOnLock(vessel);
         }
 
@@ -56,11 +54,9 @@ namespace LmpClient.Systems.VesselImmortalSys
         /// </summary>
         public void OnLockRelease(LockDefinition lockDefinition)
         {
-            if (lockDefinition.Type < LockType.Update) return;
-            if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName) return;
-            
-            var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
+            if (lockDefinition.Type != LockType.Control && lockDefinition.Type != LockType.Update && lockDefinition.Type != LockType.UnloadedUpdate) return;
 
+            var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
             System.SetImmortalStateBasedOnLock(vessel);
         }
 
