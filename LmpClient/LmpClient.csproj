@@ -93,6 +93,7 @@
     <Compile Include="Events\VesselAssemblyEvent.cs" />
     <Compile Include="Events\VesselReloadEvent.cs" />
     <Compile Include="Events\VesselInitializeEvent.cs" />
+    <Compile Include="Events\VesselRemoveEvent.cs" />
     <Compile Include="Events\VesselUnloadEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />

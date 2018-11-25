@@ -97,6 +97,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         public void KillVessel(Guid vesselId, bool addToKilledList, string reason)
         {
             VesselCommon.RemoveVesselFromSystems(vesselId);
+            VesselRemoveEvent.onLmpVesselRemoved.Fire(vesselId);
 
             if (addToKilledList)
             {
