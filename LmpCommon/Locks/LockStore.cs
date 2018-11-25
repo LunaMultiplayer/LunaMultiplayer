@@ -31,27 +31,27 @@ namespace LmpCommon.Locks
         /// <summary>
         /// Several users can have several update locks but a vessel can only have 1 update lock
         /// </summary>
-        internal ConcurrentDictionary<Guid, LockDefinition> UpdateLocks { get; set; } = new ConcurrentDictionary<Guid, LockDefinition>();
+        internal ConcurrentDictionary<Guid, LockDefinition> UpdateLocks { get; } = new ConcurrentDictionary<Guid, LockDefinition>();
 
         /// <summary>
         /// Several users can have several unloaded update locks but a vessel can only have 1 update lock
         /// </summary>
-        internal ConcurrentDictionary<Guid, LockDefinition> UnloadedUpdateLocks { get; set; } = new ConcurrentDictionary<Guid, LockDefinition>();
+        internal ConcurrentDictionary<Guid, LockDefinition> UnloadedUpdateLocks { get; } = new ConcurrentDictionary<Guid, LockDefinition>();
 
         /// <summary>
         /// Several users can have several control locks but a vessel can only have 1 control lock
         /// </summary>
-        internal ConcurrentDictionary<Guid, LockDefinition> ControlLocks { get; set; } = new ConcurrentDictionary<Guid, LockDefinition>();
+        internal ConcurrentDictionary<Guid, LockDefinition> ControlLocks { get; } = new ConcurrentDictionary<Guid, LockDefinition>();
 
         /// <summary>
         /// Several users can have several kerbal locks but a kerbal can only have 1 lock
         /// </summary>
-        internal ConcurrentDictionary<string, LockDefinition> KerbalLocks { get; set; } = new ConcurrentDictionary<string, LockDefinition>();
+        internal ConcurrentDictionary<string, LockDefinition> KerbalLocks { get; } = new ConcurrentDictionary<string, LockDefinition>();
 
         /// <summary>
         /// Several vessels can have several spectators locks but a user can only have 1 spectator lock
         /// </summary>
-        internal ConcurrentDictionary<string, LockDefinition> SpectatorLocks { get; set; } = new ConcurrentDictionary<string, LockDefinition>();
+        internal ConcurrentDictionary<string, LockDefinition> SpectatorLocks { get; } = new ConcurrentDictionary<string, LockDefinition>();
 
         /// <summary>
         /// Adds or replace the given lock to the storage
