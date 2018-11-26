@@ -12,6 +12,7 @@ if (!$WEBHOOK_URL) {
 
 $AVATAR="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Appveyor_logo.svg/256px-Appveyor_logo.svg.png"
 $GITHUB_LOGO="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png"
+$LMP_LOGO="https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png"
 
 $REPO_URL="https://github.com/$env:APPVEYOR_REPO_NAME/"
 $URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME"
@@ -66,7 +67,7 @@ $WEBHOOK_DATA="{
     ""timestamp"": ""$TIMESTAMP"",
     ""footer"": {
       ""icon_url"": ""$GITHUB_LOGO"",
-      ""text"": ""[Github repo]($REPO_URL)""
+      ""text"": ""Luna multiplayer""
     }
   } ]
 }"
