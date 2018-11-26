@@ -55,6 +55,7 @@ else {
 
 $BUILD_VERSION = [uri]::EscapeDataString($env:APPVEYOR_BUILD_VERSION)
 $TIMESTAMP="$(Get-Date -format s)Z"
+
 $WEBHOOK_DATA="{
   ""username"": """",
   ""avatar_url"": ""$AVATAR"",
@@ -89,7 +90,8 @@ $HEADER = @{
     'X-Author' = 'Dagger'
 }
 
-Write-Output "[Webhook]: PayloadData: $WEBHOOK_DATA"
+Write-Output "[Webhook]: PayloadData:"
+Write-Output "[Webhook]: $WEBHOOK_DATA"
 
 Invoke-RestMethod -Uri "$WEBHOOK_URL" -Method POST -UserAgent "AppVeyor-Webhook" -ContentType "application/json" -Header $HEADER -Body $WEBHOOK_DATA
 
