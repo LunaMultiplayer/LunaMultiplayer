@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LmpClient.VesselUtilities;
+using System;
 using UnityEngine;
 
 namespace LmpClient.Windows.Vessels.Structures
@@ -33,6 +34,12 @@ namespace LmpClient.Windows.Vessels.Structures
         {
             GUILayout.BeginVertical();
             GUILayout.Label(VesselName);
+            if (GUILayout.Button("Reload"))
+            {
+                var vessel = FlightGlobals.FindVessel(VesselId);
+                vessel.protoVessel = vessel.BackupVessel();
+                VesselLoader.LoadVessel(vessel.protoVessel);
+            }
             Data.Display = GUILayout.Toggle(Data.Display, nameof(Data), ButtonStyle);
             Data.Print();
             Locks.Display = GUILayout.Toggle(Locks.Display, nameof(Locks), ButtonStyle);
