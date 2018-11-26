@@ -31,7 +31,8 @@ Switch ($STATUS) {
 
 $AVATAR="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Appveyor_logo.svg/256px-Appveyor_logo.svg.png"
 
-$URL="https://github.com/$env:APPVEYOR_REPO_NAME/"
+$REPOURL="https://github.com/$env:APPVEYOR_REPO_NAME/"
+$URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME"
 $BUILD_VERSION = [uri]::EscapeDataString($env:APPVEYOR_BUILD_VERSION)
 $TIMESTAMP="$(Get-Date -format s)Z"
 
@@ -42,22 +43,32 @@ $WEBHOOK_DATA="{
   ""embeds"": [ {
     ""color"": $EMBED_COLOR,
     ""author"": {
-      ""name"": ""Version: $BUILD_VERSION"",
+      ""name"": ""Appveyor"",
       ""url"": ""$URL"",
       ""icon_url"": ""$AVATAR""
     },
     ""title"": ""$BUILD_VERSION"",
     ""url"": ""$URL"",
-    ""description"": """",
+    ""description"": ""Keep in mind that nightly builds might contain bugs!"",
     ""fields"": [
       {
-        ""name"": ""Item"",
-        ""value"": ""[``Artifacts``](https://ci.appveyor.com/project/$env:APPVEYOR_REPO_NAME/build/job/$env:APPVEYOR_JOB_ID/artifacts)"",
+        ""name"": """",
+        ""value"": ""Client"",
         ""inline"": true
       },
       {
-        ""name"": ""Link"",
-        ""value"": ""[``Client``](https://ci.appveyor.com/project/$env:APPVEYOR_REPO_NAME/build/job/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip)"",
+        ""name"": """",
+        ""value"": ""[``Download``]($URL/build/job/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip)"",
+        ""inline"": true
+      }
+      {
+        ""name"": """",
+        ""value"": ""Master server"",
+        ""inline"": true
+      },
+      {
+        ""name"": """",
+        ""value"": ""[``Download``]($URL/build/job/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayerMasterServer-Debug.zip)"",
         ""inline"": true
       }
     ],
@@ -69,8 +80,7 @@ $HEADER = @{
     'X-Author' = 'Dagger'
 }
 
-Write-Output "[Webhook]: PayloadData:"
-Write-Output "[Webhook]: $WEBHOOK_DATA"
+Write-Output "[Webhook]: PayloadData: $WEBHOOK_DATA"
 
 Invoke-RestMethod -Uri "$WEBHOOK_URL" -Method POST -UserAgent "AppVeyor-Webhook" -ContentType "application/json" -Header $HEADER -Body $WEBHOOK_DATA
 
