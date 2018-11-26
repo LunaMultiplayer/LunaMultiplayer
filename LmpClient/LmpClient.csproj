@@ -351,9 +351,6 @@
     <Compile Include="Windows\BannedParts\BannedPartsDrawer.cs" />
     <Compile Include="Windows\BannedParts\BannedPartsWindow.cs" />
     <Compile Include="Windows\Tools\ToolsUtils.cs" />
-    <Compile Include="Windows\Locks\VesselLockDisplay.cs" />
-    <Compile Include="Windows\Locks\LocksDrawer.cs" />
-    <Compile Include="Windows\Locks\LocksWindow.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotDrawer.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotWindow.cs" />
     <Compile Include="Windows\Status\StatusTexts.cs" />
@@ -475,9 +472,13 @@
     <Compile Include="Windows\Tools\ToolsWindow.cs" />
     <Compile Include="Windows\Update\UpdateDrawer.cs" />
     <Compile Include="Windows\Update\UpdateWindow.cs" />
+    <Compile Include="Windows\Vessels\Structures\VesselBaseDisplay.cs" />
+    <Compile Include="Windows\Vessels\Structures\VesselDataDisplay.cs" />
+    <Compile Include="Windows\Vessels\Structures\VesselOrbitDisplay.cs" />
+    <Compile Include="Windows\Vessels\Structures\VesselLockDisplay.cs" />
     <Compile Include="Windows\Vessels\VesselsDrawer.cs" />
     <Compile Include="Windows\Vessels\VesselsWindow.cs" />
-    <Compile Include="Windows\Vessels\VesselDisplay.cs" />
+    <Compile Include="Windows\Vessels\Structures\VesselDisplay.cs" />
     <Compile Include="Windows\WindowUtil.cs" />
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>

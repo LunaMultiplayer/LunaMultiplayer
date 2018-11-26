@@ -9,7 +9,6 @@ using LmpClient.Windows.Admin;
 using LmpClient.Windows.Chat;
 using LmpClient.Windows.CraftLibrary;
 using LmpClient.Windows.Debug;
-using LmpClient.Windows.Locks;
 using LmpClient.Windows.Options;
 using LmpClient.Windows.Screenshots;
 using LmpClient.Windows.Systems;
@@ -145,7 +144,6 @@ namespace LmpClient.Windows.Status
             GUILayout.BeginHorizontal();
             DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ToggleButtonStyle);
             SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ToggleButtonStyle);
-            LocksWindow.Singleton.Display = GUILayout.Toggle(LocksWindow.Singleton.Display, StatusTexts.LocksBtnTxt, ToggleButtonStyle);
             ToolsWindow.Singleton.Display = GUILayout.Toggle(ToolsWindow.Singleton.Display, StatusTexts.ToolsBtnTxt, ToggleButtonStyle);
             VesselsWindow.Singleton.Display = GUILayout.Toggle(VesselsWindow.Singleton.Display, StatusTexts.VesselsBtnTxt, ToggleButtonStyle);
             GUILayout.EndHorizontal();

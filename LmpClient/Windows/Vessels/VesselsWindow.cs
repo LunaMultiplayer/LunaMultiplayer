@@ -1,11 +1,10 @@
 ﻿using LmpClient.Base;
-using LmpClient.Extensions;
+using LmpClient.Windows.Vessels.Structures;
 using LmpCommon.Enums;
 using LmpCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace LmpClient.Windows.Vessels
@@ -21,13 +20,12 @@ namespace LmpClient.Windows.Vessels
             set => base.Display = _display = value;
         }
 
-        private const float WindowHeight = 400;
-        private const float WindowWidth = 400;
+        private const float WindowHeight = 500;
+        private const float WindowWidth = 600;
 
         private DateTime _lastUpdateTime = DateTime.MinValue;
 
-        private static readonly List<VesselDisplay> Vessels = new List<VesselDisplay>();
-        private static readonly StringBuilder StrBuilder = new StringBuilder();
+        private static readonly Dictionary<Guid, VesselDisplay> VesselDisplayStore = new Dictionary<Guid, VesselDisplay>();
 
         #endregion
 
@@ -38,32 +36,18 @@ namespace LmpClient.Windows.Vessels
             {
                 for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
                 {
-                    if (FlightGlobals.Vessels[i] == null) continue;
+                    var vessel = FlightGlobals.Vessels[i];
+                    if (!VesselDisplayStore.ContainsKey(vessel.id))
+                    {
+                        VesselDisplayStore.Add(vessel.id, new VesselDisplay(vessel.id));
+                    }
 
-                    var existingVessel = Vessels.FirstOrDefault(v => v != null && v.VesselId == FlightGlobals.Vessels[i].id);
-                    if (existingVessel == null)
-                    {
-                        Vessels.Add(new VesselDisplay
-                        {
-                            VesselId = FlightGlobals.Vessels[i].id,
-                            Loaded = FlightGlobals.Vessels[i].loaded,
-                            Packed = FlightGlobals.Vessels[i].packed,
-                            Immortal = FlightGlobals.Vessels[i].IsImmortal(),
-                            VesselName = FlightGlobals.Vessels[i].name,
-                            ObtDriverMode = FlightGlobals.Vessels[i].orbitDriver ? FlightGlobals.Vessels[i].orbitDriver.updateMode : OrbitDriver.UpdateMode.IDLE
-                        });
-                    }
-                    else
-                    {
-                        existingVessel.Loaded = FlightGlobals.Vessels[i].loaded;
-                        existingVessel.Packed = FlightGlobals.Vessels[i].packed;
-                        existingVessel.Immortal = FlightGlobals.Vessels[i].IsImmortal();
-                        existingVessel.VesselName = FlightGlobals.Vessels[i].name;
-                        existingVessel.ObtDriverMode = FlightGlobals.Vessels[i].orbitDriver ? FlightGlobals.Vessels[i].orbitDriver.updateMode : OrbitDriver.UpdateMode.IDLE;
-                    }
+                    VesselDisplayStore[vessel.id].Update(vessel);
                 }
 
-                Vessels.RemoveAll(v => FlightGlobals.Vessels.All(ev => ev != null && ev.id != v.VesselId));
+                var keysToRemove = VesselDisplayStore.Keys.Except(FlightGlobals.Vessels.Select(v => v.id)).ToList();
+                foreach (var key in keysToRemove)
+                    VesselDisplayStore.Remove(key);
             }
         }
 

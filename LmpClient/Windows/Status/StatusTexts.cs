@@ -12,7 +12,6 @@ namespace LmpClient.Windows.Status
     {
         public const string DebugBtnTxt = "Debug";
         public const string SystemsBtnTxt = "Systems";
-        public const string LocksBtnTxt = "Locks";
         public const string ToolsBtnTxt = "Tools";
         public const string VesselsBtnTxt = "Vessels";
 
