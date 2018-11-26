@@ -76,7 +76,7 @@ after_build:
 
 #Post it on discord
 on_success:
-  - ps: Invoke-RestMethod https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/appveyor_discord.ps1 -o appveyor_discord.ps1
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/appveyor_discord.ps -o appveyor_discord.ps1
   - ps: ./appveyor_discord.ps1 success $env:WEBHOOK_URL
 
 #---------------------------------#
