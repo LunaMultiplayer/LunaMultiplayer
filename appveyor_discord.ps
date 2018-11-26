@@ -10,7 +10,17 @@ if (!$WEBHOOK_URL) {
   Exit
 }
 
-Write-Output "[Webhook]: Preparing the webhook..."
+$AVATAR="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Appveyor_logo.svg/256px-Appveyor_logo.svg.png"
+$GITHUB_LOGO="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png"
+
+$REPO_URL="https://github.com/$env:APPVEYOR_REPO_NAME/"
+$URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME"
+
+$ARTIFACTS_URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME/artifacts"
+$CLIENT_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip"
+$MASTER_SERVER_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayerMasterServer-Debug.zip"
+$BUILD_VERSION = [uri]::EscapeDataString($env:APPVEYOR_BUILD_VERSION)
+$TIMESTAMP="$(Get-Date -format s)Z"
 
 Switch ($STATUS) {
   "success" {
@@ -29,17 +39,10 @@ Switch ($STATUS) {
   }
 }
 
-$AVATAR="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Appveyor_logo.svg/256px-Appveyor_logo.svg.png"
-
-$REPOURL="https://github.com/$env:APPVEYOR_REPO_NAME/"
-$URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME"
-$BUILD_VERSION = [uri]::EscapeDataString($env:APPVEYOR_BUILD_VERSION)
-$TIMESTAMP="$(Get-Date -format s)Z"
-
 $WEBHOOK_DATA="{
   ""username"": """",
   ""avatar_url"": ""$AVATAR"",
-  ""content"":""New nightly build available for download"",
+  ""content"":"""",
   ""embeds"": [ {
     ""color"": $EMBED_COLOR,
     ""author"": {
@@ -47,29 +50,29 @@ $WEBHOOK_DATA="{
       ""url"": ""$URL"",
       ""icon_url"": ""$AVATAR""
     },
-    ""title"": ""$BUILD_VERSION"",
-    ""url"": ""$URL"",
+    ""title"": ""New nightly build available for download - $BUILD_VERSION"",
+    ""url"": ""$ARTIFACTS_URL"",
     ""description"": ""Keep in mind that nightly builds might contain bugs!"",
     ""fields"": [
       {
         ""name"": ""Client"",
-        ""value"": ""[Download Link](https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip)""
+        ""value"": ""[Download Link]($CLIENT_URL)""
       },
       {
         ""name"": ""Master Server"",
-        ""value"": ""[Download Link](https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayerMasterServer-Debug.zip)""
+        ""value"": ""[Download Link]($MASTER_SERVER_URL)""
       }
     ],
-    ""timestamp"": ""$TIMESTAMP""
+    ""timestamp"": ""$TIMESTAMP"",
+    ""footer"": {
+      ""icon_url"": ""$GITHUB_LOGO"",
+      ""text: ""[Github repo]($REPO_URL)""
+    }
   } ]
 }"
 
-$HEADER = @{
-    'X-Author' = 'Dagger'
-}
+Write-Output "[Webhook]: Webhook payload data: $WEBHOOK_DATA"
 
-Write-Output "[Webhook]: PayloadData: $WEBHOOK_DATA"
-
-Invoke-RestMethod -Uri "$WEBHOOK_URL" -Method POST -UserAgent "AppVeyor-Webhook" -ContentType "application/json" -Header $HEADER -Body $WEBHOOK_DATA
+Invoke-RestMethod -Uri "$WEBHOOK_URL" -Method POST -UserAgent "AppVeyor-Webhook" -ContentType "application/json" -Header @{"X-Autho" = "Dagger"} -Body $WEBHOOK_DATA
 
 Write-Output "[Webhook]: Successfully sent the webhook."
