@@ -55,7 +55,7 @@ namespace LmpClient.Systems.PlayerColorSys
         /// </summary>
         private static void UpdateVesselColorsFromLockVesselId(Guid vesselId)
         {
-            var vessel = FlightGlobals.fetch.LmpFindVessel(vesselId);
+            var vessel = FlightGlobals.FindVessel(vesselId);
             if (vessel != null)
             {
                 System.SetVesselOrbitColor(vessel);

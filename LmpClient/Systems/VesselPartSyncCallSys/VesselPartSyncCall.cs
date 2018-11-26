@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
 
         public void ProcessPartMethodCallSync()
         {
-            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
+            var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null || !vessel.loaded) return;
 
             if (!VesselCommon.DoVesselChecks(VesselId))

@@ -25,7 +25,7 @@ namespace LmpClient.Systems.VesselPositionSys
             get
             {
                 if (_vessel == null)
-                    _vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
+                    _vessel = FlightGlobals.FindVessel(VesselId);
                 return _vessel;
             }
         }

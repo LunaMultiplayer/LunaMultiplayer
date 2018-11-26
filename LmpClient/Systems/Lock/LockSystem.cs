@@ -87,7 +87,7 @@ namespace LmpClient.Systems.Lock
         /// </summary>
         public void AcquireKerbalLock(Guid vesselId, bool force = false)
         {
-            AcquireKerbalLock(FlightGlobals.fetch.LmpFindVessel(vesselId), force);
+            AcquireKerbalLock(FlightGlobals.FindVessel(vesselId), force);
         }
 
         /// <summary>

@@ -45,11 +45,8 @@ namespace LmpClient.Windows.Locks
         private static string CreateLockText(VesselLockDisplay vesselLock)
         {
             StrBuilder.Length = 0;
-            StrBuilder.Append("Loaded: ").Append(vesselLock.Loaded).AppendLine()
-                .Append("Packed: ").Append(vesselLock.Packed).AppendLine()
-                .Append("Immortal: ").Append(vesselLock.Immortal).AppendLine()
-                .Append("Control: ").Append(vesselLock.ControlLockOwner).AppendLine()
-                .Append("Update: ").Append(vesselLock.UpdateLockOwner).AppendLine()
+            StrBuilder.Append("Control: ").AppendLine(vesselLock.ControlLockOwner)
+                .Append("Update: ").AppendLine(vesselLock.UpdateLockOwner)
                 .Append("UnlUpdate: ").Append(vesselLock.UnloadedUpdateLockOwner);
 
             return StrBuilder.ToString();

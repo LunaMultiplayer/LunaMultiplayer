@@ -14,6 +14,7 @@ using LmpClient.Windows.Options;
 using LmpClient.Windows.Screenshots;
 using LmpClient.Windows.Systems;
 using LmpClient.Windows.Tools;
+using LmpClient.Windows.Vessels;
 using LmpCommon;
 using UnityEngine;
 
@@ -146,6 +147,7 @@ namespace LmpClient.Windows.Status
             SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ToggleButtonStyle);
             LocksWindow.Singleton.Display = GUILayout.Toggle(LocksWindow.Singleton.Display, StatusTexts.LocksBtnTxt, ToggleButtonStyle);
             ToolsWindow.Singleton.Display = GUILayout.Toggle(ToolsWindow.Singleton.Display, StatusTexts.ToolsBtnTxt, ToggleButtonStyle);
+            VesselsWindow.Singleton.Display = GUILayout.Toggle(VesselsWindow.Singleton.Display, StatusTexts.VesselsBtnTxt, ToggleButtonStyle);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             DrawDebugSwitches();

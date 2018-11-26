@@ -273,6 +273,7 @@ namespace LmpClient
             //Tools window: 6722
             //Admin window: 6723
             //Update window: 6724
+            //Vessels window: 6725
 
             if (StyleLibrary.DefaultSkin == null)
                 StyleLibrary.DefaultSkin = GUI.skin;

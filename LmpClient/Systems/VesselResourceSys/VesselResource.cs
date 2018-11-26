@@ -21,7 +21,7 @@ namespace LmpClient.Systems.VesselResourceSys
 
         public void ProcessVesselResource()
         {
-            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
+            var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null) return;
 
             if (!VesselCommon.DoVesselChecks(vessel.id))

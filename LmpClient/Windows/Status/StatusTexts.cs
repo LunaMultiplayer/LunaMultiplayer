@@ -1,6 +1,6 @@
-﻿using System.Text;
-using LmpClient.Systems.TimeSync;
+﻿using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
+using System.Text;
 
 namespace LmpClient.Windows.Status
 {
@@ -14,6 +14,7 @@ namespace LmpClient.Windows.Status
         public const string SystemsBtnTxt = "Systems";
         public const string LocksBtnTxt = "Locks";
         public const string ToolsBtnTxt = "Tools";
+        public const string VesselsBtnTxt = "Vessels";
 
         public const string WarpingLabelTxt = "WARPING";
         public const string Debug1BtnTxt = "D1";

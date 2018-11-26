@@ -99,7 +99,6 @@
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
-    <Compile Include="Extensions\FlightGlobalExtension.cs" />
     <Compile Include="Extensions\LinqExtention.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\PartExtension.cs" />
@@ -476,6 +475,9 @@
     <Compile Include="Windows\Tools\ToolsWindow.cs" />
     <Compile Include="Windows\Update\UpdateDrawer.cs" />
     <Compile Include="Windows\Update\UpdateWindow.cs" />
+    <Compile Include="Windows\Vessels\VesselsDrawer.cs" />
+    <Compile Include="Windows\Vessels\VesselsWindow.cs" />
+    <Compile Include="Windows\Vessels\VesselDisplay.cs" />
     <Compile Include="Windows\WindowUtil.cs" />
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>

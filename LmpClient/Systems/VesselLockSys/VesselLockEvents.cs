@@ -141,7 +141,7 @@ namespace LmpClient.Systems.VesselLockSys
                 case LockType.Update:
                     if (HighLogic.LoadedScene < GameScenes.FLIGHT || VesselCommon.IsSpectating) return;
 
-                    var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
+                    var vessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
                     if (vessel != null)
                     {
                         switch (lockDefinition.Type)

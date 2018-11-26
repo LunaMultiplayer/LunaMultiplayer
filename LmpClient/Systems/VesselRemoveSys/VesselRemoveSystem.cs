@@ -105,7 +105,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                 RemovedVessels.TryAdd(vesselId, LunaNetworkTime.UtcNow);
             }
 
-            KillVessel(FlightGlobals.fetch.LmpFindVessel(vesselId), reason);
+            KillVessel(FlightGlobals.FindVessel(vesselId), reason);
         }
 
         /// <summary>

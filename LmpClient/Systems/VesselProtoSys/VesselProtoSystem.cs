@@ -121,7 +121,7 @@ namespace LmpClient.Systems.VesselProtoSys
 
                         if (protoVessel == null) return;
 
-                        var existingVessel = FlightGlobals.fetch.LmpFindVessel(vesselProto.VesselId);
+                        var existingVessel = FlightGlobals.FindVessel(vesselProto.VesselId);
                         if (existingVessel == null)
                         {
                             LunaLog.Log($"[LMP]: Loading vessel {vesselProto.VesselId}");

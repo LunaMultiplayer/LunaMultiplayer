@@ -129,7 +129,7 @@ namespace LmpClient.VesselUtilities
             var reloadingOwnVessel = FlightGlobals.ActiveVessel && vesselProto.vesselID == FlightGlobals.ActiveVessel.id;
 
             //In case the vessel exists, silently remove them from unity and recreate it again
-            var existingVessel = FlightGlobals.fetch.LmpFindVessel(vesselProto.vesselID);
+            var existingVessel = FlightGlobals.FindVessel(vesselProto.vesselID);
             if (existingVessel != null)
             {
                 if(reloadingOwnVessel)

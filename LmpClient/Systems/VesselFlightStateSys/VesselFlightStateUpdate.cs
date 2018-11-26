@@ -101,7 +101,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
                     //This is the case of first iteration
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds;
 
-                    CopyFrom(FlightGlobals.fetch.LmpFindVessel(VesselId));
+                    CopyFrom(FlightGlobals.FindVessel(VesselId));
                 }
                 else
                 {

@@ -1,5 +1,5 @@
 ﻿using LmpClient.Base;
-using LmpClient.Systems.Lock;
+using LmpClient.Extensions;
 using LmpCommon.Enums;
 using LmpCommon.Time;
 using System;
@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace LmpClient.Windows.Locks
+namespace LmpClient.Windows.Vessels
 {
-    public partial class LocksWindow : Window<LocksWindow>
+    public partial class VesselsWindow : Window<VesselsWindow>
     {
         #region Fields & properties
 
@@ -26,9 +26,7 @@ namespace LmpClient.Windows.Locks
 
         private DateTime _lastUpdateTime = DateTime.MinValue;
 
-        private static readonly List<VesselLockDisplay> VesselLocks = new List<VesselLockDisplay>();
-        private static string _asteroidLockOwner = string.Empty;
-        private static string _contractLockOwner = string.Empty;
+        private static readonly List<VesselDisplay> Vessels = new List<VesselDisplay>();
         private static readonly StringBuilder StrBuilder = new StringBuilder();
 
         #endregion
@@ -38,42 +36,41 @@ namespace LmpClient.Windows.Locks
             base.Update();
             if (Display && TimeUtil.IsInInterval(ref _lastUpdateTime, 3000))
             {
-                _asteroidLockOwner = LockSystem.LockQuery.AsteroidLockOwner();
-                _contractLockOwner = LockSystem.LockQuery.ContractLockOwner();
-
                 for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
                 {
                     if (FlightGlobals.Vessels[i] == null) continue;
 
-                    var existingVesselLock = VesselLocks.FirstOrDefault(v => v != null && v.VesselId == FlightGlobals.Vessels[i].id);
-                    if (existingVesselLock == null)
+                    var existingVessel = Vessels.FirstOrDefault(v => v != null && v.VesselId == FlightGlobals.Vessels[i].id);
+                    if (existingVessel == null)
                     {
-                        VesselLocks.Add(new VesselLockDisplay
+                        Vessels.Add(new VesselDisplay
                         {
                             VesselId = FlightGlobals.Vessels[i].id,
+                            Loaded = FlightGlobals.Vessels[i].loaded,
+                            Packed = FlightGlobals.Vessels[i].packed,
+                            Immortal = FlightGlobals.Vessels[i].IsImmortal(),
                             VesselName = FlightGlobals.Vessels[i].name,
-                            ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id),
-                            UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id),
-                            UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id)
+                            ObtDriverMode = FlightGlobals.Vessels[i].orbitDriver ? FlightGlobals.Vessels[i].orbitDriver.updateMode : OrbitDriver.UpdateMode.IDLE
                         });
                     }
                     else
                     {
-                        existingVesselLock.VesselName = FlightGlobals.Vessels[i].name;
-                        existingVesselLock.ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id);
-                        existingVesselLock.UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id);
-                        existingVesselLock.UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id);
+                        existingVessel.Loaded = FlightGlobals.Vessels[i].loaded;
+                        existingVessel.Packed = FlightGlobals.Vessels[i].packed;
+                        existingVessel.Immortal = FlightGlobals.Vessels[i].IsImmortal();
+                        existingVessel.VesselName = FlightGlobals.Vessels[i].name;
+                        existingVessel.ObtDriverMode = FlightGlobals.Vessels[i].orbitDriver ? FlightGlobals.Vessels[i].orbitDriver.updateMode : OrbitDriver.UpdateMode.IDLE;
                     }
                 }
 
-                VesselLocks.RemoveAll(v => FlightGlobals.Vessels.All(ev => ev != null && ev.id != v.VesselId));
+                Vessels.RemoveAll(v => FlightGlobals.Vessels.All(ev => ev != null && ev.id != v.VesselId));
             }
         }
 
         protected override void DrawGui()
         {
             GUI.skin = DefaultSkin;
-            WindowRect = FixWindowPos(GUILayout.Window(6717 + MainSystem.WindowOffset, WindowRect, DrawContent, "Locks", Skin.window, LayoutOptions));
+            WindowRect = FixWindowPos(GUILayout.Window(6725 + MainSystem.WindowOffset, WindowRect, DrawContent, "Vessels", Skin.window, LayoutOptions));
         }
 
         public override void SetStyles()
@@ -97,7 +94,7 @@ namespace LmpClient.Windows.Locks
             if (IsWindowLocked)
             {
                 IsWindowLocked = false;
-                InputLockManager.RemoveControlLock("LMP_LocksWindowsLock");
+                InputLockManager.RemoveControlLock("LMP_VesselsWindowsLock");
             }
         }
 
@@ -118,7 +115,7 @@ namespace LmpClient.Windows.Locks
 
                 if (shouldLock && !IsWindowLocked)
                 {
-                    InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_LocksWindowsLock");
+                    InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_VesselsWindowsLock");
                     IsWindowLocked = true;
                 }
                 if (!shouldLock && IsWindowLocked)

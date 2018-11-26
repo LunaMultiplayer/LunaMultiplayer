@@ -45,7 +45,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         {
             if(lockDefinition.Type != LockType.Control && lockDefinition.Type != LockType.Update && lockDefinition.Type != LockType.UnloadedUpdate) return;
 
-            var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
+            var vessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
             System.SetImmortalStateBasedOnLock(vessel);
         }
 
@@ -56,7 +56,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         {
             if (lockDefinition.Type != LockType.Control && lockDefinition.Type != LockType.Update && lockDefinition.Type != LockType.UnloadedUpdate) return;
 
-            var vessel = FlightGlobals.fetch.LmpFindVessel(lockDefinition.VesselId);
+            var vessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
             System.SetImmortalStateBasedOnLock(vessel);
         }
 

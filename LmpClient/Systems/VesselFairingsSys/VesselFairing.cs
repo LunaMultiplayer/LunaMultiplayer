@@ -23,7 +23,7 @@ namespace LmpClient.Systems.VesselFairingsSys
                 return;
 
             //Finding using persistentId failed, try searching it with the flightId...
-            var vessel = FlightGlobals.fetch.LmpFindVessel(VesselId);
+            var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null) return;
 
             var protoPart = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
