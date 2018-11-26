@@ -52,24 +52,12 @@ $WEBHOOK_DATA="{
     ""description"": ""Keep in mind that nightly builds might contain bugs!"",
     ""fields"": [
       {
-        ""name"": """",
-        ""value"": ""``Client``"",
-        ""inline"": true
+        ""name"": ""Client"",
+        ""value"": ""[Download Link](https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip)""
       },
       {
-        ""name"": """",
-        ""value"": ""[Download]($URL/build/job/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip)"",
-        ""inline"": true
-      },
-      {
-        ""name"": """",
-        ""value"": ""``Master server``"",
-        ""inline"": true
-      },
-      {
-        ""name"": """",
-        ""value"": ""[Download]($URL/build/job/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayerMasterServer-Debug.zip)"",
-        ""inline"": true
+        ""name"": ""Master Server"",
+        ""value"": ""[Download Link](https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayerMasterServer-Debug.zip)""
       }
     ],
     ""timestamp"": ""$TIMESTAMP""
