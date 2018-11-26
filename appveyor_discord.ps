@@ -10,7 +10,7 @@ if (!$WEBHOOK_URL) {
   Exit
 }
 
-Write-Output "[Webhook]: Sending webhook to Discord..."
+Write-Output "[Webhook]: Preparing the webhook..."
 
 Switch ($STATUS) {
   "success" {
@@ -28,57 +28,36 @@ Switch ($STATUS) {
     Break
   }
 }
+
 $AVATAR="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Appveyor_logo.svg/256px-Appveyor_logo.svg.png"
 
-if (!$env:APPVEYOR_REPO_COMMIT) {
-  $env:APPVEYOR_REPO_COMMIT="$(git log -1 --pretty="%H")"
-}
-
-$AUTHOR_NAME="$(git log -1 "$env:APPVEYOR_REPO_COMMIT" --pretty="%aN")"
-$COMMITTER_NAME="$(git log -1 "$env:APPVEYOR_REPO_COMMIT" --pretty="%cN")"
-$COMMIT_SUBJECT="$(git log -1 "$env:APPVEYOR_REPO_COMMIT" --pretty="%s")"
-$COMMIT_MESSAGE="$(git log -1 "$env:APPVEYOR_REPO_COMMIT" --pretty="%b")"
-
-if ($AUTHOR_NAME -eq $COMMITTER_NAME) {
-  $CREDITS="$AUTHOR_NAME authored & committed"
-}
-else {
-  $CREDITS="$AUTHOR_NAME authored & $COMMITTER_NAME committed"
-}
-
-if ($env:APPVEYOR_PULL_REQUEST_NUMBER) {
-  $URL="https://github.com/$env:APPVEYOR_REPO_NAME/pull/$env:APPVEYOR_PULL_REQUEST_NUMBER"
-}
-else {
-  $URL=""
-}
-
+$URL="https://github.com/$env:APPVEYOR_REPO_NAME/"
 $BUILD_VERSION = [uri]::EscapeDataString($env:APPVEYOR_BUILD_VERSION)
 $TIMESTAMP="$(Get-Date -format s)Z"
 
 $WEBHOOK_DATA="{
   ""username"": """",
   ""avatar_url"": ""$AVATAR"",
-  ""content"":""New NIGHTLY build""
+  ""content"":""New nightly build available for download"",
   ""embeds"": [ {
     ""color"": $EMBED_COLOR,
     ""author"": {
-      ""name"": ""Job #$env:APPVEYOR_JOB_NUMBER (Build #$env:APPVEYOR_BUILD_NUMBER) $STATUS_MESSAGE - $env:APPVEYOR_REPO_NAME"",
-      ""url"": ""https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/build/$BUILD_VERSION"",
+      ""name"": ""Version: $BUILD_VERSION"",
+      ""url"": ""$URL"",
       ""icon_url"": ""$AVATAR""
     },
-    ""title"": ""New build NIGHTLY $COMMIT_SUBJECT"",
+    ""title"": ""$BUILD_VERSION"",
     ""url"": ""$URL"",
-    ""description"": ""New build $COMMIT_MESSAGE $CREDITS"",
+    ""description"": """",
     ""fields"": [
       {
-        ""name"": ""Commit"",
-        ""value"": ""[``$($env:APPVEYOR_REPO_COMMIT.substring(0, 7))``](https://github.com/$env:APPVEYOR_REPO_NAME/commit/$env:APPVEYOR_REPO_COMMIT)"",
+        ""name"": ""Item"",
+        ""value"": ""[``Artifacts``](https://ci.appveyor.com/project/$env:APPVEYOR_REPO_NAME/build/job/$env:APPVEYOR_JOB_ID/artifacts)"",
         ""inline"": true
       },
       {
-        ""name"": ""Branch/Tag"",
-        ""value"": ""[``$env:APPVEYOR_REPO_BRANCH``](https://github.com/$env:APPVEYOR_REPO_NAME/tree/$env:APPVEYOR_REPO_BRANCH)"",
+        ""name"": ""Link"",
+        ""value"": ""[``Client``](https://ci.appveyor.com/project/$env:APPVEYOR_REPO_NAME/build/job/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip)"",
         ""inline"": true
       }
     ],
