@@ -17,7 +17,7 @@ $LMP_LOGO="https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/mas
 $REPO_URL="https://github.com/$env:APPVEYOR_REPO_NAME/"
 $URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME"
 
-$ARTIFACTS_URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME/artifacts"
+$ARTIFACTS_URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME/build/job/$env:APPVEYOR_JOB_ID/artifacts"
 $CLIENT_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip"
 $MASTER_SERVER_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayerMasterServer-Debug.zip"
 $BUILD_VERSION = [uri]::EscapeDataString($env:APPVEYOR_BUILD_VERSION)
