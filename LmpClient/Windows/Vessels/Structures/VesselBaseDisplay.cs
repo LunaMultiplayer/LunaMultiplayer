@@ -5,8 +5,13 @@ namespace LmpClient.Windows.Vessels.Structures
 {
     internal abstract class VesselBaseDisplay
     {
-        protected static readonly GUIStyle ButtonStyle = new GUIStyle(GUI.skin.button);
+        protected static GUIStyle ButtonStyle;
         protected static readonly StringBuilder StringBuilder = new StringBuilder();
+
+        public static void SetStyles()
+        {
+            ButtonStyle = new GUIStyle(GUI.skin.button);
+        }
         
         public void Print()
         {

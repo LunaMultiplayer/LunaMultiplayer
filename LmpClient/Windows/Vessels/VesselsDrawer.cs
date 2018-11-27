@@ -15,6 +15,7 @@ namespace LmpClient.Windows.Vessels
 
         private static void PrintVessels()
         {
+            FastUpdate = GUILayout.Toggle(FastUpdate, "Fast Update");
             foreach (var keyVal in VesselDisplayStore)
             {
                 GUILayout.BeginVertical(Skin.box);

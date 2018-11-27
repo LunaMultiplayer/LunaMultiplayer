@@ -27,12 +27,17 @@ namespace LmpClient.Windows.Vessels
 
         private static readonly Dictionary<Guid, VesselDisplay> VesselDisplayStore = new Dictionary<Guid, VesselDisplay>();
 
+        private static bool FastUpdate = false;
+
+        private const int SlowUpdateInterval = 3000;
+        private const int FastUpdateInterval = 50;
+
         #endregion
 
         public override void Update()
         {
             base.Update();
-            if (Display && TimeUtil.IsInInterval(ref _lastUpdateTime, 3000))
+            if (Display && TimeUtil.IsInInterval(ref _lastUpdateTime, FastUpdate ? FastUpdateInterval : SlowUpdateInterval))
             {
                 for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
                 {
@@ -59,8 +64,7 @@ namespace LmpClient.Windows.Vessels
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width - (WindowWidth + 50), Screen.height / 2f - WindowHeight / 2f, WindowWidth,
-                WindowHeight);
+            WindowRect = new Rect(Screen.width - (WindowWidth + 50), Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
 
             LayoutOptions = new GUILayoutOption[4];
@@ -71,6 +75,8 @@ namespace LmpClient.Windows.Vessels
 
             TextAreaOptions = new GUILayoutOption[1];
             TextAreaOptions[0] = GUILayout.ExpandWidth(true);
+
+            VesselBaseDisplay.SetStyles();
         }
 
         public override void RemoveWindowLock()

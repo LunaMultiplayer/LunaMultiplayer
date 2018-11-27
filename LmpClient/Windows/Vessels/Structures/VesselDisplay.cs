@@ -36,13 +36,18 @@ namespace LmpClient.Windows.Vessels.Structures
         protected override void PrintDisplay()
         {
             GUILayout.BeginVertical();
+
+            GUILayout.BeginHorizontal();
             GUILayout.Label(VesselName);
+            GUILayout.FlexibleSpace();
             if (GUILayout.Button("Reload"))
             {
                 var vessel = FlightGlobals.FindVessel(VesselId);
                 vessel.protoVessel = vessel.BackupVessel();
                 VesselLoader.LoadVessel(vessel.protoVessel);
             }
+            GUILayout.EndHorizontal();
+
             Data.Display = GUILayout.Toggle(Data.Display, nameof(Data), ButtonStyle);
             Data.Print();
             Locks.Display = GUILayout.Toggle(Locks.Display, nameof(Locks), ButtonStyle);

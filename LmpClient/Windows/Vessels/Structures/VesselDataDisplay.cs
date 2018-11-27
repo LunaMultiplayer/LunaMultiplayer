@@ -33,6 +33,7 @@ namespace LmpClient.Windows.Vessels.Structures
             GUILayout.Label($"Immortal: {Immortal}");
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Loaded: {Loaded}");
+            GUILayout.FlexibleSpace();
             if (Loaded)
             {
                 if (GUILayout.Button("Unload"))
@@ -48,6 +49,7 @@ namespace LmpClient.Windows.Vessels.Structures
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Packed: {Packed}");
+            GUILayout.FlexibleSpace();
             if (Packed)
             {
                 if (GUILayout.Button("Unpack"))

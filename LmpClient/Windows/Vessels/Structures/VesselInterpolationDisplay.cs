@@ -1,5 +1,6 @@
 ﻿using LmpClient.Systems.VesselPositionSys;
 using System;
+using UnityEngine;
 
 namespace LmpClient.Windows.Vessels.Structures
 {
@@ -46,6 +47,8 @@ namespace LmpClient.Windows.Vessels.Structures
             StringBuilder.Append("TimeDiff: ").AppendLine($"{TimeDifference:F0}ms");
             StringBuilder.Append("ExtraInterpolationTime: ").AppendLine($"+{ExtraInterpolationTime:F0}ms");
             StringBuilder.Append("Percentage: ").AppendLine($"{Percentage:F0}%");
+            
+            GUILayout.Label(StringBuilder.ToString());
         }
     }
 }

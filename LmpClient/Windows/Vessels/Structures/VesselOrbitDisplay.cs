@@ -36,7 +36,7 @@ namespace LmpClient.Windows.Vessels.Structures
             StringBuilder.Append("Update mode: ").AppendLine(ObtDriverMode.ToString());
 
             GUILayout.Label(StringBuilder.ToString());
-
+            GUILayout.FlexibleSpace();
             switch (ObtDriverMode)
             {
                 case OrbitDriver.UpdateMode.TRACK_Phys:
@@ -55,6 +55,7 @@ namespace LmpClient.Windows.Vessels.Structures
 
             GUILayout.EndHorizontal();
 
+            StringBuilder.Length = 0;
             StringBuilder.AppendLine($"Semi major axis: {Orbit.semiMajorAxis}");
             StringBuilder.AppendLine($"Eccentricity: {Orbit.eccentricity}");
             StringBuilder.AppendLine($"Inclination: {Orbit.inclination}");
