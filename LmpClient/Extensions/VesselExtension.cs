@@ -155,6 +155,5 @@ namespace LmpClient.Extensions
                 ImmortalEvent.onVesselMortal.Fire(vessel);
             }
         }
-
     }
 }
