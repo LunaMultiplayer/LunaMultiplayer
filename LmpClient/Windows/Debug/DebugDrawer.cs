@@ -31,20 +31,6 @@ namespace LmpClient.Windows.Debug
             if (_displayVesselsPositions)
                 GUILayout.Label(_positionVesselsText);
 
-            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info");
-            if (_displayOrbit)
-                GUILayout.Label(_orbitText);
-
-            _displayVesselsOrbit = GUILayout.Toggle(_displayVesselsOrbit, "Display other vessels orbit info");
-            if (_displayVesselsOrbit)
-                GUILayout.Label(_orbitVesselsText);
-
-            _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics");
-            if (_displayInterpolationData)
-            {
-                GUILayout.Label(_interpolationText);
-            }
-
             _displaySubspace = GUILayout.Toggle(_displaySubspace, "Display subspace statistics");
             if (_displaySubspace)
                 GUILayout.Label(_subspaceText);

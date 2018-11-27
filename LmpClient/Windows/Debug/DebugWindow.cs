@@ -2,13 +2,11 @@
 using LmpClient.Network;
 using LmpClient.Systems.SafetyBubble;
 using LmpClient.Systems.TimeSync;
-using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Systems.Warp;
 using LmpCommon.Enums;
 using LmpCommon.Time;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -29,23 +27,17 @@ namespace LmpClient.Windows.Debug
         private static string _vectorText;
         private static string _positionText;
         private static string _positionVesselsText;
-        private static string _orbitText;
-        private static string _orbitVesselsText;
         private static string _subspaceText;
         private static string _timeText;
         private static string _connectionText;
-        private static string _interpolationText;
         private static float _lastUpdateTime;
 
         private static bool _displayVectors;
         private static bool _displayPositions;
         private static bool _displayVesselsPositions;
-        private static bool _displayOrbit;
-        private static bool _displayVesselsOrbit;
         private static bool _displaySubspace;
         private static bool _displayTimes;
         private static bool _displayConnectionQueue;
-        private static bool _displayInterpolationData;
 
         private static bool _display;
         public override bool Display
@@ -152,62 +144,6 @@ namespace LmpClient.Windows.Debug
                     _positionVesselsText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
-                if (_displayOrbit)
-                {
-                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.orbitDriver != null && FlightGlobals.ActiveVessel.orbitDriver.orbit != null)
-                    {
-                        var ourVessel = FlightGlobals.ActiveVessel;
-
-                        StringBuilder.AppendLine($"Id: {ourVessel.id}");
-                        StringBuilder.AppendLine($"Mode: {ourVessel.orbitDriver.updateMode}");
-                        StringBuilder.AppendLine($"Semi major axis: {ourVessel.orbit.semiMajorAxis}");
-                        StringBuilder.AppendLine($"Eccentricity: {ourVessel.orbit.eccentricity}");
-                        StringBuilder.AppendLine($"Inclination: {ourVessel.orbit.inclination}");
-                        StringBuilder.AppendLine($"LAN: {ourVessel.orbit.LAN}");
-                        StringBuilder.AppendLine($"Arg Periapsis: {ourVessel.orbit.argumentOfPeriapsis}");
-                        StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbit.meanAnomaly}");
-                        StringBuilder.AppendLine($"Mean anomaly at Epoch: {ourVessel.orbit.meanAnomalyAtEpoch}");
-                        StringBuilder.AppendLine($"Epoch: {ourVessel.orbit.epoch}");
-                        StringBuilder.AppendLine($"ObT: {ourVessel.orbit.ObT}");
-                        StringBuilder.AppendLine($"Obt Speed : {ourVessel.orbit.GetRelativeVel()}, |v|: {ourVessel.orbit.GetRelativeVel().magnitude}");
-
-                        _orbitText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
-                    }
-                    else
-                    {
-                        _orbitText = "You have to be in flight and with an active vessel";
-                    }
-                }
-
-                if (_displayVesselsOrbit)
-                {
-                    foreach (var vessel in FlightGlobals.Vessels)
-                    {
-                        if (vessel == null || FlightGlobals.ActiveVessel == null || vessel.orbitDriver == null || vessel.orbitDriver.orbit == null) continue;
-
-                        if (vessel.id != FlightGlobals.ActiveVessel.id)
-                        {
-                            StringBuilder.AppendLine($"Id: {vessel.id}");
-                            StringBuilder.AppendLine($"Mode: {vessel.orbitDriver.updateMode}");
-                            StringBuilder.AppendLine($"Semi major axis: {vessel.orbit.semiMajorAxis}");
-                            StringBuilder.AppendLine($"Eccentricity: {vessel.orbit.eccentricity}");
-                            StringBuilder.AppendLine($"Inclination: {vessel.orbit.inclination}");
-                            StringBuilder.AppendLine($"LAN: {vessel.orbit.LAN}");
-                            StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbit.argumentOfPeriapsis}");
-                            StringBuilder.AppendLine($"Mean anomaly: {vessel.orbit.meanAnomaly}");
-                            StringBuilder.AppendLine($"Mean anomaly at Epoch: {vessel.orbit.meanAnomalyAtEpoch}");
-                            StringBuilder.AppendLine($"Epoch: {vessel.orbit.epoch}");
-                            StringBuilder.AppendLine($"ObT: {vessel.orbit.ObT}");
-                            StringBuilder.AppendLine($"Obt Speed : {vessel.orbit.GetRelativeVel()}, |v|: {vessel.orbit.GetRelativeVel().magnitude}");
-                            StringBuilder.AppendLine();
-                        }
-                    }
-
-                    _orbitVesselsText = StringBuilder.ToString();
-                    StringBuilder.Length = 0;
-                }
-
                 if (_displaySubspace)
                 {
                     StringBuilder.AppendLine($"Warp rate: {Math.Round(Time.timeScale, 3)}x.");
@@ -251,30 +187,6 @@ namespace LmpClient.Windows.Debug
                     StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.");
                     StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n");
                     _connectionText = StringBuilder.ToString();
-                    StringBuilder.Length = 0;
-                }
-
-                if (_displayInterpolationData)
-                {
-                    if (VesselPositionSystem.TargetVesselUpdateQueue.Any())
-                    {
-                        StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
-                        foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
-                        {
-                            if (VesselPositionSystem.CurrentVesselUpdate.TryGetValue(keyVal.Key, out var current) && current.Target != null){
-
-                                var perc = current.LerpPercentage * 100;
-                                var duration = TimeSpan.FromSeconds(current.InterpolationDuration).TotalMilliseconds;
-                                var extraInterpolationTime = TimeSpan.FromSeconds(current.ExtraInterpolationTime).TotalMilliseconds;
-                                var timeDiff = TimeSpan.FromSeconds(current.TimeDifference).TotalMilliseconds;
-                                StringBuilder.Append(keyVal.Key).Append(": ").Append($" Amt: {keyVal.Value.Count}")
-                                    .Append($" Dur: {duration:F0}ms").Append($" TimeDiff: {timeDiff:F0}ms").Append($" T+: {extraInterpolationTime:F0}ms").AppendLine($" Perc: {perc:F0}%");
-                                StringBuilder.AppendLine();
-                            }
-                        }
-                    }
-
-                    _interpolationText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
             }

@@ -12,6 +12,7 @@ namespace LmpClient.Windows.Vessels.Structures
         public VesselDataDisplay Data { get; set; }
         public VesselLockDisplay Locks { get; set; }
         public VesselOrbitDisplay Orbit { get; set; }
+        public VesselInterpolationDisplay Interpolation { get; set; }
 
         public VesselDisplay(Guid vesselId)
         {
@@ -19,6 +20,7 @@ namespace LmpClient.Windows.Vessels.Structures
             Data = new VesselDataDisplay(VesselId);
             Locks = new VesselLockDisplay(VesselId);
             Orbit = new VesselOrbitDisplay(VesselId);
+            Interpolation = new VesselInterpolationDisplay(VesselId);
         }
 
         protected override void UpdateDisplay(Vessel vessel)
@@ -28,6 +30,7 @@ namespace LmpClient.Windows.Vessels.Structures
             Data.Update(vessel);
             Locks.Update(vessel);
             Orbit.Update(vessel);
+            Interpolation.Update(vessel);
         }
 
         protected override void PrintDisplay()
@@ -46,6 +49,8 @@ namespace LmpClient.Windows.Vessels.Structures
             Locks.Print();
             Orbit.Display = GUILayout.Toggle(Orbit.Display, nameof(Orbit), ButtonStyle);
             Orbit.Print();
+            Interpolation.Display = GUILayout.Toggle(Interpolation.Display, nameof(Interpolation), ButtonStyle);
+            Interpolation.Print();
             GUILayout.EndVertical();
         }
     }

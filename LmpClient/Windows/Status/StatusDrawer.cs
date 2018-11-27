@@ -137,7 +137,7 @@ namespace LmpClient.Windows.Status
 
         #region Debug Section
 
-        private void DrawDebugSection()
+        private static void DrawDebugSection()
         {
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();

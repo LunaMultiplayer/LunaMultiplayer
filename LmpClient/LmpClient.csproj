@@ -471,6 +471,7 @@
     <Compile Include="Windows\Update\UpdateWindow.cs" />
     <Compile Include="Windows\Vessels\Structures\VesselBaseDisplay.cs" />
     <Compile Include="Windows\Vessels\Structures\VesselDataDisplay.cs" />
+    <Compile Include="Windows\Vessels\Structures\VesselInterpolationDisplay.cs" />
     <Compile Include="Windows\Vessels\Structures\VesselOrbitDisplay.cs" />
     <Compile Include="Windows\Vessels\Structures\VesselLockDisplay.cs" />
     <Compile Include="Windows\Vessels\VesselsDrawer.cs" />
