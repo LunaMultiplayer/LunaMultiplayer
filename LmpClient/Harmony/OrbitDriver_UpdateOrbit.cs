@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using LmpClient.Extensions;
+using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
 using UnityEngine;
 
@@ -24,8 +25,9 @@ namespace LmpClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
             if (__instance.vessel == null) return true;
-            if (FlightGlobals.ActiveVessel == __instance.vessel) return true;
-            if (!__instance.vessel.IsImmortal()) return true;
+
+            if (FlightGlobals.ActiveVessel == __instance.vessel && !VesselCommon.IsSpectating) return true;
+            if (!__instance.vessel.IsImmortal() && !VesselCommon.IsSpectating) return true;
 
             UpdateOrbit(__instance, offset, ref ___ready, ref ___fdtLast, ref ___isHyperbolic, ref ___updateUT);
 
