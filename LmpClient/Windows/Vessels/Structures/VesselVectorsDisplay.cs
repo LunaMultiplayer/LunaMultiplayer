@@ -33,8 +33,8 @@ namespace LmpClient.Windows.Vessels.Structures
             StringBuilder.AppendLine($"Orbital Velocity: {Vessel.GetObtVelocity()}, |v|: {Vessel.GetObtVelocity().magnitude}");
             if (Vessel.orbitDriver != null && Vessel.orbitDriver.orbit != null)
                 StringBuilder.AppendLine($"Frame Velocity: {Vessel.orbitDriver.orbit.GetFrameVel()}, |v|: {Vessel.orbitDriver.orbit.GetFrameVel().magnitude}");
-            StringBuilder.AppendLine($"CoM offset vector: {Vessel.CoM}\n");
-            StringBuilder.AppendLine($"Angular Velocity: {Vessel.angularVelocity}, |v|: {Vessel.angularVelocity.magnitude}");
+            StringBuilder.AppendLine($"CoM offset vector: {Vessel.CoM}");
+            StringBuilder.Append($"Angular Velocity: {Vessel.angularVelocity}, |v|: {Vessel.angularVelocity.magnitude}");
 
             GUILayout.Label(StringBuilder.ToString());
         }

@@ -23,12 +23,12 @@ namespace LmpClient.Windows.Vessels.Structures
             if (!Vessel) return;
 
             StringBuilder.Length = 0;
-            StringBuilder.AppendLine($"Situation: {Vessel.situation}");
-            StringBuilder.AppendLine($"Orbit Pos: {Vessel.orbit.pos}");
-            StringBuilder.AppendLine($"Transform Pos: {Vessel.vesselTransform.position}");
-            StringBuilder.AppendLine($"Com Pos: {Vessel.CoM}");
-            StringBuilder.AppendLine($"ComD Pos: {Vessel.CoMD}");
-            StringBuilder.AppendLine($"Lat,Lon,Alt: {Vessel.latitude},{Vessel.longitude},{Vessel.altitude}");
+            StringBuilder.AppendLine($"Situation: {Vessel.situation}")
+                .AppendLine($"Orbit Pos: {Vessel.orbit.pos}")
+                .AppendLine($"Transform Pos: {Vessel.vesselTransform.position}")
+                .AppendLine($"Com Pos: {Vessel.CoM}")
+                .AppendLine($"ComD Pos: {Vessel.CoMD}")
+                .AppendLine($"Lat,Lon,Alt: {Vessel.latitude},{Vessel.longitude},{Vessel.altitude}");
 
             Vessel.mainBody.GetLatLonAlt(Vessel.vesselTransform.position, out var lat, out var lon, out var alt);
             StringBuilder.AppendLine($"Current Lat,Lon,Alt: {lat},{lon},{alt}");
@@ -36,7 +36,7 @@ namespace LmpClient.Windows.Vessels.Structures
             Vessel.mainBody.GetLatLonAltOrbital(Vessel.orbit.pos, out lat, out lon, out alt);
             StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
 
-            StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(Vessel)}");
+            StringBuilder.Append($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(Vessel)}");
 
             GUILayout.Label(StringBuilder.ToString());
         }

@@ -49,15 +49,15 @@ namespace LmpClient.Windows.Vessels.Structures
             GUILayout.EndHorizontal();
 
             StringBuilder.Length = 0;
-            StringBuilder.AppendLine($"Semi major axis: {Vessel.orbit.semiMajorAxis}");
-            StringBuilder.AppendLine($"Eccentricity: {Vessel.orbit.eccentricity}");
-            StringBuilder.AppendLine($"Inclination: {Vessel.orbit.inclination}");
-            StringBuilder.AppendLine($"LAN: {Vessel.orbit.LAN}");
-            StringBuilder.AppendLine($"Arg Periapsis: {Vessel.orbit.argumentOfPeriapsis}");
-            StringBuilder.AppendLine($"Mean anomaly: {Vessel.orbit.meanAnomaly}");
-            StringBuilder.AppendLine($"Mean anomaly at Epoch: {Vessel.orbit.meanAnomalyAtEpoch}");
-            StringBuilder.AppendLine($"Epoch: {Vessel.orbit.epoch}");
-            StringBuilder.Append($"ObT: {Vessel.orbit.ObT}");
+            StringBuilder.AppendLine($"Semi major axis: {Vessel.orbit.semiMajorAxis}")
+                .AppendLine($"Eccentricity: {Vessel.orbit.eccentricity}")
+                .AppendLine($"Inclination: {Vessel.orbit.inclination}")
+                .AppendLine($"LAN: {Vessel.orbit.LAN}")
+                .AppendLine($"Arg Periapsis: {Vessel.orbit.argumentOfPeriapsis}")
+                .AppendLine($"Mean anomaly: {Vessel.orbit.meanAnomaly}")
+                .AppendLine($"Mean anomaly at Epoch: {Vessel.orbit.meanAnomalyAtEpoch}")
+                .AppendLine($"Epoch: {Vessel.orbit.epoch}")
+                .Append($"ObT: {Vessel.orbit.ObT}");
 
             GUILayout.Label(StringBuilder.ToString());
         }

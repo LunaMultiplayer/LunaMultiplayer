@@ -32,12 +32,14 @@ namespace LmpClient.Windows.Vessels.Structures
 
         protected override void PrintDisplay()
         {
+            GUILayout.BeginHorizontal();
             StringBuilder.Length = 0;
             StringBuilder.Append("Control: ").AppendLine(ControlLockOwner)
                 .Append("Update: ").AppendLine(UpdateLockOwner)
                 .Append("UnlUpdate: ").Append(UnloadedUpdateLockOwner);
 
             GUILayout.Label(StringBuilder.ToString());
+            GUILayout.FlexibleSpace();
             if (PlayerOwnsAnyLock())
             {
                 if (GUILayout.Button("Release"))
@@ -45,6 +47,7 @@ namespace LmpClient.Windows.Vessels.Structures
                     LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselId);
                 }
             }
+            GUILayout.EndHorizontal();
         }
     }
 }

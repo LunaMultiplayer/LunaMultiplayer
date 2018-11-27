@@ -42,11 +42,11 @@ namespace LmpClient.Windows.Vessels.Structures
         protected override void PrintDisplay()
         {
             StringBuilder.Length = 0;
-            StringBuilder.Append("Amt: ").AppendLine(Amount.ToString());
-            StringBuilder.Append("Duration: ").AppendLine($"{Duration:F0}ms");
-            StringBuilder.Append("TimeDiff: ").AppendLine($"{TimeDifference:F0}ms");
-            StringBuilder.Append("ExtraInterpolationTime: ").AppendLine($"+{ExtraInterpolationTime:F0}ms");
-            StringBuilder.Append("Percentage: ").AppendLine($"{Percentage:F0}%");
+            StringBuilder.Append("Amt: ").AppendLine(Amount.ToString())
+                .Append("Duration: ").AppendLine($"{Duration:F0}ms")
+                .Append("TimeDiff: ").AppendLine($"{TimeDifference:F0}ms")
+                .Append("ExtraInterpolationTime: ").AppendLine($"+{ExtraInterpolationTime:F0}ms")
+                .Append("Percentage: ").Append($"{Percentage:F0}%");
             
             GUILayout.Label(StringBuilder.ToString());
         }
