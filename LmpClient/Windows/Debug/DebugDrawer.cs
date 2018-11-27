@@ -19,18 +19,6 @@ namespace LmpClient.Windows.Debug
 
             _displayFast = GUILayout.Toggle(_displayFast, "Fast debug update");
 
-            _displayVectors = GUILayout.Toggle(_displayVectors, "Display vessel vectors");
-            if (_displayVectors)
-                GUILayout.Label(_vectorText);
-
-            _displayPositions = GUILayout.Toggle(_displayPositions, "Display active vessel positions");
-            if (_displayPositions)
-                GUILayout.Label(_positionText);
-
-            _displayVesselsPositions = GUILayout.Toggle(_displayVesselsPositions, "Display other vessel positions");
-            if (_displayVesselsPositions)
-                GUILayout.Label(_positionVesselsText);
-
             _displaySubspace = GUILayout.Toggle(_displaySubspace, "Display subspace statistics");
             if (_displaySubspace)
                 GUILayout.Label(_subspaceText);

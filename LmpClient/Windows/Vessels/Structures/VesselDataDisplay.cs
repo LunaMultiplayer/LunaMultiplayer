@@ -9,32 +9,25 @@ namespace LmpClient.Windows.Vessels.Structures
     {
         public override bool Display { get; set; }
         public Guid VesselId { get; set; }
-        public bool Loaded { get; set; }
-        public bool Packed { get; set; }
-        public bool Immortal { get; set; }
+        public Vessel Vessel { get; set; }
 
         public VesselDataDisplay(Guid vesselId) => VesselId = vesselId;
 
         protected override void UpdateDisplay(Vessel vessel)
         {
             VesselId = vessel.id;
-            Loaded = vessel.loaded;
-            Packed = vessel.packed;
-            Immortal = vessel.IsImmortal();
+            Vessel = vessel;
         }
 
         protected override void PrintDisplay()
         {
-            StringBuilder.Length = 0;
-            StringBuilder.Append("Loaded: ").AppendLine(Loaded.ToString())
-                .Append("Packed: ").AppendLine(Packed.ToString())
-                .Append("Immortal: ").Append(Immortal);
+            if (!Vessel) return;
 
-            GUILayout.Label($"Immortal: {Immortal}");
+            GUILayout.Label($"Immortal: {Vessel.IsImmortal()}");
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Loaded: {Loaded}");
+            GUILayout.Label($"Loaded: {Vessel.loaded}");
             GUILayout.FlexibleSpace();
-            if (Loaded)
+            if (Vessel.loaded)
             {
                 if (GUILayout.Button("Unload"))
                     FlightGlobals.FindVessel(VesselId).vesselRanges = UnloadRanges;
@@ -48,9 +41,9 @@ namespace LmpClient.Windows.Vessels.Structures
                 FlightGlobals.FindVessel(VesselId).vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Packed: {Packed}");
+            GUILayout.Label($"Packed: {Vessel.packed}");
             GUILayout.FlexibleSpace();
-            if (Packed)
+            if (Vessel.packed)
             {
                 if (GUILayout.Button("Unpack"))
                     FlightGlobals.FindVessel(VesselId).vesselRanges = UnPackRanges;

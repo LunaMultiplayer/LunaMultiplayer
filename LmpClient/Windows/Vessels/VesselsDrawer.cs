@@ -16,6 +16,21 @@ namespace LmpClient.Windows.Vessels
         private static void PrintVessels()
         {
             FastUpdate = GUILayout.Toggle(FastUpdate, "Fast Update");
+
+            if (ActiveVesselDisplayStore != null)
+            { 
+                GUILayout.Label("Active vessel:");
+                GUILayout.BeginVertical(Skin.box);
+                ActiveVesselDisplayStore.Display = GUILayout.Toggle(ActiveVesselDisplayStore.Display, ActiveVesselDisplayStore.VesselId.ToString());
+                ActiveVesselDisplayStore.Print();
+                GUILayout.EndVertical();
+                GUILayout.Label("Other vessels:");
+            }
+            else
+            {
+                GUILayout.Label("Vessels:");
+            }
+
             foreach (var keyVal in VesselDisplayStore)
             {
                 GUILayout.BeginVertical(Skin.box);

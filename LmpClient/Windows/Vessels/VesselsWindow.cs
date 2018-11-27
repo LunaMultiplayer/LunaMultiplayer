@@ -25,6 +25,8 @@ namespace LmpClient.Windows.Vessels
 
         private DateTime _lastUpdateTime = DateTime.MinValue;
 
+        private static VesselDisplay ActiveVesselDisplayStore;
+
         private static readonly Dictionary<Guid, VesselDisplay> VesselDisplayStore = new Dictionary<Guid, VesselDisplay>();
 
         private static bool FastUpdate = false;
@@ -39,9 +41,24 @@ namespace LmpClient.Windows.Vessels
             base.Update();
             if (Display && TimeUtil.IsInInterval(ref _lastUpdateTime, FastUpdate ? FastUpdateInterval : SlowUpdateInterval))
             {
+                if (FlightGlobals.ActiveVessel)
+                {
+                    if (ActiveVesselDisplayStore == null)
+                        ActiveVesselDisplayStore = new VesselDisplay(FlightGlobals.ActiveVessel.id);
+
+                    ActiveVesselDisplayStore.Update(FlightGlobals.ActiveVessel);
+                }
+                else
+                {
+                    ActiveVesselDisplayStore = null;
+                }
+
                 for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
                 {
                     var vessel = FlightGlobals.Vessels[i];
+                    if (FlightGlobals.ActiveVessel == vessel)
+                        continue;
+
                     if (!VesselDisplayStore.ContainsKey(vessel.id))
                     {
                         VesselDisplayStore.Add(vessel.id, new VesselDisplay(vessel.id));
@@ -51,6 +68,9 @@ namespace LmpClient.Windows.Vessels
                 }
 
                 var keysToRemove = VesselDisplayStore.Keys.Except(FlightGlobals.Vessels.Select(v => v.id)).ToList();
+                if (FlightGlobals.ActiveVessel && VesselDisplayStore.ContainsKey(FlightGlobals.ActiveVessel.id))
+                    keysToRemove.Add(FlightGlobals.ActiveVessel.id);
+
                 foreach (var key in keysToRemove)
                     VesselDisplayStore.Remove(key);
             }

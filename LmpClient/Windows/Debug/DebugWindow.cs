@@ -1,6 +1,5 @@
 ﻿using LmpClient.Base;
 using LmpClient.Network;
-using LmpClient.Systems.SafetyBubble;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
 using LmpCommon.Enums;
@@ -24,17 +23,11 @@ namespace LmpClient.Windows.Debug
         private const float WindowWidth = 650;
 
         private static bool _displayFast;
-        private static string _vectorText;
-        private static string _positionText;
-        private static string _positionVesselsText;
         private static string _subspaceText;
         private static string _timeText;
         private static string _connectionText;
         private static float _lastUpdateTime;
 
-        private static bool _displayVectors;
-        private static bool _displayPositions;
-        private static bool _displayVesselsPositions;
         private static bool _displaySubspace;
         private static bool _displayTimes;
         private static bool _displayConnectionQueue;
@@ -54,96 +47,7 @@ namespace LmpClient.Windows.Debug
             if (Display && Time.realtimeSinceStartup - _lastUpdateTime > DisplayUpdateInterval || _displayFast)
             {
                 _lastUpdateTime = Time.realtimeSinceStartup;
-                //Vector text
 
-                if (_displayVectors)
-                {
-                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
-                    {
-                        var ourVessel = FlightGlobals.ActiveVessel;
-
-                        StringBuilder.AppendLine($"Id: {ourVessel.id}");
-                        StringBuilder.AppendLine($"Forward vector: {ourVessel.GetFwdVector()}");
-                        StringBuilder.AppendLine($"Up vector: {ourVessel.upAxis}");
-                        StringBuilder.AppendLine($"Srf Rotation: {ourVessel.srfRelRotation}");
-                        StringBuilder.AppendLine($"Vessel Rotation: {ourVessel.transform.rotation}");
-                        StringBuilder.AppendLine($"Vessel Local Rotation: {ourVessel.transform.localRotation}");
-                        StringBuilder.AppendLine($"mainBody Rotation: {ourVessel.mainBody.rotation}");
-                        StringBuilder.AppendLine($"mainBody Transform Rotation: {ourVessel.mainBody.bodyTransform.rotation}");
-                        StringBuilder.AppendLine($"Surface Velocity: {ourVessel.GetSrfVelocity()}, |v|: {ourVessel.GetSrfVelocity().magnitude}");
-                        StringBuilder.AppendLine($"Orbital Velocity: {ourVessel.GetObtVelocity()}, |v|: {ourVessel.GetObtVelocity().magnitude}");
-                        if (ourVessel.orbitDriver != null && ourVessel.orbitDriver.orbit != null)
-                            StringBuilder.AppendLine($"Frame Velocity: {ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}");
-                        StringBuilder.AppendLine($"CoM offset vector: {ourVessel.CoM}\n");
-                        StringBuilder.AppendLine($"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}");
-
-                        _vectorText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
-                    }
-                    else
-                    {
-                        _vectorText = "You have to be in flight";
-                    }
-                }
-
-                if (_displayPositions)
-                {
-                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
-                    {
-                        var ourVessel = FlightGlobals.ActiveVessel;
-
-                        StringBuilder.AppendLine($"Id: {ourVessel.id}");
-                        StringBuilder.AppendLine($"Situation: {ourVessel.situation}");
-                        StringBuilder.AppendLine($"Orbit Pos: {ourVessel.orbit.pos}");
-                        StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}");
-                        StringBuilder.AppendLine($"Com Pos: {ourVessel.CoM}");
-                        StringBuilder.AppendLine($"ComD Pos: {ourVessel.CoMD}");
-                        StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
-
-                        ourVessel.mainBody.GetLatLonAlt(ourVessel.vesselTransform.position, out var lat, out var lon, out var alt);
-                        StringBuilder.AppendLine($"Current Lat,Lon,Alt: {lat},{lon},{alt}");
-                        ourVessel.mainBody.GetLatLonAltOrbital(ourVessel.orbit.pos, out lat, out lon, out alt);
-                        StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
-
-                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(ourVessel)}");
-
-                        _positionText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
-                    }
-                    else
-                    {
-                        _positionText = "You have to be in flight";
-                    }
-                }
-                if (_displayVesselsPositions)
-                {
-                    foreach (var vessel in FlightGlobals.Vessels)
-                    {
-                        if (vessel == null || FlightGlobals.ActiveVessel == null) continue;
-
-                        if (vessel.id != FlightGlobals.ActiveVessel.id)
-                        {
-                            StringBuilder.AppendLine($"Id: {vessel.id}");
-                            StringBuilder.AppendLine($"Situation: {vessel.situation}");
-                            StringBuilder.AppendLine($"Orbit Pos: {vessel.orbit.pos}");
-                            StringBuilder.AppendLine($"Transform Pos: {vessel.vesselTransform.position}");
-                            StringBuilder.AppendLine($"Com Pos: {vessel.CoM}");
-                            StringBuilder.AppendLine($"ComD Pos: {vessel.CoMD}");
-                            StringBuilder.AppendLine($"Lat,Lon,Alt: {vessel.latitude},{vessel.longitude},{vessel.altitude}");
-
-                            vessel.mainBody.GetLatLonAlt(vessel.vesselTransform.position, out var lat, out var lon, out var alt);
-                            StringBuilder.AppendLine($"Current Lat,Lon,Alt: {lat},{lon},{alt}");
-                            vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out lat, out lon, out alt);
-                            StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
-
-                            StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubbleSystem.Singleton.IsInSafetyBubble(vessel)}");
-                            StringBuilder.AppendLine();
-                        }
-                    }
-
-                    _positionVesselsText = StringBuilder.ToString();
-                    StringBuilder.Length = 0;
-                }
                 if (_displaySubspace)
                 {
                     StringBuilder.AppendLine($"Warp rate: {Math.Round(Time.timeScale, 3)}x.");

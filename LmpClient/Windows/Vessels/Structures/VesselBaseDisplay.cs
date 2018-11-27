@@ -23,7 +23,7 @@ namespace LmpClient.Windows.Vessels.Structures
 
         public void Update(Vessel vessel)
         {
-            if (Display)
+            if (Display && vessel)
             {
                 UpdateDisplay(vessel);
             }
