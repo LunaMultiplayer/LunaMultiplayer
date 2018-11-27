@@ -1,7 +1,7 @@
 {
   "username": "",
   "avatar_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png",
-  "content":"@Server Owner, @Master Server Owner and @Release Subscriber",
+  "content":"<@&417707791063580672>, <@&385162460593651715> and <@&417723357170237471>",
   "embeds": [ {
     "color": 3066993,
     "author": {
