@@ -62,7 +62,8 @@ namespace LmpClient.ModuleStore
 
             foreach (var moduleToAdd in newChildModulesToAdd)
             {
-                CustomizedModuleBehaviours.Add(moduleToAdd.ModuleName, moduleToAdd);
+                if (!CustomizedModuleBehaviours.ContainsKey(moduleToAdd.ModuleName))
+                    CustomizedModuleBehaviours.Add(moduleToAdd.ModuleName, moduleToAdd);
             }
 
             foreach (var module in CustomizedModuleBehaviours.Values)
