@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselPositionSys
         private static int UpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval 
             / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
 
-        private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity => 2 * (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval
+        private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval
             / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
 
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
