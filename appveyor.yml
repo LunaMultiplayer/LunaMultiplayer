@@ -22,8 +22,9 @@ image: Visual Studio 2017
 #---------------------------------#
 
 environment:
-  WEBHOOK_URL: https://discordapp.com/api/webhooks/516587944996241413/Aj-hZtgbmgZ44s-a-fDq7VNUWXo9FKlOsWe7dqunrVtexVPAQ3m9EYGRbucglKOm6In3
   smallversion: 0.17.0
+  WEBHOOK_URL:
+    secure: bhCOtyDF+wInocIkKfUQdxpM4csyVv7cxhUGz0NzLnFrlEZsaviEDJeDbctuv4NBM4xPkl4Wpv3rb6VwNcvEr8IWW5Te0P/kx1VeNMD5espcLKzMwy46shi630b3wvIipOeBnupc6nsiw7/2liuNhJkvjdyu4wxQXVDVWNSi+t0=
   ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=    
 cache:

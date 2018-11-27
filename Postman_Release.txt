@@ -1,0 +1,27 @@
+{
+  "username": "",
+  "avatar_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png",
+  "content":"@Server Owner, @Master Server Owner and @Release Subscriber",
+  "embeds": [ {
+    "color": 3066993,
+    "author": {
+      "name": "New Release",
+      "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
+      "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png"
+    },
+    "title": "New Release Available - 0.17.0",
+    "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
+    "description": "A new version of Luna MultiPlayer is available! You can download it at [GitHub](https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest)",
+    "fields": [
+      {
+        "name": "About version 0.17.0",
+        "value": "Build 0.17.0.78\n\n### 20th BETA version of LMP\n\n- Fixed the race condition bugs in the locks system\n- Changed the log levels on the server\n- Allow the recovery of funds in career system (with limitations)\n- Limited but better revert system\n- Better docking/undocking code\n- Added locklist command for server\n- Better debug screens\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.16.0...0.17.0>"
+      }
+    ],
+    "timestamp": "2018-11-27T09:10:10Z",
+    "footer": {
+      "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png",
+      "text": "Luna multiplayer"
+    }
+  } ]
+}

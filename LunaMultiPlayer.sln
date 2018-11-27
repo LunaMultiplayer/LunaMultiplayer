@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor_discord.ps = appveyor_discord.ps
 		Scripts\CopyToKSPDirectory.bat = Scripts\CopyToKSPDirectory.bat
 		LMP Readme.txt = LMP Readme.txt
+		Postman_Release.txt = Postman_Release.txt
 		README.md = README.md
 		Scripts\SetDirectories.bat = Scripts\SetDirectories.bat
 	EndProjectSection
