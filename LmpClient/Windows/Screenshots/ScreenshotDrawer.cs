@@ -190,8 +190,83 @@ namespace LmpClient.Windows.Screenshots
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
-
             GUILayout.EndVertical();
+
+            //Screenshot cycle buttons
+            GUILayout.Space(15);
+            GUILayout.BeginHorizontal();
+
+            GUILayout.BeginVertical();
+            if (GUILayout.Button(CycleFirstIcon))
+            {
+                //Load first image.
+                if (Miniatures.Count > 0)
+                {
+                    _selectedImage = Miniatures[0].DateTaken;
+                    if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
+                        System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
+                }
+            }
+            GUILayout.EndVertical();
+
+            GUILayout.BeginVertical();
+            if (GUILayout.Button(CyclePreviousIcon))
+            {
+                //Load previous image. If start of index, load last image.
+                var _index = Miniatures.FindIndex(screenshot => screenshot.DateTaken.Equals(_selectedImage));
+                long _previousImage = 0;
+                if (_index > 0)
+                {
+                    _previousImage = Miniatures[_index - 1].DateTaken;
+                }
+                else if (Miniatures.Count - 1 >= 0)
+                {
+                    _previousImage = Miniatures[Miniatures.Count - 1].DateTaken;
+                }
+                if (_previousImage != 0)
+                {
+                    _selectedImage = _previousImage;
+                    if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
+                        System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
+                }
+            }
+            GUILayout.EndVertical();
+
+            GUILayout.BeginVertical();
+            if (GUILayout.Button(CycleNextIcon))
+            {
+                //Load next image. If end of index, load first image.
+                var _index = Miniatures.FindIndex(screenshot => screenshot.DateTaken.Equals(_selectedImage));
+                long _nextImage = 0;
+                if (_index < Miniatures.Count - 1)
+                {
+                    _nextImage = Miniatures[_index + 1].DateTaken;
+                }
+                else
+                {
+                    _nextImage = Miniatures[0].DateTaken;
+                }
+                _selectedImage = _nextImage;
+                if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
+                    System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
+            }
+            GUILayout.EndVertical();
+
+            GUILayout.BeginVertical();
+            if (GUILayout.Button(CycleLastIcon))
+            {
+                //Load last image.
+                if (Miniatures.Count > 0)
+                {
+                    _selectedImage = Miniatures[Miniatures.Count - 1].DateTaken;
+                    if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
+                        System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
+                }
+            }
+            GUILayout.EndVertical();
+
+            GUILayout.EndHorizontal();
+            GUILayout.Space(15);
         }
 
         private static void DrawImageCentered(Screenshot screenShot)

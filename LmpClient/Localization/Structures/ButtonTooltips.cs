@@ -23,5 +23,10 @@
         public string DekesslerIcon { get; set; } = "Dekessler";
         public string NukeIcon { get; set; } = "Nuke KSC";
         public string RestartServerIcon { get; set; } = "Restart server";
+        public string DownloadIcon { get; set; } = "Download";
+        public string CycleFirstIcon { get; set; } = "First";
+        public string CyclePreviousIcon { get; set; } = "Previous";
+        public string CycleNextIcon { get; set; } = "Next";
+        public string CycleLastIcon { get; set; } = "Last";
     }
 }

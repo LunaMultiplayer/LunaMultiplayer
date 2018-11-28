@@ -81,6 +81,10 @@ namespace LmpClient.Base
         protected static GUIContent NukeBigIcon;
         protected static GUIContent RestartServerIcon;
         protected static GUIContent DownloadBigIcon;
+        protected static GUIContent CycleFirstIcon;
+        protected static GUIContent CyclePreviousIcon;
+        protected static GUIContent CycleNextIcon;
+        protected static GUIContent CycleLastIcon;
 
         protected void InitializeStyles()
         {
@@ -89,6 +93,7 @@ namespace LmpClient.Base
                 //We copy the original KSP skin, it's a ScriptableObject descendant.
                 Skin = Object.Instantiate(HighLogic.Skin);
 
+                //Icons
                 SettingsIcon = new GUIContent(
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
@@ -149,7 +154,6 @@ namespace LmpClient.Base
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "sync.png"),
                         16, 16),
                     LocalizationContainer.ButtonTooltips.SyncIcon);
-
                 ResizeIcon =
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
@@ -157,7 +161,6 @@ namespace LmpClient.Base
                 CloseIcon = WindowUtil.LoadIcon(
                     CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
                         "close_small.png"), 10, 10);
-
                 RefreshIcon = new GUIContent(
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
@@ -188,7 +191,6 @@ namespace LmpClient.Base
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "save.png"),
                         16, 16),
                     LocalizationContainer.ButtonTooltips.SaveIcon);
-
                 WaitGiantIcon =
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
@@ -196,7 +198,6 @@ namespace LmpClient.Base
                 WaitIcon = WindowUtil.LoadIcon(
                     CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "wait.png"), 16,
                     16);
-
                 KeyIcon = new GUIContent(
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "key.png"),
@@ -291,8 +292,29 @@ namespace LmpClient.Base
                     WindowUtil.LoadIcon(
                         CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
                             "downloadBig.png"), 32, 32),
-                    LocalizationContainer.ButtonTooltips.RestartServerIcon);
+                    LocalizationContainer.ButtonTooltips.DownloadIcon);
+                CycleFirstIcon = new GUIContent(
+                    WindowUtil.LoadIcon(
+                        CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
+                            "cycleFirstIcon.png"), 32, 32),
+                    LocalizationContainer.ButtonTooltips.CycleFirstIcon);
+                CyclePreviousIcon = new GUIContent(
+                    WindowUtil.LoadIcon(
+                        CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
+                            "cyclePreviousIcon.png"), 32, 32),
+                    LocalizationContainer.ButtonTooltips.CyclePreviousIcon);
+                CycleNextIcon = new GUIContent(
+                    WindowUtil.LoadIcon(
+                        CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
+                            "cycleNextIcon.png"), 32, 32),
+                    LocalizationContainer.ButtonTooltips.CycleNextIcon);
+                CycleLastIcon = new GUIContent(
+                    WindowUtil.LoadIcon(
+                        CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons",
+                            "cycleLastIcon.png"), 32, 32),
+                    LocalizationContainer.ButtonTooltips.CycleLastIcon);
 
+                //Styles
                 RedFontButtonStyle = new GUIStyle(Skin.button)
                 {
                     normal = {textColor = Color.red}, active = {textColor = Color.red}, hover = {textColor = Color.red}
