@@ -65,12 +65,18 @@ namespace LmpClient.Windows.Screenshots
                 if (_selectedFolder != folderName)
                 {
                     _selectedFolder = folderName;
+
                     System.RequestMiniaturesIfNeeded(_selectedFolder);
+                    Miniatures.Clear();
                 }
             }
             else
             {
-                if (_selectedFolder == folderName) _selectedFolder = null;
+                if (_selectedFolder == folderName)
+                {
+                    _selectedFolder = null;
+                    Miniatures.Clear();
+                }
             }
         }
 
@@ -84,9 +90,9 @@ namespace LmpClient.Windows.Screenshots
         #region Image library
 
         public void DrawLibraryContent(int windowId)
-        {            
+        {
             //Always draw close button first
-            DrawCloseButton(()=> _selectedFolder = null, _libraryWindowRect);
+            DrawCloseButton(() => _selectedFolder = null, _libraryWindowRect);
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
@@ -145,19 +151,17 @@ namespace LmpClient.Windows.Screenshots
             if (GUILayout.Button(miniature.Texture, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height)))
             {
                 _selectedImage = miniature.DateTaken;
-                if(System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
-                    System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
             }
         }
-        
+
         #endregion
 
         #region Image viewer
 
         public void DrawImageContent(int windowId)
-        {            
+        {
             //Always draw close button first
-            DrawCloseButton(()=> _selectedImage = 0, _imageWindowRect);
+            DrawCloseButton(() => _selectedImage = 0, _imageWindowRect);
             if (GUI.RepeatButton(new Rect(_imageWindowRect.width - 15, _imageWindowRect.height - 15, 10, 10), ResizeIcon, ResizeButtonStyle))
             {
                 ResizingWindow = true;
@@ -187,85 +191,42 @@ namespace LmpClient.Windows.Screenshots
             else
             {
                 DrawWaitIcon(false);
+                System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
             GUILayout.EndVertical();
 
-            //Screenshot cycle buttons
-            GUILayout.Space(15);
-            GUILayout.BeginHorizontal();
+            if (Miniatures.Count > 1)
+            {   
+                //Draw screenshot cycle buttons if we have more than 1 screenshot
+                GUILayout.Space(15);
+                GUILayout.BeginHorizontal();
 
-            GUILayout.BeginVertical();
-            if (GUILayout.Button(CycleFirstIcon))
-            {
-                //Load first image.
-                if (Miniatures.Count > 0)
+                if (GUILayout.Button(CycleFirstIcon))
                 {
+                    //Load first image.
                     _selectedImage = Miniatures[0].DateTaken;
-                    if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
-                        System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
                 }
-            }
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical();
-            if (GUILayout.Button(CyclePreviousIcon))
-            {
-                //Load previous image. If start of index, load last image.
-                var _index = Miniatures.FindIndex(screenshot => screenshot.DateTaken.Equals(_selectedImage));
-                long _previousImage = 0;
-                if (_index > 0)
+                if (GUILayout.Button(CyclePreviousIcon))
                 {
-                    _previousImage = Miniatures[_index - 1].DateTaken;
+                    //Load previous image. If start of index, load last image.
+                    _selectedImage = Miniatures[CurrentIndex > 0 ? CurrentIndex - 1 : Miniatures.Count - 1].DateTaken;
                 }
-                else if (Miniatures.Count - 1 >= 0)
+                if (GUILayout.Button(CycleNextIcon))
                 {
-                    _previousImage = Miniatures[Miniatures.Count - 1].DateTaken;
+                    //Load next image. If end of index, load first image.
+                    _selectedImage = Miniatures[CurrentIndex < Miniatures.Count - 1 ? CurrentIndex + 1 : 0].DateTaken;
                 }
-                if (_previousImage != 0)
+                if (GUILayout.Button(CycleLastIcon))
                 {
-                    _selectedImage = _previousImage;
-                    if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
-                        System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
-                }
-            }
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical();
-            if (GUILayout.Button(CycleNextIcon))
-            {
-                //Load next image. If end of index, load first image.
-                var _index = Miniatures.FindIndex(screenshot => screenshot.DateTaken.Equals(_selectedImage));
-                long _nextImage = 0;
-                if (_index < Miniatures.Count - 1)
-                {
-                    _nextImage = Miniatures[_index + 1].DateTaken;
-                }
-                else
-                {
-                    _nextImage = Miniatures[0].DateTaken;
-                }
-                _selectedImage = _nextImage;
-                if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
-                    System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
-            }
-            GUILayout.EndVertical();
-
-            GUILayout.BeginVertical();
-            if (GUILayout.Button(CycleLastIcon))
-            {
-                //Load last image.
-                if (Miniatures.Count > 0)
-                {
+                    //Load last image.
                     _selectedImage = Miniatures[Miniatures.Count - 1].DateTaken;
-                    if (System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
-                        System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
                 }
-            }
-            GUILayout.EndVertical();
 
-            GUILayout.EndHorizontal();
+                GUILayout.EndHorizontal();
+            }
+
             GUILayout.Space(15);
         }
 

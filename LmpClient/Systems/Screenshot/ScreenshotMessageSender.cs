@@ -1,17 +1,20 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Screenshot;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
+using System;
+using System.Collections.Generic;
 using UniLinq;
 
 namespace LmpClient.Systems.Screenshot
 {
     public class ScreenshotMessageSender : SubSystem<ScreenshotSystem>, IMessageSender
     {
+        public static readonly Dictionary<string, DateTime> RequestedImages = new Dictionary<string, DateTime>();
+
         public void SendMessage(IMessageData msg)
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ScreenshotCliMsg>(msg)));
@@ -58,11 +61,19 @@ namespace LmpClient.Systems.Screenshot
 
         public void RequestImage(string folderName, long dateTaken)
         {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ScreenshotDownloadRequestMsgData>();
-            msgData.FolderName = folderName;
-            msgData.DateTaken = dateTaken;
+            if (!RequestedImages.ContainsKey($"folderName_{dateTaken}") || RequestedImages[$"folderName_{dateTaken}"] < DateTime.UtcNow - TimeSpan.FromSeconds(30))
+            {
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ScreenshotDownloadRequestMsgData>();
+                msgData.FolderName = folderName;
+                msgData.DateTaken = dateTaken;
 
-            SendMessage(msgData);
+                SendMessage(msgData);
+            }
+
+            if (!RequestedImages.ContainsKey($"folderName_{dateTaken}"))
+                RequestedImages.Add($"folderName_{dateTaken}", LunaComputerTime.UtcNow);
+            else
+                RequestedImages[$"folderName_{dateTaken}"] = LunaComputerTime.UtcNow;
         }
     }
 }

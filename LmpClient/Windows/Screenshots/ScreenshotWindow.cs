@@ -39,6 +39,8 @@ namespace LmpClient.Windows.Screenshots
         private static DateTime _lastGuiUpdateTime = DateTime.MinValue;
         private static readonly List<Screenshot> Miniatures = new List<Screenshot>();
 
+        private static int CurrentIndex => _selectedImage != 0 ? Miniatures.FindIndex(s => s.DateTaken.Equals(_selectedImage)) : 0;
+
         #endregion
 
         private static bool _display;
@@ -92,11 +94,10 @@ namespace LmpClient.Windows.Screenshots
                     DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", _libraryLayoutOptions));
             }
 
-            if (!string.IsNullOrEmpty(_selectedFolder) && _selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder) && System.DownloadedImages[_selectedFolder].ContainsKey(_selectedImage))
+            if (!string.IsNullOrEmpty(_selectedFolder) && System.DownloadedImages.ContainsKey(_selectedFolder) && _selectedImage > 0)
             {
-                var _screenshotNumber = Miniatures.FindIndex(screenshot => screenshot.DateTaken.Equals(_selectedImage)) + 1;
                 _imageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, _imageWindowRect,
-                    DrawImageContent, _selectedFolder + " [" + _screenshotNumber + "] - " + $"{DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC"));
+                    DrawImageContent, $"{_selectedFolder} [{CurrentIndex + 1}] - {DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC"));
             }
         }
 
