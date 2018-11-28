@@ -67,6 +67,7 @@ namespace LmpClient.Windows.Screenshots
                     _selectedFolder = folderName;
 
                     System.RequestMiniaturesIfNeeded(_selectedFolder);
+                    _selectedImage = 0;
                     Miniatures.Clear();
                 }
             }
