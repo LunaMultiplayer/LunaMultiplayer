@@ -1,4 +1,5 @@
-﻿using Server.Context;
+﻿using LmpCommon;
+using Server.Context;
 using Server.Events;
 using Server.Log;
 using Server.Settings.Structures;
@@ -6,7 +7,6 @@ using Server.Web.Handlers;
 using Server.Web.Structures;
 using System;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using uhttpsharp;
@@ -36,20 +36,7 @@ namespace Server.Web
             {
                 try
                 {
-                    //Check if designated port is available
-                    var port = WebsiteSettings.SettingsStore.Port;
-                    var isPortAvailable = true;
-                    var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-                    var ipEndPoints = ipGlobalProperties.GetActiveTcpListeners();
-                    foreach (var endPoint in ipEndPoints)
-                    {
-                        if (endPoint.Port == port)
-                        {
-                            isPortAvailable = false;
-                            break;
-                        }
-                    }
-                    if (isPortAvailable)
+                    if (!LunaNetUtils.IsTcpPortInUse(WebsiteSettings.SettingsStore.Port))
                     {
                         Server.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Any, WebsiteSettings.SettingsStore.Port)));
                         Server.Use(new ExceptionHandler());
@@ -60,13 +47,13 @@ namespace Server.Web
                     }
                     else
                     {
-                        LunaLog.Error($"Could not start web server. Port is already in use.");
-                        LunaLog.Info($"You can change the web server settings" + Environment.NewLine + $"inside 'Config/WebsiteSettings.xml'");
+                        LunaLog.Error("Could not start web server. Port is already in use.");
+                        LunaLog.Info("You can change the web server settings inside 'Config/WebsiteSettings.xml'");
                     }
                 }
                 catch (Exception e)
                 {
-                    LunaLog.Error($"Could not start web server." + Environment.NewLine + $"Details: {e}");
+                    LunaLog.Error($"Could not start web server. Details: {e}");
                 }
             }
         }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -166,14 +165,6 @@ namespace LmpCommon
             {
                 return Guid.Empty;
             }
-        }
-
-        public static bool PortIsInUse(int port)
-        {
-            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-            var udpConnInfoArray = ipGlobalProperties.GetActiveUdpListeners();
-
-            return udpConnInfoArray.Any(tcpi => tcpi.Port == port);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Server.Lidgren
             ServerContext.Config.PingInterval = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.HearbeatMsInterval).TotalSeconds;
             ServerContext.Config.ConnectionTimeout = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds;
             
-            if (Common.PortIsInUse(ServerContext.Config.Port))
+            if (LunaNetUtils.IsUdpPortInUse(ServerContext.Config.Port))
             {
                 throw new HandledException($"Port {ServerContext.Config.Port} is already in use");
             }

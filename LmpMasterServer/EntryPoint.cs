@@ -69,7 +69,7 @@ namespace LmpMasterServer
 
         private static bool CheckPort()
         {
-            if (Common.PortIsInUse(Lidgren.MasterServer.Port))
+            if (LunaNetUtils.IsUdpPortInUse(Lidgren.MasterServer.Port))
             {
                 ConsoleLogger.Log(LogLevels.Error, $"Port {Lidgren.MasterServer.Port} is already in use!");
                 return false;
