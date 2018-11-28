@@ -97,7 +97,12 @@ namespace LmpClient.Windows.Screenshots
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            DrawRefreshButton(() => System.MessageSender.RequestMiniatures(_selectedFolder));
+            DrawRefreshButton(() =>
+            {
+                _selectedImage = 0;
+                System.MessageSender.RequestMiniatures(_selectedFolder);
+                Miniatures.Clear();
+            });
             GUILayout.Space(15);
 
             if (string.IsNullOrEmpty(_selectedFolder)) return;
