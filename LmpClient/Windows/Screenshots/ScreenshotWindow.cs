@@ -60,11 +60,7 @@ namespace LmpClient.Windows.Screenshots
         public override void Update()
         {
             base.Update();
-            if (!Display)
-            {
-                Reset();
-                return;
-            }
+            if (!Display) return;
 
             if (TimeUtil.IsInInterval(ref _lastGuiUpdateTime, UpdateIntervalMs))
             {
@@ -163,6 +159,14 @@ namespace LmpClient.Windows.Screenshots
 
             if (!Display && IsWindowLocked)
                 RemoveWindowLock();
+        }
+
+        protected override void NetworkEventHandler(ClientState data)
+        {
+            if (data <= ClientState.Disconnected)
+            {
+                Display = false;
+            }
         }
 
         private static void Reset()

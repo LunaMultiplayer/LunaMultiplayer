@@ -1,5 +1,7 @@
 ﻿using LmpClient.Base.Interface;
+using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
+using LmpCommon.Enums;
 using System;
 using UnityEngine;
 
@@ -42,6 +44,19 @@ namespace LmpClient.Base
                     OnHide();
                 }
             }
+        }
+
+        /// <summary>
+        /// We subscribe for the network event changes on the constructor
+        /// </summary>
+        protected Window() => NetworkEvent.onNetworkStatusChanged.Add(NetworkEventHandler);
+
+        /// <summary>
+        /// Handle here what happens to your window when the network status changes.
+        /// </summary>
+        protected virtual void NetworkEventHandler(ClientState data)
+        {
+            //Implement your own code
         }
 
         /// <summary>
