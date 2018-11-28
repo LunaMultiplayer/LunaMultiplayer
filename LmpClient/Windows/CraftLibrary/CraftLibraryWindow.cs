@@ -62,7 +62,11 @@ namespace LmpClient.Windows.CraftLibrary
         public override void Update()
         {
             base.Update();
-            if (!Display) return;
+            if (!Display)
+            {
+                Reset();
+                return;
+            }
 
             if (TimeUtil.IsInInterval(ref _lastGuiUpdateTime, UpdateIntervalMs))
             {
