@@ -191,6 +191,9 @@ namespace LmpClient.Windows.ServerList
 
         private void DrawServerEntry(ServerInfo currentEntry)
         {
+            if (currentEntry.DedicatedServer)
+                RainbowEffect.StartRainbowEffect();
+
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[0]));
             if (GUILayout.Button("▶"))
             {
@@ -209,45 +212,45 @@ namespace LmpClient.Windows.ServerList
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[1]));
             if (currentEntry.Password)
-                GUILayout.Label(KeyIcon, GUILayout.MinWidth(HeaderGridSize[1]));
+                GUILayout.Label(KeyIcon, GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[1]));
             else
-                GUILayout.Label("", GUILayout.MinWidth(HeaderGridSize[1]));
+                GUILayout.Label("", GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[1]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[2]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Country}"), GUILayout.MinWidth(HeaderGridSize[2]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Country}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[2]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[3]));
-            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), GUILayout.MinWidth(HeaderGridSize[3]));
+            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[3]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[4]));
-            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), GUILayout.MinWidth(HeaderGridSize[4]));
+            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[4]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[5]));
-            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), GUILayout.MinWidth(HeaderGridSize[5]));
+            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[5]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[6]));
-            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), GUILayout.MinWidth(HeaderGridSize[6]));
+            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[6]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[7]));
-            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), GUILayout.MinWidth(HeaderGridSize[7]));
+            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[7]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[8]));
-            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), GUILayout.MinWidth(HeaderGridSize[8]));
+            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[8]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[9]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), GUILayout.MinWidth(HeaderGridSize[9]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[9]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[10]));
-            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), GUILayout.MinWidth(HeaderGridSize[10]));
+            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[10]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[11]));
@@ -261,8 +264,10 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[12]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), GUILayout.MinWidth(HeaderGridSize[12]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[12]));
             GUILayout.EndHorizontal();
+
+            RainbowEffect.StopRainbowEffect();
         }
 
         #endregion

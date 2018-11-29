@@ -46,7 +46,8 @@ namespace LmpClient.Windows.ServerList
         private static GUIStyle _headerServerLine;
         private static GUIStyle _evenServerLine;
         private static GUIStyle _oddServerLine;
-        private static GUIStyle LabelStyle;
+        private static GUIStyle _labelStyle;
+        private static GUIStyle _kspLabelStyle;
 
         protected override bool Resizable => true;
 
@@ -109,7 +110,8 @@ namespace LmpClient.Windows.ServerList
             _oddServerLine.onNormal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
             _oddServerLine.onNormal.background.Apply();
 
-            LabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
+            _labelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
+            _kspLabelStyle = new GUIStyle(Skin.label) { alignment = TextAnchor.MiddleCenter };
 
             _serverDetailLayoutOptions = new GUILayoutOption[4];
             _serverDetailLayoutOptions[0] = GUILayout.MinWidth(ServerDetailWindowWidth);
@@ -140,6 +142,11 @@ namespace LmpClient.Windows.ServerList
                 DisplayedServers.AddRange(_ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)) : 
                     NetworkServerList.Servers.Values.OrderByDescending(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)));
             }
+        }
+
+        private static GUIStyle GetCorrectLabelStyle(ServerInfo server)
+        {
+            return server.DedicatedServer ? _labelStyle : _kspLabelStyle;
         }
     }
 }
