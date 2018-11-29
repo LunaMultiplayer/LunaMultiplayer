@@ -1,3 +1,7 @@
+#Here you specify the ips or hostnames of all the dedicated servers followed by ":" and the port. 
+#Then each master server will look if the server is on this list and tell the clients if it's a dedicated server or not
+#If the server is dedicated it will appear with a rainbow effect on the server list
+
 #Vega Career + Sandbox
 148.251.92.44:8801
 148.251.92.44:8800
