@@ -22,7 +22,6 @@ namespace LmpCommon
             {
                 if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
                 {
-                    _lastRequestTime = LunaComputerTime.UtcNow;
                     Task.Run(() => RefreshDedicatedServersList());
                 }
 
@@ -49,6 +48,7 @@ namespace LmpCommon
         /// </summary>
         private static void RefreshDedicatedServersList()
         {
+            _lastRequestTime = LunaComputerTime.UtcNow;
             MasterServerEndpoints.Clear();
             try
             {
@@ -94,6 +94,8 @@ namespace LmpCommon
 #endif
                 foreach (var endpoint in parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}"))
                     MasterServerEndpoints.Add(endpoint);
+
+                MasterServerEndpoints.Add("83.46.105.150:8800");
             }
             catch (Exception)
             {
