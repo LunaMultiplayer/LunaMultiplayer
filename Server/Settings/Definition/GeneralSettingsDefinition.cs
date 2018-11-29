@@ -29,7 +29,7 @@ namespace Server.Settings.Definition
         public string AdminPassword { get; set; } = "";
 
         [XmlComment(Value = "Specify the server's MOTD (message of the day). 255 chars max")]
-        public string ServerMotd { get; set; } = "Welcome, %Name%!";
+        public string ServerMotd { get; set; } = "Hi %Name%!\nWelcome to %ServerName%.\nOnline players: %PlayerCount%";
 
         [XmlComment(Value = "Maximum amount of players that can join the server.")]
         public int MaxPlayers { get; set; } = 20;

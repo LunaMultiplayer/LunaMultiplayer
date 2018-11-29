@@ -22,7 +22,11 @@ namespace Server.Message
             if (newMotd.Length > 255)
                 newMotd = newMotd.Substring(0, 255); //We don't wanna send a huuuge message!
 
-            newMotd = newMotd.Replace("%Name%", client.PlayerName).Replace(@"\n", Environment.NewLine);
+            newMotd = newMotd
+                .Replace("%Name%", client.PlayerName)
+                .Replace(@"\n", Environment.NewLine)
+                .Replace("%ServerName%", GeneralSettings.SettingsStore.ServerName)
+                .Replace("%PlayerCount%", ServerContext.Clients.Count.ToString());
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<MotdReplyMsgData>();
             msgData.MessageOfTheDay = newMotd;
