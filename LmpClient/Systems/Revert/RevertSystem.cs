@@ -26,6 +26,8 @@ namespace LmpClient.Systems.Revert
             base.OnEnabled();
             VesselAssemblyEvent.onAssembledVessel.Add(RevertEvents.VesselAssembled);
             GameEvents.onVesselChange.Add(RevertEvents.OnVesselChange);
+            RevertEvent.onRevertedToLaunch.Add(RevertEvents.OnRevertToLaunch);
+            GameEvents.onGameSceneLoadRequested.Add(RevertEvents.GameSceneLoadRequested);
         }
 
         protected override void OnDisabled()
@@ -33,6 +35,8 @@ namespace LmpClient.Systems.Revert
             base.OnDisabled();
             VesselAssemblyEvent.onAssembledVessel.Remove(RevertEvents.VesselAssembled);
             GameEvents.onVesselChange.Remove(RevertEvents.OnVesselChange);
+            RevertEvent.onRevertedToLaunch.Remove(RevertEvents.OnRevertToLaunch);
+            GameEvents.onGameSceneLoadRequested.Remove(RevertEvents.GameSceneLoadRequested);
         }
 
         #endregion
