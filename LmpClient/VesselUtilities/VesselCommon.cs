@@ -256,9 +256,8 @@ namespace LmpClient.VesselUtilities
         {
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
             return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Where(l => FlightGlobals.ActiveVessel && l.VesselId != FlightGlobals.ActiveVessel.id)
-                .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v != null && v.id == vi.VesselId))
-                .Where(v => v != null && v.id != Guid.Empty);
+                .Select(l => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v && v.id == l.VesselId))
+                .Where(v => v && (FlightGlobals.ActiveVessel == null || v != FlightGlobals.ActiveVessel));
         }
 
         /// <summary>
@@ -268,9 +267,8 @@ namespace LmpClient.VesselUtilities
         {
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
             return LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Where(l => FlightGlobals.ActiveVessel && l.VesselId != FlightGlobals.ActiveVessel.id && !LockSystem.LockQuery.UpdateLockExists(l.VesselId))
-                .Select(vi => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v != null && v.id == vi.VesselId))
-                .Where(v => v != null && v.id != Guid.Empty);
+                .Select(l => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v && v.id == l.VesselId))
+                .Where(v => v && (FlightGlobals.ActiveVessel == null || v != FlightGlobals.ActiveVessel));
         }
 
         /// <summary>
