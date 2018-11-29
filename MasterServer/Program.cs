@@ -50,7 +50,7 @@ namespace MasterServer
         private static void Main(string[] args)
         {
             //Uncomment this to properly debug the code
-            //EntryPoint.MainEntryPoint(new string[0]);
+            //LmpMasterServer.EntryPoint.MainEntryPoint(new string[0]);
             //while (true) { Thread.Sleep(100); }
 
             if (!File.Exists(DllPath))
