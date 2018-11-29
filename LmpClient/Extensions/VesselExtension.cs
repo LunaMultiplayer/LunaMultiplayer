@@ -12,7 +12,8 @@ namespace LmpClient.Extensions
         /// </summary>
         public static void AdvanceShipPosition(this Vessel vessel, double time)
         {
-            if (vessel.situation <= Vessel.Situations.PRELAUNCH) return;
+            //If we advance the orbit when flying, we risk going inside the terrain as the orbit goes deep down the planet!
+            if (vessel.situation <= Vessel.Situations.FLYING) return;
 
             var obtPos = vessel.orbit.getRelativePositionAtUT(time);
             var obtVel = vessel.orbit.getOrbitalVelocityAtUT(time);
