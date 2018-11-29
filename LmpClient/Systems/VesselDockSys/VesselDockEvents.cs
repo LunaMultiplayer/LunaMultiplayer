@@ -19,13 +19,9 @@ namespace LmpClient.Systems.VesselDockSys
         /// <summary>
         /// Called just before the docking sequence starts
         /// </summary>
-        public void OnVesselDocking(uint vessel1PersistentId, uint vessel2PersistentId)
+        public void OnVesselDocking(Vessel vessel1, Vessel vessel2)
         {
             if (VesselCommon.IsSpectating) return;
-
-            if (!FlightGlobals.PersistentVesselIds.TryGetValue(vessel1PersistentId, out var vessel1) ||
-                !FlightGlobals.PersistentVesselIds.TryGetValue(vessel2PersistentId, out var vessel2))
-                return;
 
             if (vessel1.isEVA || vessel2.isEVA) return;
 
@@ -45,11 +41,11 @@ namespace LmpClient.Systems.VesselDockSys
                 : $"Docking detected! Dominant: {dominantVessel.id} Weak: {weakVessel.id}");
         }
 
-        public void OnDockingComplete(GameEvents.FromToAction<Part, Part> data)
+        public void OnDockingComplete(Vessel vessel1, Vessel vessel2)
         {
             //Do not do a "VesselCommon.IsSpectating" check as when we detect the dock and we own the weak vessel, we switch to the dominant and we will be spectating!
 
-            if (data.from.vessel.isEVA || data.from.vessel.isEVA) return;
+            if (vessel1.isEVA || vessel2.isEVA) return;
 
             LunaLog.Log(_ownDominantVessel || _ownWeakVessel
                 ? $"[LMP]: Docking finished! We own the {(_ownDominantVessel ? "DOMINANT" : "WEAK")} vessel"

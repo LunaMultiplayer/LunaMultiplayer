@@ -89,6 +89,7 @@
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
     <Compile Include="Events\TrackingEvent.cs" />
+    <Compile Include="Events\VesselDockEvent.cs" />
     <Compile Include="Events\VesselLoadEvent.cs" />
     <Compile Include="Events\VesselAssemblyEvent.cs" />
     <Compile Include="Events\VesselReloadEvent.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
+    <Compile Include="Harmony\ModuleDockingNode_DockToVessel.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
     <Compile Include="Harmony\FlightDriver_SetStartupNewVessel.cs" />
     <Compile Include="Harmony\FlightDriver_Start.cs" />

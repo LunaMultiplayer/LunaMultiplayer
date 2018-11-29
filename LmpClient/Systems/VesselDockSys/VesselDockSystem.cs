@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Events;
 
 namespace LmpClient.Systems.VesselDockSys
 {
@@ -11,8 +12,8 @@ namespace LmpClient.Systems.VesselDockSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onVesselDocking.Add(VesselDockEvents.OnVesselDocking);
-            GameEvents.onDockingComplete.Add(VesselDockEvents.OnDockingComplete);
+            VesselDockEvent.onDocking.Add(VesselDockEvents.OnVesselDocking);
+            VesselDockEvent.onDockingComplete.Add(VesselDockEvents.OnDockingComplete);
 
             GameEvents.onPartUndock.Add(VesselDockEvents.UndockingStart);
             GameEvents.onVesselsUndocking.Add(VesselDockEvents.UndockingComplete);
@@ -21,8 +22,8 @@ namespace LmpClient.Systems.VesselDockSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onVesselDocking.Remove(VesselDockEvents.OnVesselDocking);
-            GameEvents.onDockingComplete.Remove(VesselDockEvents.OnDockingComplete);
+            VesselDockEvent.onDocking.Remove(VesselDockEvents.OnVesselDocking);
+            VesselDockEvent.onDockingComplete.Remove(VesselDockEvents.OnDockingComplete);
 
             GameEvents.onPartUndock.Remove(VesselDockEvents.UndockingStart);
             GameEvents.onVesselsUndocking.Remove(VesselDockEvents.UndockingComplete);
