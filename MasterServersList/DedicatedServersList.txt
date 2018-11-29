@@ -1,8 +1,10 @@
-#Vega Career
+#Vega Career + Sandbox
+148.251.92.44:8801
 148.251.92.44:8800
-#Vega Sandbox
-136.243.101.201:8801
 #NoNameShips
 nonameships.pw:8800
-#Dagger
-83.46.105.150:8800
+#Pictocube
+136.243.101.201:8800
+136.243.101.201:8801
+#KerbCat
+47.104.88.9:8800
