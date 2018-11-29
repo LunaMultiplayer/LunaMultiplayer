@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Systems.TimeSync;
+using System;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselFairingsSys
 {
     /// <summary>
-    /// This class sends some parts of the vessel information to other players. We do it in another system as we don't want to send this information so often as
-    /// the vessel position system and also we want to send it more oftenly than the vessel proto.
+    /// This class syncs the fairings between players
     /// </summary>
     public class VesselFairingsSystem : MessageSystem<VesselFairingsSystem, VesselFairingsMessageSender, VesselFairingsMessageHandler>
     {
