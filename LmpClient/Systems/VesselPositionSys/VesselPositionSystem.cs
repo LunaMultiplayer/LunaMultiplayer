@@ -189,21 +189,6 @@ namespace LmpClient.Systems.VesselPositionSys
         }
 
         /// <summary>
-        /// Gets the latest received position of a vessel
-        /// </summary>
-        public double[] GetLatestVesselPosition(Guid vesselId)
-        {
-            if (CurrentVesselUpdate.TryGetValue(vesselId, out var vesselPos))
-            {
-                var fullData = new double[vesselPos.LatLonAlt.Length + vesselPos.Orbit.Length];
-                vesselPos.LatLonAlt.CopyTo(fullData, 0);
-                vesselPos.Orbit.CopyTo(fullData, vesselPos.LatLonAlt.Length);
-                return fullData;
-            }
-            return null;
-        }
-
-        /// <summary>
         /// Removes a vessel from the system
         /// </summary>
         public void RemoveVessel(Guid vesselId)
