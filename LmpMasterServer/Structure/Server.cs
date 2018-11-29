@@ -1,7 +1,7 @@
-﻿using LmpMasterServer.Geolocalization;
-using LmpCommon;
+﻿using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Time;
+using LmpMasterServer.Geolocalization;
 using System;
 using System.Linq;
 using System.Net;
@@ -12,8 +12,12 @@ namespace LmpMasterServer.Structure
     public class Server
     {
         private static DateTime _lastCountryRequestTime = DateTime.MinValue;
+
         private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries =
             new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
+
+        private static readonly TimeoutConcurrentDictionary<IPEndPoint, bool> DedicatedServers =
+            new TimeoutConcurrentDictionary<IPEndPoint, bool>(TimeSpan.FromHours(30).TotalMilliseconds);
 
         public long LastRegisterTime { get; set; }
         public IPEndPoint InternalEndpoint { get; set; }
@@ -37,6 +41,7 @@ namespace LmpMasterServer.Structure
             Info.GameMode = msg.GameMode;
             Info.MaxPlayers = msg.MaxPlayers;
             Info.ModControl = msg.ModControl;
+            Info.DedicatedServer = DedicatedServerRetriever.IsDedicatedServer(ExternalEndpoint);
             Info.PlayerCount = msg.PlayerCount;
             Info.ServerName = msg.ServerName;
             Info.WarpMode = msg.WarpMode;
@@ -90,9 +95,10 @@ namespace LmpMasterServer.Structure
                 PlayerCount = msg.PlayerCount,
                 WarpMode = msg.WarpMode,
                 TerrainQuality = msg.TerrainQuality,
+                DedicatedServer = DedicatedServerRetriever.IsDedicatedServer(ExternalEndpoint)
             };
 
-            if(string.IsNullOrEmpty(Info.Country))
+            if (string.IsNullOrEmpty(Info.Country))
                 SetCountryFromEndpoint(Info, ExternalEndpoint);
 
             Info.Country = Info.Country.ToUpper();

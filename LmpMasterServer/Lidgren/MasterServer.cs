@@ -1,6 +1,4 @@
 ﻿using Lidgren.Network;
-using LmpMasterServer.Structure;
-using LmpGlobal;
 using LmpCommon;
 using LmpCommon.Message;
 using LmpCommon.Message.Data.MasterServer;
@@ -8,6 +6,8 @@ using LmpCommon.Message.Interface;
 using LmpCommon.Message.MasterServer;
 using LmpCommon.Message.Types;
 using LmpCommon.Time;
+using LmpGlobal;
+using LmpMasterServer.Structure;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -169,6 +169,7 @@ namespace LmpMasterServer.Lidgren
                 msgData.InternalEndpoint = $"{server.InternalEndpoint.Address}:{server.InternalEndpoint.Port}";
                 msgData.MaxPlayers = server.Info.MaxPlayers;
                 msgData.ModControl = server.Info.ModControl;
+                msgData.DedicatedServer = server.Info.DedicatedServer;
                 msgData.PlayerCount = server.Info.PlayerCount;
                 msgData.ServerName = server.Info.ServerName;
                 msgData.VesselUpdatesSendMsInterval = server.Info.VesselUpdatesSendMsInterval;

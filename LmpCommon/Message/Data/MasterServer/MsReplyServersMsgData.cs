@@ -17,6 +17,7 @@ namespace LmpCommon.Message.Data.MasterServer
         public bool Password;
         public bool Cheats;
         public bool ModControl;
+        public bool DedicatedServer;
         public int GameMode;
         public int MaxPlayers;
         public int PlayerCount;
@@ -45,6 +46,7 @@ namespace LmpCommon.Message.Data.MasterServer
             lidgrenMsg.Write(Password);
             lidgrenMsg.Write(Cheats);
             lidgrenMsg.Write(ModControl);
+            lidgrenMsg.Write(DedicatedServer);
             lidgrenMsg.Write(GameMode);
             lidgrenMsg.Write(MaxPlayers);
             lidgrenMsg.Write(PlayerCount);
@@ -72,6 +74,7 @@ namespace LmpCommon.Message.Data.MasterServer
             Password = lidgrenMsg.ReadBoolean();
             Cheats = lidgrenMsg.ReadBoolean();
             ModControl = lidgrenMsg.ReadBoolean();
+            DedicatedServer = lidgrenMsg.ReadBoolean();
             GameMode = lidgrenMsg.ReadInt32();
             MaxPlayers = lidgrenMsg.ReadInt32();
             PlayerCount = lidgrenMsg.ReadInt32();
@@ -93,7 +96,7 @@ namespace LmpCommon.Message.Data.MasterServer
             return base.InternalGetMessageSize() + 
                 sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
                 ExternalEndpoint.GetByteCount() + ServerName.GetByteCount() + Description.GetByteCount() + Country .GetByteCount() + Website.GetByteCount() + WebsiteText.GetByteCount() +
-                sizeof(bool) * 6 + sizeof(int) * 6;
+                sizeof(bool) * 7 + sizeof(int) * 6;
         }
     }
 }

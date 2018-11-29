@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collection\ConcurrentHashSet.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ConsoleUtil.cs" />
@@ -73,10 +74,12 @@
     <Compile Include="FastMember\ObjectReader.cs" />
     <Compile Include="FastMember\TypeAccessor.cs" />
     <Compile Include="Flags\DefaultFlags.cs" />
+    <Compile Include="GithubCertification.cs" />
     <Compile Include="IgnoredScenarios.cs" />
     <Compile Include="Locks\LockQueryContract.cs" />
     <Compile Include="Locks\LockQueryKerbal.cs" />
     <Compile Include="LunaMath.cs" />
+    <Compile Include="DedicatedServerRetriever.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
     <Compile Include="Message\Client\AdminCliMsg.cs" />
