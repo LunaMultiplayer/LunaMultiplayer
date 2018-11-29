@@ -1,6 +1,7 @@
 ﻿using FinePrint.Utilities;
 using LmpClient.Base;
 using LmpClient.Events;
+using LmpClient.Extensions;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
@@ -180,7 +181,7 @@ namespace LmpClient.Systems.Warp
                 DisplayMessage(LocalizationContainer.ScreenText.WarpDisabled, 5f);
                 return false;
             }
-            
+
             if (WaitingSubspaceIdFromServer && TimeWarp.CurrentRateIndex > 0)
             {
                 DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
@@ -319,8 +320,18 @@ namespace LmpClient.Systems.Warp
         /// </summary>
         public void ProcessNewSubspace()
         {
-            TimeWarp.fetch.WarpTo(CurrentSubspaceTime);
             ClockHandler.StepClock(CurrentSubspaceTime);
+            
+            //As we are syncing to a new game time, we must advance all the sip positions and put them in the correct "epoch"
+            var vesselsToUpdate = LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
+                .Select(l => FlightGlobals.FindVessel(l.VesselId))
+                .Where(v => v != null);
+
+            foreach (var vessel in vesselsToUpdate)
+            {
+                vessel.AdvanceShipPosition(CurrentSubspaceTime);
+            }
+            
             WarpEvent.onTimeWarpStopped.Fire();
         }
 

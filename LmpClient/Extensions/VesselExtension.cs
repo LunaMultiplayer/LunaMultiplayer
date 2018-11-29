@@ -8,6 +8,28 @@ namespace LmpClient.Extensions
     public static class VesselExtension
     {
         /// <summary>
+        /// Advance the orbit epoch to the specified time sent as parameter
+        /// </summary>
+        public static void AdvanceShipPosition(this Vessel vessel, double time)
+        {
+            if (vessel.situation <= Vessel.Situations.PRELAUNCH) return;
+
+            var obtPos = vessel.orbit.getRelativePositionAtUT(time);
+            var obtVel = vessel.orbit.getOrbitalVelocityAtUT(time);
+
+            if (!vessel.packed)
+                vessel.GoOnRails();
+
+            vessel.orbit.UpdateFromStateVectors(obtPos, obtVel, vessel.mainBody, time);
+            vessel.orbitDriver.updateFromParameters();
+
+            FloatingOrigin.SetOffset(vessel.transform.position);
+            OrbitPhysicsManager.CheckReferenceFrame();
+            OrbitPhysicsManager.HoldVesselUnpack(10);
+            vessel.IgnoreGForces(20);
+        }
+
+        /// <summary>
         /// Get vessel cost
         /// </summary>
         public static float GetShipCosts(this Vessel vessel, out float dryCost, out float fuelCost)
