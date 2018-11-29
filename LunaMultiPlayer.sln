@@ -24,6 +24,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LMP Server", "LMP Server", "{D438F6D8-A5FB-4C11-83F9-CBB34BDF123F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LMP MasterServer", "LMP MasterServer", "{36350310-DD1E-4EA0-A4AE-95A959EAC386}"
+	ProjectSection(SolutionItems) = preProject
+		MasterServersList\DedicatedServersList.txt = MasterServersList\DedicatedServersList.txt
+		MasterServersList\MasterServersList.txt = MasterServersList\MasterServersList.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LMP Client", "LMP Client", "{30A93EE1-4800-4120-969C-988400F69B8D}"
 EndProject

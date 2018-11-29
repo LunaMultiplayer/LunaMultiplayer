@@ -89,9 +89,6 @@ namespace LmpCommon
                     }
                 }
 
-#if DEBUG
-                parsedServers.Add(new IPEndPoint(IPAddress.Loopback, 8700));
-#endif
                 foreach (var endpoint in parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}"))
                     MasterServerEndpoints.Add(endpoint);
             }
