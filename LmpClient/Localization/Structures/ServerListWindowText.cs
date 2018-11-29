@@ -17,5 +17,6 @@
         public string ServerDetailTitle { get; set; } = "Connect to server";
         public string Password { get; set; } = "Password:";
         public string Connect { get; set; } = "Connect";
+        public string Dedicated { get; set; } = "Dedicated";
     }
 }
