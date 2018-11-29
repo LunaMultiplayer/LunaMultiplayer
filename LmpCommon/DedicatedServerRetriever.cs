@@ -23,6 +23,7 @@ namespace LmpCommon
                 if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
                 {
                     Task.Run(() => RefreshDedicatedServersList());
+                    _lastRequestTime = LunaComputerTime.UtcNow;
                 }
 
                 return MasterServerEndpoints;
@@ -48,7 +49,6 @@ namespace LmpCommon
         /// </summary>
         private static void RefreshDedicatedServersList()
         {
-            _lastRequestTime = LunaComputerTime.UtcNow;
             MasterServerEndpoints.Clear();
             try
             {
