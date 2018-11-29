@@ -29,7 +29,7 @@ namespace LmpCommon.Message.Data.Vessel
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(uint) * 2;
+            return base.InternalGetMessageSize() + sizeof(uint);
         }
     }
 }
