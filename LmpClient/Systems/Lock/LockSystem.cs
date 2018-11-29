@@ -1,6 +1,5 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
-using LmpClient.Extensions;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
@@ -37,79 +36,85 @@ namespace LmpClient.Systems.Lock
         #region AcquireLocks
 
         /// <summary>
-        /// Aquire the specified lock by sending a message to the server.
+        /// Acquire the specified lock by sending a message to the server.
         /// </summary>
         /// <param name="lockDefinition">The definition of the lock to acquire</param>
-        /// <param name="force">Force the aquire. Usually false unless in dockings.</param>
-        private void AcquireLock(LockDefinition lockDefinition, bool force = false)
+        /// <param name="force">Force the acquire. Usually false unless in dockings.</param>
+        /// <param name="immediate">Acquire the lock immediately without waiting confirmation from the server</param>
+        private void AcquireLock(LockDefinition lockDefinition, bool force = false, bool immediate = false)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockAcquireMsgData>();
             msgData.Lock = lockDefinition;
             msgData.Force = force;
 
             MessageSender.SendMessage(msgData);
+
+            if (force && immediate)
+            {
+                LockStore.AddOrUpdateLock(lockDefinition);
+            }
         }
 
         /// <summary>
-        /// Aquire the control lock on the given vessel
+        /// Acquire the control lock on the given vessel
         /// </summary>
-        public void AcquireControlLock(Guid vesselId, bool force = false)
+        public void AcquireControlLock(Guid vesselId, bool force = false, bool immediate = false)
         {
             if (!LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+                AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId), force, immediate);
         }
 
         /// <summary>
-        /// Aquire the kerbal lock on the given kerbal
+        /// Acquire the kerbal lock on the given kerbal
         /// </summary>
-        public void AcquireKerbalLock(string kerbalName, bool force = false)
+        public void AcquireKerbalLock(string kerbalName, bool force = false, bool immediate = false)
         {
             if (!LockQuery.KerbalLockBelongsToPlayer(kerbalName, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName), force);
+                AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName), force, immediate);
         }
 
         /// <summary>
-        /// Aquire the kerbal lock on the given vessel
+        /// Acquire the kerbal lock on the given vessel
         /// </summary>
-        public void AcquireKerbalLock(Vessel vessel, bool force = false)
+        public void AcquireKerbalLock(Vessel vessel, bool force = false, bool immediate = false)
         {
             if (vessel == null) return;
             foreach (var kerbal in vessel.GetVesselCrew())
             {
                 if (kerbal == null) continue;
                 if (!LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
-                    AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal.name), force);
+                    AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal.name), force, immediate);
             }
         }
 
         /// <summary>
-        /// Aquire the kerbal lock on the given vessel
+        /// Acquire the kerbal lock on the given vessel
         /// </summary>
-        public void AcquireKerbalLock(Guid vesselId, bool force = false)
+        public void AcquireKerbalLock(Guid vesselId, bool force = false, bool immediate = false)
         {
-            AcquireKerbalLock(FlightGlobals.FindVessel(vesselId), force);
+            AcquireKerbalLock(FlightGlobals.FindVessel(vesselId), force, immediate);
         }
 
         /// <summary>
-        /// Aquire the update lock on the given vessel
+        /// Acquire the update lock on the given vessel
         /// </summary>
-        public void AcquireUpdateLock(Guid vesselId, bool force = false)
+        public void AcquireUpdateLock(Guid vesselId, bool force = false, bool immediate = false)
         {
             if (!LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+                AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId), force, immediate);
         }
 
         /// <summary>
-        /// Aquire the unloaded update lock on the given vessel
+        /// Acquire the unloaded update lock on the given vessel
         /// </summary>
-        public void AcquireUnloadedUpdateLock(Guid vesselId, bool force = false)
+        public void AcquireUnloadedUpdateLock(Guid vesselId, bool force = false, bool immediate = false)
         {
             if (!LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+                AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId), force, immediate);
         }
 
         /// <summary>
-        /// Aquire the spectator lock on the given vessel
+        /// Acquire the spectator lock on the given vessel
         /// </summary>
         public void AcquireSpectatorLock()
         {
@@ -118,7 +123,7 @@ namespace LmpClient.Systems.Lock
         }
 
         /// <summary>
-        /// Aquire the asteroid lock for the current player
+        /// Acquire the asteroid lock for the current player
         /// </summary>
         public void AcquireAsteroidLock()
         {
