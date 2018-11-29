@@ -63,13 +63,14 @@ namespace uhttpsharp
             for (int i = 0; i < keyValues.Length; i += 2)
             {
                 var key = keyValues[i];
-                var value = keyValues[i + 1];
 
-                _values[key] = value;
+                if (i + 1 < keyValues.Length)
+                {
+                    var value = keyValues[i + 1];
+                    _values[key] = value;
+                }
             }
         }
-
-
 
         public void Upsert(string key, string value)
         {
