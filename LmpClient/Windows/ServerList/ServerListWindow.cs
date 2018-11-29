@@ -110,9 +110,9 @@ namespace LmpClient.Windows.ServerList
             _oddServerLine.onNormal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
             _oddServerLine.onNormal.background.Apply();
 
-            _labelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
             _kspLabelStyle = new GUIStyle(Skin.label) { alignment = TextAnchor.MiddleCenter };
-
+            _labelStyle = new GUIStyle(Skin.label) { alignment = TextAnchor.MiddleCenter, normal = GUI.skin.label.normal };
+            
             _serverDetailLayoutOptions = new GUILayoutOption[4];
             _serverDetailLayoutOptions[0] = GUILayout.MinWidth(ServerDetailWindowWidth);
             _serverDetailLayoutOptions[1] = GUILayout.MaxWidth(ServerDetailWindowWidth);
@@ -139,7 +139,7 @@ namespace LmpClient.Windows.ServerList
             if (Display)
             {
                 DisplayedServers.Clear();
-                DisplayedServers.AddRange(_ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)) : 
+                DisplayedServers.AddRange(_ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)) :
                     NetworkServerList.Servers.Values.OrderByDescending(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)));
             }
         }
@@ -147,6 +147,11 @@ namespace LmpClient.Windows.ServerList
         private static GUIStyle GetCorrectLabelStyle(ServerInfo server)
         {
             return server.DedicatedServer ? _labelStyle : _kspLabelStyle;
+        }
+
+        private static GUIStyle GetCorrectHyperlinkLabelStyle(ServerInfo server)
+        {
+            return server.DedicatedServer ? _labelStyle : HyperlinkLabelStyle;
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Net;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpClient.Systems.Ping;
 using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.MasterServer;
 using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net;
 using UniLinq;
 
 namespace LmpClient.Network
@@ -87,6 +87,7 @@ namespace LmpClient.Network
                             PlayerCount = data.PlayerCount,
                             GameMode = data.GameMode,
                             ModControl = data.ModControl,
+                            DedicatedServer = data.DedicatedServer,
                             DropControlOnExitFlight = data.DropControlOnExitFlight,
                             VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval,
                             DropControlOnVesselSwitching = data.DropControlOnVesselSwitching,

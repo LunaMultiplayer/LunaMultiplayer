@@ -317,23 +317,25 @@ namespace LmpClient.Base
                 //Styles
                 RedFontButtonStyle = new GUIStyle(Skin.button)
                 {
-                    normal = {textColor = Color.red}, active = {textColor = Color.red}, hover = {textColor = Color.red}
+                    normal = { textColor = Color.red },
+                    active = { textColor = Color.red },
+                    hover = { textColor = Color.red }
                 };
-                
-                CloseButtonStyle = new GUIStyle(Skin.button) {padding = new RectOffset(2, 2, 2, 2), margin = new RectOffset(2,2,2,2)};
-                
+
+                CloseButtonStyle = new GUIStyle(Skin.button) { padding = new RectOffset(2, 2, 2, 2), margin = new RectOffset(2, 2, 2, 2) };
+
                 ResizeButtonStyle = new GUIStyle(Skin.button)
                 {
                     padding = new RectOffset(0, 0, 0, 0),
                     border = new RectOffset(0, 0, 0, 0),
-                    normal = new GUIStyleState {background = ResizeIcon},
-                    active = new GUIStyleState {background = ResizeIcon},
-                    focused = new GUIStyleState {background = ResizeIcon},
-                    hover = new GUIStyleState {background = ResizeIcon},
-                    onNormal = new GUIStyleState {background = ResizeIcon},
-                    onActive = new GUIStyleState {background = ResizeIcon},
-                    onFocused = new GUIStyleState {background = ResizeIcon},
-                    onHover = new GUIStyleState {background = ResizeIcon}
+                    normal = new GUIStyleState { background = ResizeIcon },
+                    active = new GUIStyleState { background = ResizeIcon },
+                    focused = new GUIStyleState { background = ResizeIcon },
+                    hover = new GUIStyleState { background = ResizeIcon },
+                    onNormal = new GUIStyleState { background = ResizeIcon },
+                    onActive = new GUIStyleState { background = ResizeIcon },
+                    onFocused = new GUIStyleState { background = ResizeIcon },
+                    onHover = new GUIStyleState { background = ResizeIcon }
                 };
 
                 HyperlinkLabelStyle = new GUIStyle(Skin.button)
@@ -341,7 +343,7 @@ namespace LmpClient.Base
                     fontStyle = FontStyle.Bold,
                     padding = new RectOffset(0, 0, 0, 0),
                     border = new RectOffset(0, 0, 0, 0),
-                    normal = new GUIStyleState {textColor = XKCDColors.KSPUnnamedCyan},
+                    normal = new GUIStyleState { textColor = XKCDColors.KSPUnnamedCyan },
                     active = new GUIStyleState(),
                     focused = new GUIStyleState(),
                     hover = new GUIStyleState(),
@@ -352,22 +354,23 @@ namespace LmpClient.Base
                 };
 
                 BoldGreenLabelStyle = new GUIStyle(Skin.label)
-                    {fontStyle = FontStyle.Bold, normal = new GUIStyleState {textColor = XKCDColors.KSPBadassGreen}};
-                
+                { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = XKCDColors.KSPBadassGreen } };
+
                 BoldRedLabelStyle = new GUIStyle(Skin.label)
                 {
-                    fontStyle = FontStyle.Bold, normal = new GUIStyleState {textColor = XKCDColors.KSPNotSoGoodOrange}
+                    fontStyle = FontStyle.Bold,
+                    normal = new GUIStyleState { textColor = XKCDColors.KSPNotSoGoodOrange }
                 };
 
                 BigLabelStyle = new GUIStyle(Skin.label)
                 {
                     fontSize = 60,
-                    normal = {textColor = XKCDColors.KSPNotSoGoodOrange}
+                    normal = { textColor = XKCDColors.KSPNotSoGoodOrange }
                 };
 
                 ToolTipStyle = new GUIStyle(Skin.box)
                 {
-                    padding = new RectOffset(2,2,2,2)
+                    padding = new RectOffset(2, 2, 2, 2)
                 };
 
                 //Custom style used by the "folder" type buttons.

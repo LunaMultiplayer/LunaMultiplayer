@@ -5,7 +5,7 @@ namespace LmpClient.Windows
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class RainbowEffect : MonoBehaviour
     {
-        private static readonly Color DefaultContentColor = GUI.contentColor;
+        private static Color _defaultContentColor;
         private static readonly Color[] Colors = { Color.red, Color.magenta, Color.blue, Color.cyan, Color.green, Color.yellow };
 
         private static Color _lerpedColor = Colors[0];
@@ -15,6 +15,7 @@ namespace LmpClient.Windows
         
         public void Awake()
         {
+            _defaultContentColor = GUI.contentColor;
             DontDestroyOnLoad(this);
         }
 
@@ -48,7 +49,7 @@ namespace LmpClient.Windows
 
         public static void StopRainbowEffect()
         {
-            GUI.contentColor = DefaultContentColor;
+            GUI.contentColor = _defaultContentColor;
         }
     }
 }

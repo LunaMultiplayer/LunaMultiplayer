@@ -256,7 +256,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[11]));
             if (!string.IsNullOrEmpty(currentEntry.Website))
             {
-                if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), HyperlinkLabelStyle, GUILayout.MinWidth(HeaderGridSize[11])))
+                if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), GetCorrectHyperlinkLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[11])))
                 {
                     Application.OpenURL(currentEntry.Website);
                 }
