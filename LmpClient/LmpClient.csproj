@@ -82,6 +82,7 @@
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
     <Compile Include="Events\NetworkEvent.cs" />
+    <Compile Include="Events\PartEvent.cs" />
     <Compile Include="Events\PartModuleEvent.cs" />
     <Compile Include="Events\RailEvent.cs" />
     <Compile Include="Events\RemoveEvent.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Harmony\Vessel_GoOnRails.cs" />
     <Compile Include="Harmony\Vessel_GoOffRails.cs" />
     <Compile Include="Harmony\PauseMenu_DrawRevertOptions.cs" />
+    <Compile Include="Harmony\Part_Decouple.cs" />
     <Compile Include="Localization\Structures\RevertDialogText.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_OnDeboardSeat.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_BoardSeat.cs" />
