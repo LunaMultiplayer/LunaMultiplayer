@@ -1,6 +1,4 @@
 ﻿using LmpClient.Base;
-using LmpClient.Systems.SettingsSys;
-using LmpCommon.Locks;
 
 namespace LmpClient.Systems.VesselFlightStateSys
 {
@@ -24,24 +22,6 @@ namespace LmpClient.Systems.VesselFlightStateSys
         public void OnFinishedSpectating()
         {
             System.RemoveVessel(FlightGlobals.ActiveVessel);
-        }
-        
-        /// <summary>
-        /// Whenever we acquire a UnloadedUpdate/Update/Control lock of a vessel, remove it from the dictionaries
-        /// </summary>
-        public void OnLockAcquire(LockDefinition data)
-        {
-            if (data.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
-                return;
-
-            switch (data.Type)
-            {
-                case LockType.UnloadedUpdate:
-                case LockType.Update:
-                case LockType.Control:
-                    System.RemoveVessel(data.VesselId);
-                    break;
-            }
         }
 
         /// <summary>
