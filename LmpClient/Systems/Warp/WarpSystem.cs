@@ -107,22 +107,16 @@ namespace LmpClient.Systems.Warp
         #region Update methods
 
         /// <summary>
-        /// If we are spectating this routine checks if the controller has a different subspace and then we warp to it
+        /// If we are spectating this routine checks if the controller has a different subspace and he is more advanced then we warp to it
         /// </summary>
         private void WarpIfSpectatingToController()
         {
             if (VesselCommon.IsSpectating)
             {
-                //Sync to the subspace of the controller in case we are spectating
-                var controller = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id);
-                if (string.IsNullOrEmpty(controller)) return;
-
-                var targetPlayerSubspace = Singleton.GetPlayerSubspace(controller);
-                if (targetPlayerSubspace != -1 && CurrentSubspace != targetPlayerSubspace)
-                    Singleton.SyncToSubspace(targetPlayerSubspace);
+                var targetPlayerSubspace = GetPlayerSubspace(LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id));
+                WarpIfSubspaceIsMoreAdvanced(targetPlayerSubspace);
             }
         }
-
 
         /// <summary>
         /// This routine checks if we are stuck at warping and if that's the case it request a new subspace again
@@ -202,6 +196,7 @@ namespace LmpClient.Systems.Warp
         /// </summary>
         public void WarpIfSubspaceIsMoreAdvanced(int newSubspace)
         {
+            if (newSubspace <= 0) return;
             if (Subspaces.TryGetValue(newSubspace, out var newSubspaceTime))
             {
                 if (CurrentSubspaceTimeDifference < newSubspaceTime && CurrentSubspace != newSubspace)
@@ -321,7 +316,7 @@ namespace LmpClient.Systems.Warp
         public void ProcessNewSubspace()
         {
             ClockHandler.StepClock(CurrentSubspaceTime);
-            
+
             //As we are syncing to a new game time, we must advance all the sip positions and put them in the correct "epoch"
             var vesselsToUpdate = LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Select(l => FlightGlobals.FindVessel(l.VesselId))
@@ -331,7 +326,7 @@ namespace LmpClient.Systems.Warp
             {
                 vessel.AdvanceShipPosition(CurrentSubspaceTime);
             }
-            
+
             WarpEvent.onTimeWarpStopped.Fire();
         }
 
