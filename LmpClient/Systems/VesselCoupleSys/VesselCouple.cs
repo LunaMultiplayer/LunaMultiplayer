@@ -19,26 +19,31 @@ namespace LmpClient.Systems.VesselCoupleSys
 
         #endregion
 
-        public void ProcessCouple()
+        public bool ProcessCouple()
         {
-            ProcessCoupleInternal(VesselId, CoupledVesselId, PartFlightId, CoupledPartFlightId);
+            return ProcessCoupleInternal(VesselId, CoupledVesselId, PartFlightId, CoupledPartFlightId);
         }
 
-        public static void ProcessCouple(VesselCoupleMsgData msgData)
+        public static bool ProcessCouple(VesselCoupleMsgData msgData)
         {
-            ProcessCoupleInternal(msgData.VesselId, msgData.CoupledVesselId, msgData.PartFlightId, msgData.CoupledPartFlightId);
+            return ProcessCoupleInternal(msgData.VesselId, msgData.CoupledVesselId, msgData.PartFlightId, msgData.CoupledPartFlightId);
         }
-
-        private static void ProcessCoupleInternal(Guid vesselId, Guid coupledVesselId, uint partFlightId, uint coupledPartFlightId)
+        
+        private static bool ProcessCoupleInternal(Guid vesselId, Guid coupledVesselId, uint partFlightId, uint coupledPartFlightId)
         {
             if (!VesselCommon.DoVesselChecks(vesselId))
-                return;
+                return false;
+
+            //If the coupling is against our OWN vessel we must FORCE the loading
+            var forceLoad = FlightGlobals.ActiveVessel && (FlightGlobals.ActiveVessel.id == vesselId || FlightGlobals.ActiveVessel.id == coupledVesselId);
 
             var vessel = FlightGlobals.FindVessel(vesselId);
-            if (vessel == null) return;
+            if (vessel == null) return false;
+            if (!vessel.loaded && forceLoad) vessel.Load();
 
             var coupledVessel = FlightGlobals.FindVessel(coupledVesselId);
-            if (coupledVessel == null) return;
+            if (coupledVessel == null) return false;
+            if (!coupledVessel.loaded && forceLoad) coupledVessel.Load();
 
             var protoPart = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, partFlightId);
             var coupledProtoPart = VesselCommon.FindProtoPartInProtovessel(coupledVessel.protoVessel, coupledPartFlightId);
@@ -46,9 +51,15 @@ namespace LmpClient.Systems.VesselCoupleSys
             {
                 if (protoPart.partRef && coupledProtoPart.partRef)
                 {
+                    VesselCoupleSystem.Singleton.IgnoreEvents = true;
                     protoPart.partRef.Couple(coupledProtoPart.partRef);
+                    VesselCoupleSystem.Singleton.IgnoreEvents = false;
+
+                    return true;
                 }
             }
+
+            return false;
         }
     }
 }

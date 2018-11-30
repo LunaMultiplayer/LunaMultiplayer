@@ -23,8 +23,10 @@ namespace LmpClient.Systems.VesselCoupleSys
             if (VesselRemoveSystem.Singleton.VesselWillBeKilled(msgData.VesselId))
                 return;
 
+            var affectsActiveVessel = FlightGlobals.ActiveVessel && (FlightGlobals.ActiveVessel.id == msgData.VesselId || FlightGlobals.ActiveVessel.id == msgData.CoupledVesselId);
+            
             //If the coupling packet affects our active vessel (even if we are spectating) jump to the future subspace
-            if (FlightGlobals.ActiveVessel && (FlightGlobals.ActiveVessel.id == msgData.VesselId || FlightGlobals.ActiveVessel.id == msgData.CoupledVesselId))
+            if (affectsActiveVessel)
             {
                 LunaLog.Log($"Received a coupling against our own vessel! We own the {(FlightGlobals.ActiveVessel.id == msgData.VesselId ? "Dominant" : "Weak")} vessel");
                 WarpSystem.Singleton.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
@@ -46,15 +48,6 @@ namespace LmpClient.Systems.VesselCoupleSys
                 if (msgData.GameTime <= TimeSyncSystem.UniversalTime)
                 {
                     VesselCouple.ProcessCouple(msgData);
-
-                    //Something has gone wrong and we are still with the weak vessel so for this case we need to switch to the dominant vessel and remove our old one...
-                    if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.CoupledVesselId)
-                    {
-                        var vesselToSwitch = FlightGlobals.FindVessel(msgData.VesselId);
-                        if (vesselToSwitch != null)
-                            FlightGlobals.ForceSetActiveVessel(vesselToSwitch);
-                        VesselRemoveSystem.Singleton.KillVessel(msgData.CoupledVesselId, false, "ERROR while docking!");
-                    }
                 }
                 else
                 {

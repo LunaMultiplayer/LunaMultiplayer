@@ -15,6 +15,7 @@ namespace LmpClient.Systems.VesselCoupleSys
         
         public ConcurrentDictionary<Guid, VesselCoupleQueue> VesselCouples { get; } = new ConcurrentDictionary<Guid, VesselCoupleQueue>();
         private VesselCoupleEvents VesselCoupleEvents { get; } = new VesselCoupleEvents();
+        public bool IgnoreEvents { get; set; }
 
         #endregion
 

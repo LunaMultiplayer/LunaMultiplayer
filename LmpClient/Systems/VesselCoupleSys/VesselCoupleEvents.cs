@@ -12,7 +12,7 @@ namespace LmpClient.Systems.VesselCoupleSys
     {
         public void CoupleStart(Part partFrom, Part partTo)
         {
-            if (VesselCommon.IsSpectating) return;
+            if (VesselCommon.IsSpectating || System.IgnoreEvents) return;
 
             //If neither the vessel 1 or vessel2 locks belong to us, ignore the coupling
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName) &&
@@ -23,7 +23,7 @@ namespace LmpClient.Systems.VesselCoupleSys
 
         public void CoupleComplete(Part partFrom, Part partTo, Guid removedVesselId)
         {
-            if (VesselCommon.IsSpectating) return;
+            if (VesselCommon.IsSpectating || System.IgnoreEvents) return;
 
             //If neither the vessel 1 or vessel2 locks belong to us, ignore the coupling
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName) &&
