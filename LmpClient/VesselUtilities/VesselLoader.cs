@@ -1,10 +1,6 @@
-﻿using KSP.UI.Screens;
-using KSP.UI.Screens.Flight;
+﻿using KSP.UI.Screens.Flight;
 using LmpClient.Extensions;
 using LmpClient.Systems.Flag;
-using LmpClient.Systems.KscScene;
-using LmpClient.Systems.PlayerColorSys;
-using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Utilities;
 using System;
 using UniLinq;
@@ -147,10 +143,6 @@ namespace LmpClient.VesselUtilities
                 LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} has an invalid orbit");
                 return false;
             }
-
-            PlayerColorSystem.Singleton.SetVesselOrbitColor(vesselProto.vesselRef);
-            KscSceneSystem.Singleton.RefreshTrackingStationVessels();
-            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
 
             if (reloadingOwnVessel)
             {

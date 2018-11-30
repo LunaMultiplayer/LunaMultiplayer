@@ -1,7 +1,6 @@
-﻿using System;
-using LmpClient.Base;
-using LmpClient.Extensions;
+﻿using LmpClient.Base;
 using LmpCommon.Locks;
+using System;
 using UniLinq;
 
 namespace LmpClient.Systems.PlayerColorSys
@@ -16,9 +15,9 @@ namespace LmpClient.Systems.PlayerColorSys
         /// <summary>
         /// When we create a vessel set it's orbit color to the player color
         /// </summary>
-        public void OnVesselCreated(Vessel colorVessel)
+        public void OnVesselCreated(Vessel vessel)
         {
-            System.SetVesselOrbitColor(colorVessel);
+            System.SetVesselOrbitColor(vessel);
         }
 
         /// <summary>
@@ -55,11 +54,15 @@ namespace LmpClient.Systems.PlayerColorSys
         /// </summary>
         private static void UpdateVesselColorsFromLockVesselId(Guid vesselId)
         {
-            var vessel = FlightGlobals.FindVessel(vesselId);
-            if (vessel != null)
-            {
-                System.SetVesselOrbitColor(vessel);
-            }
+            System.SetVesselOrbitColor(FlightGlobals.FindVessel(vesselId));
+        }
+
+        /// <summary>
+        /// Called when a vessel is initialized
+        /// </summary>
+        public void VesselInitialized(Vessel vessel, bool fromShipAssembly)
+        {
+            System.SetVesselOrbitColor(vessel);
         }
     }
 }

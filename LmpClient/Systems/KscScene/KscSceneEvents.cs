@@ -13,11 +13,13 @@ namespace LmpClient.Systems.KscScene
 
         public void OnLockAcquire(LockDefinition lockdefinition)
         {
+            System.RefreshTrackingStationVessels();
             if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
         }
 
         public void OnLockRelease(LockDefinition lockdefinition)
         {
+            System.RefreshTrackingStationVessels();
             if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
         }
 
@@ -42,6 +44,18 @@ namespace LmpClient.Systems.KscScene
                 ClearMarkers();
                 KSCVesselMarkers.fetch.RefreshMarkers();
             }
+        }
+        
+        public void OnVesselCreated(Vessel vessel)
+        {
+            System.RefreshTrackingStationVessels();
+            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
+        }
+
+        public void VesselInitialized(Vessel vessel, bool fromShipAssembly)
+        {
+            System.RefreshTrackingStationVessels();
+            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
         }
 
         private static void ClearMarkers()

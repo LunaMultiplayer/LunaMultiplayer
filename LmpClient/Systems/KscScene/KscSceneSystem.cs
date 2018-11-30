@@ -26,6 +26,8 @@ namespace LmpClient.Systems.KscScene
             LockEvent.onLockRelease.Add(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Add(KscSceneEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Add(KscSceneEvents.LevelLoaded);
+            GameEvents.onVesselCreate.Add(KscSceneEvents.OnVesselCreated);
+            VesselInitializeEvent.onVesselInitialized.Add(KscSceneEvents.VesselInitialized);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, IncreaseTimeWhileInEditor));
         }
@@ -36,6 +38,8 @@ namespace LmpClient.Systems.KscScene
             LockEvent.onLockRelease.Remove(KscSceneEvents.OnLockRelease);
             GameEvents.onGameSceneLoadRequested.Remove(KscSceneEvents.OnSceneRequested);
             GameEvents.onLevelWasLoadedGUIReady.Remove(KscSceneEvents.LevelLoaded);
+            GameEvents.onVesselCreate.Remove(KscSceneEvents.OnVesselCreated);
+            VesselInitializeEvent.onVesselInitialized.Remove(KscSceneEvents.VesselInitialized);
         }
 
         #endregion

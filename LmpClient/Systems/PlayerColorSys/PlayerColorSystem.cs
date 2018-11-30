@@ -30,6 +30,7 @@ namespace LmpClient.Systems.PlayerColorSys
             MessageSender.SendPlayerColorToServer();
 
             GameEvents.onVesselCreate.Add(PlayerColorEvents.OnVesselCreated);
+            VesselInitializeEvent.onVesselInitialized.Add(PlayerColorEvents.VesselInitialized);
             GameEvents.OnMapEntered.Add(PlayerColorEvents.MapEntered);
             LockEvent.onLockAcquire.Add(PlayerColorEvents.OnLockAcquire);
             LockEvent.onLockRelease.Add(PlayerColorEvents.OnLockRelease);
@@ -39,6 +40,7 @@ namespace LmpClient.Systems.PlayerColorSys
         {
             base.OnDisabled();
             GameEvents.onVesselCreate.Remove(PlayerColorEvents.OnVesselCreated);
+            VesselInitializeEvent.onVesselInitialized.Remove(PlayerColorEvents.VesselInitialized);
             GameEvents.OnMapEntered.Remove(PlayerColorEvents.MapEntered);
             LockEvent.onLockAcquire.Remove(PlayerColorEvents.OnLockAcquire);
             LockEvent.onLockRelease.Remove(PlayerColorEvents.OnLockRelease);
@@ -52,10 +54,12 @@ namespace LmpClient.Systems.PlayerColorSys
         /// <summary>
         /// When we create a vessel set it's orbit color to the player color
         /// </summary>
-        public void SetVesselOrbitColor(Vessel colorVessel)
+        public void SetVesselOrbitColor(Vessel vessel)
         {
-            var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
-            SetOrbitColor(colorVessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
+            if (vessel == null) return;
+
+            var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(vessel.id);
+            SetOrbitColor(vessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
         }
 
         public static Color GenerateRandomColor()
