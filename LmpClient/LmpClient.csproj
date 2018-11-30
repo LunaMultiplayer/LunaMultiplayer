@@ -104,6 +104,7 @@
     <Compile Include="Extensions\LinqExtention.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\PartExtension.cs" />
+    <Compile Include="Extensions\ProtoVesselExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
     <Compile Include="Harmony\FlightResultsDialog_SetupGUI.cs" />
     <Compile Include="Harmony\Part_Couple.cs" />
+    <Compile Include="Harmony\Part_Undock.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
     <Compile Include="Harmony\FlightIntegrator_FixedUpdate.cs" />
@@ -196,8 +198,6 @@
     <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Admin\AdminSystem.cs" />
     <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
-    <Compile Include="Systems\ExternalSeat\ExternalSeatEvents.cs" />
-    <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
     <Compile Include="Systems\Label\LabelEvents.cs" />
     <Compile Include="Systems\Label\LabelSystem.cs" />
     <Compile Include="Systems\Revert\RevertEvents.cs" />
@@ -265,6 +265,12 @@
     <Compile Include="Systems\TimeSync\TimeSyncEvents.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupEvents.cs" />
+    <Compile Include="Systems\VesselCoupleSys\VesselCouple.cs" />
+    <Compile Include="Systems\VesselCoupleSys\VesselCoupleEvents.cs" />
+    <Compile Include="Systems\VesselCoupleSys\VesselCoupleMessageHandler.cs" />
+    <Compile Include="Systems\VesselCoupleSys\VesselCoupleMessageSender.cs" />
+    <Compile Include="Systems\VesselCoupleSys\VesselCoupleQueue.cs" />
+    <Compile Include="Systems\VesselCoupleSys\VesselCoupleSystem.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewEvents.cs" />
     <Compile Include="Systems\VesselCrewSys\VesselCrewSystem.cs" />
     <Compile Include="Systems\Facility\FacilityEvents.cs" />
@@ -279,10 +285,12 @@
     <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
     <Compile Include="Systems\Ping\PingSystem.cs" />
-    <Compile Include="Systems\VesselDockSys\CurrentUndockEvent.cs" />
-    <Compile Include="Systems\VesselDockSys\CurrentDockEvent.cs" />
-    <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
-    <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
+    <Compile Include="Systems\VesselDecoupleSys\VesselDecouple.cs" />
+    <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleEvents.cs" />
+    <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleMessageHandler.cs" />
+    <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleMessageSender.cs" />
+    <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleQueue.cs" />
+    <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleSystem.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingEvents.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
@@ -335,6 +343,12 @@
     <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupMessageSender.cs" />
     <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupQueue.cs" />
     <Compile Include="Systems\VesselActionGroupSys\VesselActionGroupSystem.cs" />
+    <Compile Include="Systems\VesselUndockSys\VesselUndock.cs" />
+    <Compile Include="Systems\VesselUndockSys\VesselUndockEvents.cs" />
+    <Compile Include="Systems\VesselUndockSys\VesselUndockMessageHandler.cs" />
+    <Compile Include="Systems\VesselUndockSys\VesselUndockMessageSender.cs" />
+    <Compile Include="Systems\VesselUndockSys\VesselUndockQueue.cs" />
+    <Compile Include="Systems\VesselUndockSys\VesselUndockSystem.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdate.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateQueue.cs" />
     <Compile Include="Utilities\EvaReady.cs" />
@@ -392,8 +406,6 @@
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionSystem.cs" />
     <Compile Include="VesselUtilities\VesselCommon.cs" />
-    <Compile Include="Systems\VesselDockSys\VesselDockEvents.cs" />
-    <Compile Include="Systems\VesselDockSys\VesselDockSystem.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateMessageHandler.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateMessageSender.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateSystem.cs" />

@@ -226,7 +226,9 @@
     <Compile Include="Message\Data\ShareProgress\TechNodeInfo.cs" />
     <Compile Include="Message\Data\Vessel\FieldNameValue.cs" />
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselCoupleMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselUndockMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselDecoupleMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselActionGroupMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselPartSyncUiFieldMsgData.cs" />

@@ -28,7 +28,8 @@ using LmpClient.Systems.ShareTechnology;
 using LmpClient.Systems.ShareUpgradeableFacilities;
 using LmpClient.Systems.Status;
 using LmpClient.Systems.VesselActionGroupSys;
-using LmpClient.Systems.VesselDockSys;
+using LmpClient.Systems.VesselCoupleSys;
+using LmpClient.Systems.VesselDecoupleSys;
 using LmpClient.Systems.VesselFairingsSys;
 using LmpClient.Systems.VesselFlightStateSys;
 using LmpClient.Systems.VesselPartSyncCallSys;
@@ -38,6 +39,7 @@ using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.VesselResourceSys;
+using LmpClient.Systems.VesselUndockSys;
 using LmpClient.Systems.VesselUpdateSys;
 using LmpClient.Systems.Warp;
 using LmpCommon.Enums;
@@ -171,9 +173,6 @@ namespace LmpClient.Network
                         case VesselMessageType.Proto:
                             VesselProtoSystem.Singleton.EnqueueMessage(msg);
                             break;
-                        case VesselMessageType.Dock:
-                            VesselDockSystem.Singleton.EnqueueMessage(msg);
-                            break;
                         case VesselMessageType.Remove:
                             VesselRemoveSystem.Singleton.EnqueueMessage(msg);
                             break;
@@ -197,6 +196,15 @@ namespace LmpClient.Network
                             break;
                         case VesselMessageType.Fairing:
                             VesselFairingsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Decouple:
+                            VesselDecoupleSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Couple:
+                            VesselCoupleSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Undock:
+                            VesselUndockSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;

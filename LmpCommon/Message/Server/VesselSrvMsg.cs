@@ -20,7 +20,6 @@ namespace LmpCommon.Message.Server
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
-            [(ushort)VesselMessageType.Dock] = typeof(VesselDockMsgData),
             [(ushort)VesselMessageType.Remove] = typeof(VesselRemoveMsgData),
             [(ushort)VesselMessageType.Position] = typeof(VesselPositionMsgData),
             [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData),
@@ -31,6 +30,9 @@ namespace LmpCommon.Message.Server
             [(ushort)VesselMessageType.PartSyncCall] = typeof(VesselPartSyncCallMsgData),
             [(ushort)VesselMessageType.ActionGroup] = typeof(VesselActionGroupMsgData),
             [(ushort)VesselMessageType.Fairing] = typeof(VesselFairingMsgData),
+            [(ushort)VesselMessageType.Decouple] = typeof(VesselDecoupleMsgData),
+            [(ushort)VesselMessageType.Couple] = typeof(VesselCoupleMsgData),
+            [(ushort)VesselMessageType.Undock] = typeof(VesselUndockMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;

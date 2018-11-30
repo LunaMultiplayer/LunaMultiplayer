@@ -1,6 +1,6 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpCommon.Message.Data.Vessel;
+using System;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -11,6 +11,7 @@ namespace LmpClient.Systems.VesselProtoSys
             value.GameTime = msgData.GameTime;
             value.VesselId = msgData.VesselId;
             value.NumBytes = msgData.NumBytes;
+            value.ForceReload = msgData.ForceReload;
 
             if (value.RawData.Length < msgData.NumBytes)
                 value.RawData = new byte[msgData.NumBytes];

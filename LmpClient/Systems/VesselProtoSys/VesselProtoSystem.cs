@@ -1,11 +1,12 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
-using LmpClient.Extensions;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
+using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -16,9 +17,11 @@ namespace LmpClient.Systems.VesselProtoSys
     {
         #region Fields & properties
 
+        private static readonly HashSet<Guid> QueuedVesselsToSend = new HashSet<Guid>();
+
         public ConcurrentDictionary<Guid, VesselProtoQueue> VesselProtos { get; } = new ConcurrentDictionary<Guid, VesselProtoQueue>();
-        
-        public bool ProtoSystemReady => Enabled && FlightGlobals.ready && HighLogic.LoadedScene == GameScenes.FLIGHT && 
+
+        public bool ProtoSystemReady => Enabled && FlightGlobals.ready && HighLogic.LoadedScene == GameScenes.FLIGHT &&
             FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating;
 
         public VesselProtoEvents VesselProtoEvents { get; } = new VesselProtoEvents();
@@ -37,39 +40,43 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             base.OnEnabled();
 
-            VesselInitializeEvent.onVesselInitialized.Add(VesselProtoEvents.VesselInitialized);
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
             GameEvents.onGameSceneLoadRequested.Add(VesselProtoEvents.OnSceneRequested);
-            GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChanged);
 
             GameEvents.OnTriggeredDataTransmission.Add(VesselProtoEvents.TriggeredDataTransmission);
             GameEvents.OnExperimentStored.Add(VesselProtoEvents.ExperimentStored);
             ExperimentEvent.onExperimentReset.Add(VesselProtoEvents.ExperimentReset);
 
+            PartEvent.onPartDecoupled.Add(VesselProtoEvents.PartDecoupled);
+            PartEvent.onPartUndocked.Add(VesselProtoEvents.PartUndocked);
+            PartEvent.onPartCoupled.Add(VesselProtoEvents.PartCoupled);
+
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckVesselsToLoad));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendVesselDefinition));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselDefinition));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
 
-            VesselInitializeEvent.onVesselInitialized.Remove(VesselProtoEvents.VesselInitialized);
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
             GameEvents.onGameSceneLoadRequested.Remove(VesselProtoEvents.OnSceneRequested);
-            GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChanged);
 
             GameEvents.OnTriggeredDataTransmission.Remove(VesselProtoEvents.TriggeredDataTransmission);
             GameEvents.OnExperimentStored.Remove(VesselProtoEvents.ExperimentStored);
             ExperimentEvent.onExperimentReset.Remove(VesselProtoEvents.ExperimentReset);
 
-            //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
+            PartEvent.onPartDecoupled.Remove(VesselProtoEvents.PartDecoupled);
+            PartEvent.onPartUndocked.Remove(VesselProtoEvents.PartUndocked);
+            PartEvent.onPartCoupled.Remove(VesselProtoEvents.PartCoupled);
+
+            //This is the main system that handles the vesselstore so if it's disabled clear the store too
             VesselProtos.Clear();
-            VesselProtoEvents.QueuedVessels.Clear();
+            QueuedVesselsToSend.Clear();
         }
 
         #endregion
-        
+
         #region Update routines
 
         /// <summary>
@@ -116,6 +123,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.VesselId))
                             continue;
 
+                        var forceReload = vesselProto.ForceReload;
                         var protoVessel = vesselProto.CreateProtoVessel();
                         keyVal.Value.Recycle(vesselProto);
 
@@ -125,7 +133,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         if (existingVessel == null)
                         {
                             LunaLog.Log($"[LMP]: Loading vessel {vesselProto.VesselId}");
-                            if (VesselLoader.LoadVessel(protoVessel))
+                            if (VesselLoader.LoadVessel(protoVessel, forceReload))
                             {
                                 LunaLog.Log($"[LMP]: Vessel {protoVessel.vesselID} loaded");
                                 VesselLoadEvent.onLmpVesselLoaded.Fire(protoVessel.vesselRef);
@@ -134,7 +142,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         else
                         {
                             LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.VesselId}");
-                            if (VesselLoader.LoadVessel(protoVessel))
+                            if (VesselLoader.LoadVessel(protoVessel, forceReload))
                             {
                                 LunaLog.Log($"[LMP]: Vessel {protoVessel.vesselID} reloaded");
                                 VesselReloadEvent.onLmpVesselReloaded.Fire(protoVessel.vesselRef);
@@ -152,6 +160,22 @@ namespace LmpClient.Systems.VesselProtoSys
         #endregion
 
         #region Public methods
+        
+        /// <summary>
+        /// Sends a delayed vessel definition to the server.
+        /// Call this method if you expect to do a lot of modifications to a vessel and you want to send it only once
+        /// </summary>
+        public void DelayedSendVesselMessage(Guid vesselId, float delayInSec, bool forceReload = false)
+        {
+            if (QueuedVesselsToSend.Contains(vesselId)) return;
+
+            QueuedVesselsToSend.Add(vesselId);
+            CoroutineUtil.StartDelayedRoutine("QueueVesselMessageAsPartsChanged", () =>
+            {
+                QueuedVesselsToSend.Remove(vesselId);
+                MessageSender.SendVesselMessage(FlightGlobals.FindVessel(vesselId));
+            }, delayInSec);
+        }
 
         /// <summary>
         /// Removes a vessel from the system

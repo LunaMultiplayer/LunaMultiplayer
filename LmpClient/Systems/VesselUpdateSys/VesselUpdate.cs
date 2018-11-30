@@ -1,4 +1,4 @@
-﻿using LmpClient.Extensions;
+﻿using KSP.UI.Screens;
 using LmpClient.VesselUtilities;
 using System;
 
@@ -59,9 +59,12 @@ namespace LmpClient.Systems.VesselUpdateSys
                 }
             }
 
-            //Trigger a reload when staging!
             if (previousStage != Stage)
-                VesselLoader.LoadVessel(vessel.protoVessel);
+            {
+                vessel.currentStage = Stage;
+                if (FlightGlobals.ActiveVessel == vessel)
+                    StageManager.RecalculateVesselStaging(vessel);
+            }
         }
 
         private void UpdateVesselFields(Vessel vessel)

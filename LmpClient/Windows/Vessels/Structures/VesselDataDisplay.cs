@@ -23,6 +23,7 @@ namespace LmpClient.Windows.Vessels.Structures
         {
             if (!Vessel) return;
 
+            GUILayout.Label($"Stage: {Vessel.currentStage}");
             GUILayout.Label($"Immortal: {Vessel.IsImmortal()}");
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Loaded: {Vessel.loaded}");

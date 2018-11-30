@@ -21,7 +21,7 @@ namespace LmpClient.Systems.VesselCrewSys
             LockSystem.Singleton.ReleaseAllVesselLocks(new[] { kerbalName }, kerbalId);
             VesselRemoveSystem.Singleton.KillVessel(kerbalId, true, "Killing kerbal-vessel as it boarded a vessel");
 
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
         }
         
         /// <summary>
@@ -37,7 +37,7 @@ namespace LmpClient.Systems.VesselCrewSys
         /// </summary>
         public void CrewEvaReady(Vessel evaVessel)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(evaVessel);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(evaVessel, true);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LmpClient.Systems.VesselCrewSys
         public void OnCrewModified(Vessel vessel)
         {
             if(!vessel.isEVA && LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
         }
     }
 }

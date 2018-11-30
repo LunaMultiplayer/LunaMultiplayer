@@ -30,9 +30,6 @@ namespace Server.Message
                 case VesselMessageType.Proto:
                     HandleVesselProto(client, messageData);
                     break;
-                case VesselMessageType.Dock:
-                    HandleVesselDock(client, messageData);
-                    break;
                 case VesselMessageType.Remove:
                     HandleVesselRemove(client, messageData);
                     break;
@@ -70,6 +67,15 @@ namespace Server.Message
                     break;
                 case VesselMessageType.Fairing:
                     VesselDataUpdater.WriteFairingDataToFile(messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
+                    break;
+                case VesselMessageType.Decouple:
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
+                    break;
+                case VesselMessageType.Couple:
+                    HandleVesselCouple(client, messageData);
+                    break;
+                case VesselMessageType.Undock:
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
                 default:
@@ -118,33 +124,6 @@ namespace Server.Message
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
         }
 
-        private static void HandleVesselDock(ClientStructure client, VesselBaseMsgData message)
-        {
-            var msgData = (VesselDockMsgData) message;
-
-            LunaLog.Debug($"Docking message received! Dominant vessel: {msgData.DominantVesselId}");
-
-            if (VesselContext.RemovedVessels.Contains(msgData.WeakVesselId)) return;
-
-            if (VesselStoreSystem.VesselExists(msgData.DominantVesselId))
-            {
-                LunaLog.Debug($"Saving DOCKED vessel {msgData.DominantVesselId} from {client.PlayerName}. Bytes: {msgData.NumBytes}");
-            }
-            VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.DominantVesselId, Encoding.UTF8.GetString(msgData.FinalVesselData, 0, msgData.NumBytes));
-
-            //Now remove the weak vessel but DO NOT add to the removed vessels as they might undock!!!
-            LunaLog.Debug($"Removing weak docked vessel {msgData.WeakVesselId}");
-            VesselStoreSystem.RemoveVessel(msgData.WeakVesselId);
-
-            MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
-
-            //Tell all clients to remove the weak vessel
-            var removeMsgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
-            removeMsgData.VesselId = msgData.WeakVesselId;
-
-            MessageQueuer.SendToAllClients<VesselSrvMsg>(removeMsgData);
-        }
-
         private static void HandleVesselsSync(ClientStructure client, VesselBaseMsgData message)
         {
             var msgData = (VesselSyncMsgData) message;
@@ -172,6 +151,26 @@ namespace Server.Message
 
             if (allVessels.Count > 0)
                 LunaLog.Debug($"Sending {client.PlayerName} {vesselsToSend.Count} vessels");
+        }
+        
+        private static void HandleVesselCouple(ClientStructure client, VesselBaseMsgData message)
+        {
+            var msgData = (VesselCoupleMsgData)message;
+
+            LunaLog.Debug($"Coupling message received! Dominant vessel: {msgData.VesselId}");
+            MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
+
+            if (VesselContext.RemovedVessels.Contains(msgData.CoupledVesselId)) return;
+
+            //Now remove the weak vessel but DO NOT add to the removed vessels as they might undock!!!
+            LunaLog.Debug($"Removing weak coupled vessel {msgData.CoupledVesselId}");
+            VesselStoreSystem.RemoveVessel(msgData.CoupledVesselId);
+
+            //Tell all clients to remove the weak vessel
+            var removeMsgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
+            removeMsgData.VesselId = msgData.CoupledVesselId;
+
+            MessageQueuer.SendToAllClients<VesselSrvMsg>(removeMsgData);
         }
     }
 }

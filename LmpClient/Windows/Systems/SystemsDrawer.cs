@@ -1,5 +1,4 @@
 ﻿using LmpClient.Systems.CraftLibrary;
-using LmpClient.Systems.ExternalSeat;
 using LmpClient.Systems.Facility;
 using LmpClient.Systems.Flag;
 using LmpClient.Systems.Groups;
@@ -21,7 +20,6 @@ using LmpClient.Systems.ShareTechnology;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselActionGroupSys;
 using LmpClient.Systems.VesselCrewSys;
-using LmpClient.Systems.VesselDockSys;
 using LmpClient.Systems.VesselFairingsSys;
 using LmpClient.Systems.VesselFlightStateSys;
 using LmpClient.Systems.VesselImmortalSys;
@@ -61,7 +59,6 @@ namespace LmpClient.Windows.Systems
             CraftLibrarySystem.Singleton.Enabled = GUILayout.Toggle(CraftLibrarySystem.Singleton.Enabled, CraftLibrarySystem.Singleton.SystemName);
             FacilitySystem.Singleton.Enabled = GUILayout.Toggle(FacilitySystem.Singleton.Enabled, FacilitySystem.Singleton.SystemName);
             FlagSystem.Singleton.Enabled = GUILayout.Toggle(FlagSystem.Singleton.Enabled, FlagSystem.Singleton.SystemName);
-            ExternalSeatSystem.Singleton.Enabled = GUILayout.Toggle(ExternalSeatSystem.Singleton.Enabled, ExternalSeatSystem.Singleton.SystemName);
             KscSceneSystem.Singleton.Enabled = GUILayout.Toggle(KscSceneSystem.Singleton.Enabled, KscSceneSystem.Singleton.SystemName);
             GroupSystem.Singleton.Enabled = GUILayout.Toggle(GroupSystem.Singleton.Enabled, GroupSystem.Singleton.SystemName);
             KerbalSystem.Singleton.Enabled = GUILayout.Toggle(KerbalSystem.Singleton.Enabled, KerbalSystem.Singleton.SystemName);
@@ -88,7 +85,6 @@ namespace LmpClient.Windows.Systems
             //    ToolbarSystem.Singleton.Enabled = GUILayout.Toggle(ToolbarSystem.Singleton.Enabled, .Singleton.SystemName);
             //}
             VesselCrewSystem.Singleton.Enabled = GUILayout.Toggle(VesselCrewSystem.Singleton.Enabled, VesselCrewSystem.Singleton.SystemName);
-            VesselDockSystem.Singleton.Enabled = GUILayout.Toggle(VesselDockSystem.Singleton.Enabled, VesselDockSystem.Singleton.SystemName);
             VesselFlightStateSystem.Singleton.Enabled = GUILayout.Toggle(VesselFlightStateSystem.Singleton.Enabled, VesselFlightStateSystem.Singleton.SystemName);
             VesselImmortalSystem.Singleton.Enabled = GUILayout.Toggle(VesselImmortalSystem.Singleton.Enabled, VesselImmortalSystem.Singleton.SystemName);
             VesselLockSystem.Singleton.Enabled = GUILayout.Toggle(VesselLockSystem.Singleton.Enabled, VesselLockSystem.Singleton.SystemName);

@@ -3,6 +3,8 @@ using LmpClient.Systems.Chat;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.Mod;
 using LmpClient.Systems.SettingsSys;
+using LmpClient.Systems.VesselCoupleSys;
+using LmpClient.Systems.VesselDecoupleSys;
 using LmpClient.Systems.VesselFairingsSys;
 using LmpClient.Systems.VesselFlightStateSys;
 using LmpClient.Systems.VesselPartSyncCallSys;
@@ -12,6 +14,7 @@ using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.VesselResourceSys;
+using LmpClient.Systems.VesselUndockSys;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +65,9 @@ namespace LmpClient.VesselUtilities
             VesselPartSyncUiFieldSystem.Singleton.RemoveVessel(vesselId);
             VesselPartSyncCallSystem.Singleton.RemoveVessel(vesselId);
             VesselFairingsSystem.Singleton.RemoveVessel(vesselId);
+            VesselCoupleSystem.Singleton.RemoveVessel(vesselId);
+            VesselDecoupleSystem.Singleton.RemoveVessel(vesselId);
+            VesselUndockSystem.Singleton.RemoveVessel(vesselId);
         }
 
         /// <summary>

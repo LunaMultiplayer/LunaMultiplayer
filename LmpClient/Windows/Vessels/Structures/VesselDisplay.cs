@@ -50,7 +50,7 @@ namespace LmpClient.Windows.Vessels.Structures
             {
                 var vessel = FlightGlobals.FindVessel(VesselId);
                 vessel.protoVessel = vessel.BackupVessel();
-                VesselLoader.LoadVessel(vessel.protoVessel);
+                VesselLoader.LoadVessel(vessel.protoVessel, true);
             }
             GUILayout.EndHorizontal();
 

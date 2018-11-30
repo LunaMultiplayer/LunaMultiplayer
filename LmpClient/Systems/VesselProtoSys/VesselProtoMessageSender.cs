@@ -1,19 +1,24 @@
-﻿using LmpClient.Base;
+﻿using Harmony;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
+using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System;
-using System.Collections.Generic;
+using System.Collections;
+using System.Reflection;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
     public class VesselProtoMessageSender : SubSystem<VesselProtoSystem>, IMessageSender
     {
+        private static readonly FieldInfo OrbitDriverReady = typeof(OrbitDriver).GetField("ready", AccessTools.all);
+        
         /// <summary>
         /// Pre allocated array to store the vessel data into it. Max 10 megabytes
         /// </summary>
@@ -26,24 +31,46 @@ namespace LmpClient.Systems.VesselProtoSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselMessage(IEnumerable<Vessel> vessels)
-        {
-            foreach (var vessel in vessels)
-            {
-                SendVesselMessage(vessel);
-            }
-        }
-
-        public void SendVesselMessage(Vessel vessel)
+        public void SendVesselMessage(Vessel vessel, bool forceReload = false)
         {
             if (vessel == null || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
                 return;
 
-            vessel.protoVessel = vessel.BackupVessel();
-            SendVesselMessage(vessel.protoVessel);
+            if (!vessel.orbitDriver)
+            {
+                LunaLog.LogWarning($"Cannot send vessel {vessel.vesselName} - {vessel.id}. It's orbit driver is null!");
+                return;
+            }
+
+            if ((bool)OrbitDriverReady.GetValue(vessel.orbitDriver))
+            {
+                vessel.protoVessel = vessel.BackupVessel();
+                SendVesselMessage(vessel.protoVessel);
+            }
+            else
+            {
+                //Orbit driver is not ready so wait 10 frames until it's ready
+                CoroutineUtil.StartConditionRoutine("SendVesselMessage",
+                    () => SendVesselMessage(vessel),
+                    () => (bool)OrbitDriverReady.GetValue(vessel.orbitDriver), 10);
+            }
         }
 
         #region Private methods
+
+        private IEnumerator SendOnceOrbitDriverReady(Vessel vessel, int maxTries)
+        {
+            var tries = 0;
+
+            while (!(bool)OrbitDriverReady.GetValue(vessel.orbitDriver) && tries < maxTries)
+            {
+                tries++;
+                yield return 0;
+            }
+
+            vessel.protoVessel = vessel.BackupVessel();
+            SendVesselMessage(vessel.protoVessel);
+        }
 
         private void SendVesselMessage(ProtoVessel protoVessel)
         {

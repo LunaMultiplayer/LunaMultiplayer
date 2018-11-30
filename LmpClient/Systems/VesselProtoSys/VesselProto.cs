@@ -1,7 +1,7 @@
-﻿using System;
-using LmpClient.Systems.VesselRemoveSys;
+﻿using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
+using System;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -11,6 +11,7 @@ namespace LmpClient.Systems.VesselProtoSys
         public byte[] RawData = new byte[0];
         public int NumBytes;
         public double GameTime;
+        public bool ForceReload;
 
         public Vessel LoadVessel()
         {

@@ -1,30 +1,23 @@
 ﻿using KSP.UI.Screens.Flight;
 using LmpClient.Extensions;
-using LmpClient.Systems.Flag;
 using LmpClient.Utilities;
 using System;
-using UniLinq;
 using Object = UnityEngine.Object;
 
 namespace LmpClient.VesselUtilities
 {
     public class VesselLoader
     {
-        public static Guid CurrentlyLoadingVesselId { get; private set; }
-        
         /// <summary>
-        /// Loads/reloads a vessel into game
+        /// Loads/Reloads a vessel into game
         /// </summary>
-        public static bool LoadVessel(ProtoVessel vesselProto)
+        public static bool LoadVessel(ProtoVessel vesselProto, bool forceReload)
         {
             try
             {
-                if (ProtoVesselValidationsPassed(vesselProto))
+                if (vesselProto.Validate())
                 {
-                    CurrentlyLoadingVesselId = vesselProto.vesselID;
-                    FixProtoVesselFlags(vesselProto);
-
-                    return LoadVesselIntoGame(vesselProto);
+                    return LoadVesselIntoGame(vesselProto, forceReload);
                 }
 
                 return false;
@@ -34,66 +27,14 @@ namespace LmpClient.VesselUtilities
                 LunaLog.LogError($"[LMP]: Error loading vessel: {e}");
                 return false;
             }
-            finally
-            {
-                CurrentlyLoadingVesselId = Guid.Empty;
-            }
         }
 
         #region Private methods
-
-        /// <summary>
-        /// Do some basic validations over the protovessel
-        /// </summary>
-        private static bool ProtoVesselValidationsPassed(ProtoVessel vesselProto)
-        {
-            if (vesselProto == null)
-            {
-                LunaLog.LogError("[LMP]: protoVessel is null!");
-                return false;
-            }
-
-            if (vesselProto.vesselID == Guid.Empty)
-            {
-                LunaLog.LogError("[LMP]: protoVessel id is null!");
-                return false;
-            }
-
-            if (vesselProto.situation == Vessel.Situations.FLYING)
-            {
-                if (vesselProto.orbitSnapShot == null)
-                {
-                    LunaLog.LogWarning("[LMP]: Skipping flying vessel load - Protovessel does not have an orbit snapshot");
-                    return false;
-                }
-                if (FlightGlobals.Bodies == null || FlightGlobals.Bodies.Count < vesselProto.orbitSnapShot.ReferenceBodyIndex)
-                {
-                    LunaLog.LogWarning($"[LMP]: Skipping flying vessel load - Could not find celestial body index {vesselProto.orbitSnapShot.ReferenceBodyIndex}");
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Fixes the flags urls in the vessel. The flag have the value as: "Squad/Flags/default" or "LunaMultiplayer/Flags/mycoolflag" 
-        /// </summary>
-        private static void FixProtoVesselFlags(ProtoVessel vesselProto)
-        {
-            foreach (var part in vesselProto.protoPartSnapshots.Where(p => !string.IsNullOrEmpty(p.flagURL)))
-            {
-                if (!FlagSystem.Singleton.FlagExists(part.flagURL))
-                {
-                    LunaLog.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
-                    part.flagURL = "Squad/Flags/default";
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Loads the vessel proto into the current game
         /// </summary>
-        private static bool LoadVesselIntoGame(ProtoVessel vesselProto)
+        private static bool LoadVesselIntoGame(ProtoVessel vesselProto, bool forceReload)
         {
             if (HighLogic.CurrentGame?.flightState == null)
                 return false;
@@ -104,6 +45,9 @@ namespace LmpClient.VesselUtilities
             var existingVessel = FlightGlobals.FindVessel(vesselProto.vesselID);
             if (existingVessel != null)
             {
+                if (existingVessel.Parts.Count == vesselProto.protoPartSnapshots.Count && !forceReload)
+                    return true;
+
                 if(reloadingOwnVessel)
                     existingVessel.RemoveAllCrew();
 

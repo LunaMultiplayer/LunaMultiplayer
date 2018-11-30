@@ -9,6 +9,7 @@ namespace LmpCommon.Message.Data.Vessel
 
         public int NumBytes;
         public byte[] Data = new byte[0];
+        public bool ForceReload;
 
         public override VesselMessageType VesselMessageType => VesselMessageType.Proto;
 
@@ -18,6 +19,7 @@ namespace LmpCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
             
+            lidgrenMsg.Write(ForceReload);
             Common.ThreadSafeCompress(this, ref Data, ref NumBytes);
 
             lidgrenMsg.Write(NumBytes);
@@ -27,6 +29,8 @@ namespace LmpCommon.Message.Data.Vessel
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             base.InternalDeserialize(lidgrenMsg);
+
+            ForceReload = lidgrenMsg.ReadBoolean();
 
             NumBytes = lidgrenMsg.ReadInt32();
             if (Data.Length < NumBytes)
@@ -39,7 +43,7 @@ namespace LmpCommon.Message.Data.Vessel
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) + sizeof(byte) * NumBytes;
+            return base.InternalGetMessageSize() + sizeof(bool) + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }
