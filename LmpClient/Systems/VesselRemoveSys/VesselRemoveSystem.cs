@@ -1,7 +1,6 @@
 ﻿using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events;
-using LmpClient.Extensions;
 using LmpClient.Localization;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
@@ -115,8 +114,6 @@ namespace LmpClient.Systems.VesselRemoveSys
         {
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
-
-            VesselCommon.RemoveVesselFromSystems(killVessel.id);
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}. Reason: {reason}");
             SwitchVesselIfKillingActiveVessel(killVessel);
