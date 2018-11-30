@@ -13,14 +13,14 @@ namespace LmpClient.Harmony
     public class Part_Decouple
     {
         [HarmonyPrefix]
-        private static void PrefixDecouple(Part __instance, float breakForce, Vessel __state)
+        private static void PrefixDecouple(Part __instance, float breakForce, ref Vessel __state)
         {
             __state = __instance.vessel;
             PartEvent.onPartDecoupling.Fire(__instance, breakForce);
         }
 
         [HarmonyPostfix]
-        private static void PostfixDecouple(Part __instance, float breakForce, Vessel __state)
+        private static void PostfixDecouple(Part __instance, float breakForce, ref Vessel __state)
         {
             PartEvent.onPartDecoupled.Fire(__instance, breakForce, __state);
         }
