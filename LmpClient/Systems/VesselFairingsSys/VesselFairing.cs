@@ -1,6 +1,5 @@
-﻿using System;
-using LmpClient.Extensions;
-using LmpClient.VesselUtilities;
+﻿using LmpClient.VesselUtilities;
+using System;
 
 namespace LmpClient.Systems.VesselFairingsSys
 {
@@ -22,7 +21,6 @@ namespace LmpClient.Systems.VesselFairingsSys
             if (!VesselCommon.DoVesselChecks(VesselId))
                 return;
 
-            //Finding using persistentId failed, try searching it with the flightId...
             var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null) return;
 
