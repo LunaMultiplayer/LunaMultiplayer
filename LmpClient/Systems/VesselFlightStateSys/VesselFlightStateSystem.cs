@@ -78,8 +78,6 @@ namespace LmpClient.Systems.VesselFlightStateSys
             //Send the flight state updates after all the calculations are done.
             TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
 
-            LockEvent.onLockAcquire.Add(FlightStateEvents.OnLockAcquire);
-
             WarpEvent.onTimeWarpStopped.Add(FlightStateEvents.WarpStopped);
         }
 
@@ -94,8 +92,6 @@ namespace LmpClient.Systems.VesselFlightStateSys
             SpectateEvent.onFinishedSpectating.Remove(FlightStateEvents.OnFinishedSpectating);
 
             TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
-
-            LockEvent.onLockAcquire.Remove(FlightStateEvents.OnLockAcquire);
 
             WarpEvent.onTimeWarpStopped.Remove(FlightStateEvents.WarpStopped);
 
