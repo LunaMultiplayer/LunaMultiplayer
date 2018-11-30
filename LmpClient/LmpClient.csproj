@@ -114,6 +114,7 @@
     <Compile Include="Harmony\FlightDriver_Start.cs" />
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
     <Compile Include="Harmony\FlightResultsDialog_SetupGUI.cs" />
+    <Compile Include="Harmony\Part_Couple.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
     <Compile Include="Harmony\FlightIntegrator_FixedUpdate.cs" />
