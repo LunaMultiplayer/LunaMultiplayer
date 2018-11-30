@@ -6,6 +6,11 @@ namespace LmpClient.Utilities
 {
     public class CoroutineUtil
     {
+        public static void StartConditionRoutine(string routineName, Action action, Func<bool> condition, float maxFrameTries)
+        {
+            MainSystem.Singleton.StartCoroutine(RoutineWithCondition(routineName, action, condition, maxFrameTries));
+        }
+        
         public static void StartDelayedRoutine(string routineName, Action action, float delayInSec)
         {
             MainSystem.Singleton.StartCoroutine(DelaySeconds(routineName, action, delayInSec));
@@ -22,6 +27,26 @@ namespace LmpClient.Utilities
             catch (Exception e)
             {
                 LunaLog.LogError($"Error in delayed coroutine: {routineName}. Details {e}");
+            }
+        }
+
+        private static IEnumerator RoutineWithCondition(string routineName, Action action, Func<bool> condition, float maxFrameTries)
+        {
+            var tries = 0;
+
+            if (!condition.Invoke() && tries < maxFrameTries)
+            {
+                tries++;
+                yield return 0;
+            }
+
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"Error in coroutine: {routineName}. Details {e}");
             }
         }
     }
