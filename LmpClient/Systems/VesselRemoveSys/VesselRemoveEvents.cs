@@ -46,6 +46,8 @@ namespace LmpClient.Systems.VesselRemoveSys
                 //Vessel is dead so remove the locks. Do not remove the kerbal locks as that's done in the Kerbal system
                 LockSystem.Singleton.ReleaseAllVesselLocks(null, dyingVessel.id, 500);
                 RemoveEvent.onLmpDestroyVessel.Fire(dyingVessel);
+
+                VesselCommon.RemoveVesselFromSystems(dyingVessel.id);
             }
         }
 
@@ -81,6 +83,8 @@ namespace LmpClient.Systems.VesselRemoveSys
             //We consider this vessel removed but we let KSP do the remove of the vessel
             System.RemovedVessels.TryAdd(recoveredVessel.vesselID, DateTime.Now);
             RemoveEvent.onLmpRecoveredVessel.Fire(recoveredVessel);
+
+            VesselCommon.RemoveVesselFromSystems(recoveredVessel.vesselID);
         }
 
         /// <summary>
@@ -105,6 +109,8 @@ namespace LmpClient.Systems.VesselRemoveSys
             //We consider this vessel removed but we let KSP do the remove of the vessel
             System.RemovedVessels.TryAdd(terminatedVessel.vesselID, DateTime.Now);
             RemoveEvent.onLmpRecoveredVessel.Fire(terminatedVessel);
+
+            VesselCommon.RemoveVesselFromSystems(terminatedVessel.vesselID);
         }
 
         /// <summary>
@@ -117,6 +123,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                 LunaLog.Log("[LMP]: Detected a revert to launch!");
                 RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Assigned);
                 System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel, false);
+                VesselCommon.RemoveVesselFromSystems(FlightGlobals.ActiveVessel.id);
             }
         }
 
@@ -133,6 +140,7 @@ namespace LmpClient.Systems.VesselRemoveSys
 
                 //We consider this vessel removed but we let KSP do the remove of the vessel
                 System.RemovedVessels.TryAdd(FlightGlobals.ActiveVessel.id, DateTime.Now);
+                VesselCommon.RemoveVesselFromSystems(FlightGlobals.ActiveVessel.id);
             }
         }
 
@@ -168,6 +176,7 @@ namespace LmpClient.Systems.VesselRemoveSys
 
                 //We consider this vessel removed but we let KSP do the remove of the vessel
                 System.RemovedVessels.TryAdd(vesselToRemove.id, DateTime.Now);
+                VesselCommon.RemoveVesselFromSystems(vesselToRemove.id);
             }
         }
     }
