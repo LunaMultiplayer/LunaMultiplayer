@@ -19,5 +19,5 @@
   <BanIcon>Bannen</BanIcon>
   <DekesslerIcon>Dekessler (löscht alle Debris)</DekesslerIcon>
   <NukeIcon>Nuke KSC (löscht alle Fahrzeuge am KSC)</NukeIcon>
-  <RestartServerIcon>Restart server</RestartServerIcon>
+  <RestartServerIcon>Server Neustart</RestartServerIcon>
 </ButtonTooltips>

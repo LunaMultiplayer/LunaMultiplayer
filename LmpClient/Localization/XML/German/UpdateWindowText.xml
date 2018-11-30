@@ -4,7 +4,7 @@
   <Text>Es ist eine neue LMP Version zum Download verfügbar</Text>
   <StillCompatible>Die installierte LMP Version ist mit der aktuellsten Version kompatibel</StillCompatible>
   <NotCompatible>Deine installierte LMP Version ist NICHT mit der aktuellsten Version kompatibel</NotCompatible>
-  <Changelog>Changelog</Changelog>
+  <Changelog>Änderungsprotokoll</Changelog>
   <CurrentVersion>Installierte Version:</CurrentVersion>
   <LatestVersion>Aktuellste Version:</LatestVersion>
 </UpdateWindowText>
