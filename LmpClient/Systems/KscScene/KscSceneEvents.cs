@@ -14,13 +14,13 @@ namespace LmpClient.Systems.KscScene
         public void OnLockAcquire(LockDefinition lockdefinition)
         {
             System.RefreshTrackingStationVessels();
-            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
+            RefreshMarkers();
         }
 
         public void OnLockRelease(LockDefinition lockdefinition)
         {
             System.RefreshTrackingStationVessels();
-            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
+            RefreshMarkers();
         }
 
         /// <summary>
@@ -42,20 +42,20 @@ namespace LmpClient.Systems.KscScene
             if (data == GameScenes.SPACECENTER)
             {
                 ClearMarkers();
-                KSCVesselMarkers.fetch.RefreshMarkers();
+                RefreshMarkers();
             }
         }
         
         public void OnVesselCreated(Vessel vessel)
         {
             System.RefreshTrackingStationVessels();
-            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
+            RefreshMarkers();
         }
 
         public void VesselInitialized(Vessel vessel, bool fromShipAssembly)
         {
             System.RefreshTrackingStationVessels();
-            if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
+            RefreshMarkers();
         }
 
         private static void ClearMarkers()
@@ -68,6 +68,12 @@ namespace LmpClient.Systems.KscScene
                 kscVesselMarker.Terminate();
                 Object.DestroyImmediate(kscVesselMarker);
             }
+        }
+
+        private static void RefreshMarkers()
+        {
+            if (KSCVesselMarkers.fetch && HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                KSCVesselMarkers.fetch.RefreshMarkers();
         }
     }
 }
