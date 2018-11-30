@@ -33,6 +33,7 @@ namespace LmpClient.Systems.VesselFairingsSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            GameEvents.onFairingsDeployed.Remove(VesselFairingEvents.FairingsDeployed);
             VesselFairings.Clear();
         }
 
