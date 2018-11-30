@@ -30,7 +30,8 @@ namespace LmpClient.Systems.VesselCoupleSys
                 !LockSystem.LockQuery.UpdateLockBelongsToPlayer(removedVesselId, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             LunaLog.Log($"Couple complete! Removed vessel: {removedVesselId}");
-            System.MessageSender.SendVesselCouple(partFrom.vessel, partFrom.flightID, removedVesselId, partTo.flightID);
+            //Yes, it doesn't make much sense but that's the correct order of the parameters...
+            System.MessageSender.SendVesselCouple(partFrom.vessel, partTo.flightID, removedVesselId, partFrom.flightID);
 
             var ownFinalVessel = LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName);
             if (ownFinalVessel)

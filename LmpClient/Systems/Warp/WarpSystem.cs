@@ -201,7 +201,7 @@ namespace LmpClient.Systems.Warp
             {
                 if (CurrentSubspaceTimeDifference < newSubspaceTime && CurrentSubspace != newSubspace)
                 {
-                    CoroutineUtil.StartDelayedRoutine(nameof(WarpIfSubspaceIsMoreAdvanced), () => CurrentSubspace = newSubspace, 0.5f);
+                    CurrentSubspace = newSubspace;
                 }
             }
         }
