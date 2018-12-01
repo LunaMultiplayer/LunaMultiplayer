@@ -1,4 +1,5 @@
-﻿using LmpClient.VesselUtilities;
+﻿using LmpClient.Systems.VesselPositionSys;
+using LmpClient.VesselUtilities;
 using System;
 
 namespace LmpClient.Systems.VesselUndockSys
@@ -36,6 +37,7 @@ namespace LmpClient.Systems.VesselUndockSys
                     VesselUndockSystem.Singleton.IgnoreEvents = true;
                     protoPart.partRef.Undock(DockedInfo);
                     protoPart.partRef.vessel.id = NewVesselId;
+                    VesselPositionSystem.Singleton.ForceUpdateVesselPosition(NewVesselId);
                     VesselUndockSystem.Singleton.IgnoreEvents = false;
                 }
             }

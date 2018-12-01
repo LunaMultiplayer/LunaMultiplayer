@@ -1,5 +1,6 @@
 ﻿using KSP.UI.Screens.Flight;
 using LmpClient.Extensions;
+using LmpClient.Systems.VesselPositionSys;
 using LmpClient.Utilities;
 using System;
 using Object = UnityEngine.Object;
@@ -65,6 +66,8 @@ namespace LmpClient.VesselUtilities
                 LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} failed to create a vessel!");
                 return false;
             }
+
+            VesselPositionSystem.Singleton.ForceUpdateVesselPosition(vesselProto.vesselRef.id);
 
             vesselProto.vesselRef.protoVessel = vesselProto;
             if (vesselProto.vesselRef.isEVA)

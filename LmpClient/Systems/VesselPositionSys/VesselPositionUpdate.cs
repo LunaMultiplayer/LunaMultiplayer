@@ -168,12 +168,12 @@ namespace LmpClient.Systems.VesselPositionSys
         #region Main method
 
         /// <summary>
-        /// Call this method to apply a vessel update using interpolation
+        /// Updates the vessel position with the current data
         /// </summary>
-        public void ApplyInterpolatedVesselUpdate()
+        public void UpdateVesselWithPositionData()
         {
             if (Body == null) return;
-            
+
             if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
                 if (Target == null)
@@ -207,10 +207,20 @@ namespace LmpClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
+
+            //ALWAYS set the position of the vessel even if we don't have anything in the queue. Otherwise its position will shake
+            Vessel.SetVesselPosition(this, Target, LerpPercentage);
+        }
+
+        /// <summary>
+        /// Call this method to apply a vessel update using interpolation and advance the frame count
+        /// </summary>
+        public void ApplyInterpolatedVesselUpdate()
+        {
             try
             {
                 //ALWAYS set the position of the vessel even if we don't have anything in the queue. Otherwise its position will shake
-                Vessel.SetVesselPosition(this, Target, LerpPercentage);
+                UpdateVesselWithPositionData();
             }
             catch (Exception e)
             {

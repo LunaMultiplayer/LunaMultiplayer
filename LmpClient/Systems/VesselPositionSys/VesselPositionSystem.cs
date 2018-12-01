@@ -176,6 +176,15 @@ namespace LmpClient.Systems.VesselPositionSys
         #region Public methods
 
         /// <summary>
+        /// Forcefully updates a vessel position
+        /// </summary>
+        public void ForceUpdateVesselPosition(Guid vesselId)
+        {
+            if (CurrentVesselUpdate.TryGetValue(vesselId, out var posUpdate))
+                posUpdate.UpdateVesselWithPositionData();
+        }
+
+        /// <summary>
         /// Checks if the given vessel id has position messages stored to be replayed
         /// </summary>
         public bool VesselHavePositionUpdatesQueued(Guid vesselId)
