@@ -37,7 +37,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             _activeVesselIsDominantVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == VesselId;
 
             var coupleResult = ProcessCoupleInternal(VesselId, CoupledVesselId, PartFlightId, CoupledPartFlightId, Grapple);
-            AfterCouplingEvent(VesselId);
+            AfterCouplingEvent();
 
             if(!coupleResult)
                 VesselRemoveSystem.Singleton.KillVessel(CoupledVesselId, false, "Killing coupled vessel during a undetected coupling");
@@ -51,7 +51,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             _activeVesselIsDominantVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.VesselId;
 
             var coupleResult = ProcessCoupleInternal(msgData.VesselId, msgData.CoupledVesselId, msgData.PartFlightId, msgData.CoupledPartFlightId, msgData.Grapple);
-            AfterCouplingEvent(msgData.VesselId);
+            AfterCouplingEvent();
 
             if (!coupleResult)
                 VesselRemoveSystem.Singleton.KillVessel(msgData.CoupledVesselId, false, "Killing coupled vessel during a undetected coupling");
@@ -114,7 +114,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             return false;
         }
 
-        private static void AfterCouplingEvent(Guid vesselId)
+        private static void AfterCouplingEvent()
         {
             if (_activeVesselIsWeakVessel)
             {
