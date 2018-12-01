@@ -30,8 +30,10 @@ namespace LmpClient.Systems.VesselCoupleSys
                 !LockSystem.LockQuery.UpdateLockBelongsToPlayer(removedVesselId, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             LunaLog.Log($"Couple complete! Removed vessel: {removedVesselId}");
-            //Yes, it doesn't make much sense but that's the correct order of the parameters...
-            System.MessageSender.SendVesselCouple(partFrom.vessel, partTo.flightID, removedVesselId, partFrom.flightID);
+
+            //Yes, the couple event is called by the WEAK vessel!!
+            var grapple = partTo.FindModuleImplementing<ModuleGrappleNode>() != null;
+            System.MessageSender.SendVesselCouple(partFrom.vessel, partTo.flightID, removedVesselId, partFrom.flightID, grapple);
 
             var ownFinalVessel = LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName);
             if (ownFinalVessel)
@@ -48,8 +50,8 @@ namespace LmpClient.Systems.VesselCoupleSys
                 JumpIfVesselOwnerIsInFuture(partFrom.vessel.id);
             }
 
-            VesselRemoveSystem.Singleton.DelayedKillVessel(removedVesselId, false, "Killing coupled vessel during a detected coupling", 500);
             VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(removedVesselId, false);
+            VesselRemoveSystem.Singleton.DelayedKillVessel(removedVesselId, false, "Killing coupled vessel during a detected coupling", 500);
             LockSystem.Singleton.ReleaseAllVesselLocks(null, removedVesselId);
         }
 

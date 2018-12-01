@@ -14,6 +14,8 @@ namespace LmpClient.Systems.VesselCoupleSys
             value.CoupledPartFlightId = msgData.CoupledPartFlightId;
 
             value.CoupledVesselId = msgData.CoupledVesselId;
+
+            value.Grapple = msgData.Grapple;
         }
     }
 }
