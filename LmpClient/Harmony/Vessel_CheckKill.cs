@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
+using LmpClient.Systems.VesselPositionSys;
 using LmpCommon.Enums;
 
 // ReSharper disable All
@@ -18,6 +19,10 @@ namespace LmpClient.Harmony
         private static bool PrefixCheckKill(Vessel __instance)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
+
+            //The vessel have updates queued as it was left there by a player in a future subspace
+            if (VesselPositionSystem.Singleton.VesselHavePositionUpdatesQueued(__instance.id))
+                return false;
 
             //Do not check against the locks as they generate garbage. Instead check if the vessel is immortal by looking at the crash tolerance
 
