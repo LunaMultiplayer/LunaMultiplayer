@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpCommon.Enums;
 using LmpCommon.Message.Data.Vessel;
 
 namespace LmpClient.Systems.VesselCoupleSys
@@ -15,7 +16,7 @@ namespace LmpClient.Systems.VesselCoupleSys
 
             value.CoupledVesselId = msgData.CoupledVesselId;
 
-            value.Grapple = msgData.Grapple;
+            value.Trigger = (CoupleTrigger)msgData.Trigger;
         }
     }
 }

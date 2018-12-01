@@ -7,6 +7,7 @@ using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System;
+using LmpCommon.Enums;
 
 namespace LmpClient.Systems.VesselCoupleSys
 {
@@ -17,7 +18,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselCouple(Vessel vessel, uint partFlightId, Guid coupledVesselId, uint coupledPartFlightId, bool grapple)
+        public void SendVesselCouple(Vessel vessel, uint partFlightId, Guid coupledVesselId, uint coupledPartFlightId, CoupleTrigger trigger)
         {
             if (vessel == null) return;
 
@@ -28,7 +29,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             msgData.CoupledVesselId = coupledVesselId;
             msgData.CoupledPartFlightId = coupledPartFlightId;
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
-            msgData.Grapple = grapple;
+            msgData.Trigger = (int)trigger;
 
             SendMessage(msgData);
         }

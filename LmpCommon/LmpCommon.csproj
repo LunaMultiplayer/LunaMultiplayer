@@ -60,6 +60,7 @@
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />
     <Compile Include="Enums\ConnectionStatus.cs" />
+    <Compile Include="Enums\CoupleTrigger.cs" />
     <Compile Include="Enums\CraftType.cs" />
     <Compile Include="Enums\GameDificulty.cs" />
     <Compile Include="Enums\GameMode.cs" />

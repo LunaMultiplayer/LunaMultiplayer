@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
+using LmpCommon.Enums;
 using LmpCommon.Message.Data.Vessel;
 using System;
 using System.Reflection;
@@ -13,7 +14,8 @@ namespace LmpClient.Systems.VesselCoupleSys
     public class VesselCouple
     {
         private static readonly MethodInfo GrappleMethod = typeof(ModuleGrappleNode).GetMethod("Grapple", AccessTools.all);
-        
+        private static readonly FieldInfo KerbalSeatField = typeof(KerbalEVA).GetField("kerbalSeat", AccessTools.all);
+
         #region Fields and Properties
 
         public double GameTime;
@@ -21,7 +23,7 @@ namespace LmpClient.Systems.VesselCoupleSys
         public Guid CoupledVesselId;
         public uint PartFlightId;
         public uint CoupledPartFlightId;
-        public bool Grapple;
+        public CoupleTrigger Trigger;
 
         private static bool _activeVesselIsWeakVessel;
         private static bool _activeVesselIsDominantVessel;
@@ -36,7 +38,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             _activeVesselIsWeakVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == CoupledVesselId;
             _activeVesselIsDominantVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == VesselId;
 
-            var coupleResult = ProcessCoupleInternal(VesselId, CoupledVesselId, PartFlightId, CoupledPartFlightId, Grapple);
+            var coupleResult = ProcessCoupleInternal(VesselId, CoupledVesselId, PartFlightId, CoupledPartFlightId, Trigger);
             AfterCouplingEvent();
 
             if(!coupleResult)
@@ -50,7 +52,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             _activeVesselIsWeakVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.CoupledVesselId;
             _activeVesselIsDominantVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == msgData.VesselId;
 
-            var coupleResult = ProcessCoupleInternal(msgData.VesselId, msgData.CoupledVesselId, msgData.PartFlightId, msgData.CoupledPartFlightId, msgData.Grapple);
+            var coupleResult = ProcessCoupleInternal(msgData.VesselId, msgData.CoupledVesselId, msgData.PartFlightId, msgData.CoupledPartFlightId, (CoupleTrigger)msgData.Trigger);
             AfterCouplingEvent();
 
             if (!coupleResult)
@@ -59,7 +61,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             return coupleResult;
         }
 
-        private static bool ProcessCoupleInternal(Guid vesselId, Guid coupledVesselId, uint partFlightId, uint coupledPartFlightId, bool grapple)
+        private static bool ProcessCoupleInternal(Guid vesselId, Guid coupledVesselId, uint partFlightId, uint coupledPartFlightId, CoupleTrigger trigger)
         {
             if (!VesselCommon.DoVesselChecks(vesselId))
                 return false;
@@ -83,28 +85,43 @@ namespace LmpClient.Systems.VesselCoupleSys
                 {
                     VesselCoupleSystem.Singleton.IgnoreEvents = true;
 
-                    //The weak vessel must couple with the DOMINANT vessel and not the other way around!
-                    if (grapple)
-                    {
-                        var grappleModule = coupledProtoPart.partRef.FindModuleImplementing<ModuleGrappleNode>();
-                        if (grappleModule)
-                        {
-                            GrappleMethod.Invoke(grappleModule, new object[] { coupledProtoPart, protoPart });
-                        }
-                    }
-                    else
-                    {
-                        var weakDockingNode = coupledProtoPart.partRef.FindModuleImplementing<ModuleDockingNode>();
-                        if (weakDockingNode)
-                        {
-                            var dominantDockingNode = protoPart.partRef.FindModuleImplementing<ModuleDockingNode>();
-                            if (dominantDockingNode)
-                            {
-                                weakDockingNode.DockToVessel(dominantDockingNode);
-                            }
-                        }
-                    }
+                    //Remember! The weak vessel must couple with the DOMINANT vessel and not the other way around!
 
+                    switch (trigger)
+                    {
+                        case CoupleTrigger.DockingNode:
+                            var weakDockingNode = coupledProtoPart.partRef.FindModuleImplementing<ModuleDockingNode>();
+                            if (weakDockingNode)
+                            {
+                                var dominantDockingNode = protoPart.partRef.FindModuleImplementing<ModuleDockingNode>();
+                                if (dominantDockingNode)
+                                {
+                                    weakDockingNode.DockToVessel(dominantDockingNode);
+                                }
+                            }
+                            break;
+                        case CoupleTrigger.GrappleNode:
+                            var grappleModule = coupledProtoPart.partRef.FindModuleImplementing<ModuleGrappleNode>();
+                            if (grappleModule)
+                            {
+                                GrappleMethod.Invoke(grappleModule, new object[] { coupledProtoPart, protoPart });
+                            }
+                            break;
+                        case CoupleTrigger.Kerbal:
+                            var kerbalEva = coupledProtoPart.partRef.FindModuleImplementing<KerbalEVA>();
+                            if (kerbalEva)
+                            {
+                                var seat = KerbalSeatField.GetValue(kerbalEva) as KerbalSeat;
+                                if (seat)
+                                {
+                                    kerbalEva.fsm.RunEvent(kerbalEva.On_seatBoard);
+                                }
+                            }
+                            break;
+                        case CoupleTrigger.Other:
+                            coupledProtoPart.partRef.Couple(protoPart.partRef);
+                            break;
+                    }
                     VesselCoupleSystem.Singleton.IgnoreEvents = false;
 
                     return true;

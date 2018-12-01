@@ -5,6 +5,7 @@ using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.Warp;
 using LmpClient.VesselUtilities;
 using System;
+using LmpCommon.Enums;
 
 namespace LmpClient.Systems.VesselCoupleSys
 {
@@ -32,8 +33,11 @@ namespace LmpClient.Systems.VesselCoupleSys
             LunaLog.Log($"Couple complete! Removed vessel: {removedVesselId}");
 
             //Yes, the couple event is called by the WEAK vessel!!
-            var grapple = partTo.FindModuleImplementing<ModuleGrappleNode>() != null;
-            System.MessageSender.SendVesselCouple(partFrom.vessel, partTo.flightID, removedVesselId, partFrom.flightID, grapple);
+            var trigger = partTo.FindModuleImplementing<ModuleDockingNode>() != null ? CoupleTrigger.DockingNode :
+                partTo.FindModuleImplementing<ModuleGrappleNode>() != null ? CoupleTrigger.GrappleNode :
+                partTo.FindModuleImplementing<KerbalEVA>() != null ? CoupleTrigger.Kerbal : CoupleTrigger.Other;
+
+            System.MessageSender.SendVesselCouple(partFrom.vessel, partTo.flightID, removedVesselId, partFrom.flightID, trigger);
 
             var ownFinalVessel = LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName);
             if (ownFinalVessel)
