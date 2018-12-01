@@ -1,6 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
+using LmpClient.Systems.VesselPositionSys;
 using LmpClient.VesselUtilities;
 
 namespace LmpClient.Systems.VesselDecoupleSys
@@ -20,11 +21,13 @@ namespace LmpClient.Systems.VesselDecoupleSys
             if (VesselCommon.IsSpectating || System.IgnoreEvents) return;
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
-            LunaLog.Log($"Decouple complete! Part: {part.partName} Vessel: {part.vessel.id}");
-            System.MessageSender.SendVesselDecouple(originalVessel, part.flightID, breakForce, part.vessel.id);
-
             LockSystem.Singleton.AcquireUnloadedUpdateLock(part.vessel.id, true, true);
             LockSystem.Singleton.AcquireUpdateLock(part.vessel.id, true, true);
+
+            VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(part.vessel);
+
+            LunaLog.Log($"Decouple complete! Part: {part.partName} Vessel: {part.vessel.id}");
+            System.MessageSender.SendVesselDecouple(originalVessel, part.flightID, breakForce, part.vessel.id);
         }
     }
 }
