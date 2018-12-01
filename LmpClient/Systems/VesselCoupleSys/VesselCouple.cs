@@ -59,12 +59,6 @@ namespace LmpClient.Systems.VesselCoupleSys
             return coupleResult;
         }
 
-        private static void BeforeCouplingEvent(Guid vesselId, Guid coupledVesselId)
-        {
-            _activeVesselIsWeakVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == coupledVesselId;
-            _activeVesselIsDominantVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == vesselId;
-        }
-
         private static bool ProcessCoupleInternal(Guid vesselId, Guid coupledVesselId, uint partFlightId, uint coupledPartFlightId, bool grapple)
         {
             if (!VesselCommon.DoVesselChecks(vesselId))
@@ -125,12 +119,15 @@ namespace LmpClient.Systems.VesselCoupleSys
             if (_activeVesselIsWeakVessel)
             {
                 if (_dominantVessel)
-                    _dominantVessel.SetRotation(_dominantVessel.transform.rotation);
+                {
+                    FlightGlobals.ForceSetActiveVessel(_dominantVessel);
+                    FlightInputHandler.SetNeutralControls();
+                }
+            }
 
-                var dominantVessel = FlightGlobals.FindVessel(vesselId);
-                if (dominantVessel)
-                    FlightGlobals.ForceSetActiveVessel(dominantVessel);
-
+            if (_activeVesselIsDominantVessel)
+            {
+                _dominantVessel.MakeActive();
                 FlightInputHandler.SetNeutralControls();
             }
         }
