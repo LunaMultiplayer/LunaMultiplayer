@@ -71,8 +71,8 @@ namespace LmpClient.Systems.VesselPositionSys
             
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendUnloadedSecondaryVesselPositionUpdates));
 
             WarpEvent.onTimeWarpStopped.Add(PositionEvents.WarpStopped);
         }
@@ -142,7 +142,6 @@ namespace LmpClient.Systems.VesselPositionSys
                     if (VesselHavePositionUpdatesQueued(SecondaryVesselsToUpdate[i].id))
                         continue;
 
-                    UpdateSecondaryVesselValues(SecondaryVesselsToUpdate[i]);
                     MessageSender.SendVesselPositionUpdate(SecondaryVesselsToUpdate[i]);
                 }
             }
@@ -249,21 +248,6 @@ namespace LmpClient.Systems.VesselPositionSys
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
                 }
             }
-        }
-
-        /// <summary>
-        /// Secondary vessels (vessels that are loaded and we have the update lock) don't get their lat/lon/alt values updated by the game engine
-        /// Here we manually update them so we send updateded lat/lon/alt values
-        /// </summary>
-        private static void UpdateSecondaryVesselValues(Vessel vessel)
-        {
-            vessel.UpdateLandedSplashed();
-            vessel.UpdatePosVel();
-
-            if (vessel.orbitDriver) vessel.orbitDriver.UpdateOrbit();
-            vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
-
-            vessel.mainBody.GetLatLonAlt(vessel.vesselTransform.position, out vessel.latitude, out vessel.longitude, out vessel.altitude);
         }
 
         #endregion
