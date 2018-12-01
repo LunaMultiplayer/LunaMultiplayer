@@ -9,7 +9,7 @@ namespace LmpClient.Systems.VesselUndockSys
     {
         public void UndockStart(Part part, DockedVesselInfo dockedInfo)
         {
-            if (VesselCommon.IsSpectating) return;
+            if (VesselCommon.IsSpectating || System.IgnoreEvents) return;
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(part.vessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             LunaLog.Log($"Detected undock! Part: {part.partName} Vessel: {part.vessel.id}");
@@ -17,7 +17,7 @@ namespace LmpClient.Systems.VesselUndockSys
 
         public void UndockComplete(Part part, DockedVesselInfo dockedInfo, Vessel originalVessel)
         {
-            if (VesselCommon.IsSpectating) return;
+            if (VesselCommon.IsSpectating || System.IgnoreEvents) return;
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             LunaLog.Log($"Undock complete! Part: {part} Vessel: {originalVessel.id}");

@@ -31,8 +31,10 @@ namespace LmpClient.Systems.VesselDecoupleSys
             {
                 if (protoPart.partRef)
                 {
+                    VesselDecoupleSystem.Singleton.IgnoreEvents = true;
                     protoPart.partRef.decouple(BreakForce);
                     protoPart.partRef.vessel.id = NewVesselId;
+                    VesselDecoupleSystem.Singleton.IgnoreEvents = false;
                 }
             }
         }

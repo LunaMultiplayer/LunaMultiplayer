@@ -33,8 +33,10 @@ namespace LmpClient.Systems.VesselUndockSys
             {
                 if (protoPart.partRef)
                 {
+                    VesselUndockSystem.Singleton.IgnoreEvents = true;
                     protoPart.partRef.Undock(DockedInfo);
                     protoPart.partRef.vessel.id = NewVesselId;
+                    VesselUndockSystem.Singleton.IgnoreEvents = false;
                 }
             }
         }
