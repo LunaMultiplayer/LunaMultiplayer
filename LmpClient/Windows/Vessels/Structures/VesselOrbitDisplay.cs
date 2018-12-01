@@ -15,6 +15,7 @@ namespace LmpClient.Windows.Vessels.Structures
         {
             VesselId = vessel.id;
             Vessel = vessel;
+            ObtDriverMode = vessel.orbitDriver.updateMode;
         }
 
         public VesselOrbitDisplay(Guid vesselId) => VesselId = vesselId;
