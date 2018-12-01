@@ -8,7 +8,15 @@ using System;
 namespace LmpClient.Systems.VesselProtoSys
 {
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
-    {
+    {        
+        /// <summary>
+        /// When stop warping fastly spawn the missing vessels
+        /// </summary>
+        public void WarpStopped()
+        {
+            System.CheckVesselsToLoad();
+        }
+
         /// <summary>
         /// Sends our vessel just when we start the flight
         /// </summary>

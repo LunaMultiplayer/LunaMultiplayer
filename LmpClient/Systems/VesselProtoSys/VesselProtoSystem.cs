@@ -51,6 +51,8 @@ namespace LmpClient.Systems.VesselProtoSys
             PartEvent.onPartUndocked.Add(VesselProtoEvents.PartUndocked);
             PartEvent.onPartCoupled.Add(VesselProtoEvents.PartCoupled);
 
+            WarpEvent.onTimeWarpStopped.Add(VesselProtoEvents.WarpStopped);
+
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselDefinition));
         }
@@ -69,6 +71,8 @@ namespace LmpClient.Systems.VesselProtoSys
             PartEvent.onPartDecoupled.Remove(VesselProtoEvents.PartDecoupled);
             PartEvent.onPartUndocked.Remove(VesselProtoEvents.PartUndocked);
             PartEvent.onPartCoupled.Remove(VesselProtoEvents.PartCoupled);
+
+            WarpEvent.onTimeWarpStopped.Remove(VesselProtoEvents.WarpStopped);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store too
             VesselProtos.Clear();
@@ -108,7 +112,7 @@ namespace LmpClient.Systems.VesselProtoSys
         /// <summary>
         /// Check vessels that must be loaded
         /// </summary>
-        private void CheckVesselsToLoad()
+        public void CheckVesselsToLoad()
         {
             if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
 
