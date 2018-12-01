@@ -26,7 +26,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
 
             if (System.VesselDecouples.TryGetValue(msgData.VesselId, out var queue))
             {
-                if (queue.TryPeek(out var resource) && resource.GameTime > msgData.GameTime)
+                if (queue.TryPeek(out var value) && value.GameTime > msgData.GameTime)
                 {
                     //A user reverted, so clear his message queue and start from scratch
                     queue.Clear();
