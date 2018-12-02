@@ -1,7 +1,7 @@
-﻿using LmpClient.Extensions;
-using LmpClient.Systems.VesselPositionSys;
-using LmpClient.VesselUtilities;
+﻿using LmpClient.VesselUtilities;
 using System;
+using LmpClient.Systems.Lock;
+using LmpClient.Systems.VesselPositionSys;
 
 namespace LmpClient.Systems.VesselDecoupleSys
 {
@@ -36,8 +36,8 @@ namespace LmpClient.Systems.VesselDecoupleSys
                     VesselDecoupleSystem.Singleton.IgnoreEvents = true;
                     protoPart.partRef.decouple(BreakForce);
                     protoPart.partRef.vessel.id = NewVesselId;
-
-                    protoPart.partRef.vessel.orbitDriver.ForceStart();
+                    
+                    LockSystem.Singleton.FireVesselLocksEvents(NewVesselId);
 
                     VesselPositionSystem.Singleton.ForceUpdateVesselPosition(NewVesselId);
                     VesselDecoupleSystem.Singleton.IgnoreEvents = false;

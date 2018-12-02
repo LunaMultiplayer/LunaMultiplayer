@@ -287,6 +287,19 @@ namespace LmpClient.Systems.Lock
 
         #endregion
 
+        /// <summary>
+        /// Fires the relevant lock events for given vesselId
+        /// </summary>
+        public void FireVesselLocksEvents(Guid vesselId)
+        {
+            if(LockQuery.ControlLockExists(vesselId))
+                LockEvent.onLockAcquire.Fire(LockQuery.GetControlLock(vesselId));
+            if (LockQuery.UpdateLockExists(vesselId))
+                LockEvent.onLockAcquire.Fire(LockQuery.GetUpdateLock(vesselId));
+            if (LockQuery.UnloadedUpdateLockExists(vesselId))
+                LockEvent.onLockAcquire.Fire(LockQuery.GetUnloadedUpdateLock(vesselId));
+        }
+
         #endregion
     }
 }

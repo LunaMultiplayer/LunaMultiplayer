@@ -26,6 +26,14 @@ namespace LmpCommon.Locks
         }
 
         /// <summary>
+        /// Get control lock for given vessel
+        /// </summary>
+        public LockDefinition GetControlLock(Guid vesselId)
+        {
+            return LockStore.ControlLocks[vesselId];
+        }
+
+        /// <summary>
         /// Get control lock owner for given vessel
         /// </summary>
         public string GetControlLockOwner(Guid vesselId)

@@ -26,6 +26,14 @@ namespace LmpCommon.Locks
         }
 
         /// <summary>
+        /// Get unloaded update lock for given vessel
+        /// </summary>
+        public LockDefinition GetUnloadedUpdateLock(Guid vesselId)
+        {
+            return LockStore.UnloadedUpdateLocks[vesselId];
+        }
+
+        /// <summary>
         /// Get unloaded update lock owner for given vessel
         /// </summary>
         public string GetUnloadedUpdateLockOwner(Guid vesselId)

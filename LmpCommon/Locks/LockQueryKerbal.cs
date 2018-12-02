@@ -28,6 +28,14 @@ namespace LmpCommon.Locks
         /// <summary>
         /// Get kerbal lock owner for given kerbal name
         /// </summary>
+        public LockDefinition GetKerbalLock(string kerbalName)
+        {
+            return LockStore.KerbalLocks[kerbalName];
+        }
+
+        /// <summary>
+        /// Get kerbal lock owner for given kerbal name
+        /// </summary>
         public string GetKerbalLockOwner(string kerbalName)
         {
             return GetLockOwner(LockType.Kerbal, Guid.Empty, kerbalName);

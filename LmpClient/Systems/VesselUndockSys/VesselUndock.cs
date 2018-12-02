@@ -1,4 +1,4 @@
-﻿using LmpClient.Extensions;
+﻿using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselPositionSys;
 using LmpClient.VesselUtilities;
 using System;
@@ -39,7 +39,7 @@ namespace LmpClient.Systems.VesselUndockSys
                     protoPart.partRef.Undock(DockedInfo);
                     protoPart.partRef.vessel.id = NewVesselId;
                     
-                    protoPart.partRef.vessel.orbitDriver.ForceStart();
+                    LockSystem.Singleton.FireVesselLocksEvents(NewVesselId);
 
                     VesselPositionSystem.Singleton.ForceUpdateVesselPosition(NewVesselId);
                     VesselUndockSystem.Singleton.IgnoreEvents = false;
