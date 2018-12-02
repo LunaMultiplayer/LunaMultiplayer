@@ -49,7 +49,8 @@ namespace LmpClient.VesselUtilities
                 if (existingVessel.Parts.Count == vesselProto.protoPartSnapshots.Count && !forceReload)
                     return true;
 
-                if(reloadingOwnVessel)
+                LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.vesselID}");
+                if (reloadingOwnVessel)
                     existingVessel.RemoveAllCrew();
 
                 FlightGlobals.RemoveVessel(existingVessel);
@@ -58,6 +59,10 @@ namespace LmpClient.VesselUtilities
                     Object.Destroy(part.gameObject);
                 }
                 Object.Destroy(existingVessel.gameObject);
+            }
+            else
+            {
+                LunaLog.Log($"[LMP]: Loading vessel {vesselProto.vesselID}");
             }
 
             vesselProto.Load(HighLogic.CurrentGame.flightState);
