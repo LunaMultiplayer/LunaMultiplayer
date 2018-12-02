@@ -10,7 +10,6 @@ using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System;
-using System.Collections;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -54,20 +53,6 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         #region Private methods
-
-        private IEnumerator SendOnceOrbitDriverReady(Vessel vessel, int maxTries)
-        {
-            var tries = 0;
-
-            while (!(bool)OrbitDriverReady.GetValue(vessel.orbitDriver) && tries < maxTries)
-            {
-                tries++;
-                yield return 0;
-            }
-
-            vessel.protoVessel = vessel.BackupVessel();
-            SendVesselMessage(vessel.protoVessel);
-        }
 
         private void SendVesselMessage(ProtoVessel protoVessel)
         {
