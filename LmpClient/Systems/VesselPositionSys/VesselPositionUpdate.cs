@@ -202,7 +202,6 @@ namespace LmpClient.Systems.VesselPositionSys
                 }
 
                 AdjustExtraInterpolationTimes();
-                if (Vessel) Vessel.protoVessel?.UpdatePositionValues(Target);
                 InitializeOrbits();
             }
 

@@ -2,6 +2,34 @@
 {
     public static class VesselProtoUpdater
     {
+        public static void UpdatePositionValues(this ProtoVessel protoVessel, Vessel vessel)
+        {
+            if (protoVessel == null) return;
+
+            protoVessel.latitude = vessel.latitude;
+            protoVessel.longitude = vessel.longitude;
+            protoVessel.altitude = vessel.altitude;
+            protoVessel.height = vessel.heightFromTerrain;
+
+            protoVessel.normal[0] = vessel.terrainNormal.x;
+            protoVessel.normal[1] = vessel.terrainNormal.y;
+            protoVessel.normal[2] = vessel.terrainNormal.z;
+
+            protoVessel.rotation[0] = vessel.srfRelRotation.x;
+            protoVessel.rotation[1] = vessel.srfRelRotation.y;
+            protoVessel.rotation[2] = vessel.srfRelRotation.z;
+            protoVessel.rotation[3] = vessel.srfRelRotation.w;
+
+            protoVessel.orbitSnapShot.inclination = vessel.orbit.inclination;
+            protoVessel.orbitSnapShot.eccentricity = vessel.orbit.eccentricity;
+            protoVessel.orbitSnapShot.semiMajorAxis = vessel.orbit.semiMajorAxis;
+            protoVessel.orbitSnapShot.LAN = vessel.orbit.LAN;
+            protoVessel.orbitSnapShot.argOfPeriapsis = vessel.orbit.argumentOfPeriapsis;
+            protoVessel.orbitSnapShot.meanAnomalyAtEpoch = vessel.orbit.meanAnomalyAtEpoch;
+            protoVessel.orbitSnapShot.epoch = vessel.orbit.epoch;
+            protoVessel.orbitSnapShot.ReferenceBodyIndex = vessel.orbit.referenceBody.flightGlobalsIndex;
+        }
+
         public static void UpdatePositionValues(this ProtoVessel protoVessel, VesselPositionUpdate update)
         {
             if (protoVessel == null) return;

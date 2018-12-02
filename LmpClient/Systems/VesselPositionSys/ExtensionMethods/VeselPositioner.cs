@@ -22,6 +22,8 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.heightFromTerrain = target.HeightFromTerrain;
 
             ApplyInterpolationsToVessel(vessel, update, target, lerpedBody, percentage);
+
+            vessel.protoVessel.UpdatePositionValues(vessel);
         }
 
         private static void ApplyOrbitInterpolation(Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, CelestialBody lerpedBody, float percentage)
