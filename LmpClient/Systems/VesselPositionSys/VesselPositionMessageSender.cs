@@ -1,8 +1,10 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Extensions;
 using LmpClient.Network;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.Warp;
+using LmpClient.Utilities;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
@@ -18,14 +20,31 @@ namespace LmpClient.Systems.VesselPositionSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselPositionUpdate(Vessel vessel)
+        /// <summary>
+        /// Sends a vessel position update
+        /// </summary>
+        /// <param name="vessel">Vessel to send the position</param>
+        /// <param name="doOrbitDriverReadyCheck">Set it to true if you want to check if the driver is ready.
+        /// Avoid checking it unless is really needed as it uses reflection that's slow</param>
+        public void SendVesselPositionUpdate(Vessel vessel, bool doOrbitDriverReadyCheck = false)
         {
             if (vessel == null) return;
 
-            var msg = CreateMessageFromVessel(vessel);
-            if (msg == null) return;
+            if (doOrbitDriverReadyCheck && !vessel.orbitDriver.Ready())
+            {                
+                //Orbit driver is not ready so wait max 10 frames until it's ready
+                CoroutineUtil.StartConditionRoutine("SendVesselPositionUpdate",
+                    () => SendVesselPositionUpdate(vessel),
+                    () => vessel.orbitDriver.Ready(), 10);
 
-            SendMessage(msg);
+            }
+            else
+            {
+                var msg = CreateMessageFromVessel(vessel);
+                if (msg == null) return;
+
+                SendMessage(msg);
+            }
         }
         
         public static VesselPositionMsgData CreateMessageFromVessel(Vessel vessel)

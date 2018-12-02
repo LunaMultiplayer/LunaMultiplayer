@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
             LockSystem.Singleton.AcquireUnloadedUpdateLock(part.vessel.id, true, true);
             LockSystem.Singleton.AcquireUpdateLock(part.vessel.id, true, true);
 
-            VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(part.vessel);
+            VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(part.vessel, true);
 
             LunaLog.Log($"Decouple complete! Part: {part.partName} Vessel: {part.vessel.id}");
             System.MessageSender.SendVesselDecouple(originalVessel, part.flightID, breakForce, part.vessel.id);

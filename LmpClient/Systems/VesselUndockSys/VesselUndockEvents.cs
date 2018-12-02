@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselUndockSys
             LockSystem.Singleton.AcquireUnloadedUpdateLock(part.vessel.id, true, true);
             LockSystem.Singleton.AcquireUpdateLock(part.vessel.id, true, true);
             
-            VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(part.vessel);
+            VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(part.vessel, true);
 
             LunaLog.Log($"Undock complete! Part: {part} Vessel: {originalVessel.id}");
             System.MessageSender.SendVesselUndock(originalVessel, part.flightID, dockedInfo, part.vessel.id);

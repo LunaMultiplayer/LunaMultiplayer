@@ -177,6 +177,8 @@ namespace LmpClient.Systems.VesselProtoSys
             CoroutineUtil.StartDelayedRoutine("QueueVesselMessageAsPartsChanged", () =>
             {
                 QueuedVesselsToSend.Remove(vesselId);
+
+                LunaLog.LogError($"[LMP]: Sending delayed proto vessel {vesselId}");
                 MessageSender.SendVesselMessage(FlightGlobals.FindVessel(vesselId));
             }, delayInSec);
         }

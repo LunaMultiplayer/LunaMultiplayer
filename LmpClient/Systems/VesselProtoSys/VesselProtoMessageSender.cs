@@ -1,6 +1,6 @@
-﻿using Harmony;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Extensions;
 using LmpClient.Network;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
@@ -11,14 +11,11 @@ using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System;
 using System.Collections;
-using System.Reflection;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
     public class VesselProtoMessageSender : SubSystem<VesselProtoSystem>, IMessageSender
     {
-        private static readonly FieldInfo OrbitDriverReady = typeof(OrbitDriver).GetField("ready", AccessTools.all);
-        
         /// <summary>
         /// Pre allocated array to store the vessel data into it. Max 10 megabytes
         /// </summary>
@@ -42,17 +39,17 @@ namespace LmpClient.Systems.VesselProtoSys
                 return;
             }
 
-            if ((bool)OrbitDriverReady.GetValue(vessel.orbitDriver))
+            if (vessel.orbitDriver.Ready())
             {
                 vessel.protoVessel = vessel.BackupVessel();
                 SendVesselMessage(vessel.protoVessel);
             }
             else
             {
-                //Orbit driver is not ready so wait 10 frames until it's ready
+                //Orbit driver is not ready so wait max 10 frames until it's ready
                 CoroutineUtil.StartConditionRoutine("SendVesselMessage",
                     () => SendVesselMessage(vessel),
-                    () => (bool)OrbitDriverReady.GetValue(vessel.orbitDriver), 10);
+                    () => vessel.orbitDriver.Ready(), 10);
             }
         }
 

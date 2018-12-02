@@ -102,6 +102,7 @@
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\LinqExtention.cs" />
+    <Compile Include="Extensions\OrbitDriverExtension.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\PartExtension.cs" />
     <Compile Include="Extensions\ProtoVesselExtension.cs" />
