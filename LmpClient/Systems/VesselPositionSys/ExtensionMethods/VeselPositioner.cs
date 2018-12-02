@@ -55,7 +55,7 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             vessel.altitude = LunaMath.Lerp(update.LatLonAlt[2], target.LatLonAlt[2], percentage);
 
             var rotation = (Quaternion)lerpedBody.rotation * currentSurfaceRelRotation;
-            var position = vessel.situation <= Vessel.Situations.SUB_ORBITAL ?
+            var position = vessel.situation <= Vessel.Situations.FLYING ?
                 lerpedBody.GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude) :
                 vessel.orbit.getPositionAtUT(TimeSyncSystem.UniversalTime);
 
