@@ -125,44 +125,6 @@ namespace LmpClient.Systems.VesselPositionSys
             Array.Copy(update.Orbit, Orbit, 8);
         }
 
-        public void CopyFrom(Vessel vessel)
-        {
-            if (Vessel == null) return;
-
-            BodyIndex = Vessel.mainBody.flightGlobalsIndex;
-            Landed = Vessel.Landed;
-            Splashed = Vessel.Splashed;
-
-            SrfRelRotation[0] = Vessel.srfRelRotation.x;
-            SrfRelRotation[1] = Vessel.srfRelRotation.y;
-            SrfRelRotation[2] = Vessel.srfRelRotation.z;
-            SrfRelRotation[3] = Vessel.srfRelRotation.w;
-
-            LatLonAlt[0] = Vessel.latitude;
-            LatLonAlt[1] = Vessel.longitude;
-            LatLonAlt[2] = Vessel.altitude;
-
-            var velVector = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.srf_velocity;
-            VelocityVector[0] = velVector.x;
-            VelocityVector[1] = velVector.y;
-            VelocityVector[2] = velVector.z;
-
-            NormalVector[0] = Vessel.terrainNormal.x;
-            NormalVector[1] = Vessel.terrainNormal.y;
-            NormalVector[2] = Vessel.terrainNormal.z;
-
-            Orbit[0] = Vessel.orbit.inclination;
-            Orbit[1] = Vessel.orbit.eccentricity;
-            Orbit[2] = Vessel.orbit.semiMajorAxis;
-            Orbit[3] = Vessel.orbit.LAN;
-            Orbit[4] = Vessel.orbit.argumentOfPeriapsis;
-            Orbit[5] = Vessel.orbit.meanAnomalyAtEpoch;
-            Orbit[6] = Vessel.orbit.epoch;
-            Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
-
-            HeightFromTerrain = Vessel.heightFromTerrain;
-        }
-
         #endregion
 
         #region Main method
@@ -182,7 +144,7 @@ namespace LmpClient.Systems.VesselPositionSys
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds;
                     PingMs = 0;
 
-                    CopyFrom(Vessel);
+                    CopyFrom(targetUpdate);
                 }
                 else
                 {
