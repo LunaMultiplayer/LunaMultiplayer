@@ -41,7 +41,7 @@ namespace Server.Lidgren
                 msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats;
                 msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats;
                 msgData.GameMode = (int)GeneralSettings.SettingsStore.GameMode;
-                msgData.InternalEndpoint = $"{endpoint.Address}:{endpoint.Port}";
+                msgData.InternalEndpoint = endpoint;
                 msgData.MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers;
                 msgData.ModControl = GeneralSettings.SettingsStore.ModControl;
                 msgData.PlayerCount = ServerContext.Clients.Count;

@@ -58,7 +58,7 @@ namespace LmpCommon.Message.Base
         
         public int GetMessageSize()
         {
-            return sizeof(long) + sizeof(ushort) * 3 + sizeof(byte) + InternalGetMessageSize();
+            return sizeof(long) + sizeof(ushort) * 3 + InternalGetMessageSize();
         }
 
         internal abstract int InternalGetMessageSize();

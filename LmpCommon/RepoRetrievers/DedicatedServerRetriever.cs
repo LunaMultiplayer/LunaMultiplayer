@@ -70,16 +70,7 @@ namespace LmpCommon.RepoRetrievers
                         {
                             try
                             {
-                                var ipPort = server.Split(':');
-                                if (!IPAddress.TryParse(ipPort[0], out var ip))
-                                {
-                                    ip = Common.GetIpFromString(ipPort[0]);
-                                }
-
-                                if (ip != null && ushort.TryParse(ipPort[1], out var port))
-                                {
-                                    DedicatedServers.Add(new IPEndPoint(ip, port));
-                                }
+                                DedicatedServers.Add(Common.CreateEndpointFromString(server));
                             }
                             catch (Exception)
                             {

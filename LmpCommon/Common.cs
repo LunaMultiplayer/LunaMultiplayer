@@ -48,12 +48,7 @@ namespace LmpCommon
         {
             return Environment.OSVersion.Platform == PlatformID.Win32NT;
         }
-
-        public static bool IsX64()
-        {
-            return IntPtr.Size == 8;
-        }
-
+        
         /// <summary>
         /// Compare two ienumerables and return if they are the same or not IGNORING the order
         /// </summary>
@@ -96,38 +91,17 @@ namespace LmpCommon
         {
             try
             {
-                if (IPAddress.TryParse(endpoint.Split(':')[0], out var ip))
+                if (IPAddress.TryParse(endpoint.Split(':')[0].Trim(), out var ip))
                 {
-                    return new IPEndPoint(ip, int.Parse(endpoint.Split(':')[1]));
+                    return new IPEndPoint(ip, int.Parse(endpoint.Split(':')[1].Trim()));
                 }
 
-                return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0])[0], int.Parse(endpoint.Split(':')[1]));
+                return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0].Trim())[0], int.Parse(endpoint.Split(':')[1].Trim()));
             }
             catch (Exception)
             {
                 return null;
             }
-        }
-
-        public static IPAddress GetIpFromString(string server)
-        {
-            try
-            {
-                if (IPAddress.TryParse(server, out var ip))
-                {
-                    return ip;
-                }
-                return Dns.GetHostEntry(server).AddressList[0];
-            }
-            catch (Exception)
-            {
-                throw new Exception($"Error trying to get the ip doing a DNS resolve from: {server}");
-            }
-        }
-
-        public static string StringFromEndpoint(IPEndPoint endpoint)
-        {
-            return $"{endpoint.Address}:{endpoint.Port}";
         }
 
         public string CalculateSha256StringHash(string input)

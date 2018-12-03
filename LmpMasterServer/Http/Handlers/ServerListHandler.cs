@@ -20,7 +20,7 @@ namespace LmpMasterServer.Http.Handlers
 
         private static string GetServerList()
         {
-            var servers = Lidgren.MasterServer.ServerDictionary.Values.Select(s => s.Info).ToArray();
+            var servers = Lidgren.MasterServer.ServerDictionary.Values.Select(s => (ServerInfo)s).ToArray();
 
             using (var stringWriter = new StringWriter())
             using (var writer = new HtmlTextWriter(stringWriter))

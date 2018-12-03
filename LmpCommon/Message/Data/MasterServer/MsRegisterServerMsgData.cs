@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using LmpCommon.Message.Base;
 using LmpCommon.Message.Types;
+using System.Net;
 
 namespace LmpCommon.Message.Data.MasterServer
 {
@@ -12,7 +13,7 @@ namespace LmpCommon.Message.Data.MasterServer
 
         public long Id;
         public string ServerVersion;
-        public string InternalEndpoint;
+        public IPEndPoint InternalEndpoint;
         public bool Password;
         public bool Cheats;
         public bool ModControl;
@@ -72,7 +73,7 @@ namespace LmpCommon.Message.Data.MasterServer
 
             Id = lidgrenMsg.ReadInt64();
             ServerVersion = lidgrenMsg.ReadString();
-            InternalEndpoint = lidgrenMsg.ReadString();
+            InternalEndpoint = lidgrenMsg.ReadIPEndPoint();
 
             Password = lidgrenMsg.ReadBoolean();
             Cheats = lidgrenMsg.ReadBoolean();

@@ -56,8 +56,8 @@ namespace LmpClient.Systems.Ping
         {
             if (NetworkServerList.Servers.TryGetValue(serverId, out var serverInfo))
             {
-                var host = serverInfo.ExternalEndpoint.Substring(0, serverInfo.ExternalEndpoint.LastIndexOf(":", StringComparison.InvariantCulture));
-                var ping = new UnityEngine.Ping(host);
+                var host = serverInfo.ExternalEndpoint.Address;
+                var ping = new UnityEngine.Ping(host.ToString());
 
                 var elapsedSecs = 0;
 

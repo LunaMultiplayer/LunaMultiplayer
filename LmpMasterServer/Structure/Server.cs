@@ -10,113 +10,60 @@ using System.Threading.Tasks;
 
 namespace LmpMasterServer.Structure
 {
-    public class Server
+    public class Server : ServerInfo
     {
         private static DateTime _lastCountryRequestTime = DateTime.MinValue;
 
         private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries =
             new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
-
-        private static readonly TimeoutConcurrentDictionary<IPEndPoint, bool> DedicatedServers =
-            new TimeoutConcurrentDictionary<IPEndPoint, bool>(TimeSpan.FromHours(30).TotalMilliseconds);
-
+        
         public long LastRegisterTime { get; set; }
-        public IPEndPoint InternalEndpoint { get; set; }
-        public IPEndPoint ExternalEndpoint { get; set; }
-        public ServerInfo Info { get; set; }
 
         public void Update(MsRegisterServerMsgData msg)
         {
-            InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
+            InternalEndpoint = msg.InternalEndpoint;
             LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
-            Info.InternalEndpoint = $"{InternalEndpoint.Address}:{InternalEndpoint.Port}";
-            Info.Cheats = msg.Cheats;
-            Info.Password = msg.Password;
-            Info.ServerVersion = msg.ServerVersion;
-            Info.Description = msg.Description;
-            Info.Website = msg.Website;
-            Info.WebsiteText = msg.WebsiteText;
-            Info.DropControlOnExit = msg.DropControlOnExit;
-            Info.DropControlOnExitFlight = msg.DropControlOnExitFlight;
-            Info.DropControlOnVesselSwitching = msg.DropControlOnVesselSwitching;
-            Info.GameMode = msg.GameMode;
-            Info.MaxPlayers = msg.MaxPlayers;
-            Info.ModControl = msg.ModControl;
-            Info.DedicatedServer = DedicatedServerRetriever.IsDedicatedServer(ExternalEndpoint);
-            Info.PlayerCount = msg.PlayerCount;
-            Info.ServerName = msg.ServerName;
-            Info.WarpMode = msg.WarpMode;
-            Info.TerrainQuality = msg.TerrainQuality;
+            Cheats = msg.Cheats;
+            Password = msg.Password;
+            ServerVersion = msg.ServerVersion;
+            ServerName = msg.ServerName.Substring(0, 30);
+            Description = msg.Description.Substring(0, 200);
+            Country = msg.CountryCode.ToUpper();
+            Website = msg.Website.Substring(0, 60);
+            WebsiteText = msg.WebsiteText.Substring(0, 15);
+            DropControlOnExit = msg.DropControlOnExit;
+            DropControlOnExitFlight = msg.DropControlOnExitFlight;
+            DropControlOnVesselSwitching = msg.DropControlOnVesselSwitching;
+            GameMode = msg.GameMode;
+            MaxPlayers = msg.MaxPlayers;
+            ModControl = msg.ModControl;
+            DedicatedServer = DedicatedServerRetriever.IsDedicatedServer(ExternalEndpoint);
+            PlayerCount = msg.PlayerCount;
+            WarpMode = msg.WarpMode;
+            TerrainQuality = msg.TerrainQuality;
 
-            if (string.IsNullOrEmpty(Info.Country))
-                SetCountryFromEndpoint(Info, ExternalEndpoint);
+            if (string.IsNullOrEmpty(Country))
+                SetCountryFromEndpoint(this, ExternalEndpoint);
 
-            Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
-            Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
-            Info.Website = Info.Website.Length > 60 ? Info.Website.Substring(0, 60) : Info.Website;
-            Info.WebsiteText = Info.WebsiteText.Length > 15 ? Info.WebsiteText.Substring(0, 15) : Info.WebsiteText;
-
-            if (!string.IsNullOrEmpty(Info.Website) && !Info.Website.Contains("://"))
+            if (!Website.Contains("://"))
             {
-                Info.Website = "http://" + Info.Website;
+                Website = "http://" + Website;
             }
 
-            if (string.IsNullOrEmpty(Info.WebsiteText) && !string.IsNullOrEmpty(Info.Website))
+            if (string.IsNullOrEmpty(WebsiteText) && !string.IsNullOrEmpty(Website))
             {
-                Info.WebsiteText = "URL";
+                WebsiteText = "URL";
             }
         }
 
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
-            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port) :
+            Id = msg.Id;
+            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? 
+                new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port) :
                 externalEndpoint;
 
-            InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
-            LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
-            Info = new ServerInfo
-            {
-                Id = msg.Id,
-                ExternalEndpoint = $"{ExternalEndpoint.Address}:{ExternalEndpoint.Port}",
-                InternalEndpoint = $"{InternalEndpoint.Address}:{InternalEndpoint.Port}",
-                Cheats = msg.Cheats,
-                Password = msg.Password,
-                ServerVersion = msg.ServerVersion,
-                ServerName = msg.ServerName,
-                Description = msg.Description,
-                Country = msg.CountryCode,
-                Website = msg.Website,
-                WebsiteText = msg.WebsiteText,
-                DropControlOnExit = msg.DropControlOnExit,
-                DropControlOnExitFlight = msg.DropControlOnExitFlight,
-                DropControlOnVesselSwitching = msg.DropControlOnVesselSwitching,
-                GameMode = msg.GameMode,
-                MaxPlayers = msg.MaxPlayers,
-                ModControl = msg.ModControl,
-                PlayerCount = msg.PlayerCount,
-                WarpMode = msg.WarpMode,
-                TerrainQuality = msg.TerrainQuality,
-                DedicatedServer = DedicatedServerRetriever.IsDedicatedServer(ExternalEndpoint)
-            };
-
-            if (string.IsNullOrEmpty(Info.Country))
-                SetCountryFromEndpoint(Info, ExternalEndpoint);
-
-            Info.Country = Info.Country.ToUpper();
-            Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
-            Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
-            Info.Website = Info.Website.Length > 60 ? Info.Website.Substring(0, 60) : Info.Website;
-            Info.WebsiteText = Info.WebsiteText.Length > 15 ? Info.WebsiteText.Substring(0, 15) : Info.WebsiteText;
-
-            if (!string.IsNullOrEmpty(Info.Website) && !Info.Website.Contains("://"))
-            {
-                Info.Website = "http://" + Info.Website;
-            }
-
-            if (string.IsNullOrEmpty(Info.WebsiteText) && !string.IsNullOrEmpty(Info.Website))
-            {
-                Info.WebsiteText = "URL";
-            }
+            Update(msg);
         }
 
         private static void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)

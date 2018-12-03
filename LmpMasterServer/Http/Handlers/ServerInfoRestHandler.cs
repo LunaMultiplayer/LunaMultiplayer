@@ -11,7 +11,7 @@ namespace LmpMasterServer.Http.Handlers
     {
         public Task<IEnumerable<ServerInfo>> Get(IHttpRequest request)
         {
-            return Task.FromResult(Lidgren.MasterServer.ServerDictionary.Values.Select(s => s.Info));
+            return Task.FromResult(Lidgren.MasterServer.ServerDictionary.Values.Select(s => (ServerInfo)s));
         }
         public Task<ServerInfo> GetItem(IHttpRequest request)
         {

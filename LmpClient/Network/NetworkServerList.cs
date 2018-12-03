@@ -96,7 +96,7 @@ namespace LmpClient.Network
         {
             if (Servers.TryGetValue(serverId, out var serverInfo))
             {
-                var serverEndpoint = Common.CreateEndpointFromString(serverInfo.ExternalEndpoint);
+                var serverEndpoint = serverInfo.ExternalEndpoint;
                 if (serverEndpoint == null) return;
 
                 if (ServerIsInLocalLan(serverEndpoint))
@@ -109,12 +109,11 @@ namespace LmpClient.Network
                     try
                     {
                         var token = RandomString(10);
-                        var ownEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
 
                         var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
                         msgData.Id = serverId;
                         msgData.Token = token;
-                        msgData.InternalEndpoint = Common.StringFromEndpoint(ownEndpoint);
+                        msgData.InternalEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
 
                         var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 

@@ -130,7 +130,7 @@ namespace LmpMasterServer.Lidgren
                         {
                             ConsoleLogger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
                             peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
-                                Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
+                                msgData.InternalEndpoint,// client internal
                                 netMsg.SenderEndPoint,// client external
                                 msgData.Token); // request token
                         }
@@ -156,28 +156,28 @@ namespace LmpMasterServer.Lidgren
             {
                 var msgData = MasterServerMessageFactory.CreateNewMessageData<MsReplyServersMsgData>();
 
-                msgData.Id = server.Info.Id;
-                msgData.ServerVersion = server.Info.ServerVersion;
-                msgData.Password = server.Info.Password;
-                msgData.Cheats = server.Info.Cheats;
-                msgData.Description = server.Info.Description;
-                msgData.Country = server.Info.Country;
-                msgData.Website = server.Info.Website;
-                msgData.WebsiteText = server.Info.WebsiteText;
-                msgData.DropControlOnExit = server.Info.DropControlOnExit;
-                msgData.DropControlOnExitFlight = server.Info.DropControlOnExitFlight;
-                msgData.DropControlOnVesselSwitching = server.Info.DropControlOnVesselSwitching;
-                msgData.ExternalEndpoint = $"{server.ExternalEndpoint.Address}:{server.ExternalEndpoint.Port}";
-                msgData.GameMode = server.Info.GameMode;
-                msgData.InternalEndpoint = $"{server.InternalEndpoint.Address}:{server.InternalEndpoint.Port}";
-                msgData.MaxPlayers = server.Info.MaxPlayers;
-                msgData.ModControl = server.Info.ModControl;
-                msgData.DedicatedServer = server.Info.DedicatedServer;
-                msgData.PlayerCount = server.Info.PlayerCount;
-                msgData.ServerName = server.Info.ServerName;
-                msgData.VesselUpdatesSendMsInterval = server.Info.VesselUpdatesSendMsInterval;
-                msgData.WarpMode = server.Info.WarpMode;
-                msgData.TerrainQuality = server.Info.TerrainQuality;
+                msgData.Id = server.Id;
+                msgData.ServerVersion = server.ServerVersion;
+                msgData.Password = server.Password;
+                msgData.Cheats = server.Cheats;
+                msgData.Description = server.Description;
+                msgData.Country = server.Country;
+                msgData.Website = server.Website;
+                msgData.WebsiteText = server.WebsiteText;
+                msgData.DropControlOnExit = server.DropControlOnExit;
+                msgData.DropControlOnExitFlight = server.DropControlOnExitFlight;
+                msgData.DropControlOnVesselSwitching = server.DropControlOnVesselSwitching;
+                msgData.ExternalEndpoint = server.ExternalEndpoint;
+                msgData.GameMode = server.GameMode;
+                msgData.InternalEndpoint = server.InternalEndpoint;
+                msgData.MaxPlayers = server.MaxPlayers;
+                msgData.ModControl = server.ModControl;
+                msgData.DedicatedServer = server.DedicatedServer;
+                msgData.PlayerCount = server.PlayerCount;
+                msgData.ServerName = server.ServerName;
+                msgData.VesselUpdatesSendMsInterval = server.VesselUpdatesSendMsInterval;
+                msgData.WarpMode = server.WarpMode;
+                msgData.TerrainQuality = server.TerrainQuality;
 
                 var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
                 var outMsg = peer.CreateMessage(msg.GetMessageSize());
@@ -221,7 +221,7 @@ namespace LmpMasterServer.Lidgren
                     foreach (var serverId in serversIdsToRemove)
                     {
                         ConsoleLogger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
-                        ServerDictionary.TryRemove(serverId.Key, out var _);
+                        ServerDictionary.TryRemove(serverId.Key, out _);
                     }
 
                     await Task.Delay(ServerRemoveMsCheckInterval);

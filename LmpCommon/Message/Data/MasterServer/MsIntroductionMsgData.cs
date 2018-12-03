@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using LmpCommon.Message.Base;
 using LmpCommon.Message.Types;
+using System.Net;
 
 namespace LmpCommon.Message.Data.MasterServer
 {
@@ -11,7 +12,7 @@ namespace LmpCommon.Message.Data.MasterServer
         public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.Introduction;
 
         public long Id;
-        public string InternalEndpoint;
+        public IPEndPoint InternalEndpoint;
         public string Token;
 
         public override string ClassName { get; } = nameof(MsIntroductionMsgData);
@@ -30,7 +31,7 @@ namespace LmpCommon.Message.Data.MasterServer
             base.InternalDeserialize(lidgrenMsg);
 
             Id = lidgrenMsg.ReadInt64();
-            InternalEndpoint = lidgrenMsg.ReadString();
+            InternalEndpoint = lidgrenMsg.ReadIPEndPoint();
             Token = lidgrenMsg.ReadString();
         }
 

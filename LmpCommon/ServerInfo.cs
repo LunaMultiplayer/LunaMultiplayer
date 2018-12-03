@@ -1,11 +1,13 @@
-﻿namespace LmpCommon
+﻿using System.Net;
+
+namespace LmpCommon
 {
     public class ServerInfo
     {
         public long Id { get; set; }
         public string Country { get; set; }
-        public string InternalEndpoint { get; set; }
-        public string ExternalEndpoint { get; set; }
+        public IPEndPoint InternalEndpoint { get; set; }
+        public IPEndPoint ExternalEndpoint { get; set; }
         public string ServerVersion { get; set; }
         public string DisplayedPing { get; set; } = "?";
         public int Ping { get; set; } = int.MaxValue;
