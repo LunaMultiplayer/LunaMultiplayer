@@ -2,25 +2,31 @@
 using LmpCommon.Time;
 using LmpGlobal;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace LmpCommon
+namespace LmpCommon.RepoRetrievers
 {
     /// <summary>
     /// This class retrieves the dedicated servers stored in
     /// <see cref="RepoConstants.DedicatedServersListUrl"/>
-    /// </summary>
+    /// </summary> 
     public static class DedicatedServerRetriever
     {
-        public static ConcurrentHashSet<string> DedicatedServers
+        private static readonly ConcurrentHashSet<IPEndPoint> DedicatedServerEndpoints = new ConcurrentHashSet<IPEndPoint>();
+        private static ConcurrentHashSet<IPEndPoint> DedicatedServers
         {
             get
             {
-                if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
+                if (_lastRequestTime == DateTime.MinValue)
+                {
+                    //Run syncronously if it's the first time
+                    RefreshDedicatedServersList();
+                    _lastRequestTime = LunaComputerTime.UtcNow;
+                }
+                else if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
                 {
                     Task.Run(() => RefreshDedicatedServersList());
                     _lastRequestTime = LunaComputerTime.UtcNow;
@@ -32,16 +38,10 @@ namespace LmpCommon
 
         private static readonly TimeSpan MaxRequestInterval = TimeSpan.FromMinutes(30);
         private static DateTime _lastRequestTime = DateTime.MinValue;
-        private static readonly ConcurrentHashSet<string> DedicatedServerEndpoints = new ConcurrentHashSet<string>();
-
-        public static bool IsDedicatedServer(string endpoint)
-        {
-            return DedicatedServers.Contains(endpoint);
-        }
-
+        
         public static bool IsDedicatedServer(IPEndPoint endpoint)
         {
-            return DedicatedServers.Contains(Common.StringFromEndpoint(endpoint));
+            return DedicatedServers.Contains(endpoint);
         }
 
         /// <summary>
@@ -49,11 +49,9 @@ namespace LmpCommon
         /// </summary>
         private static void RefreshDedicatedServersList()
         {
-            DedicatedServerEndpoints.Clear();
             try
             {
                 ServicePointManager.ServerCertificateValidationCallback = GithubCertification.MyRemoteCertificateValidationCallback;
-                var parsedServers = new List<IPEndPoint>();
                 using (var client = new WebClient())
                 using (var stream = client.OpenRead(RepoConstants.DedicatedServersListUrl))
                 {
@@ -65,6 +63,8 @@ namespace LmpCommon
                             .Split('\n')
                             .Where(s => !s.StartsWith("#") && s.Contains(":") && !string.IsNullOrEmpty(s))
                             .ToArray();
+
+                        DedicatedServerEndpoints.Clear();
 
                         foreach (var server in servers)
                         {
@@ -78,7 +78,7 @@ namespace LmpCommon
 
                                 if (ip != null && ushort.TryParse(ipPort[1], out var port))
                                 {
-                                    parsedServers.Add(new IPEndPoint(ip, port));
+                                    DedicatedServers.Add(new IPEndPoint(ip, port));
                                 }
                             }
                             catch (Exception)
@@ -88,9 +88,6 @@ namespace LmpCommon
                         }
                     }
                 }
-
-                foreach (var endpoint in parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}"))
-                    DedicatedServerEndpoints.Add(endpoint);
             }
             catch (Exception)
             {

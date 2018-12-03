@@ -5,12 +5,14 @@ using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.MasterServer;
 using LmpCommon.Message.Types;
+using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
 using LmpGlobal;
 using LmpMasterServer.Structure;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ConsoleLogger = LmpCommon.ConsoleLogger;
 using LogLevels = LmpCommon.LogLevels;
@@ -93,10 +95,8 @@ namespace LmpMasterServer.Lidgren
 
         private static void CheckMasterServerListed()
         {
-            var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-            var ownEndpoint = $"{LunaNetUtils.GetOwnExternalIpAddress()}:{Port}";
-
-            if(!servers.Contains(ownEndpoint))
+            var ownEndpoint = new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), Port);
+            if(!MasterServerRetriever.MasterServers.Contains(ownEndpoint))
             {
                 ConsoleLogger.Log(LogLevels.Error, $"You're not in the master-servers URL ({RepoConstants.MasterServersListShortUrl}) " +
                     "Clients/Servers won't see you");

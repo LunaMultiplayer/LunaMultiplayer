@@ -56,7 +56,7 @@
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ConsoleUtil.cs" />
     <Compile Include="ContentChecker.cs" />
-    <Compile Include="BannedIpsRetriever.cs" />
+    <Compile Include="RepoRetrievers\BannedIpsRetriever.cs" />
     <Compile Include="Enums\AdminResponse.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />
@@ -81,7 +81,7 @@
     <Compile Include="Locks\LockQueryContract.cs" />
     <Compile Include="Locks\LockQueryKerbal.cs" />
     <Compile Include="LunaMath.cs" />
-    <Compile Include="DedicatedServerRetriever.cs" />
+    <Compile Include="RepoRetrievers\DedicatedServerRetriever.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
     <Compile Include="Message\Client\AdminCliMsg.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Locks\LockStore.cs" />
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="LunaNetUtils.cs" />
-    <Compile Include="MasterServerRetriever.cs" />
+    <Compile Include="RepoRetrievers\MasterServerRetriever.cs" />
     <Compile Include="Message\Base\FactoryBase.cs" />
     <Compile Include="Message\Base\MessageBase.cs" />
     <Compile Include="Message\Base\MessageData.cs" />

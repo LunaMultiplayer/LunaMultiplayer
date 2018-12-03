@@ -39,7 +39,7 @@ namespace LmpCommon
             return IPAddress.Loopback;
         }
 
-        public static string GetOwnExternalIpAddress()
+        public static IPAddress GetOwnExternalIpAddress()
         {
             var currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
 
@@ -50,7 +50,7 @@ namespace LmpCommon
             if (string.IsNullOrEmpty(currentIpAddress))
                 currentIpAddress = TryGetIpAddress("http://checkip.dyndns.org");
 
-            return currentIpAddress;
+            return IPAddress.TryParse(currentIpAddress, out var ipAddress) ? ipAddress : null;
         }
 
         private static string TryGetIpAddress(string url)

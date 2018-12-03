@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace LmpCommon.Collection
@@ -69,6 +70,22 @@ namespace LmpCommon.Collection
                 try
                 {
                     return _hashSet.Count;
+                }
+                finally
+                {
+                    if (_lock.IsReadLockHeld) _lock.ExitReadLock();
+                }
+            }
+        }
+
+        public T[] GetValues
+        {
+            get
+            {
+                _lock.EnterReadLock();
+                try
+                {
+                    return _hashSet.ToArray();
                 }
                 finally
                 {

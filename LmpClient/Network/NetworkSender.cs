@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
 using LmpCommon.Message.Interface;
+using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace LmpClient.Network
 {
@@ -64,7 +65,7 @@ namespace LmpClient.Network
 
                 if (message is IMasterServerMessageBase)
                 {
-                    foreach (var masterServer in NetworkServerList.MasterServers)
+                    foreach (var masterServer in MasterServerRetriever.MasterServers.GetValues)
                     {
                         //Don't reuse lidgren messages, he does that on it's own
                         var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(message.GetMessageSize());

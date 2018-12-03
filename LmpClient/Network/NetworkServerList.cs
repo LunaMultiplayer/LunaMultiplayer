@@ -3,6 +3,7 @@ using LmpClient.Systems.Ping;
 using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.MasterServer;
+using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
 using System;
 using System.Collections.Concurrent;
@@ -17,23 +18,6 @@ namespace LmpClient.Network
         public static string Password { get; set; } = string.Empty;
 
         private static string LastIntroductionToken { get; set; }
-
-        private static readonly List<IPEndPoint> PrivMasterServers = new List<IPEndPoint>();
-        public static List<IPEndPoint> MasterServers
-        {
-            get
-            {
-                lock (PrivMasterServers)
-                {
-                    if (!PrivMasterServers.Any())
-                    {
-                        var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-                        PrivMasterServers.AddRange(servers.Select(Common.CreateEndpointFromString).Where(e => e != null));
-                    }
-                    return PrivMasterServers;
-                }
-            }
-        }
 
         public static ConcurrentDictionary<long, ServerInfo> Servers { get; } = new ConcurrentDictionary<long, ServerInfo>();
         private static readonly Random Random = new Random();
@@ -150,7 +134,7 @@ namespace LmpClient.Network
         /// </summary>
         private static bool ServerIsInLocalLan(IPEndPoint serverEndPoint)
         {
-            return LunaNetUtils.GetOwnExternalIpAddress() == serverEndPoint.Address.ToString();
+            return Equals(LunaNetUtils.GetOwnExternalIpAddress(), serverEndPoint.Address);
         }
 
         /// <summary>

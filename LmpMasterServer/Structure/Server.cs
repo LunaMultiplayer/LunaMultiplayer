@@ -1,5 +1,6 @@
 ﻿using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
+using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
 using LmpMasterServer.Geolocalization;
 using System;
@@ -68,7 +69,7 @@ namespace LmpMasterServer.Structure
 
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
-            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? new IPEndPoint(IPAddress.Parse(LunaNetUtils.GetOwnExternalIpAddress()), externalEndpoint.Port) :
+            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port) :
                 externalEndpoint;
 
             InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);

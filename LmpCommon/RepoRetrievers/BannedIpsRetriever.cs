@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace LmpCommon
+namespace LmpCommon.RepoRetrievers
 {
     /// <summary>
     /// This class retrieves the banned ips stored in <see cref="RepoConstants.BannedIpListUrl"/>
@@ -19,7 +19,13 @@ namespace LmpCommon
         {
             get
             {
-                if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
+                if (_lastRequestTime == DateTime.MinValue)
+                {
+                    //Run syncronously if it's the first time
+                    RefreshBannedIps();
+                    _lastRequestTime = LunaComputerTime.UtcNow;
+                }
+                else if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
                 {
                     Task.Run(() => RefreshBannedIps());
                     _lastRequestTime = LunaComputerTime.UtcNow;
@@ -42,7 +48,6 @@ namespace LmpCommon
         /// </summary>
         private static void RefreshBannedIps()
         {
-            BannedIps.Clear();
             try
             {
                 ServicePointManager.ServerCertificateValidationCallback = GithubCertification.MyRemoteCertificateValidationCallback;
@@ -55,6 +60,8 @@ namespace LmpCommon
                         var ips = content
                             .Trim().Split('\n')
                             .Where(s => !s.StartsWith("#") && !string.IsNullOrEmpty(s)).ToArray();
+
+                        PrivBannedIPs.Clear();
 
                         foreach (var ip in ips)
                         {

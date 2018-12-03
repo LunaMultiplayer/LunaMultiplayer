@@ -1,13 +1,12 @@
 ﻿using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.MasterServer;
+using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
 using Server.Context;
 using Server.Log;
 using Server.Settings.Structures;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -15,27 +14,8 @@ namespace Server.Lidgren
 {
     public class LidgrenMasterServer
     {
-        private static List<IPEndPoint> MasterServerEndpoints { get; } = new List<IPEndPoint>();
-
         private static int MasterServerRegistrationMsInterval => MasterServerSettings.SettingsStore.MasterServerRegistrationMsInterval < 5000 ?
             5000 : MasterServerSettings.SettingsStore.MasterServerRegistrationMsInterval;
-
-        public static async void RefreshMasterServersList()
-        {
-            if (!MasterServerSettings.SettingsStore.RegisterWithMasterServer) return;
-
-            while (ServerContext.ServerRunning)
-            {
-                lock (MasterServerEndpoints)
-                {
-                    MasterServerEndpoints.Clear();
-                    MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
-                        .Select(Common.CreateEndpointFromString).Where(e => e != null));
-                }
-
-                await Task.Delay((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
-            }
-        }
 
         public static async void RegisterWithMasterServer()
         {
@@ -78,12 +58,9 @@ namespace Server.Lidgren
                 msgData.WebsiteText = msgData.WebsiteText.Length > 15 ? msgData.WebsiteText.Substring(0, 15) : msgData.WebsiteText;
                 msgData.ServerName = msgData.ServerName.Length > 30 ? msgData.ServerName.Substring(0, 30) : msgData.ServerName;
 
-                lock (MasterServerEndpoints)
+                foreach (var masterServer in MasterServerRetriever.MasterServers.GetValues)
                 {
-                    foreach (var masterServer in MasterServerEndpoints)
-                    {
-                        RegisterWithMasterServer(msgData, masterServer);
-                    }
+                    RegisterWithMasterServer(msgData, masterServer);
                 }
 
                 await Task.Delay(MasterServerRegistrationMsInterval);
