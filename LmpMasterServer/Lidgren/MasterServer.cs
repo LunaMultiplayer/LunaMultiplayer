@@ -112,6 +112,9 @@ namespace LmpMasterServer.Lidgren
         {
             try
             {
+                if (BannedServerRetriever.IsBannedServer(netMsg.SenderEndPoint))
+                    return;
+
                 switch ((message?.Data as MsBaseMsgData)?.MasterServerMessageSubType)
                 {
                     case MasterServerMessageSubType.RegisterServer:
@@ -211,7 +214,8 @@ namespace LmpMasterServer.Lidgren
                 {
                     var serversIdsToRemove = ServerDictionary
                         .Where(s => LunaNetworkTime.UtcNow.Ticks - s.Value.LastRegisterTime >
-                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
+                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks || 
+                                    BannedServerRetriever.IsBannedServer(s.Value.ExternalEndpoint))
                         .ToArray();
 
                     foreach (var serverId in serversIdsToRemove)

@@ -11,51 +11,51 @@ using System.Threading.Tasks;
 namespace LmpCommon
 {
     /// <summary>
-    /// This class retrieves the dedicated servers stored in
-    /// <see cref="RepoConstants.DedicatedServersListUrl"/>
+    /// This class retrieves the banned servers stored in
+    /// <see cref="RepoConstants.BannedServersListUrl"/>
     /// </summary>
-    public static class DedicatedServerRetriever
+    public static class BannedServerRetriever
     {
-        public static ConcurrentHashSet<string> DedicatedServers
+        public static ConcurrentHashSet<string> BannedServers
         {
             get
             {
                 if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
                 {
-                    Task.Run(() => RefreshDedicatedServersList());
+                    Task.Run(() => RefreshBannedServersList());
                     _lastRequestTime = LunaComputerTime.UtcNow;
                 }
 
-                return DedicatedServerEndpoints;
+                return BannedServerEndpoints;
             }
         }
 
-        private static readonly TimeSpan MaxRequestInterval = TimeSpan.FromMinutes(30);
+        private static readonly TimeSpan MaxRequestInterval = TimeSpan.FromMinutes(10);
         private static DateTime _lastRequestTime = DateTime.MinValue;
-        private static readonly ConcurrentHashSet<string> DedicatedServerEndpoints = new ConcurrentHashSet<string>();
+        private static readonly ConcurrentHashSet<string> BannedServerEndpoints = new ConcurrentHashSet<string>();
 
-        public static bool IsDedicatedServer(string endpoint)
+        public static bool IsBannedServer(string endpoint)
         {
-            return DedicatedServers.Contains(endpoint);
+            return BannedServers.Contains(endpoint);
         }
 
-        public static bool IsDedicatedServer(IPEndPoint endpoint)
+        public static bool IsBannedServer(IPEndPoint endpoint)
         {
-            return DedicatedServers.Contains(Common.StringFromEndpoint(endpoint));
+            return BannedServers.Contains(Common.StringFromEndpoint(endpoint));
         }
 
         /// <summary>
-        /// Download the dedicated server list from the <see cref="RepoConstants.DedicatedServersListUrl"/> and return the ones that are correctly written
+        /// Download the banned server list from the <see cref="RepoConstants.BannedServersListUrl"/> and return the ones that are correctly written
         /// </summary>
-        private static void RefreshDedicatedServersList()
+        private static void RefreshBannedServersList()
         {
-            DedicatedServerEndpoints.Clear();
+            BannedServerEndpoints.Clear();
             try
             {
                 ServicePointManager.ServerCertificateValidationCallback = GithubCertification.MyRemoteCertificateValidationCallback;
                 var parsedServers = new List<IPEndPoint>();
                 using (var client = new WebClient())
-                using (var stream = client.OpenRead(RepoConstants.DedicatedServersListUrl))
+                using (var stream = client.OpenRead(RepoConstants.BannedServersListUrl))
                 {
                     using (var reader = new StreamReader(stream))
                     {
@@ -90,7 +90,7 @@ namespace LmpCommon
                 }
 
                 foreach (var endpoint in parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}"))
-                    DedicatedServerEndpoints.Add(endpoint);
+                    BannedServerEndpoints.Add(endpoint);
             }
             catch (Exception)
             {
