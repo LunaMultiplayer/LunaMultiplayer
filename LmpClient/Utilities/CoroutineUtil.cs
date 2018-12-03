@@ -37,11 +37,11 @@ namespace LmpClient.Utilities
             {
                 try
                 {
-                    action();
+                    action.Invoke();
                 }
                 catch (Exception e)
                 {
-                    LunaLog.LogError($"Error in delayed coroutine: {routineName}. Details {e}");
+                    LunaLog.LogError($"Error in run coroutine: {routineName}. Details {e}");
                 }
                 action.Invoke();
                 amountOfFrames--;
@@ -56,13 +56,12 @@ namespace LmpClient.Utilities
             {
                 try
                 {
-                    action();
+                    action.Invoke();
                 }
                 catch (Exception e)
                 {
-                    LunaLog.LogError($"Error in delayed coroutine: {routineName}. Details {e}");
+                    LunaLog.LogError($"Error in run coroutine: {routineName}. Details {e}");
                 }
-                action.Invoke();
                 amountOfSeconds -= Time.deltaTime;
 
                 yield return 0;
