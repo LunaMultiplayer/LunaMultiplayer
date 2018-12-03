@@ -30,7 +30,7 @@ namespace Server.Lidgren
                 {
                     MasterServerEndpoints.Clear();
                     MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
-                        .Select(Common.CreateEndpointFromString));
+                        .Select(Common.CreateEndpointFromString).Where(e => e != null));
                 }
 
                 await Task.Delay((int)TimeSpan.FromMinutes(10).TotalMilliseconds);

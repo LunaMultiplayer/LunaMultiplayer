@@ -28,7 +28,7 @@ namespace LmpClient.Network
                     if (!PrivMasterServers.Any())
                     {
                         var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-                        PrivMasterServers.AddRange(servers.Select(Common.CreateEndpointFromString));
+                        PrivMasterServers.AddRange(servers.Select(Common.CreateEndpointFromString).Where(e => e != null));
                     }
                     return PrivMasterServers;
                 }
@@ -113,6 +113,8 @@ namespace LmpClient.Network
             if (Servers.TryGetValue(serverId, out var serverInfo))
             {
                 var serverEndpoint = Common.CreateEndpointFromString(serverInfo.ExternalEndpoint);
+                if (serverEndpoint == null) return;
+
                 if (ServerIsInLocalLan(serverEndpoint))
                 {
                     LunaLog.Log("Server is in LAN. Skipping NAT punch");
