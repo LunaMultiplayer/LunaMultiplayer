@@ -11,7 +11,7 @@ namespace LmpClient.Utilities
             MainSystem.Singleton.StartCoroutine(RoutineWithCondition(routineName, action, condition, maxFrameTries));
         }
 
-        public static void StartDelayedRoutine(string routineName, Action action, int framesDelay)
+        public static void StartFrameDelayedRoutine(string routineName, Action action, int framesDelay)
         {
             MainSystem.Singleton.StartCoroutine(DelayFrames(routineName, action, framesDelay));
         }
@@ -21,7 +21,7 @@ namespace LmpClient.Utilities
             MainSystem.Singleton.StartCoroutine(DelaySeconds(routineName, action, delayInSec));
         }
 
-        public static void ExecuteAction(string routineName, Action action, int amountOfFrames)
+        public static void ExecuteFrameAction(string routineName, Action action, int amountOfFrames)
         {
             MainSystem.Singleton.StartCoroutine(RunForFrames(routineName, action, amountOfFrames));
         }

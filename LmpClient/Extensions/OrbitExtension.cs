@@ -4,6 +4,11 @@ namespace LmpClient.Extensions
 {
     public static class OrbitExtension
     {
+        public static string PrintOrbitDataIndex(this Orbit orbit)
+        {
+            return $"INCLINATION;ECCENTRICITY;SEMIMAJORAXIS;LONGITUDEOFASCENDINGNODE;ARGUMENTOFPERIAPSIS;MEANANOMALYATEPOCH;EPOCH";
+        }
+
         public static string PrintOrbitData(this Orbit orbit)
         {
             return $"{orbit.inclination.ToString(CultureInfo.InvariantCulture)};{orbit.eccentricity.ToString(CultureInfo.InvariantCulture)};" +
