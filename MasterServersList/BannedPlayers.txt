@@ -1,5 +1,3 @@
 #Here you specify the ips or hostnames of all the servers that will banned followed by ":" and the port. 
 #Then each master server will look if the server it's listed here so it's skipped
 
-#Cloning usernames
-37.187.251.11:8800
