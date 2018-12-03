@@ -21,13 +21,61 @@ namespace LmpClient.Utilities
             MainSystem.Singleton.StartCoroutine(DelaySeconds(routineName, action, delayInSec));
         }
 
+        public static void ExecuteAction(string routineName, Action action, int amountOfFrames)
+        {
+            MainSystem.Singleton.StartCoroutine(RunForFrames(routineName, action, amountOfFrames));
+        }
+
+        public static void ExecuteAction(string routineName, Action action, float amountOfSeconds)
+        {
+            MainSystem.Singleton.StartCoroutine(RunForSeconds(routineName, action, amountOfSeconds));
+        }
+
+        private static IEnumerator RunForFrames(string routineName, Action action, int amountOfFrames)
+        {
+            while (amountOfFrames > 0)
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception e)
+                {
+                    LunaLog.LogError($"Error in delayed coroutine: {routineName}. Details {e}");
+                }
+                action.Invoke();
+                amountOfFrames--;
+
+                yield return 0;
+            }
+        }
+
+        private static IEnumerator RunForSeconds(string routineName, Action action, float amountOfSeconds)
+        {
+            while (amountOfSeconds > 0)
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception e)
+                {
+                    LunaLog.LogError($"Error in delayed coroutine: {routineName}. Details {e}");
+                }
+                action.Invoke();
+                amountOfSeconds -= Time.deltaTime;
+
+                yield return 0;
+            }
+        }
+
         private static IEnumerator DelaySeconds(string routineName, Action action, float delayInSec)
         {
             if (delayInSec > 0)
                 yield return new WaitForSeconds(delayInSec);
             try
             {
-                action();
+                action.Invoke();
             }
             catch (Exception e)
             {
@@ -47,7 +95,7 @@ namespace LmpClient.Utilities
 
             try
             {
-                action();
+                action.Invoke();
             }
             catch (Exception e)
             {
@@ -69,7 +117,7 @@ namespace LmpClient.Utilities
 
             try
             {
-                action();
+                action.Invoke();
             }
             catch (Exception e)
             {
