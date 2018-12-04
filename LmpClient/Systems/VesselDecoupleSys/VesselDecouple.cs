@@ -34,7 +34,9 @@ namespace LmpClient.Systems.VesselDecoupleSys
             {
                 if (protoPart.partRef)
                 {
+                    VesselDecoupleSystem.Singleton.ManuallyDecouplingVesselId = protoPart.partRef.vessel.id;
                     VesselDecoupleSystem.Singleton.IgnoreEvents = true;
+
                     protoPart.partRef.decouple(BreakForce);
                     protoPart.partRef.vessel.id = NewVesselId;
                     
@@ -44,7 +46,9 @@ namespace LmpClient.Systems.VesselDecoupleSys
                     protoPart.partRef.vessel.SetImmortal(true);
 
                     VesselPositionSystem.Singleton.ForceUpdateVesselPosition(NewVesselId);
+
                     VesselDecoupleSystem.Singleton.IgnoreEvents = false;
+                    VesselDecoupleSystem.Singleton.ManuallyDecouplingVesselId = Guid.Empty;
                 }
             }
         }

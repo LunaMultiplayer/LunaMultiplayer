@@ -16,6 +16,7 @@ namespace LmpClient.Systems.VesselUndockSys
         public ConcurrentDictionary<Guid, VesselUndockQueue> VesselUndocks { get; } = new ConcurrentDictionary<Guid, VesselUndockQueue>();
         private VesselUndockEvents VesselUndockEvents { get; } = new VesselUndockEvents();
         public bool IgnoreEvents { get; set; }
+        public Guid ManuallyUndockingVesselId { get; set; }
 
         #endregion
 

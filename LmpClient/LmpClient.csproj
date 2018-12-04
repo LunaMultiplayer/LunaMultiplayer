@@ -116,6 +116,7 @@
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
     <Compile Include="Harmony\FlightResultsDialog_SetupGUI.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
+    <Compile Include="Harmony\Part_Die.cs" />
     <Compile Include="Harmony\Part_CheckPartTemp.cs" />
     <Compile Include="Harmony\Part_CheckPartPressure.cs" />
     <Compile Include="Harmony\Part_Couple.cs" />

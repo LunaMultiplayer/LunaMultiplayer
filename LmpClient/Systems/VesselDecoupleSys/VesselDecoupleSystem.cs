@@ -16,6 +16,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
         public ConcurrentDictionary<Guid, VesselDecoupleQueue> VesselDecouples { get; } = new ConcurrentDictionary<Guid, VesselDecoupleQueue>();
         private VesselDecoupleEvents VesselDecoupleEvents { get; } = new VesselDecoupleEvents();
         public bool IgnoreEvents { get; set; }
+        public Guid ManuallyDecouplingVesselId { get; set; }
 
         #endregion
 

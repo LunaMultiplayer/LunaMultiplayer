@@ -36,7 +36,9 @@ namespace LmpClient.Systems.VesselUndockSys
             {
                 if (protoPart.partRef)
                 {
+                    VesselUndockSystem.Singleton.ManuallyUndockingVesselId = protoPart.partRef.vessel.id;
                     VesselUndockSystem.Singleton.IgnoreEvents = true;
+
                     protoPart.partRef.Undock(DockedInfo);
                     protoPart.partRef.vessel.id = NewVesselId;
                     
@@ -46,7 +48,9 @@ namespace LmpClient.Systems.VesselUndockSys
                     protoPart.partRef.vessel.SetImmortal(true);
 
                     VesselPositionSystem.Singleton.ForceUpdateVesselPosition(NewVesselId);
+
                     VesselUndockSystem.Singleton.IgnoreEvents = false;
+                    VesselUndockSystem.Singleton.ManuallyUndockingVesselId = Guid.Empty;
                 }
             }
         }
