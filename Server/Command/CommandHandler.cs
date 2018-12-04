@@ -39,7 +39,7 @@ namespace Server.Command
         /// <summary>
         /// We receive the console inputs with a pipe
         /// </summary>
-        public async void ThreadMain()
+        public static async void ThreadMain()
         {
             try
             {

@@ -13,7 +13,7 @@ namespace Server.Client
 {
     public class ClientMainThread
     {
-        public async void ThreadMain()
+        public static async void ThreadMain()
         {
             try
             {

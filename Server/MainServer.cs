@@ -92,13 +92,13 @@ namespace Server
                 WebServer.StartWebServer();
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
-                LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain(), CancellationTokenSrc.Token);
+                LongRunTaskFactory.StartNew(CommandHandler.ThreadMain, CancellationTokenSrc.Token);
                 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformation, CancellationTokenSrc.Token));
 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPort, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThread, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => new ClientMainThread().ThreadMain(), CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(ClientMainThread.ThreadMain, CancellationTokenSrc.Token));
 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformBackups(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceiveingMessages, CancellationTokenSrc.Token));
