@@ -2,7 +2,6 @@
 using LmpClient.Base;
 using LmpClient.Systems.Network;
 using LmpClient.Systems.SettingsSys;
-using LmpCommon;
 using LmpCommon.Enums;
 using LmpCommon.Message.Base;
 using System;
@@ -53,90 +52,68 @@ namespace LmpClient.Network
 
         public static void ConnectToServer(string address, int port, string password)
         {
-            try
-            {
-                while (!ConnectThread?.IsCompleted ?? false)
-                {
-                    Thread.Sleep(500);
-                }
-
-                ConnectThread = SystemBase.TaskFactory.StartNew(() => ConnectToServer($"{address}:{port}", password));
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error calling the connect thread {e}");
-            }
+            ConnectToServer(new IPEndPoint(IPAddress.Parse(address), port), password);
         }
 
-        #region Private
-
-        private static void ConnectToServer(string endpointString, string serverPassword)
+        public static void ConnectToServer(IPEndPoint endpoint, string password)
         {
-            if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
-                NetworkMain.ClientConnection.Start();
-
-            if (MainSystem.NetworkState <= ClientState.Disconnected)
+            while (!ConnectThread?.IsCompleted ?? false)
             {
-                var endpoint = CreateEndpoint(endpointString);
-                if (endpoint == null) return;
+                Thread.Sleep(500);
+            }
 
-                MainSystem.Singleton.Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
-                LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
+            ConnectThread = SystemBase.TaskFactory.StartNew(() =>
+            {
+                if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
+                    NetworkMain.ClientConnection.Start();
 
-                MainSystem.NetworkState = ClientState.Connecting;
-                try
+                if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
-                    var outmsg = NetworkMain.ClientConnection.CreateMessage(serverPassword.GetByteCount());
-                    outmsg.Write(serverPassword);
-                    
-                    NetworkMain.ClientConnection.Connect(endpoint, outmsg);
+                    if (endpoint == null) return;
 
-                    //Force send of packets
-                    NetworkMain.ClientConnection.FlushSendQueue();
+                    MainSystem.Singleton.Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
+                    LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
-                    var connectionTrials = 0;
-                    while (MainSystem.NetworkState >= ClientState.Connecting &&
-                            NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected &&
-                           connectionTrials < SettingsSystem.CurrentSettings.ConnectionTries)
+                    MainSystem.NetworkState = ClientState.Connecting;
+                    try
                     {
-                        connectionTrials++;
-                        Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
+                        var outMsg = NetworkMain.ClientConnection.CreateMessage(password.GetByteCount());
+                        outMsg.Write(password);
+
+                        NetworkMain.ClientConnection.Connect(endpoint, outMsg);
+
+                        //Force send of packets
+                        NetworkMain.ClientConnection.FlushSendQueue();
+
+                        var connectionTrials = 0;
+                        while (MainSystem.NetworkState >= ClientState.Connecting &&
+                                NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected &&
+                               connectionTrials < SettingsSystem.CurrentSettings.ConnectionTries)
+                        {
+                            connectionTrials++;
+                            Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
+                        }
+
+                        if (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Connected)
+                        {
+                            LunaLog.Log($"[LMP]: Connected to {endpoint.Address}:{endpoint.Port}");
+                            MainSystem.NetworkState = ClientState.Connected;
+                        }
+                        else
+                        {
+                            Disconnect(MainSystem.NetworkState == ClientState.Connecting ? "Initial connection timeout" : "Cancelled connection");
+                        }
                     }
-
-                    if (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Connected)
+                    catch (Exception e)
                     {
-                        LunaLog.Log($"[LMP]: Connected to {endpoint.Address}:{endpoint.Port}");
-                        MainSystem.NetworkState = ClientState.Connected;
-                    }
-                    else
-                    {
-                        Disconnect(MainSystem.NetworkState == ClientState.Connecting ? "Initial connection timeout" : "Cancelled connection");
+                        NetworkMain.HandleDisconnectException(e);
                     }
                 }
-                catch (Exception e)
+                else
                 {
-                    NetworkMain.HandleDisconnectException(e);
+                    LunaLog.LogError("[LMP]: Cannot connect when we are already trying to connect");
                 }
-            }
-            else
-            {
-                LunaLog.LogError("[LMP]: Cannot connect when we are already trying to connect");
-            }
+            });
         }
-
-        private static IPEndPoint CreateEndpoint(string endpointString)
-        {
-            try
-            {
-                return Common.CreateEndpointFromString(endpointString);
-            }
-            catch (Exception)
-            {
-                MainSystem.Singleton.Status = $"Invalid IP address: {endpointString}";
-                return null;
-            }
-        }
-        
-        #endregion
     }
 }

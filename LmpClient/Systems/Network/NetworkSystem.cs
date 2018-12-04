@@ -96,7 +96,7 @@ namespace LmpClient.Systems.Network
                     MainSystem.Singleton.Status = "Handshaking successful";
                     SettingsSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingSettings;
-                    NetworkSimpleMessageSender.SendSettingsRequest();
+                    SettingsSystem.Singleton.MessageSender.SendSettingsRequest();
 
                     _lastStateTime = LunaComputerTime.UtcNow;
                     break;
@@ -114,7 +114,7 @@ namespace LmpClient.Systems.Network
                         VesselSyncSystem.Singleton.Enabled = true;
                         VesselSyncSystem.Singleton.MessageSender.SendVesselsSyncMsg();
                         MainSystem.NetworkState = ClientState.SyncingKerbals;
-                        NetworkSimpleMessageSender.SendKerbalsRequest();
+                        KerbalSystem.Singleton.MessageSender.SendKerbalsRequest();
                         _lastStateTime = LunaComputerTime.UtcNow;
                     }
                     break;
@@ -127,7 +127,7 @@ namespace LmpClient.Systems.Network
                     MainSystem.Singleton.Status = "Kerbals synced";
                     WarpSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingWarpsubspaces;
-                    NetworkSimpleMessageSender.SendWarpSubspacesRequest();
+                    WarpSystem.Singleton.MessageSender.SendWarpSubspacesRequest();
                     _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingWarpsubspaces:
@@ -139,7 +139,7 @@ namespace LmpClient.Systems.Network
                     MainSystem.Singleton.Status = "Warp subspaces synced";
                     PlayerColorSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingColors;
-                    NetworkSimpleMessageSender.SendColorsRequest();
+                    PlayerColorSystem.Singleton.MessageSender.SendColorsRequest();
                     _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingColors:
@@ -151,7 +151,7 @@ namespace LmpClient.Systems.Network
                     MainSystem.Singleton.Status = "Player colors synced";
                     FlagSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingFlags;
-                    NetworkSimpleMessageSender.SendFlagsRequest();
+                    FlagSystem.Singleton.MessageSender.SendFlagsRequest();
                     _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingFlags:
@@ -164,7 +164,7 @@ namespace LmpClient.Systems.Network
                     StatusSystem.Singleton.Enabled = true;
                     PlayerConnectionSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingPlayers;
-                    NetworkSimpleMessageSender.SendPlayersRequest();
+                    StatusSystem.Singleton.MessageSender.SendPlayersRequest();
                     _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingPlayers:
@@ -176,7 +176,7 @@ namespace LmpClient.Systems.Network
                     MainSystem.Singleton.Status = "Players synced";
                     ScenarioSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingScenarios;
-                    NetworkSimpleMessageSender.SendScenariosRequest();
+                    ScenarioSystem.Singleton.MessageSender.SendScenariosRequest();
                     _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingScenarios:

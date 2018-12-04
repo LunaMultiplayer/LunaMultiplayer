@@ -13,7 +13,6 @@ namespace LmpClient.Network
     public class NetworkSender
     {
         public static ConcurrentQueue<IMessageBase> OutgoingMessages { get; set; } = new ConcurrentQueue<IMessageBase>();
-        public static NetworkSimpleMessageSender SimpleMessageSender { get; } = new NetworkSimpleMessageSender();
 
         /// <summary>
         /// Main sending thread

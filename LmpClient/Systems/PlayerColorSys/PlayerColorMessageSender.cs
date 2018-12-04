@@ -14,6 +14,11 @@ namespace LmpClient.Systems.PlayerColorSys
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<PlayerColorCliMsg>(msg)));
         }
+        
+        public void SendColorsRequest()
+        {
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<PlayerColorCliMsg, PlayerColorRequestMsgData>()));
+        }
 
         public void SendPlayerColorToServer()
         {

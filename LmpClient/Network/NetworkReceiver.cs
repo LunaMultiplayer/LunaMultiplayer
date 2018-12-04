@@ -56,7 +56,7 @@ namespace LmpClient.Network
     public class NetworkReceiver
     {
         /// <summary>
-        /// Main receiveing thread
+        /// Main receiving thread. Here we map each received message to the specific system
         /// </summary>
         public static void ReceiveMain()
         {

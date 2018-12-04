@@ -402,7 +402,6 @@
     <Compile Include="Systems\Motd\MotdMessageSender.cs" />
     <Compile Include="Systems\Motd\MotdSystem.cs" />
     <Compile Include="Network\NetworkServerList.cs" />
-    <Compile Include="Network\NetworkSimpleMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageHandler.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionSystem.cs" />

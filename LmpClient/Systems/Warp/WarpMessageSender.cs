@@ -16,6 +16,11 @@ namespace LmpClient.Systems.Warp
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<WarpCliMsg>(msg)));
         }
 
+        public void SendWarpSubspacesRequest()
+        {
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<WarpCliMsg, WarpSubspacesRequestMsgData>()));
+        }
+
         /// <summary>
         /// Sends the EXISTING subspace that we jumped into
         /// </summary>

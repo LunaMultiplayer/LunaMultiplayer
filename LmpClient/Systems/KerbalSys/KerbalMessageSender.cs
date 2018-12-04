@@ -18,6 +18,11 @@ namespace LmpClient.Systems.KerbalSys
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg)));
         }
 
+        public void SendKerbalsRequest()
+        {
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<KerbalCliMsg, KerbalsRequestMsgData>()));
+        }
+
         public void SendKerbalRemove(string kerbalName)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<KerbalRemoveMsgData>();

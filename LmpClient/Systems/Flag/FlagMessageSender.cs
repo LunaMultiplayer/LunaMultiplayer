@@ -1,11 +1,11 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Flag;
 using LmpCommon.Message.Interface;
+using System;
 
 namespace LmpClient.Systems.Flag
 {
@@ -14,6 +14,11 @@ namespace LmpClient.Systems.Flag
         public void SendMessage(IMessageData msg)
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<FlagCliMsg>(msg)));
+        }
+
+        public void SendFlagsRequest()
+        {
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<FlagCliMsg, FlagListRequestMsgData>()));
         }
 
         public FlagDataMsgData GetFlagMessageData(string flagName, byte[] flagData)
