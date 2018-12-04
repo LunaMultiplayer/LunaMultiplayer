@@ -150,8 +150,8 @@ namespace LmpClient.Systems.Lock
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
             msgData.Lock = lockDefinition;
 
-            LockStore.RemoveLock(lockDefinition);
             LockEvent.onLockRelease.Fire(lockDefinition);
+            LockStore.RemoveLock(lockDefinition);
 
             MessageSender.SendMessage(msgData);
         }
