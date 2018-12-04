@@ -3,11 +3,9 @@ using LmpClient.Systems.Ping;
 using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.MasterServer;
-using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Net;
 using UniLinq;
 
@@ -46,7 +44,7 @@ namespace LmpClient.Network
                 //Therefore we assert that the received message data is of MsReplyServersMsgData
                 if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
-                    //Filter servers with diferent version
+                    //Filter servers with different version
                     if (!LmpVersioning.IsCompatible(data.ServerVersion))
                         return;
 
@@ -96,13 +94,10 @@ namespace LmpClient.Network
         {
             if (Servers.TryGetValue(serverId, out var serverInfo))
             {
-                var serverEndpoint = serverInfo.ExternalEndpoint;
-                if (serverEndpoint == null) return;
-
-                if (ServerIsInLocalLan(serverEndpoint))
+                if (ServerIsInLocalLan(serverInfo.ExternalEndpoint))
                 {
                     LunaLog.Log("Server is in LAN. Skipping NAT punch");
-                    NetworkConnection.ConnectToServer(serverEndpoint.Address.ToString(), serverEndpoint.Port, Password);
+                    NetworkConnection.ConnectToServer(serverInfo.InternalEndpoint, Password);
                 }
                 else
                 {
@@ -158,7 +153,7 @@ namespace LmpClient.Network
         }
 
         /// <summary>
-        /// Generates a random string, usefull for token
+        /// Generates a random string, useful for token
         /// </summary>
         private static string RandomString(int length)
         {
