@@ -1,5 +1,4 @@
 ﻿using LmpClient.Events;
-using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
 using System;
@@ -33,7 +32,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
 
         #endregion
 
-        public void ProcessPartMethodSync()
+        public void ProcessPartFieldSync()
         {
             var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null) return;

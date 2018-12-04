@@ -49,7 +49,8 @@ namespace LmpClient.Windows.Vessels.Structures
             if (GUILayout.Button("Reload"))
             {
                 var vessel = FlightGlobals.FindVessel(VesselId);
-                vessel.protoVessel = vessel.BackupVessel();
+                
+                //Do not call BackupVessel() as that would overwrite the proto with the actual vessel values and mess up part syncs
                 VesselLoader.LoadVessel(vessel.protoVessel, true);
             }
             GUILayout.EndHorizontal();

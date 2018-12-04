@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Events;
 using LmpClient.Systems.TimeSync;
+using System;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselPartSyncFieldSys
@@ -74,7 +74,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
                 while (keyVal.Value.TryPeek(out var update) && update.GameTime <= TimeSyncSystem.UniversalTime)
                 {
                     keyVal.Value.TryDequeue(out update);
-                    update.ProcessPartMethodSync();
+                    update.ProcessPartFieldSync();
                     keyVal.Value.Recycle(update);
                 }
             }
