@@ -1,7 +1,8 @@
-﻿using LmpClient.VesselUtilities;
-using System;
+﻿using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselPositionSys;
+using LmpClient.VesselUtilities;
+using System;
 
 namespace LmpClient.Systems.VesselDecoupleSys
 {
@@ -38,6 +39,9 @@ namespace LmpClient.Systems.VesselDecoupleSys
                     protoPart.partRef.vessel.id = NewVesselId;
                     
                     LockSystem.Singleton.FireVesselLocksEvents(NewVesselId);
+
+                    //Forcefully set the vessel as immortal
+                    protoPart.partRef.vessel.SetImmortal(true);
 
                     VesselPositionSystem.Singleton.ForceUpdateVesselPosition(NewVesselId);
                     VesselDecoupleSystem.Singleton.IgnoreEvents = false;
