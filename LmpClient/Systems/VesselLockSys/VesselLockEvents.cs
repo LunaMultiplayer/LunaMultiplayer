@@ -105,6 +105,12 @@ namespace LmpClient.Systems.VesselLockSys
                     }
                     else
                     {
+                        //Somebody else got the control of our active vessel so start spectating
+                        if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
+                        {
+                            System.StartSpectating(lockDefinition.VesselId);
+                        }
+
                         //If some other player got the control lock release the update lock in case we have it
                         if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(lockDefinition.VesselId, SettingsSystem.CurrentSettings.PlayerName))
                         {
@@ -120,11 +126,6 @@ namespace LmpClient.Systems.VesselLockSys
                         }
 
                         //TODO:We should release the kerbals locks?
-                    }
-
-                    if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
-                    {
-                        System.StartSpectating(lockDefinition.VesselId);
                     }
                     break;
                 case LockType.Update:
