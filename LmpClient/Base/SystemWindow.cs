@@ -1,8 +1,9 @@
-﻿using System.Reflection;
-using LmpClient.Base.Interface;
+﻿using LmpClient.Base.Interface;
+using System.Reflection;
 
 namespace LmpClient.Base
 {
+    /// <inheritdoc />
     /// <summary>
     /// Base class for systems that also implement a window (chat for example)
     /// </summary>

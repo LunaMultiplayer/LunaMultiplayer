@@ -42,7 +42,6 @@ namespace LmpClient.Network
         /// <summary>
         /// Adds a new message to the queue
         /// </summary>
-        /// <param name="message"></param>
         public static void QueueOutgoingMessage(IMessageBase message)
         {
             OutgoingMessages.Enqueue(message);
@@ -51,7 +50,6 @@ namespace LmpClient.Network
         /// <summary>
         /// Sends the network message. It will skip client messages to send when we are not connected
         /// </summary>
-        /// <param name="message"></param>
         private static void SendNetworkMessage(IMessageBase message)
         {
             if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)

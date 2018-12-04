@@ -354,7 +354,10 @@ namespace LmpClient.Base
                 };
 
                 BoldGreenLabelStyle = new GUIStyle(Skin.label)
-                { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = XKCDColors.KSPBadassGreen } };
+                {
+                    fontStyle = FontStyle.Bold,
+                    normal = new GUIStyleState { textColor = XKCDColors.KSPBadassGreen }
+                };
 
                 BoldRedLabelStyle = new GUIStyle(Skin.label)
                 {

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LmpClient.Base.Interface;
+﻿using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpCommon.Message.Interface;
+using System;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Base
 {
@@ -19,7 +19,6 @@ namespace LmpClient.Base
         
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
-        public virtual IInputHandler InputHandler { get; } = null;
 
         public virtual void EnqueueMessage(IServerMessageBase msg)
         {
@@ -71,8 +70,8 @@ namespace LmpClient.Base
             }
             catch (Exception e)
             {
-                LunaLog.LogError($"[LMP]: Error handling Message type {msg.Data.GetType()}, exception: {e}");
-                NetworkConnection.Disconnect($"Error handling {msg.Data.GetType()} Message");
+                LunaLog.LogError($"Error handling message type {msg.Data.GetType()}. Details: {e}");
+                NetworkConnection.Disconnect($"Error handling message type {msg.Data.GetType()}. Details: {e}");
             }
             finally
             {

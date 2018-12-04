@@ -9,6 +9,8 @@ using System.Linq;
 
 namespace LmpClient.Base
 {
+    /// <inheritdoc cref="SystemBase" />
+    /// <inheritdoc cref="ISystem" />
     /// <summary>
     /// System base class. This class is made for a grouping logic.
     /// </summary>

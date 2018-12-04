@@ -12,7 +12,7 @@ namespace LmpClient.Base
     }
 
     /// <summary>
-    /// This class defines a routine that must be executed during an update or a fixed update
+    /// This class defines a routine that must be executed during an update or a fixed/late update
     /// </summary>
     public class RoutineDefinition
     {

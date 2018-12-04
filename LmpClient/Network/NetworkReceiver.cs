@@ -90,7 +90,7 @@ namespace LmpClient.Network
                                     var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
                                     if (deserializedMsg != null)
                                     {
-                                        EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);
+                                        QueueMessageToSystem(deserializedMsg as IServerMessageBase);
                                     }
                                 }
                                 catch (Exception e)
@@ -127,10 +127,9 @@ namespace LmpClient.Network
         }
 
         /// <summary>
-        /// Enqueues the received message to the correct system
+        /// Queues the received message to the correct system
         /// </summary>
-        /// <param name="msg"></param>
-        private static void EnqueueMessageToSystem(IServerMessageBase msg)
+        private static void QueueMessageToSystem(IServerMessageBase msg)
         {
             switch (msg.MessageType)
             {

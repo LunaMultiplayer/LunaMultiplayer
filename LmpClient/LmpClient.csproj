@@ -65,7 +65,6 @@
     <Compile Include="Base\CachedConcurrentQueue.cs" />
     <Compile Include="Base\FixedSizedConcurrentQueue.cs" />
     <Compile Include="Base\HarmonyPatcher.cs" />
-    <Compile Include="Base\Interface\IInputHandler.cs" />
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
