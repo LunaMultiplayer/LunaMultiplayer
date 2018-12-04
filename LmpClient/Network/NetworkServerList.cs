@@ -7,18 +7,14 @@ using LmpCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Net;
-using UniLinq;
+using UnityEngine;
 
 namespace LmpClient.Network
 {
     public class NetworkServerList
     {
         public static string Password { get; set; } = string.Empty;
-
-        private static string LastIntroductionToken { get; set; }
-
         public static ConcurrentDictionary<long, ServerInfo> Servers { get; } = new ConcurrentDictionary<long, ServerInfo>();
-        private static readonly Random Random = new Random();
         
         /// <summary>
         /// Sends a request servers to the master servers
@@ -103,16 +99,14 @@ namespace LmpClient.Network
                 {
                     try
                     {
-                        var token = RandomString(10);
-
                         var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
                         msgData.Id = serverId;
-                        msgData.Token = token;
+                        msgData.Token = SystemInfo.deviceUniqueIdentifier;
                         msgData.InternalEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
 
                         var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
-                        LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
+                        LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {SystemInfo.deviceUniqueIdentifier}");
                         NetworkSender.QueueOutgoingMessage(introduceMsg);
                     }
                     catch (Exception e)
@@ -136,30 +130,11 @@ namespace LmpClient.Network
         /// </summary>
         public static void HandleNatIntroduction(NetIncomingMessage msg)
         {
-            try
+            if (SystemInfo.deviceUniqueIdentifier == msg.ReadString())
             {
-                var token = msg.ReadString();
-                if (LastIntroductionToken != token)
-                {
-                    LastIntroductionToken = token;
-                    LunaLog.Log($"[LMP]: Nat introduction success to {msg.SenderEndPoint} token is: {token}");
-                    NetworkConnection.ConnectToServer(msg.SenderEndPoint.Address.ToString(), msg.SenderEndPoint.Port, Password);
-                }
+                LunaLog.Log($"[LMP]: Nat introduction success against {msg.SenderEndPoint}. Token: {SystemInfo.deviceUniqueIdentifier}");
+                NetworkConnection.ConnectToServer(msg.SenderEndPoint, Password);
             }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error handling NAT introduction: {e}");
-            }
-        }
-
-        /// <summary>
-        /// Generates a random string, useful for token
-        /// </summary>
-        private static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[Random.Next(s.Length)]).ToArray());
         }
     }
 }

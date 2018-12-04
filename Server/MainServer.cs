@@ -84,11 +84,11 @@ namespace Server
                 WarpSystem.Reset();
 
                 LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
-
+                
+                LidgrenServer.SetupLidgrenServer();
                 LmpPortMapper.OpenLmpPort().Wait();
                 LmpPortMapper.OpenWebPort().Wait();
                 ServerContext.ServerRunning = true;
-                LidgrenServer.SetupLidgrenServer();
                 WebServer.StartWebServer();
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
@@ -157,12 +157,12 @@ namespace Server
         private static void Exit()
         {
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
-            ServerContext.Shutdown("Server is shutting down");
-
             ExitEvent.Exit();
             
             CancellationTokenSrc.Cancel();
             Task.WaitAll(TaskContainer.ToArray());
+
+            ServerContext.Shutdown("Server is shutting down");
 
             QuitEvent.Set();
         }

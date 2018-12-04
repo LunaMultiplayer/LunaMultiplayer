@@ -92,7 +92,7 @@ namespace Server.Upnp
         /// </summary>
         public static async Task CloseLmpPort()
         {
-            if (ConnectionSettings.SettingsStore.Upnp)
+            if (ConnectionSettings.SettingsStore.Upnp && ServerContext.ServerRunning)
             {
                 try
                 {
@@ -111,7 +111,7 @@ namespace Server.Upnp
         /// </summary>
         public static async Task CloseWebPort()
         {
-            if (ConnectionSettings.SettingsStore.Upnp && WebsiteSettings.SettingsStore.EnableWebsite)
+            if (ConnectionSettings.SettingsStore.Upnp && WebsiteSettings.SettingsStore.EnableWebsite && ServerContext.ServerRunning)
             {
                 try
                 {
