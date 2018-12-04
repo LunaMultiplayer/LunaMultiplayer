@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Utilities;
 using LmpClient.Windows.Mod;
 using LmpCommon.ModFile.Structure;
 using LmpCommon.Xml;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace LmpClient.Systems.Mod
 {
@@ -48,7 +48,7 @@ namespace LmpClient.Systems.Mod
 
         private static void SaveCurrentModConfigurationFile()
         {
-            var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Plugins", "Data", "LMPModControl.xml");
+            var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Data", "LMPModControl.xml");
             LunaXmlSerializer.WriteToXmlFile(System.ModControlData, tempModFilePath);
         }
 
