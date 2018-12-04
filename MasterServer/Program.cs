@@ -125,7 +125,9 @@ namespace MasterServer
                     var latestVersion = nightly ? AppveyorUpdateChecker.GetLatestVersion() : GithubUpdateChecker.GetLatestVersion();
                     if (latestVersion > CurrentVersion)
                     {
-                        var url = AppveyorUpdateDownloader.GetZipFileUrl(AppveyorProduct.MasterServer, DebugVersion);
+                        var url = nightly ? AppveyorUpdateDownloader.GetZipFileUrl(AppveyorProduct.MasterServer, DebugVersion) : 
+                            GithubUpdateDownloader.GetZipFileUrl(DebugVersion);
+
                         if (!string.IsNullOrEmpty(url))
                         {
                             ConsoleLogger.Log(LogLevels.Normal, $"Found a new updated version! Current: {CurrentVersion} Latest: {latestVersion}");
