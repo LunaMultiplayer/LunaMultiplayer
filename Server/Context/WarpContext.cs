@@ -1,6 +1,4 @@
-﻿using LmpCommon.Time;
-using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Linq;
 
 namespace Server.Context
@@ -10,7 +8,6 @@ namespace Server.Context
         public int Id { get; set; }
         public double Time { get; set; }
         public string Creator { get; set; }
-        public DateTime CurrentUtcTime => new DateTime(LunaNetworkTime.UtcNow.Ticks + TimeSpan.FromSeconds(Time).Ticks);
 
         public override string ToString()
         {
@@ -31,10 +28,9 @@ namespace Server.Context
 
     public class WarpContext
     {
-        public static int NextSubspaceId { get; set; }
+        public static volatile int NextSubspaceId;
 
-        public static ConcurrentDictionary<int, Subspace> Subspaces { get; set; } =
-            new ConcurrentDictionary<int, Subspace>();
+        public static readonly ConcurrentDictionary<int, Subspace> Subspaces = new ConcurrentDictionary<int, Subspace>();
 
         public static Subspace LatestSubspace => Subspaces.OrderByDescending(s => s.Value.Time).Select(s => s.Value).First();
     }

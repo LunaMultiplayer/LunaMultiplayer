@@ -20,11 +20,12 @@ namespace LmpMasterServer.Lidgren
 {
     public class MasterServer
     {
+        public static volatile bool RunServer;
+
         public static int ServerMsTick { get; set; } = 100;
         public static int ServerMsTimeout { get; set; } = 15000;
         public static int ServerRemoveMsCheckInterval { get; set; } = 5000;
         public static ushort Port { get; set; } = 8700;
-        public static bool RunServer { get; set; }
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
         private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 

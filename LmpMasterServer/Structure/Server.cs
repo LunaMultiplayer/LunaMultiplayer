@@ -6,20 +6,22 @@ using LmpMasterServer.Geolocalization;
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LmpMasterServer.Structure
 {
     public class Server : ServerInfo
     {
+        private static readonly TimeSpan MaxCountryRequestTimeMs = TimeSpan.FromSeconds(5);
         private static DateTime _lastCountryRequestTime = DateTime.MinValue;
 
         private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries =
             new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
-        
-        public long LastRegisterTime { get; set; }
 
-        public volatile bool RefreshingCountryCode;
+
+        private volatile bool _refreshingCountryCode;
+        public long LastRegisterTime { get; private set; }
 
         public void Update(MsRegisterServerMsgData msg)
         {
@@ -75,11 +77,15 @@ namespace LmpMasterServer.Structure
         {
             Task.Run(() =>
             {
-                if (RefreshingCountryCode) return;
+                if (_refreshingCountryCode) return;
 
-                RefreshingCountryCode = true;
+                _refreshingCountryCode = true;
                 try
                 {
+                    if (DateTime.UtcNow - _lastCountryRequestTime < MaxCountryRequestTimeMs)
+                        Thread.Sleep(MaxCountryRequestTimeMs);
+
+                    _lastCountryRequestTime = DateTime.UtcNow;
                     if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
                     {
                         server.Country = countryCode;
@@ -96,7 +102,7 @@ namespace LmpMasterServer.Structure
                 }
                 finally
                 {
-                    RefreshingCountryCode = false;
+                    _refreshingCountryCode = false;
                 }
             });
         }

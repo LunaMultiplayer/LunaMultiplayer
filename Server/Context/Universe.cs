@@ -1,7 +1,7 @@
-﻿using System;
-using ByteSizeLib;
+﻿using ByteSizeLib;
 using Server.Log;
 using Server.System;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -14,6 +14,9 @@ namespace Server.Context
         /// </summary>
         private static double GetUniverseSize()
         {
+            if (!Directory.Exists(ServerContext.UniverseDirectory))
+                return 0;
+
             var size = ByteSize.FromBytes(Directory.GetFiles(ServerContext.UniverseDirectory, "*.*")
                 .Select(f => new FileInfo(f)).Select(i => i.Length).Sum()).KiloBytes;
             

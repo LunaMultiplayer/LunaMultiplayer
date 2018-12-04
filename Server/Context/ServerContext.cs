@@ -14,20 +14,21 @@ namespace Server.Context
 {
     public static class ServerContext
     {
-        public static ConcurrentDictionary<IPEndPoint, ClientStructure> Clients { get; set; } =
-            new ConcurrentDictionary<IPEndPoint, ClientStructure>();
-
-        public static bool ServerRunning { get; set; }
-        public static bool ServerStarting { get; set; }
-        public static Stopwatch ServerClock { get; } = new Stopwatch();
-        public static long StartTime { get; set; }
-        public static string ModFilePath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.xml");
         public static int PlayerCount => ClientRetriever.GetActiveClientCount();
-        public static string UniverseDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe");
-        public static string ConfigDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");
+        public static readonly ConcurrentDictionary<IPEndPoint, ClientStructure> Clients = new ConcurrentDictionary<IPEndPoint, ClientStructure>();
+
+        public static volatile bool ServerRunning;
+        public static volatile bool ServerStarting;
+        public static volatile int Day;
+
         public static string Players => ClientRetriever.GetActivePlayerNames();
-        public static int Day { get; set; }
         public static bool UsePassword => !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
+
+        public static Stopwatch ServerClock = new Stopwatch();
+        public static long StartTime;
+        public static string ModFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.xml");
+        public static string UniverseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe");
+        public static string ConfigDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");
 
         // Configuration object
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")

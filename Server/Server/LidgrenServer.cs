@@ -62,7 +62,7 @@ namespace Server.Server
             ServerContext.ServerStarting = false;
         }
 
-        public static async void StartReceiveingMessages()
+        public static async void StartReceivingMessages()
         {
             try
             {

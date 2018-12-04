@@ -13,9 +13,10 @@ namespace LmpClient.Network
 {
     public class NetworkConnection
     {
-        public static bool ResetRequested { get; set; }
-        private static Task ConnectThread { get; set; }
-        private static object DisconnectLock { get; } = new object();
+        private static readonly object DisconnectLock = new object();
+        public static volatile bool ResetRequested;
+
+        private static volatile Task _connectThread;
 
         /// <summary>
         /// Disconnects the network system. You should kill threads ONLY from main thread
@@ -57,12 +58,12 @@ namespace LmpClient.Network
 
         public static void ConnectToServer(IPEndPoint endpoint, string password)
         {
-            while (!ConnectThread?.IsCompleted ?? false)
+            while (!_connectThread?.IsCompleted ?? false)
             {
                 Thread.Sleep(500);
             }
 
-            ConnectThread = SystemBase.TaskFactory.StartNew(() =>
+            _connectThread = SystemBase.TaskFactory.StartNew(() =>
             {
                 if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
                     NetworkMain.ClientConnection.Start();
