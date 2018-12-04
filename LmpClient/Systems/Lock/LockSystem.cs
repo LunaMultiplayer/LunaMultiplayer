@@ -159,7 +159,7 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Release the update lock on the given vessel
         /// </summary>
-        public void ReleaseUpdateLock(Guid vesselId, uint vesselPersistentId)
+        public void ReleaseUpdateLock(Guid vesselId)
         {
             ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
         }
