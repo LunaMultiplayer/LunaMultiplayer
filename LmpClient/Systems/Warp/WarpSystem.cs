@@ -113,8 +113,12 @@ namespace LmpClient.Systems.Warp
         {
             if (VesselCommon.IsSpectating)
             {
-                var targetPlayerSubspace = GetPlayerSubspace(LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id));
-                WarpIfSubspaceIsMoreAdvanced(targetPlayerSubspace);
+                var owner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id);
+                if (!string.IsNullOrEmpty(owner))
+                {
+                    var targetPlayerSubspace = GetPlayerSubspace(owner);
+                    WarpIfSubspaceIsMoreAdvanced(targetPlayerSubspace);
+                }
             }
         }
 
@@ -250,9 +254,7 @@ namespace LmpClient.Systems.Warp
 
         public int GetPlayerSubspace(string playerName)
         {
-            if (ClientSubspaceList.ContainsKey(playerName))
-                return ClientSubspaceList[playerName];
-            return 0;
+            return ClientSubspaceList.ContainsKey(playerName) ? ClientSubspaceList[playerName] : 0;
         }
 
         public void DisplayMessage(string messageText, float messageDuration)
