@@ -1,5 +1,4 @@
 ﻿using LmpClient.Base;
-using LmpClient.Extensions;
 using LmpCommon.Locks;
 
 namespace LmpClient.Systems.VesselImmortalSys
@@ -74,6 +73,16 @@ namespace LmpClient.Systems.VesselImmortalSys
         public void StartSpectating()
         {
             System.SetImmortalStateBasedOnLock(FlightGlobals.ActiveVessel);
+        }
+
+        public void VesselInitialized(Vessel vessel, bool fromShipAssembly)
+        {
+            System.SetImmortalStateBasedOnLock(vessel);
+        }
+
+        public void OnVesselCreated(Vessel vessel)
+        {
+            System.SetImmortalStateBasedOnLock(vessel);
         }
     }
 }

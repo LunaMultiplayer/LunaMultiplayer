@@ -34,6 +34,9 @@ namespace LmpClient.Systems.VesselImmortalSys
             LockEvent.onLockAcquire.Add(VesselImmortalEvents.OnLockAcquire);
             LockEvent.onLockRelease.Add(VesselImmortalEvents.OnLockRelease);
 
+            VesselInitializeEvent.onVesselInitialized.Add(VesselImmortalEvents.VesselInitialized);
+            GameEvents.onVesselCreate.Add(VesselImmortalEvents.OnVesselCreated);
+
             foreach (var vessel in FlightGlobals.VesselsLoaded)
             {
                 SetImmortalStateBasedOnLock(vessel);
@@ -51,6 +54,9 @@ namespace LmpClient.Systems.VesselImmortalSys
             SpectateEvent.onFinishedSpectating.Remove(VesselImmortalEvents.FinishSpectating);
             LockEvent.onLockAcquire.Remove(VesselImmortalEvents.OnLockAcquire);
             LockEvent.onLockRelease.Remove(VesselImmortalEvents.OnLockRelease);
+
+            VesselInitializeEvent.onVesselInitialized.Remove(VesselImmortalEvents.VesselInitialized);
+            GameEvents.onVesselCreate.Remove(VesselImmortalEvents.OnVesselCreated);
 
             foreach (var vessel in FlightGlobals.VesselsLoaded)
             {
