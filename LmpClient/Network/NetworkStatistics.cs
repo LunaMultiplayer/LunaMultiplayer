@@ -1,6 +1,6 @@
-﻿using System;
-using LmpCommon.Message.Base;
+﻿using LmpCommon.Message.Base;
 using LmpCommon.Time;
+using System;
 
 namespace LmpClient.Network
 {
@@ -9,9 +9,7 @@ namespace LmpClient.Network
         public static float PingMs { get; set; }
         public static DateTime LastReceiveTime { get; set; }
         public static DateTime LastSendTime { get; set; }
-
-        public static long TimeOffset => TimeSpan.FromSeconds(NetworkMain.ClientConnection?.ServerConnection?.RemoteTimeOffset ?? 0).Ticks;
-
+        
         public static long GetStatistics(string statType)
         {
             switch (statType)
@@ -25,7 +23,7 @@ namespace LmpClient.Network
                 case "Latency":
                     return (long)NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
                 case "TimeOffset":
-                    return TimeOffset;
+                    return (long)TimeSpan.FromSeconds(NetworkMain.ClientConnection?.ServerConnection?.RemoteTimeOffset ?? 0).TotalMilliseconds;
                 case "LastSendTime":
                     return (long)(LunaNetworkTime.UtcNow - LastSendTime).TotalMilliseconds;
                 case "LastReceiveTime":
