@@ -18,7 +18,8 @@ namespace LmpMasterServer.Structure
             new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
         
         public long LastRegisterTime { get; set; }
-        public bool RefreshingCountryCode { get; set; }
+
+        public volatile bool RefreshingCountryCode;
 
         public void Update(MsRegisterServerMsgData msg)
         {
@@ -77,20 +78,26 @@ namespace LmpMasterServer.Structure
                 if (RefreshingCountryCode) return;
 
                 RefreshingCountryCode = true;
-                if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
+                try
                 {
-                    server.Country = countryCode;
-                }
-                else
-                {
-                    server.Country = IpApi.GetCountry(externalEndpoint);
-                    if (string.IsNullOrEmpty(server.Country))
-                        server.Country = IpLocate.GetCountry(externalEndpoint);
+                    if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
+                    {
+                        server.Country = countryCode;
+                    }
+                    else
+                    {
+                        server.Country = IpApi.GetCountry(externalEndpoint);
+                        if (string.IsNullOrEmpty(server.Country))
+                            server.Country = IpLocate.GetCountry(externalEndpoint);
 
-                    if (!string.IsNullOrEmpty(server.Country))
-                        EndpointCountries.TryAdd(externalEndpoint, server.Country);
+                        if (!string.IsNullOrEmpty(server.Country))
+                            EndpointCountries.TryAdd(externalEndpoint, server.Country);
+                    }
                 }
-                RefreshingCountryCode = false;
+                finally
+                {
+                    RefreshingCountryCode = false;
+                }
             });
         }
 
