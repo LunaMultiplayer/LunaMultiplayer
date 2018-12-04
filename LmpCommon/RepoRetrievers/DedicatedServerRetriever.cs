@@ -70,7 +70,7 @@ namespace LmpCommon.RepoRetrievers
                         {
                             try
                             {
-                                DedicatedServers.Add(Common.CreateEndpointFromString(server));
+                                DedicatedServerEndpoints.Add(Common.CreateEndpointFromString(server));
                             }
                             catch (Exception)
                             {

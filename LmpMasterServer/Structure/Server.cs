@@ -26,11 +26,11 @@ namespace LmpMasterServer.Structure
             Cheats = msg.Cheats;
             Password = msg.Password;
             ServerVersion = msg.ServerVersion;
-            ServerName = msg.ServerName.Substring(0, 30);
-            Description = msg.Description.Substring(0, 200);
+            ServerName = msg.ServerName.Length > 30 ? msg.ServerName.Substring(0, 30) : msg.ServerName;
+            Description = msg.Description.Length > 200 ? msg.Description.Substring(0, 200) : msg.Description;
             Country = msg.CountryCode.ToUpper();
-            Website = msg.Website.Substring(0, 60);
-            WebsiteText = msg.WebsiteText.Substring(0, 15);
+            Website = msg.Website.Length > 60 ? msg.Website.Substring(0, 60) : msg.Website;
+            WebsiteText = msg.WebsiteText.Length > 15 ? msg.WebsiteText.Substring(0, 15) : msg.WebsiteText;
             DropControlOnExit = msg.DropControlOnExit;
             DropControlOnExitFlight = msg.DropControlOnExitFlight;
             DropControlOnVesselSwitching = msg.DropControlOnVesselSwitching;
