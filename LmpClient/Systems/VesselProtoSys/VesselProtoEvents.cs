@@ -10,7 +10,7 @@ namespace LmpClient.Systems.VesselProtoSys
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
     {        
         /// <summary>
-        /// When stop warping fastly spawn the missing vessels
+        /// When stop warping, spawn the missing vessels
         /// </summary>
         public void WarpStopped()
         {
