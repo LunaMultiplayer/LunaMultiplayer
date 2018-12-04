@@ -1,6 +1,5 @@
 ﻿using Harmony;
-using LmpClient.Systems.Lock;
-using LmpClient.Systems.SettingsSys;
+using LmpClient.Extensions;
 using LmpClient.Systems.VesselPositionSys;
 using LmpCommon.Enums;
 
@@ -18,21 +17,16 @@ namespace LmpClient.Harmony
         [HarmonyPrefix]
         private static bool PrefixCheckKill(Vessel __instance)
         {
-            if (MainSystem.NetworkState < ClientState.Connected) return true;
+            if (MainSystem.NetworkState < ClientState.Connected || !__instance) return true;
+
+            if (__instance.IsImmortal())
+                return false;
 
             //The vessel have updates queued as it was left there by a player in a future subspace
             if (VesselPositionSystem.Singleton.VesselHavePositionUpdatesQueued(__instance.id))
                 return false;
 
-            //Do not check against the locks as they generate garbage. Instead check if the vessel is immortal by looking at the crash tolerance
-
-            if (__instance.rootPart == null)
-            {
-                return !LockSystem.LockQuery.UnloadedUpdateLockExists(__instance.id) ||
-                       LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(__instance.id, SettingsSystem.CurrentSettings.PlayerName);
-            }
-
-            return __instance.rootPart.crashTolerance != float.PositiveInfinity;
+            return true;
         }
     }
 }

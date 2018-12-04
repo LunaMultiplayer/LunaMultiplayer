@@ -115,6 +115,9 @@
     <Compile Include="Harmony\FlightDriver_Start.cs" />
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
     <Compile Include="Harmony\FlightResultsDialog_SetupGUI.cs" />
+    <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
+    <Compile Include="Harmony\Part_CheckPartTemp.cs" />
+    <Compile Include="Harmony\Part_CheckPartPressure.cs" />
     <Compile Include="Harmony\Part_Couple.cs" />
     <Compile Include="Harmony\Part_Undock.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
@@ -134,6 +137,7 @@
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
+    <Compile Include="Harmony\Part_CheckPartG.cs" />
     <Compile Include="Harmony\Vessel_GoOnRails.cs" />
     <Compile Include="Harmony\Vessel_GoOffRails.cs" />
     <Compile Include="Harmony\PauseMenu_DrawRevertOptions.cs" />
