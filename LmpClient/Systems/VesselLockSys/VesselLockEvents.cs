@@ -103,18 +103,43 @@ namespace LmpClient.Systems.VesselLockSys
                         //This is done so even if the vessel has queued updates, we ignore them as we are controlling it
                         VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                     }
-                    else if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
+                    else
+                    {
+                        //If some other player got the control lock release the unloaded update lock just in case we have it
+                        if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(lockDefinition.VesselId, SettingsSystem.CurrentSettings.PlayerName))
+                        {
+                            LockSystem.LockStore.RemoveLock(LockSystem.LockQuery.GetUpdateLock(lockDefinition.VesselId));
+                            LockSystem.LockStore.AddOrUpdateLock(new LockDefinition(LockType.UnloadedUpdate, lockDefinition.PlayerName, lockDefinition.VesselId));
+                        }
+
+                        //If some other player got the control lock release the unloaded update lock just in case we have it
+                        if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(lockDefinition.VesselId, SettingsSystem.CurrentSettings.PlayerName))
+                        {
+                            LockSystem.LockStore.RemoveLock(LockSystem.LockQuery.GetUnloadedUpdateLock(lockDefinition.VesselId));
+                            LockSystem.LockStore.AddOrUpdateLock(new LockDefinition(LockType.UnloadedUpdate, lockDefinition.PlayerName, lockDefinition.VesselId));
+                        }
+                    }
+
+                    if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
                     {
                         System.StartSpectating(lockDefinition.VesselId);
                     }
                     break;
                 case LockType.Update:
                     if (lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
-                        return;
-
-                    LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
-                    LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
-
+                    {
+                        //If some other player got the update lock release the unloaded update lock  just in case we have it
+                        if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(lockDefinition.VesselId, SettingsSystem.CurrentSettings.PlayerName))
+                        {
+                            LockSystem.LockStore.RemoveLock(LockSystem.LockQuery.GetUnloadedUpdateLock(lockDefinition.VesselId));
+                            LockSystem.LockStore.AddOrUpdateLock(new LockDefinition(LockType.UnloadedUpdate, lockDefinition.PlayerName, lockDefinition.VesselId));
+                        }
+                    }
+                    else
+                    {
+                        LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
+                        LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);
+                    }
                     break;
             }
         }
@@ -161,7 +186,7 @@ namespace LmpClient.Systems.VesselLockSys
         public void VesselUnloading(Vessel vessel)
         {
             if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                LockSystem.Singleton.ReleaseUpdateLock(vessel.id, vessel.persistentId);
+                LockSystem.Singleton.ReleaseUpdateLock(vessel.id);
         }
 
         /// <summary>
