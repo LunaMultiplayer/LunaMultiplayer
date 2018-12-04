@@ -55,7 +55,7 @@ namespace MasterServer
 
             if (!File.Exists(DllPath))
             {
-                ConsoleLogger.Log(LogLevels.Error, $"Cannot find needed file {DllFileName}");
+                LogError($"Cannot find needed file {DllFileName}");
                 return;
             }
 
@@ -130,8 +130,8 @@ namespace MasterServer
 
                         if (!string.IsNullOrEmpty(url))
                         {
-                            ConsoleLogger.Log(LogLevels.Normal, $"Found a new updated version! Current: {CurrentVersion} Latest: {latestVersion}");
-                            ConsoleLogger.Log(LogLevels.Normal, "Downloading and restarting program....");
+                            Console.WriteLine($"Found a new updated version! Current: {CurrentVersion} Latest: {latestVersion}");
+                            Console.WriteLine("Downloading and restarting program....");
 
                             var zipFileName = url.Substring(url.LastIndexOf("/", StringComparison.Ordinal) + 1);
                             if (CommonDownloader.DownloadZipFile(url, Path.Combine(Directory.GetCurrentDirectory(), zipFileName)))
@@ -150,6 +150,13 @@ namespace MasterServer
                     await Task.Delay(5 * 1000 * 60);
                 }
             });
+        }
+
+        public static void LogError(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(msg);
+            Console.ResetColor();
         }
     }
 }
