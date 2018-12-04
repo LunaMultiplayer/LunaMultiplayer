@@ -1,6 +1,7 @@
 ﻿using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using System;
+using UniLinq;
 using UnityEngine;
 
 namespace LmpClient.Windows.Vessels.Structures
@@ -44,7 +45,8 @@ namespace LmpClient.Windows.Vessels.Structures
             {
                 if (GUILayout.Button("Release"))
                 {
-                    LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselId);
+                    var vessel = FlightGlobals.FindVessel(VesselId);
+                    LockSystem.Singleton.ReleaseAllVesselLocks(vessel ? vessel.GetVesselCrew().Select(c => c.name).ToArray() : null, VesselId);
                 }
             }
             GUILayout.EndHorizontal();
