@@ -112,7 +112,10 @@ namespace LmpMasterServer.Lidgren
         private static void HandleMessage(IMasterServerMessageBase message, NetIncomingMessage netMsg, NetPeer peer)
         {
             if (BannedIpsRetriever.IsBanned(netMsg.SenderEndPoint))
+            {
+                LunaLog.Debug($"Ignoring BANNED ip: {netMsg.SenderEndPoint}");
                 return;
+            }
 
             try
             {
