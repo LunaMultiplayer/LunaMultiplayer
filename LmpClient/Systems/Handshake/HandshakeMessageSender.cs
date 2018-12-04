@@ -5,7 +5,6 @@ using LmpClient.Systems.SettingsSys;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Handshake;
 using LmpCommon.Message.Interface;
-using UnityEngine;
 
 namespace LmpClient.Systems.Handshake
 {
@@ -20,7 +19,7 @@ namespace LmpClient.Systems.Handshake
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<HandshakeRequestMsgData>();
             msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            msgData.UniqueIdentifier = SystemInfo.deviceUniqueIdentifier;
+            msgData.UniqueIdentifier = MainSystem.UniqueIdentifier;
 
             SendMessage(msgData);
         }

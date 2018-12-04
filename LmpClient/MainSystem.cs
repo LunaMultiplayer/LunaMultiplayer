@@ -34,8 +34,9 @@ namespace LmpClient
         public static MainSystem Singleton { get; set; }
 
         #region Fields
-        
+
         public static string KspPath { get; private set; }
+        public static string UniqueIdentifier { get; private set; }
 
         private static ClientState _networkState;
         public static ClientState NetworkState
@@ -51,11 +52,11 @@ namespace LmpClient
                 NetworkSystem.NetworkStatus = value;
             }
         }
-        
+
         public string Status { get; set; }
 
         public const int WindowOffset = 1664147604;
-        
+
         public static bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
         public bool LmpSaveChecked { get; set; }
@@ -214,8 +215,9 @@ namespace LmpClient
         {
             Singleton = this;
             DontDestroyOnLoad(this);
-            
+
             KspPath = UrlDir.ApplicationRootPath;
+            UniqueIdentifier = SystemInfo.deviceUniqueIdentifier;
 
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
@@ -477,7 +479,7 @@ namespace LmpClient
                     {
                         LunaLog.LogError($"[LMP]: Command line address is invalid: {address}, port: {port}");
                     }
-                }                
+                }
             }
         }
 

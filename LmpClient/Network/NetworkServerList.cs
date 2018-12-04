@@ -7,7 +7,6 @@ using LmpCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Net;
-using UnityEngine;
 
 namespace LmpClient.Network
 {
@@ -101,12 +100,12 @@ namespace LmpClient.Network
                     {
                         var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
                         msgData.Id = serverId;
-                        msgData.Token = SystemInfo.deviceUniqueIdentifier;
+                        msgData.Token = MainSystem.UniqueIdentifier;
                         msgData.InternalEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
 
                         var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
-                        LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {SystemInfo.deviceUniqueIdentifier}");
+                        LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {MainSystem.UniqueIdentifier}");
                         NetworkSender.QueueOutgoingMessage(introduceMsg);
                     }
                     catch (Exception e)
@@ -130,9 +129,9 @@ namespace LmpClient.Network
         /// </summary>
         public static void HandleNatIntroduction(NetIncomingMessage msg)
         {
-            if (SystemInfo.deviceUniqueIdentifier == msg.ReadString())
+            if (MainSystem.UniqueIdentifier == msg.ReadString())
             {
-                LunaLog.Log($"[LMP]: Nat introduction success against {msg.SenderEndPoint}. Token: {SystemInfo.deviceUniqueIdentifier}");
+                LunaLog.Log($"[LMP]: Nat introduction success against {msg.SenderEndPoint}. Token: {MainSystem.UniqueIdentifier}");
                 NetworkConnection.ConnectToServer(msg.SenderEndPoint, Password);
             }
         }
