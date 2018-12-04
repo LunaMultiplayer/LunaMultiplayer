@@ -28,7 +28,10 @@ namespace LmpMasterServer.Structure
             ServerVersion = msg.ServerVersion;
             ServerName = msg.ServerName.Length > 30 ? msg.ServerName.Substring(0, 30) : msg.ServerName;
             Description = msg.Description.Length > 200 ? msg.Description.Substring(0, 200) : msg.Description;
-            Country = msg.CountryCode.ToUpper();
+
+            if (!string.IsNullOrEmpty(msg.CountryCode))
+                Country = msg.CountryCode.ToUpper();
+
             Website = msg.Website.Length > 60 ? msg.Website.Substring(0, 60) : msg.Website;
             WebsiteText = msg.WebsiteText.Length > 15 ? msg.WebsiteText.Substring(0, 15) : msg.WebsiteText;
             DropControlOnExit = msg.DropControlOnExit;
@@ -70,10 +73,6 @@ namespace LmpMasterServer.Structure
         {
             Task.Run(() =>
             {
-                if (DateTime.UtcNow - _lastCountryRequestTime < TimeSpan.FromSeconds(10))
-                    return;
-
-                _lastCountryRequestTime = DateTime.UtcNow;
                 if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
                 {
                     server.Country = countryCode;
