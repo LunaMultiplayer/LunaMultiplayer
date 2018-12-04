@@ -53,9 +53,10 @@
   <ItemGroup>
     <Compile Include="Collection\ConcurrentHashSet.cs" />
     <Compile Include="Common.cs" />
-    <Compile Include="ConsoleLogger.cs" />
+    <Compile Include="Enums\LogLevels.cs" />
     <Compile Include="ConsoleUtil.cs" />
     <Compile Include="ContentChecker.cs" />
+    <Compile Include="BaseLogger.cs" />
     <Compile Include="Message\Base\EndpointUtil.cs" />
     <Compile Include="RepoRetrievers\BannedIpsRetriever.cs" />
     <Compile Include="Enums\AdminResponse.cs" />

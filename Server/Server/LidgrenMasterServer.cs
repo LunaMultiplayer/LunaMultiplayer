@@ -10,7 +10,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Server.Lidgren
+namespace Server.Server
 {
     public class LidgrenMasterServer
     {

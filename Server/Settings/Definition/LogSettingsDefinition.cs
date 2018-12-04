@@ -1,5 +1,5 @@
-﻿using LmpCommon.Xml;
-using Server.Log;
+﻿using LmpCommon.Enums;
+using LmpCommon.Xml;
 using System;
 
 namespace Server.Settings.Definition

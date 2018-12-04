@@ -1,18 +1,17 @@
 ﻿using Lidgren.Network;
 using LmpCommon;
+using LmpCommon.Enums;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
 using Server.Client;
 using Server.Context;
 using Server.Log;
-using Server.Server;
 using Server.Settings.Structures;
 using Server.Utilities;
 using System;
 using System.Threading.Tasks;
-using LogLevels = Server.Log.LogLevels;
 
-namespace Server.Lidgren
+namespace Server.Server
 {
     public class LidgrenServer
     {

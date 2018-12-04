@@ -95,10 +95,9 @@
     <Compile Include="Events\ExitEvent.cs" />
     <Compile Include="Exit\WinExitSignal.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Lidgren\LidgrenMasterServer.cs" />
-    <Compile Include="Lidgren\LidgrenServer.cs" />
+    <Compile Include="Server\LidgrenMasterServer.cs" />
+    <Compile Include="Server\LidgrenServer.cs" />
     <Compile Include="Log\LogExpire.cs" />
-    <Compile Include="Log\LogLevels.cs" />
     <Compile Include="Log\LogThread.cs" />
     <Compile Include="Log\LunaLog.cs" />
     <Compile Include="MainServer.cs" />
@@ -216,7 +215,6 @@
     <Compile Include="System\WarpSystemReceiver.cs" />
     <Compile Include="System\WarpSystemSender.cs" />
     <Compile Include="Upnp\LmpPortMapper.cs" />
-    <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\HandledException.cs" />
     <Compile Include="Utilities\VersionChecker.cs" />
     <Compile Include="Web\Handlers\ExceptionHandler.cs" />
@@ -292,9 +290,7 @@
     <None Include="Resources\Kerbals\Bob Kerman.txt" />
     <None Include="Resources\Kerbals\Bill Kerman.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Structures\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(OS)' != 'Unix'">
     <PostBuildEvent>del "$(TargetDir)LiteDB.xml"</PostBuildEvent>

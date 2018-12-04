@@ -1,4 +1,4 @@
-﻿namespace Server.Log
+﻿namespace LmpCommon.Enums
 {
     public enum LogLevels
     {

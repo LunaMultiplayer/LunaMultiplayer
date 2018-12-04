@@ -1,13 +1,12 @@
 ﻿using LmpCommon;
 using LmpMasterServer.Http;
+using LmpMasterServer.Log;
 using LmpMasterServer.Upnp;
 using LmpMasterServer.Web;
 using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleLogger = LmpCommon.ConsoleLogger;
-using LogLevels = LmpCommon.LogLevels;
 
 namespace LmpMasterServer
 {
@@ -52,10 +51,10 @@ namespace LmpMasterServer
             if (!ParseHttpServerPort(commandLineArguments)) return;
             MasterServerPortMapper.OpenPort().Wait();
 
-            ConsoleLogger.Log(LogLevels.Normal, $"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
+            LunaLog.Normal($"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
             if (IsNightly)
-                ConsoleLogger.Log(LogLevels.Normal, "Will download NIGHTLY versions!");
-            ConsoleLogger.Log(LogLevels.Normal, $"Listening for GET requests at port: {LunaHttpServer.Port}");
+                LunaLog.Normal("Will download NIGHTLY versions!");
+            LunaLog.Normal($"Listening for GET requests at port: {LunaHttpServer.Port}");
 
             if (CheckPort())
             {
@@ -71,7 +70,7 @@ namespace LmpMasterServer
         {
             if (LunaNetUtils.IsUdpPortInUse(Lidgren.MasterServer.Port))
             {
-                ConsoleLogger.Log(LogLevels.Error, $"Port {Lidgren.MasterServer.Port} is already in use!");
+                LunaLog.Fatal($"Port {Lidgren.MasterServer.Port} is already in use!");
                 return false;
             }
             return true;
@@ -126,7 +125,7 @@ namespace LmpMasterServer
             if (ushort.TryParse(commandLineArguments[parameter].Trim(), out portNum))
                 return true;
 
-            ConsoleLogger.Log(LogLevels.Error, $"Invalid port specified: {commandLineArguments[parameter].Trim()}");
+            LunaLog.Error($"Invalid port specified: {commandLineArguments[parameter].Trim()}");
             return false;
         }
 

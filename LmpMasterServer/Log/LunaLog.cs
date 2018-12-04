@@ -1,38 +1,10 @@
 ﻿using LmpCommon;
-using LmpCommon.Enums;
-using Server.Settings.Structures;
-using Server.System;
-using System;
-using System.IO;
 
-namespace Server.Log
+namespace LmpMasterServer.Log
 {
     public class LunaLog : BaseLogger
     {
         private static readonly BaseLogger Singleton = new LunaLog();
-
-        static LunaLog()
-        {
-            if (!FileHandler.FolderExists(LogFolder))
-                FileHandler.FolderCreate(LogFolder);
-        }
-
-        public static string LogFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
-
-        public static string LogFilename = Path.Combine(LogFolder, $"lmpserver_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
-
-        #region Overrides
-
-        protected override LogLevels LogLevel => LogSettings.SettingsStore.LogLevel;
-        protected override bool UseUtcTime => true;
-
-        protected override void AfterPrint(string line)
-        {
-            base.AfterPrint(line);
-            FileHandler.AppendToFile(LogFilename, line + Environment.NewLine);
-        }
-
-        #endregion
 
         #region Public methods
 

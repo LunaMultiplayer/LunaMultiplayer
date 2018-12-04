@@ -8,14 +8,13 @@ using LmpCommon.Message.Types;
 using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
 using LmpGlobal;
+using LmpMasterServer.Log;
 using LmpMasterServer.Structure;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using ConsoleLogger = LmpCommon.ConsoleLogger;
-using LogLevels = LmpCommon.LogLevels;
 
 namespace LmpMasterServer.Lidgren
 {
@@ -46,7 +45,7 @@ namespace LmpMasterServer.Lidgren
 
             CheckMasterServerListed();
 
-            ConsoleLogger.Log(LogLevels.Normal, $"Master server {LmpVersioning.CurrentVersion} started! Поехали!");
+            LunaLog.Info($"Master server {LmpVersioning.CurrentVersion} started! Поехали!");
             RemoveExpiredServers();
 
             while (RunServer)
@@ -57,14 +56,16 @@ namespace LmpMasterServer.Lidgren
                     switch (msg.MessageType)
                     {
                         case NetIncomingMessageType.DebugMessage:
+                            LunaLog.NetworkDebug(msg.ReadString());
+                            break;
                         case NetIncomingMessageType.VerboseDebugMessage:
-                            ConsoleLogger.Log(LogLevels.Debug, msg.ReadString());
+                            LunaLog.NetworkVerboseDebug(msg.ReadString());
                             break;
                         case NetIncomingMessageType.WarningMessage:
-                            ConsoleLogger.Log(LogLevels.Warning, msg.ReadString());
+                            LunaLog.Warning(msg.ReadString());
                             break;
                         case NetIncomingMessageType.ErrorMessage:
-                            ConsoleLogger.Log(LogLevels.Error, msg.ReadString());
+                            LunaLog.Error(msg.ReadString());
                             break;
                         case NetIncomingMessageType.UnconnectedData:
                             var message = GetMessage(msg);
@@ -98,12 +99,11 @@ namespace LmpMasterServer.Lidgren
             var ownEndpoint = new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), Port);
             if(!MasterServerRetriever.MasterServers.Contains(ownEndpoint))
             {
-                ConsoleLogger.Log(LogLevels.Error, $"You're not in the master-servers URL ({RepoConstants.MasterServersListShortUrl}) " +
-                    "Clients/Servers won't see you");
+                LunaLog.Error($"You're not in the master-servers URL ({RepoConstants.MasterServersListShortUrl}) Clients/Servers won't see you");
             }
             else
             {
-                ConsoleLogger.Log(LogLevels.Normal, "Own ip correctly listed in master - servers URL");
+                LunaLog.Normal("Own ip correctly listed in master - servers URL");
             }
         }
 
@@ -121,14 +121,14 @@ namespace LmpMasterServer.Lidgren
                         RegisterServer(message, netMsg);
                         break;
                     case MasterServerMessageSubType.RequestServers:
-                        ConsoleLogger.Log(LogLevels.Normal, $"LIST REQUEST from: {netMsg.SenderEndPoint}");
+                        LunaLog.Normal($"LIST REQUEST from: {netMsg.SenderEndPoint}");
                         SendServerLists(netMsg, peer);
                         break;
                     case MasterServerMessageSubType.Introduction:
                         var msgData = (MsIntroductionMsgData)message.Data;
                         if (ServerDictionary.TryGetValue(msgData.Id, out var server))
                         {
-                            ConsoleLogger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
+                            LunaLog.Normal($"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
                             peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
                                 msgData.InternalEndpoint,// client internal
                                 netMsg.SenderEndPoint,// client external
@@ -136,14 +136,14 @@ namespace LmpMasterServer.Lidgren
                         }
                         else
                         {
-                            ConsoleLogger.Log(LogLevels.Warning, $"Client {netMsg.SenderEndPoint} requested introduction to nonlisted host!");
+                            LunaLog.Warning($"Client {netMsg.SenderEndPoint} requested introduction to non listed host!");
                         }
                         break;
                 }
             }
             catch (Exception e)
             {
-                ConsoleLogger.Log(LogLevels.Error, $"Error handling message. Details: {e}");
+                LunaLog.Error($"Error handling message. Details: {e}");
             }
         }
 
@@ -197,7 +197,7 @@ namespace LmpMasterServer.Lidgren
             if (!ServerDictionary.ContainsKey(msgData.Id))
             {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
-                ConsoleLogger.Log(LogLevels.Normal, $"NEW SERVER: {netMsg.SenderEndPoint}");
+                LunaLog.Normal($"NEW SERVER: {netMsg.SenderEndPoint}");
             }
             else
             {
@@ -220,7 +220,7 @@ namespace LmpMasterServer.Lidgren
 
                     foreach (var serverId in serversIdsToRemove)
                     {
-                        ConsoleLogger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
+                        LunaLog.Normal($"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
                         ServerDictionary.TryRemove(serverId.Key, out _);
                     }
 
