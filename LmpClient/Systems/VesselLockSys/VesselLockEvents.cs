@@ -105,19 +105,21 @@ namespace LmpClient.Systems.VesselLockSys
                     }
                     else
                     {
-                        //If some other player got the control lock release the unloaded update lock just in case we have it
+                        //If some other player got the control lock release the update lock in case we have it
                         if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(lockDefinition.VesselId, SettingsSystem.CurrentSettings.PlayerName))
                         {
                             LockSystem.LockStore.RemoveLock(LockSystem.LockQuery.GetUpdateLock(lockDefinition.VesselId));
                             LockSystem.LockStore.AddOrUpdateLock(new LockDefinition(LockType.UnloadedUpdate, lockDefinition.PlayerName, lockDefinition.VesselId));
                         }
 
-                        //If some other player got the control lock release the unloaded update lock just in case we have it
+                        //If some other player got the control lock release the unloaded update lock in case we have it
                         if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(lockDefinition.VesselId, SettingsSystem.CurrentSettings.PlayerName))
                         {
                             LockSystem.LockStore.RemoveLock(LockSystem.LockQuery.GetUnloadedUpdateLock(lockDefinition.VesselId));
                             LockSystem.LockStore.AddOrUpdateLock(new LockDefinition(LockType.UnloadedUpdate, lockDefinition.PlayerName, lockDefinition.VesselId));
                         }
+
+                        //TODO:We should release the kerbals locks?
                     }
 
                     if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == lockDefinition.VesselId)
@@ -134,6 +136,8 @@ namespace LmpClient.Systems.VesselLockSys
                             LockSystem.LockStore.RemoveLock(LockSystem.LockQuery.GetUnloadedUpdateLock(lockDefinition.VesselId));
                             LockSystem.LockStore.AddOrUpdateLock(new LockDefinition(LockType.UnloadedUpdate, lockDefinition.PlayerName, lockDefinition.VesselId));
                         }
+                        
+                        //TODO:We should release the kerbals locks?
                     }
                     else
                     {
