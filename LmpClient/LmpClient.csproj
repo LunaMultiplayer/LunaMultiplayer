@@ -119,6 +119,7 @@
     <Compile Include="Harmony\Part_CheckPartTemp.cs" />
     <Compile Include="Harmony\Part_CheckPartPressure.cs" />
     <Compile Include="Harmony\Part_Couple.cs" />
+    <Compile Include="Harmony\PartBuoyancy_FixedUpdate.cs" />
     <Compile Include="Harmony\Part_Undock.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
