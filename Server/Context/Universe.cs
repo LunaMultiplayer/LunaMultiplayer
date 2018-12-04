@@ -1,4 +1,6 @@
-﻿using Server.Log;
+﻿using System;
+using ByteSizeLib;
+using Server.Log;
 using Server.System;
 using System.IO;
 using System.Linq;
@@ -7,27 +9,23 @@ namespace Server.Context
 {
     public class Universe
     {
-        // Check universe folder size
-        public static long GetUniverseSize()
+        /// <summary>
+        /// Gets the universe folder size. Caution! This method is not thread safe!
+        /// </summary>
+        private static double GetUniverseSize()
         {
-            var kerbals = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Kerbals"));
-            var vessels = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
-
-            var directorySize = kerbals.Select(kerbal => new FileInfo(kerbal)).Select(kInfo => kInfo.Length).Sum();
-            directorySize += vessels.Select(vessel => new FileInfo(vessel)).Select(vInfo => vInfo.Length).Sum();
-
-            return directorySize;
+            var size = ByteSize.FromBytes(Directory.GetFiles(ServerContext.UniverseDirectory, "*.*")
+                .Select(f => new FileInfo(f)).Select(i => i.Length).Sum()).KiloBytes;
+            
+            return Math.Round(size, 3);
         }
 
-        public static void RemoveFromUniverse(string path)
-        {
-            FileHandler.FileDelete(path);
-        }
-
-        //Create universe directories
+        /// <summary>
+        /// Create universe directories
+        /// </summary>
         public static void CheckUniverse()
         {
-            LunaLog.Debug("Loading universe... ");
+            LunaLog.Debug($"Loading universe... {GetUniverseSize()}{ByteSize.KiloByteSymbol}");
 
             if (!FileHandler.FileExists(ServerContext.ModFilePath))
                 ModFileSystem.GenerateNewModFile();

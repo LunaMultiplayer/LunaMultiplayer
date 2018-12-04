@@ -89,11 +89,9 @@
     <Compile Include="Command\Command\SetScienceCommand.cs" />
     <Compile Include="Command\Command\SetFundsCommand.cs" />
     <Compile Include="Command\Common\CommandSystemHelperMethods.cs" />
-    <Compile Include="Context\Constants.cs" />
     <Compile Include="Context\ServerContext.cs" />
     <Compile Include="Context\Universe.cs" />
     <Compile Include="Context\WarpContext.cs" />
-    <Compile Include="Enums\RelaySystemMode.cs" />
     <Compile Include="Events\ExitEvent.cs" />
     <Compile Include="Exit\WinExitSignal.cs" />
     <Compile Include="GlobalSuppressions.cs" />

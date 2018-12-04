@@ -55,7 +55,7 @@ namespace Server.System
                             ScreenshotSettings.SettingsStore.MaxScreenshotWidth,
                             ScreenshotSettings.SettingsStore.MaxScreenshotHeight);
 
-                        LunaLog.Normal($"Saving screenshot {fileName} ({ByteSize.FromBytes(data.Screenshot.NumBytes).KiloBytes} KB) from: {client.PlayerName}.");
+                        LunaLog.Normal($"Saving screenshot {fileName} ({ByteSize.FromBytes(data.Screenshot.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}) from: {client.PlayerName}.");
                         FileHandler.CreateFile(fullPath, scaledImageData, scaledImageData.Length);
                         CreateMiniature(fullPath);
                         SendNotification(client.PlayerName);
@@ -159,7 +159,7 @@ namespace Server.System
                     msgData.Screenshot.Width = (ushort)bitmap.Width;
                     msgData.Screenshot.FolderName = data.FolderName;
 
-                    LunaLog.Debug($"Sending screenshot ({ByteSize.FromBytes(msgData.Screenshot.NumBytes).KiloBytes} KB): {data.DateTaken} to: {client.PlayerName}.");
+                    LunaLog.Debug($"Sending screenshot ({ByteSize.FromBytes(msgData.Screenshot.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}): {data.DateTaken} to: {client.PlayerName}.");
                     MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
                 }
             });
