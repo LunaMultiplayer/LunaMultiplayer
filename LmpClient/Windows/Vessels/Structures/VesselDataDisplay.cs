@@ -1,4 +1,5 @@
 ﻿using LmpClient.Extensions;
+using LmpClient.Systems.VesselImmortalSys;
 using System;
 using UnityEngine;
 
@@ -24,7 +25,22 @@ namespace LmpClient.Windows.Vessels.Structures
             if (!Vessel) return;
 
             GUILayout.Label($"Stage: {Vessel.currentStage}");
+            GUILayout.BeginHorizontal();
             GUILayout.Label($"Immortal: {Vessel.IsImmortal()}");
+            GUILayout.FlexibleSpace();
+            if (Vessel.IsImmortal())
+            {
+                if (GUILayout.Button("Make mortal"))
+                    Vessel.SetImmortal(false);
+            }
+            else
+            {
+                if (GUILayout.Button("Make immortal"))
+                    Vessel.SetImmortal(true);
+            }
+            if (GUILayout.Button("Reset"))
+                VesselImmortalSystem.Singleton.SetImmortalStateBasedOnLock(Vessel);
+            GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Loaded: {Vessel.loaded}");
             GUILayout.FlexibleSpace();
