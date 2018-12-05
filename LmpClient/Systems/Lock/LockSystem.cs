@@ -2,6 +2,7 @@
 using LmpClient.Events;
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
+using LmpClient.Utilities;
 using LmpCommon.Locks;
 using LmpCommon.Message.Data.Lock;
 using System;
@@ -167,15 +168,16 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Release the given kerbal lock
         /// </summary>
-        public void ReleaseKerbalLock(string kerbalName, int msDelay = 0)
+        public void ReleaseKerbalLock(string kerbalName, float delayInSec)
         {
-            TaskFactory.StartNew(() =>
+            if (delayInSec > 0)
             {
-                if (msDelay > 0)
-                    Thread.Sleep(msDelay);
-
+                CoroutineUtil.StartDelayedRoutine("ReleaseKerbalLock", () => ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName)), delayInSec);
+            }
+            else
+            {
                 ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName));
-            });
+            }
         }
 
         /// <summary>
