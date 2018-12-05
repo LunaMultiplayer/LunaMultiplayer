@@ -99,6 +99,7 @@
     <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Extensions\AssemblyExtension.cs" />
     <Compile Include="Extensions\CelestialBodyExtension.cs" />
+    <Compile Include="Extensions\ConfigNodeExtension.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\LinqExtention.cs" />
     <Compile Include="Extensions\OrbitDriverExtension.cs" />

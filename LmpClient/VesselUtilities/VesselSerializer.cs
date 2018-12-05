@@ -1,4 +1,5 @@
-﻿using LmpClient.Utilities;
+﻿using LmpClient.Extensions;
+using LmpClient.Utilities;
 using System;
 
 namespace LmpClient.VesselUtilities
@@ -94,7 +95,7 @@ namespace LmpClient.VesselUtilities
             var vesselId = new Guid(configNode.GetValue("pid"));
 
             //Defend against NaN orbits
-            if (VesselCommon.VesselHasNaNPosition(configNode))
+            if (configNode.VesselHasNaNPosition())
             {
                 LunaLog.LogError($"[LMP]: Vessel {vesselId} has NaN position");
                 return false;

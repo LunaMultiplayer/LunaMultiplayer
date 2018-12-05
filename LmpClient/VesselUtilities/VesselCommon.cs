@@ -1,7 +1,5 @@
 ﻿using LmpClient.Network;
-using LmpClient.Systems.Chat;
 using LmpClient.Systems.Lock;
-using LmpClient.Systems.Mod;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.VesselCoupleSys;
 using LmpClient.Systems.VesselDecoupleSys;
@@ -162,60 +160,10 @@ namespace LmpClient.VesselUtilities
         }
 
         /// <summary>
-        /// Checks if the protovessel has resources, parts that you don't have or that they are banned
-        /// </summary>
-        public static bool ProtoVesselHasInvalidParts(ProtoVessel pv)
-        {
-            foreach (var pps in pv.protoPartSnapshots)
-            {
-                if (ModSystem.Singleton.ModControl && !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
-                {
-                    var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the BANNED PART '{pps.partName}'. Skipping load.";
-                    LunaLog.LogWarning(msg);
-                    ChatSystem.Singleton.PmMessageServer(msg);
-
-                    return true;
-                }
-
-                if (pps.partInfo == null)
-                {
-                    LunaLog.LogWarning($"Protovessel {pv.vesselID} ({pv.vesselName}) contains the MISSING PART '{pps.partName}'. Skipping load.");
-                    LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing part: {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
-
-                    return true;
-                }
-
-                var missingResource = pps.resources.FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
-                if (missingResource != null)
-                {
-                    var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the MISSING RESOURCE '{missingResource.resourceName}'.";
-                    LunaLog.LogWarning(msg);
-                    ChatSystem.Singleton.PmMessageServer(msg);
-                    
-                    LunaScreenMsg.PostScreenMessage($"Vessel '{pv.vesselName}' contains the modded RESOURCE: {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
-
-                    //We allow loading of vessels that have missing resources. They will be removed by the player with the lock tough...
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
         /// </summary>
         public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, uint partFlightId)
         {
-            //if (FlightGlobals.FindUnloadedPart(partPersistentId, out var existingProtoPart))
-            //{
-            //    return existingProtoPart;
-            //}
-
-            //if (FlightGlobals.FindLoadedPart(partPersistentId, out var existingPart))
-            //{
-            //    return existingPart.protoPartSnapshot;
-            //}
-
             if (protoVessel == null) return null;
 
             for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
@@ -276,41 +224,6 @@ namespace LmpClient.VesselUtilities
             return LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Select(l => FlightGlobals.VesselsUnloaded.FirstOrDefault(v => v && v.id == l.VesselId))
                 .Where(v => v && (FlightGlobals.ActiveVessel == null || v != FlightGlobals.ActiveVessel));
-        }
-
-        /// <summary>
-        /// Checks if the given config node from a protovessel has NaN orbits
-        /// </summary>
-        public static bool VesselHasNaNPosition(ConfigNode vesselNode)
-        {
-            if (vesselNode.GetValue("landed") == "True" || vesselNode.GetValue("splashed") == "True")
-            {
-                if (double.TryParse(vesselNode.values.GetValue("lat"), out var latitude)
-                    && (double.IsNaN(latitude) || double.IsInfinity(latitude)))
-                    return true;
-
-                if (double.TryParse(vesselNode.values.GetValue("lon"), out var longitude)
-                    && (double.IsNaN(longitude) || double.IsInfinity(longitude)))
-                    return true;
-
-                if (double.TryParse(vesselNode.values.GetValue("alt"), out var altitude)
-                    && (double.IsNaN(altitude) || double.IsInfinity(altitude)))
-                    return true;
-            }
-            else
-            {
-                var orbitNode = vesselNode.GetNode("ORBIT");
-                if (orbitNode != null)
-                {
-                    var allValuesAre0 = orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v)).Take(7)
-                        .All(v => v == "0");
-
-                    return allValuesAre0 || orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v))
-                               .Any(val => double.TryParse(val, out var value) && (double.IsNaN(value) || double.IsInfinity(value)));
-                }
-            }
-
-            return false;
         }
     }
 }

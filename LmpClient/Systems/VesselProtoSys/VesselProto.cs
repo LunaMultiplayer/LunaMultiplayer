@@ -1,4 +1,5 @@
-﻿using LmpClient.Systems.VesselRemoveSys;
+﻿using LmpClient.Extensions;
+using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using System;
@@ -21,7 +22,7 @@ namespace LmpClient.Systems.VesselProtoSys
         public ProtoVessel CreateProtoVessel()
         {
             var configNode = ConfigNodeSerializer.Deserialize(RawData, NumBytes);
-            if (configNode == null || VesselCommon.VesselHasNaNPosition(configNode))
+            if (configNode == null || configNode.VesselHasNaNPosition())
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
                 VesselRemoveSystem.Singleton.KillVessel(VesselId, true, "Malformed vessel");
@@ -35,9 +36,6 @@ namespace LmpClient.Systems.VesselProtoSys
                 VesselRemoveSystem.Singleton.KillVessel(VesselId, true, "Malformed vessel");
                 return null;
             }
-
-            if (VesselCommon.ProtoVesselHasInvalidParts(newProto))
-                return null;
 
             return newProto;
         }

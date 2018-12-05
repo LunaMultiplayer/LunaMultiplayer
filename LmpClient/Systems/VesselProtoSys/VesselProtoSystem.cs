@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
+using LmpClient.Extensions;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
@@ -18,6 +19,8 @@ namespace LmpClient.Systems.VesselProtoSys
         #region Fields & properties
 
         private static readonly HashSet<Guid> QueuedVesselsToSend = new HashSet<Guid>();
+
+        public readonly HashSet<Guid> VesselsUnableToLoad = new HashSet<Guid>();
 
         public ConcurrentDictionary<Guid, VesselProtoQueue> VesselProtos { get; } = new ConcurrentDictionary<Guid, VesselProtoQueue>();
 
@@ -131,7 +134,13 @@ namespace LmpClient.Systems.VesselProtoSys
                         var protoVessel = vesselProto.CreateProtoVessel();
                         keyVal.Value.Recycle(vesselProto);
 
-                        if (protoVessel == null) return;
+                        if (protoVessel == null || protoVessel.HasInvalidParts(!VesselsUnableToLoad.Contains(vesselProto.VesselId)))
+                        {
+                            VesselsUnableToLoad.Add(vesselProto.VesselId);
+                            return;
+                        }
+
+                        VesselsUnableToLoad.Remove(vesselProto.VesselId);
 
                         var existingVessel = FlightGlobals.FindVessel(vesselProto.VesselId);
                         if (existingVessel == null)
