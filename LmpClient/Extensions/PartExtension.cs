@@ -1,9 +1,30 @@
-﻿namespace LmpClient.Extensions
+﻿using System;
+
+namespace LmpClient.Extensions
 {
     public static class PartExtension
     {
+        /// <summary>
+        /// Finds a module in a part without generating garbage. Returns null if not found
+        /// </summary>
+        public static PartModule FindModuleInPart(Part part, string moduleName)
+        {
+            if (part == null) return null;
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var i = 0; i < part.Modules.Count; i++)
+            {
+                if (part.Modules[i].moduleName == moduleName)
+                    return part.Modules[i];
+            }
+
+            return null;
+        }
+        
         public static PartResource FindResource(this Part part, string resourceName)
         {
+            if (part == null) return null;
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < part.Resources.Count; i++)
             {

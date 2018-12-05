@@ -104,38 +104,6 @@ namespace LmpClient.VesselUtilities
         }
 
         /// <summary>
-        /// Finds a module in a part without generating garbage. Returns null if not found
-        /// </summary>
-        public static PartModule FindModuleInPart(Part part, string moduleName)
-        {
-            if (part == null) return null;
-
-            for (var i = 0; i < part.Modules.Count; i++)
-            {
-                if (part.Modules[i].moduleName == moduleName)
-                    return part.Modules[i];
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Finds a module in a proto part module without generating garbage. Returns null if not found
-        /// </summary>
-        public static ProtoPartModuleSnapshot FindProtoPartModuleInProtoPart(ProtoPartSnapshot part, string moduleName)
-        {
-            if (part == null) return null;
-
-            for (var i = 0; i < part.modules.Count; i++)
-            {
-                if (part.modules[i].moduleName == moduleName)
-                    return part.modules[i];
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Check if we should apply a message to the given vesselId
         /// </summary>
         public static bool DoVesselChecks(Guid vesselId)
@@ -157,51 +125,6 @@ namespace LmpClient.VesselUtilities
                 return false;
 
             return true;
-        }
-
-        /// <summary>
-        /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
-        /// </summary>
-        public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, uint partFlightId)
-        {
-            if (protoVessel == null) return null;
-
-            for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
-            {
-                if (protoVessel.protoPartSnapshots[i].flightID == partFlightId)
-                    return protoVessel.protoPartSnapshots[i];
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Finds a resource in a part without generating garbage. Returns null if not found
-        /// </summary>
-        public static PartResource FindResourceInPart(Part part, string resourceName)
-        {
-            if (part == null) return null;
-
-            for (var i = 0; i < part.Resources.Count; i++)
-            {
-                if (part.Resources[i].resourceName == resourceName)
-                    return part.Resources[i];
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Finds a proto part resource snapshot in a proto part snapshot without generating garbage. Returns null if not found
-        /// </summary>
-        public static ProtoPartResourceSnapshot FindResourceInProtoPart(ProtoPartSnapshot protoPart, string resourceName)
-        {
-            if (protoPart == null) return null;
-
-            for (var i = 0; i < protoPart.resources.Count; i++)
-            {
-                if (protoPart.resources[i].resourceName == resourceName)
-                    return protoPart.resources[i];
-            }
-            return null;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using LmpClient.VesselUtilities;
+﻿using LmpClient.Extensions;
+using LmpClient.VesselUtilities;
 using System;
 
 namespace LmpClient.Systems.VesselFairingsSys
@@ -24,7 +25,7 @@ namespace LmpClient.Systems.VesselFairingsSys
             var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null) return;
 
-            var protoPart = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
+            var protoPart = vessel.protoVessel.GetProtoPart(PartFlightId);
             if (protoPart != null)
             {
                 ProcessFairingChange(protoPart);
@@ -33,7 +34,7 @@ namespace LmpClient.Systems.VesselFairingsSys
 
         private static void ProcessFairingChange(ProtoPartSnapshot protoPart)
         {
-            var module = VesselCommon.FindProtoPartModuleInProtoPart(protoPart, "ModuleProceduralFairing");
+            var module = protoPart.FindProtoPartModuleInProtoPart("ModuleProceduralFairing");
             module?.moduleValues.SetValue("fsm", "st_flight_deployed");
             module?.moduleValues.RemoveNodesStartWith("XSECTION");
 

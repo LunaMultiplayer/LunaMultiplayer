@@ -25,7 +25,7 @@ namespace LmpClient.VesselUtilities
             var partsToInit = new List<ProtoPartSnapshot>();
             foreach (var partIdToCreate in partIdsToCreate)
             {
-                var newProtoPart = VesselCommon.FindProtoPartInProtovessel(protoVessel, partIdToCreate);
+                var newProtoPart = protoVessel.GetProtoPart(partIdToCreate);
                 var newPart = newProtoPart.Load(FlightGlobals.ActiveVessel, false);
                 FlightGlobals.ActiveVessel.parts.Add(newPart);
                 partsToInit.Add(newProtoPart);

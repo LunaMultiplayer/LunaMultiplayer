@@ -36,10 +36,10 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             if (!VesselCommon.DoVesselChecks(VesselId))
                 return;
 
-            var part = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
+            var part = vessel.protoVessel.GetProtoPart(PartFlightId);
             if (part != null)
             {
-                var module = VesselCommon.FindProtoPartModuleInProtoPart(part, ModuleName);
+                var module = part.FindProtoPartModuleInProtoPart(ModuleName);
                 if (module != null)
                 {
                     switch (FieldType)

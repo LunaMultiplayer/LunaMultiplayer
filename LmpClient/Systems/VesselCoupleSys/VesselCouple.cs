@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using LmpClient.Extensions;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
 using LmpCommon.Enums;
@@ -77,8 +78,8 @@ namespace LmpClient.Systems.VesselCoupleSys
             if (_weakVessel == null) return false;
             if (!_weakVessel.loaded && forceLoad) _weakVessel.Load();
 
-            var protoPart = VesselCommon.FindProtoPartInProtovessel(_dominantVessel.protoVessel, partFlightId);
-            var coupledProtoPart = VesselCommon.FindProtoPartInProtovessel(_weakVessel.protoVessel, coupledPartFlightId);
+            var protoPart = _dominantVessel.protoVessel.GetProtoPart(partFlightId);
+            var coupledProtoPart = _weakVessel.protoVessel.GetProtoPart(coupledPartFlightId);
             if (protoPart != null && coupledProtoPart != null)
             {
                 if (protoPart.partRef && coupledProtoPart.partRef)

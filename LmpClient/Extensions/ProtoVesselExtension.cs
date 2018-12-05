@@ -9,6 +9,21 @@ namespace LmpClient.Extensions
     public static class ProtoVesselExtension
     {
         /// <summary>
+        /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
+        /// </summary>
+        public static ProtoPartSnapshot GetProtoPart(this ProtoVessel protoVessel, uint partFlightId)
+        {
+            if (protoVessel == null) return null;
+
+            for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
+            {
+                if (protoVessel.protoPartSnapshots[i].flightID == partFlightId)
+                    return protoVessel.protoPartSnapshots[i];
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Checks if the protovessel has resources, parts that you don't have or that they are banned
         /// </summary>
         public static bool HasInvalidParts(this ProtoVessel pv, bool verboseErrors)

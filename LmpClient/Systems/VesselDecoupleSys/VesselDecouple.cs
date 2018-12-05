@@ -29,7 +29,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
             var vessel = FlightGlobals.FindVessel(VesselId);
             if (vessel == null) return;
 
-            var protoPart = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, PartFlightId);
+            var protoPart = vessel.protoVessel.GetProtoPart(PartFlightId);
             if (protoPart != null)
             {
                 if (protoPart.partRef)

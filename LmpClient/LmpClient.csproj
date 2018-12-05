@@ -105,6 +105,7 @@
     <Compile Include="Extensions\OrbitDriverExtension.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\PartExtension.cs" />
+    <Compile Include="Extensions\ProtoPartExtension.cs" />
     <Compile Include="Extensions\ProtoVesselExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Extensions\VesselExtension.cs" />

@@ -1,7 +1,7 @@
-﻿using System;
-using LmpClient.Extensions;
+﻿using LmpClient.Extensions;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Data.Vessel;
+using System;
 
 namespace LmpClient.Systems.VesselResourceSys
 {
@@ -36,8 +36,8 @@ namespace LmpClient.Systems.VesselResourceSys
 
             for (var i = 0; i < ResourcesCount; i++)
             {
-                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(vessel.protoVessel, Resources[i].PartFlightId);
-                var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, Resources[i].ResourceName);
+                var partSnapshot = vessel.protoVessel.GetProtoPart(Resources[i].PartFlightId);
+                var resourceSnapshot = partSnapshot.FindResourceInProtoPart(Resources[i].ResourceName);
                 if (resourceSnapshot != null)
                 {
                     resourceSnapshot.amount = Resources[i].Amount;
