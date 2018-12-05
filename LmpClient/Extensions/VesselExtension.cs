@@ -8,6 +8,18 @@ namespace LmpClient.Extensions
     public static class VesselExtension
     {
         /// <summary>
+        /// Returns true or false in case the vessel is an asteroid
+        /// </summary>
+        public static bool IsAsteroid(this Vessel vessel)
+        {
+            if (vessel != null && !vessel.loaded)
+                return vessel.protoVessel.IsAsteroid();
+
+            //Check the vessel has exactly one part.
+            return vessel && vessel.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
+        }
+
+        /// <summary>
         /// Advance the orbit epoch to the specified time sent as parameter
         /// </summary>
         public static void AdvanceShipPosition(this Vessel vessel, double time)

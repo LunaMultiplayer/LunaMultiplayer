@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Events;
+using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,25 +55,6 @@ namespace LmpClient.Systems.Asteroid
                 LockSystem.Singleton.AcquireAsteroidLock();
         }
 
-        public bool VesselIsAsteroid(Vessel vessel)
-        {
-            if (vessel != null && !vessel.loaded)
-                return ProtoVesselIsAsteroid(vessel.protoVessel);
-
-            //Check the vessel has exactly one part.
-            return vessel && vessel.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
-        }
-
-        private static bool ProtoVesselIsAsteroid(ProtoVessel protoVessel)
-        {
-            if (protoVessel == null) return false;
-
-            if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
-                return true;
-
-            return protoVessel.protoPartSnapshots?.FirstOrDefault()?.partName == "PotatoRoid";
-        }
-
         public int GetAsteroidCount()
         {
             var seenAsteroids = GetCurrentAsteroids().Count();
@@ -81,7 +63,7 @@ namespace LmpClient.Systems.Asteroid
 
         public IEnumerable<Vessel> GetCurrentAsteroids()
         {
-            return FlightGlobals.Vessels.Where(VesselIsAsteroid);
+            return FlightGlobals.Vessels.Where(v=> v.IsAsteroid());
         }
 
         #endregion

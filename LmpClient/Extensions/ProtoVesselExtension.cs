@@ -5,7 +5,20 @@ using System.Linq;
 namespace LmpClient.Extensions
 {
     public static class ProtoVesselExtension
-    {
+    {        
+        /// <summary>
+        /// Returns true or false in case the protovessel is an asteroid
+        /// </summary>
+        public static bool IsAsteroid(this ProtoVessel protoVessel)
+        {
+            if (protoVessel == null) return false;
+
+            if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
+                return true;
+
+            return protoVessel.protoPartSnapshots?.FirstOrDefault()?.partName == "PotatoRoid";
+        }
+
         /// <summary>
         /// Checks the protovessel for errors
         /// </summary>
