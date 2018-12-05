@@ -4,6 +4,9 @@
         <FieldDefinition>
             <FieldName>persistentState</FieldName>
         </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>deploymentState</FieldName>
+        </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>

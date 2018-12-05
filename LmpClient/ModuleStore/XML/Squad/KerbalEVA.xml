@@ -8,6 +8,9 @@
         <FieldDefinition>
             <FieldName>lampOn</FieldName>
         </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>_flags</FieldName>
+        </FieldDefinition>
     </Fields>
     <Methods>
         <MethodDefinition>
