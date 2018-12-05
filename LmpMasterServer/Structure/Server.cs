@@ -4,6 +4,8 @@ using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
 using LmpMasterServer.Geolocalization;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -13,6 +15,12 @@ namespace LmpMasterServer.Structure
 {
     public class Server : ServerInfo
     {
+        private static IEnumerable<string> _countryCodes;
+        private static IEnumerable<string> CountryCodes => _countryCodes ?? (_countryCodes = CultureInfo
+                           .GetCultures(CultureTypes.SpecificCultures)
+                           .Select(culture => new RegionInfo(culture.LCID))
+                           .Select(ri => ri.TwoLetterISORegionName).Distinct());
+
         private static readonly TimeSpan MaxCountryRequestTimeMs = TimeSpan.FromSeconds(5);
         private static DateTime _lastCountryRequestTime = DateTime.MinValue;
 
@@ -33,7 +41,7 @@ namespace LmpMasterServer.Structure
             ServerName = msg.ServerName.Length > 30 ? msg.ServerName.Substring(0, 30) : msg.ServerName;
             Description = msg.Description.Length > 200 ? msg.Description.Substring(0, 200) : msg.Description;
 
-            if (!string.IsNullOrEmpty(msg.CountryCode))
+            if (!string.IsNullOrEmpty(msg.CountryCode) && CountryCodes.Contains(msg.CountryCode.ToUpper()))
                 Country = msg.CountryCode.ToUpper();
 
             Website = msg.Website.Length > 60 ? msg.Website.Substring(0, 60) : msg.Website;
@@ -72,7 +80,7 @@ namespace LmpMasterServer.Structure
 
             Update(msg);
         }
-
+        
         private void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
             Task.Run(() =>
