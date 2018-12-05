@@ -96,6 +96,8 @@
     <Compile Include="HttpServerExtensions.cs" />
     <Compile Include="IHttpContext.cs" />
     <Compile Include="IHttpMethodProvider.cs" />
+    <Compile Include="Json\IPAddressConverter.cs" />
+    <Compile Include="Json\IPEndPointConverter.cs" />
     <Compile Include="LimitedStream.cs" />
     <Compile Include="Listeners\IHttpListener.cs" />
     <Compile Include="Listeners\SslListenerDecoerator.cs" />
