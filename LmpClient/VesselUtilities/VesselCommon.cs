@@ -185,15 +185,16 @@ namespace LmpClient.VesselUtilities
                     return true;
                 }
 
-                var missingeResource = pps.resources.FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
-                if (missingeResource != null)
+                var missingResource = pps.resources.FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
+                if (missingResource != null)
                 {
-                    var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the MISSING RESOURCE '{missingeResource.resourceName}'. Skipping load.";
+                    var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the MISSING RESOURCE '{missingResource.resourceName}'.";
                     LunaLog.LogWarning(msg);
                     ChatSystem.Singleton.PmMessageServer(msg);
+                    
+                    LunaScreenMsg.PostScreenMessage($"Vessel '{pv.vesselName}' contains the modded RESOURCE: {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
 
-                    LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing resource: {missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
-                    return true;
+                    //We allow loading of vessels that have missing resources. They will be removed by the player with the lock tough...
                 }
             }
 
