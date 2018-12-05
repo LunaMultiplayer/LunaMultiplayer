@@ -162,7 +162,7 @@ namespace LmpClient.VesselUtilities
         }
 
         /// <summary>
-        /// Checks if the protovessel has resources,parts that you don't have or that they are banned
+        /// Checks if the protovessel has resources, parts that you don't have or that they are banned
         /// </summary>
         public static bool ProtoVesselHasInvalidParts(ProtoVessel pv)
         {
