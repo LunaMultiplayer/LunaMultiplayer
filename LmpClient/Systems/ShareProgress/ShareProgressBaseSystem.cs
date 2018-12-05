@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
+using System;
+using System.Collections.Generic;
 
 namespace LmpClient.Systems.ShareProgress
 {
@@ -15,7 +15,6 @@ namespace LmpClient.Systems.ShareProgress
         public bool IgnoreEvents { get; protected set; }
 
         private Queue<Action> _actionQueue;
-        public int ActionQueueCount => _actionQueue?.Count ?? 0;
 
         protected abstract GameMode RelevantGameModes { get; }
 
