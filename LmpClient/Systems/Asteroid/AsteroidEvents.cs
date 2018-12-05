@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Extensions;
 using LmpClient.Systems.VesselProtoSys;
 using LmpCommon.Locks;
 
@@ -42,7 +43,7 @@ namespace LmpClient.Systems.Asteroid
         /// </summary>
         public void NewVesselCreated(Vessel vessel)
         {
-            if (AsteroidSystem.Singleton.VesselIsAsteroid(vessel))
+            if (vessel.IsAsteroid())
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
         }
     }
