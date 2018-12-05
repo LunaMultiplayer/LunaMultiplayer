@@ -62,11 +62,17 @@ namespace LmpClient.Systems.PlayerColorSys
             SetOrbitColor(vessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
         }
 
+        /// <summary>
+        /// Generates one of n distinct, luminous colors. They are spread across the spectrum using the golden ratio.
+        /// </summary>
         public static Color GenerateRandomColor()
         {
-            //Generates one of n distinct, luminous colours. They are spread across the spectrum using the golden ratio.
-           const int n = 10;
-            return Color.HSVToRGB((UnityEngine.Random.Range(0, n) * 0.618033988749895f) % 1.0f, 0.5f, 1.0f);
+            const int numberOfColors = 24;
+
+            const float goldenRatio = 0.618033988749895f;
+            const float value = 0.99f;
+
+            return Color.HSVToRGB(Random.Range(0, numberOfColors) * goldenRatio % 1.0f, Random.Range(0.8f, 0.99f), value);
         }
 
         public Color GetPlayerColor(string playerName)
