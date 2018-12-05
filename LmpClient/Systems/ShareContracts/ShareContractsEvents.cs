@@ -30,7 +30,7 @@ namespace LmpClient.Systems.ShareContracts
                 System.TryGetContractLock();
             }
         }
-        
+
         /// <summary>
         /// Try to get contract lock when loading a level
         /// </summary>
@@ -108,7 +108,7 @@ namespace LmpClient.Systems.ShareContracts
                 return;
             }
 
-            if(contract.GetType() == typeof(RecoverAsset))
+            if (contract.GetType() == typeof(RecoverAsset))
             {
                 //We don't support rescue contracts. See: https://github.com/LunaMultiplayer/LunaMultiplayer/issues/226#issuecomment-431831526
                 contract.Kill();
@@ -125,7 +125,7 @@ namespace LmpClient.Systems.ShareContracts
         {
             //Do not send contract parameter changes as other players might override them
             //See: https://github.com/LunaMultiplayer/LunaMultiplayer/issues/186
-            
+
             //TODO: Perhaps we can send only when the parameters are complete?
             //if (contractParameter.State == ParameterState.Complete)
             //    System.MessageSender.SendContractMessage(contract);
