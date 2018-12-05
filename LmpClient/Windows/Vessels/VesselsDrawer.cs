@@ -16,7 +16,7 @@ namespace LmpClient.Windows.Vessels
         private static void PrintVessels()
         {
             FastUpdate = GUILayout.Toggle(FastUpdate, "Fast Update");
-
+            FilterAsteroids = GUILayout.Toggle(FilterAsteroids, "Filter Asteroids");
             if (ActiveVesselDisplayStore != null)
             { 
                 GUILayout.Label("Active vessel:");

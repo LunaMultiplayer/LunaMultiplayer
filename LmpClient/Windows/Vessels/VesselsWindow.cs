@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Extensions;
 using LmpClient.Windows.Vessels.Structures;
 using LmpCommon.Enums;
 using LmpCommon.Time;
@@ -30,8 +31,9 @@ namespace LmpClient.Windows.Vessels
         private static readonly Dictionary<Guid, VesselDisplay> VesselDisplayStore = new Dictionary<Guid, VesselDisplay>();
 
         private static bool FastUpdate = false;
+        private static bool FilterAsteroids = true;
 
-        private const int SlowUpdateInterval = 3000;
+        private const int SlowUpdateInterval = 1000;
         private const int FastUpdateInterval = 50;
 
         #endregion
@@ -57,6 +59,8 @@ namespace LmpClient.Windows.Vessels
                 {
                     var vessel = FlightGlobals.Vessels[i];
                     if (FlightGlobals.ActiveVessel == vessel)
+                        continue;
+                    if (vessel.IsAsteroid() && FilterAsteroids)
                         continue;
 
                     if (!VesselDisplayStore.ContainsKey(vessel.id))
