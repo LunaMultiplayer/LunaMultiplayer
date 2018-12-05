@@ -44,7 +44,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                 }
 
                 //Vessel is dead so remove the locks. Do not remove the kerbal locks as that's done in the Kerbal system
-                LockSystem.Singleton.ReleaseAllVesselLocks(null, dyingVessel.id, 500);
+                LockSystem.Singleton.ReleaseAllVesselLocks(null, dyingVessel.id, 0.5f);
                 RemoveEvent.onLmpDestroyVessel.Fire(dyingVessel);
 
                 VesselCommon.RemoveVesselFromSystems(dyingVessel.id);
@@ -78,7 +78,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
             //Vessel is recovered so remove the locks. Do not remove the kerbal locks as that's done in the Kerbal system
-            LockSystem.Singleton.ReleaseAllVesselLocks(null, recoveredVessel.vesselID, 1000);
+            LockSystem.Singleton.ReleaseAllVesselLocks(null, recoveredVessel.vesselID, 1);
 
             //We consider this vessel removed but we let KSP do the remove of the vessel
             System.RemovedVessels.TryAdd(recoveredVessel.vesselID, DateTime.Now);
@@ -104,7 +104,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 
             //Vessel is terminated so remove locks Do not remove the kerbal locks as that's done in the Kerbal system
-            LockSystem.Singleton.ReleaseAllVesselLocks(null, terminatedVessel.vesselID, 1000);
+            LockSystem.Singleton.ReleaseAllVesselLocks(null, terminatedVessel.vesselID, 1);
             
             //We consider this vessel removed but we let KSP do the remove of the vessel
             System.RemovedVessels.TryAdd(terminatedVessel.vesselID, DateTime.Now);

@@ -191,29 +191,16 @@ namespace LmpClient.Systems.Lock
         /// <summary>
         /// Release all the locks (unloaded update, update, control and kerbals) of a vessel
         /// </summary>
-        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, int msDelay = 0)
+        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, float delayInSec = 0)
         {
-            TaskFactory.StartNew(() =>
+            if (delayInSec > 0)
             {
-                if (msDelay > 0)
-                    Thread.Sleep(msDelay);
-
-                if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
-                if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
-                if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
-
-                if (crewNames != null)
-                {
-                    foreach (var kerbal in crewNames)
-                    {
-                        if (LockQuery.KerbalLockBelongsToPlayer(kerbal, SettingsSystem.CurrentSettings.PlayerName))
-                            ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal));
-                    }
-                }
-            });
+                CoroutineUtil.StartDelayedRoutine("ReleaseAllVesselLocks", () => ReleaseAllVesselLocksImpl(crewNames, vesselId), delayInSec);
+            }
+            else
+            {
+                ReleaseAllVesselLocksImpl(crewNames, vesselId);
+            }
         }
 
         /// <summary>
@@ -300,6 +287,29 @@ namespace LmpClient.Systems.Lock
                 LockEvent.onLockAcquire.Fire(LockQuery.GetUpdateLock(vesselId));
             if (LockQuery.UnloadedUpdateLockExists(vesselId))
                 LockEvent.onLockAcquire.Fire(LockQuery.GetUnloadedUpdateLock(vesselId));
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void ReleaseAllVesselLocksImpl(IEnumerable<string> crewNames, Guid vesselId)
+        {
+            if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+            if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+            if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+
+            if (crewNames != null)
+            {
+                foreach (var kerbal in crewNames)
+                {
+                    if (LockQuery.KerbalLockBelongsToPlayer(kerbal, SettingsSystem.CurrentSettings.PlayerName))
+                        ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal));
+                }
+            }
         }
 
         #endregion
