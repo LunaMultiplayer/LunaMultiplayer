@@ -19,7 +19,27 @@ namespace LmpCommon
             return IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(e => e.Port == port);
         }
 
-        public static IPAddress GetMyAddress()
+        public static IPAddress GetOwnSubnetMask()
+        {
+            var ni = GetNetworkInterface();
+            if (ni == null)
+            {
+                return IPAddress.Any;
+            }
+
+            var properties = ni.GetIPProperties();
+            foreach (var unicastAddress in properties.UnicastAddresses)
+            {
+                if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return unicastAddress.IPv4Mask;
+                }
+            }
+
+            return IPAddress.Any;
+        }
+
+        public static IPAddress GetOwnInternalIpAddress()
         {
             var ni = GetNetworkInterface();
             if (ni == null)

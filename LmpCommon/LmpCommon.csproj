@@ -57,6 +57,7 @@
     <Compile Include="ConsoleUtil.cs" />
     <Compile Include="ContentChecker.cs" />
     <Compile Include="BaseLogger.cs" />
+    <Compile Include="Extensions\IpAddressExtensions.cs" />
     <Compile Include="Message\Base\EndpointUtil.cs" />
     <Compile Include="RepoRetrievers\BannedIpsRetriever.cs" />
     <Compile Include="Enums\AdminResponse.cs" />

@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using LmpCommon;
+using LmpCommon.Extensions;
 using LmpCommon.Message;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.Interface;
@@ -133,10 +134,22 @@ namespace LmpMasterServer.Lidgren
                         if (ServerDictionary.TryGetValue(msgData.Id, out var server))
                         {
                             LunaLog.Normal($"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
-                            peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
-                                msgData.InternalEndpoint,// client internal
-                                netMsg.SenderEndPoint,// client external
-                                msgData.Token); // request token
+
+                            if (netMsg.SenderEndPoint.Address.IsInSameSubnet(LunaNetUtils.GetOwnInternalIpAddress(), LunaNetUtils.GetOwnSubnetMask()))
+                            {
+                                var externalEndpoint = new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), netMsg.SenderEndPoint.Port);
+                                peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
+                                    msgData.InternalEndpoint,// client internal
+                                    externalEndpoint,// client external
+                                    msgData.Token); // request token
+                            }
+                            else
+                            {
+                                peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
+                                    msgData.InternalEndpoint,// client internal
+                                    netMsg.SenderEndPoint,// client external
+                                    msgData.Token); // request token
+                            }
                         }
                         else
                         {

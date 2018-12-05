@@ -101,7 +101,7 @@ namespace LmpClient.Network
                         var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
                         msgData.Id = serverId;
                         msgData.Token = MainSystem.UniqueIdentifier;
-                        msgData.InternalEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
+                        msgData.InternalEndpoint = new IPEndPoint(LunaNetUtils.GetOwnInternalIpAddress(), NetworkMain.Config.Port);
 
                         var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 

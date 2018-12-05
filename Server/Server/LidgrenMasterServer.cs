@@ -23,7 +23,7 @@ namespace Server.Server
 
             LunaLog.Normal("Registering with master servers...");
 
-            var adr = LunaNetUtils.GetMyAddress();
+            var adr = LunaNetUtils.GetOwnInternalIpAddress();
             if (adr == null) return;
 
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
