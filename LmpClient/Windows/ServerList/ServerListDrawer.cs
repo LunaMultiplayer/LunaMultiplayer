@@ -197,9 +197,7 @@ namespace LmpClient.Windows.ServerList
 
         private void DrawServerEntry(ServerInfo currentEntry)
         {
-            if (currentEntry.DedicatedServer)
-                RainbowEffect.StartRainbowEffect();
-
+            ColorEffect.StartPaintingServer(currentEntry);
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[0]));
             if (GUILayout.Button("▶"))
             {
@@ -277,7 +275,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.Label(new GUIContent($"{currentEntry.Description}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[13]));
             GUILayout.EndHorizontal();
 
-            RainbowEffect.StopRainbowEffect();
+            ColorEffect.StopPaintingServer();
         }
 
         #endregion

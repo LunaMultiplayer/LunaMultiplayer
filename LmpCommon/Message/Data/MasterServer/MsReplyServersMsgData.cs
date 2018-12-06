@@ -1,7 +1,7 @@
-﻿using System.Net;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpCommon.Message.Base;
 using LmpCommon.Message.Types;
+using System.Net;
 
 namespace LmpCommon.Message.Data.MasterServer
 {
@@ -19,6 +19,8 @@ namespace LmpCommon.Message.Data.MasterServer
         public bool Cheats;
         public bool ModControl;
         public bool DedicatedServer;
+        public bool RainbowEffect;
+        public byte[] Color = new byte[3];
         public int GameMode;
         public int MaxPlayers;
         public int PlayerCount;
@@ -30,9 +32,6 @@ namespace LmpCommon.Message.Data.MasterServer
         public int WarpMode;
         public int TerrainQuality;
         public int VesselUpdatesSendMsInterval;
-        public bool DropControlOnVesselSwitching;
-        public bool DropControlOnExitFlight;
-        public bool DropControlOnExit;
 
         public override string ClassName { get; } = nameof(MsReplyServersMsgData);
 
@@ -48,6 +47,9 @@ namespace LmpCommon.Message.Data.MasterServer
             lidgrenMsg.Write(Cheats);
             lidgrenMsg.Write(ModControl);
             lidgrenMsg.Write(DedicatedServer);
+            lidgrenMsg.Write(RainbowEffect);
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(Color[i]);
             lidgrenMsg.Write(GameMode);
             lidgrenMsg.Write(MaxPlayers);
             lidgrenMsg.Write(PlayerCount);
@@ -59,9 +61,6 @@ namespace LmpCommon.Message.Data.MasterServer
             lidgrenMsg.Write(WarpMode);
             lidgrenMsg.Write(TerrainQuality);
             lidgrenMsg.Write(VesselUpdatesSendMsInterval);
-            lidgrenMsg.Write(DropControlOnVesselSwitching);
-            lidgrenMsg.Write(DropControlOnExitFlight);
-            lidgrenMsg.Write(DropControlOnExit);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -76,6 +75,9 @@ namespace LmpCommon.Message.Data.MasterServer
             Cheats = lidgrenMsg.ReadBoolean();
             ModControl = lidgrenMsg.ReadBoolean();
             DedicatedServer = lidgrenMsg.ReadBoolean();
+            RainbowEffect = lidgrenMsg.ReadBoolean();
+            for (var i = 0; i < 3; i++)
+                Color[i] = lidgrenMsg.ReadByte();
             GameMode = lidgrenMsg.ReadInt32();
             MaxPlayers = lidgrenMsg.ReadInt32();
             PlayerCount = lidgrenMsg.ReadInt32();
@@ -87,9 +89,6 @@ namespace LmpCommon.Message.Data.MasterServer
             WarpMode = lidgrenMsg.ReadInt32();
             TerrainQuality = lidgrenMsg.ReadInt32();
             VesselUpdatesSendMsInterval = lidgrenMsg.ReadInt32();
-            DropControlOnVesselSwitching = lidgrenMsg.ReadBoolean();
-            DropControlOnExitFlight = lidgrenMsg.ReadBoolean();
-            DropControlOnExit = lidgrenMsg.ReadBoolean();
         }
         
         internal override int InternalGetMessageSize()
@@ -97,7 +96,7 @@ namespace LmpCommon.Message.Data.MasterServer
             return base.InternalGetMessageSize() + 
                 sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
                 ExternalEndpoint.GetByteCount() + ServerName.GetByteCount() + Description.GetByteCount() + Country .GetByteCount() + Website.GetByteCount() + WebsiteText.GetByteCount() +
-                sizeof(bool) * 7 + sizeof(int) * 6;
+                sizeof(bool) * 5 + sizeof(int) * 6 + sizeof(byte) * 3;
         }
     }
 }

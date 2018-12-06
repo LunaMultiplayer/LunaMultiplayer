@@ -168,9 +168,8 @@ namespace LmpMasterServer.Lidgren
                 msgData.Country = server.Country;
                 msgData.Website = server.Website;
                 msgData.WebsiteText = server.WebsiteText;
-                msgData.DropControlOnExit = server.DropControlOnExit;
-                msgData.DropControlOnExitFlight = server.DropControlOnExitFlight;
-                msgData.DropControlOnVesselSwitching = server.DropControlOnVesselSwitching;
+                msgData.RainbowEffect = server.RainbowEffect;
+                Array.Copy(server.Color, msgData.Color, 3);
                 msgData.ExternalEndpoint = server.ExternalEndpoint;
                 msgData.GameMode = server.GameMode;
                 msgData.InternalEndpoint = server.InternalEndpoint;

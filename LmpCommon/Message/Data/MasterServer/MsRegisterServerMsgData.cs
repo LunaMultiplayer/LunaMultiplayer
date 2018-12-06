@@ -29,9 +29,8 @@ namespace LmpCommon.Message.Data.MasterServer
         public int TerrainQuality;
         public int VesselPositionUpdatesMsInterval;
         public int SecondaryVesselPositionUpdatesMsInterval;
-        public bool DropControlOnVesselSwitching;
-        public bool DropControlOnExitFlight;
-        public bool DropControlOnExit;
+        public bool RainbowEffect;
+        public byte[] Color = new byte[3];
 
         public override string ClassName { get; } = nameof(MsRegisterServerMsgData);
 
@@ -61,10 +60,9 @@ namespace LmpCommon.Message.Data.MasterServer
             lidgrenMsg.Write(VesselPositionUpdatesMsInterval);
             lidgrenMsg.Write(SecondaryVesselPositionUpdatesMsInterval);
 
-            //4 bits = 1 byte, no need to pad bits here...
-            lidgrenMsg.Write(DropControlOnVesselSwitching);
-            lidgrenMsg.Write(DropControlOnExitFlight);
-            lidgrenMsg.Write(DropControlOnExit);
+            lidgrenMsg.Write(RainbowEffect);
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(Color[i]);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -92,9 +90,10 @@ namespace LmpCommon.Message.Data.MasterServer
             TerrainQuality = lidgrenMsg.ReadInt32();
             VesselPositionUpdatesMsInterval = lidgrenMsg.ReadInt32();
             SecondaryVesselPositionUpdatesMsInterval = lidgrenMsg.ReadInt32();
-            DropControlOnVesselSwitching = lidgrenMsg.ReadBoolean();
-            DropControlOnExitFlight = lidgrenMsg.ReadBoolean();
-            DropControlOnExit = lidgrenMsg.ReadBoolean();
+
+            RainbowEffect = lidgrenMsg.ReadBoolean();
+            for (var i = 0; i < 3; i++)
+                Color[i] = lidgrenMsg.ReadByte();
         }
 
         internal override int InternalGetMessageSize()

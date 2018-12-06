@@ -31,6 +31,9 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Specify the server's MOTD (message of the day). 255 chars max")]
         public string ServerMotd { get; set; } = "Hi %Name%!\nWelcome to %ServerName%.\nOnline players: %PlayerCount%";
 
+        [XmlComment(Value = "Writes the server's MOTD (message of the day) in the chat of the user who joins")]
+        public bool PrintMotdInChat { get; set; } = false;
+
         [XmlComment(Value = "Maximum amount of players that can join the server.")]
         public int MaxPlayers { get; set; } = 20;
 

@@ -57,7 +57,6 @@ namespace LmpClient.Network
                             Password = data.Password,
                             Cheats = data.Cheats,
                             ServerName = data.ServerName,
-                            DropControlOnExit = data.DropControlOnExit,
                             MaxPlayers = data.MaxPlayers,
                             WarpMode = data.WarpMode,
                             TerrainQuality = data.TerrainQuality,
@@ -65,11 +64,12 @@ namespace LmpClient.Network
                             GameMode = data.GameMode,
                             ModControl = data.ModControl,
                             DedicatedServer = data.DedicatedServer,
-                            DropControlOnExitFlight = data.DropControlOnExitFlight,
+                            RainbowEffect = data.RainbowEffect,
                             VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval,
-                            DropControlOnVesselSwitching = data.DropControlOnVesselSwitching,
                             ServerVersion = data.ServerVersion
                         };
+
+                        Array.Copy(data.Color, server.Color, 3);
 
                         if (Servers.TryAdd(data.Id, server))
                             PingSystem.QueuePing(data.Id);

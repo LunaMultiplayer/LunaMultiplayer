@@ -129,6 +129,7 @@
     <Compile Include="Settings\Base\ISettings.cs" />
     <Compile Include="Settings\Definition\ConnectionSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\CraftSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\DedicatedServerSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\IntervalSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\LogSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\MasterServerSettingsDefinition.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Settings\Definition\WebsiteSettingsDefinition.cs" />
     <Compile Include="Settings\SettingsHandler.cs" />
     <Compile Include="Settings\Structures\ConnectionSettings.cs" />
+    <Compile Include="Settings\Structures\DedicatedServerSettings.cs" />
     <Compile Include="Settings\Structures\IntervalSettings.cs" />
     <Compile Include="Settings\Structures\LogSettings.cs" />
     <Compile Include="Settings\Structures\WebsiteSettings.cs" />

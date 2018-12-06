@@ -32,6 +32,7 @@ namespace LmpClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.MaxScreenshotWidth = msgData.MaxScreenshotWidth;
             SettingsSystem.ServerSettings.MaxScreenshotHeight = msgData.MaxScreenshotHeight;
             SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs = msgData.MinScreenshotIntervalMs;
+            SettingsSystem.ServerSettings.PrintMotdInChat = msgData.PrintMotdInChat;
 
             SettingsSystem.ServerSettings.ServerParameters =
                 GameParameters.GetDefaultParameters(

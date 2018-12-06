@@ -46,9 +46,8 @@ namespace LmpMasterServer.Structure
 
             Website = msg.Website.Length > 60 ? msg.Website.Substring(0, 60) : msg.Website;
             WebsiteText = msg.WebsiteText.Length > 15 ? msg.WebsiteText.Substring(0, 15) : msg.WebsiteText;
-            DropControlOnExit = msg.DropControlOnExit;
-            DropControlOnExitFlight = msg.DropControlOnExitFlight;
-            DropControlOnVesselSwitching = msg.DropControlOnVesselSwitching;
+            RainbowEffect = msg.RainbowEffect;
+            Array.Copy(msg.Color, Color, 3);
             GameMode = msg.GameMode;
             MaxPlayers = msg.MaxPlayers;
             ModControl = msg.ModControl;

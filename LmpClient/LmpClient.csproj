@@ -379,7 +379,7 @@
     <Compile Include="Windows\Admin\AdminWindow.cs" />
     <Compile Include="Windows\BannedParts\BannedPartsDrawer.cs" />
     <Compile Include="Windows\BannedParts\BannedPartsWindow.cs" />
-    <Compile Include="Windows\RainbowEffect.cs" />
+    <Compile Include="Windows\ServerList\ColorEffect.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotDrawer.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotWindow.cs" />
     <Compile Include="Windows\ServerList\ServerFilter.cs" />

@@ -26,8 +26,7 @@ namespace LmpCommon
         public int TerrainQuality { get; set; }
         public int VesselUpdatesSendMsInterval { get; set; }
         public int SecondaryVesselUpdatesSendMsInterval { get; set; }
-        public bool DropControlOnVesselSwitching { get; set; }
-        public bool DropControlOnExitFlight { get; set; }
-        public bool DropControlOnExit { get; set; }
+        public bool RainbowEffect { get; set; }
+        public byte[] Color { get; set; }
     }
 }

@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using LmpCommon;
+using UnityEngine;
 
 namespace LmpClient.Windows
 {
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
-    public class RainbowEffect : MonoBehaviour
+    public class ColorEffect : MonoBehaviour
     {
         private static Color _defaultContentColor;
         private static readonly Color[] Colors = { Color.red, Color.magenta, Color.blue, Color.cyan, Color.green, Color.yellow };
@@ -42,14 +43,25 @@ namespace LmpClient.Windows
             }
         }
 
-        public static void StartRainbowEffect()
+        public static void StartPaintingServer(ServerInfo server)
         {
-            GUI.contentColor = _lerpedColor;
+            if (server.DedicatedServer)
+            {
+                if (server.RainbowEffect)
+                    StartRainbowEffect();
+                else
+                    GUI.contentColor = new Color(server.Color[0] / 255f, server.Color[1] / 255f, server.Color[2] / 255f);
+            }
         }
 
-        public static void StopRainbowEffect()
+        public static void StopPaintingServer()
         {
             GUI.contentColor = _defaultContentColor;
+        }
+
+        private static void StartRainbowEffect()
+        {
+            GUI.contentColor = _lerpedColor;
         }
     }
 }

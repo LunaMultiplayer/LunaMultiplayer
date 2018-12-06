@@ -37,9 +37,8 @@ namespace Server.Server
                 msgData.CountryCode = GeneralSettings.SettingsStore.CountryCode;
                 msgData.Website = GeneralSettings.SettingsStore.Website;
                 msgData.WebsiteText = GeneralSettings.SettingsStore.WebsiteText;
-                msgData.DropControlOnExit = GeneralSettings.SettingsStore.Cheats;
-                msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats;
-                msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats;
+                msgData.RainbowEffect = DedicatedServerSettings.SettingsStore.UseRainbowEffect;
+                msgData.Color = new[]{ DedicatedServerSettings.SettingsStore.Red, DedicatedServerSettings.SettingsStore.Green, DedicatedServerSettings.SettingsStore.Blue };
                 msgData.GameMode = (int)GeneralSettings.SettingsStore.GameMode;
                 msgData.InternalEndpoint = endpoint;
                 msgData.MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers;
