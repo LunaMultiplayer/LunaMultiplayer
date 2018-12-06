@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Harmony;
+﻿using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpCommon.Enums;
+using System.Collections.Generic;
 
 // ReSharper disable All
 
@@ -39,6 +39,9 @@ namespace LmpClient.Harmony
                 markers.Remove(marker);
                 marker.Terminate();
             }
+
+            //HACK: Sometimes you can get a lock when holding the mouse over a marker. Here we clear them
+            InputLockManager.ClearControlLocks();
         }
     }
 }
