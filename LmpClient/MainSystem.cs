@@ -38,7 +38,7 @@ namespace LmpClient
         public static string KspPath { get; private set; }
         public static string UniqueIdentifier { get; private set; }
 
-        private static ClientState _networkState;
+        private static volatile ClientState _networkState;
         public static ClientState NetworkState
         {
             get => _networkState;

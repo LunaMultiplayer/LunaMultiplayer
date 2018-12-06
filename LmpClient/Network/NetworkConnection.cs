@@ -7,7 +7,6 @@ using LmpCommon.Message.Base;
 using System;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace LmpClient.Network
 {
@@ -15,8 +14,6 @@ namespace LmpClient.Network
     {
         private static readonly object DisconnectLock = new object();
         public static volatile bool ResetRequested;
-
-        private static volatile Task _connectThread;
 
         /// <summary>
         /// Disconnects the network system. You should kill threads ONLY from main thread
@@ -58,61 +55,55 @@ namespace LmpClient.Network
 
         public static void ConnectToServer(IPEndPoint endpoint, string password)
         {
-            while (!_connectThread?.IsCompleted ?? false)
-            {
-                Thread.Sleep(500);
-            }
+            if (MainSystem.NetworkState > ClientState.Disconnected || endpoint == null)
+                return;
 
-            _connectThread = SystemBase.TaskFactory.StartNew(() =>
-            {
-                if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
-                    NetworkMain.ClientConnection.Start();
+            MainSystem.NetworkState = ClientState.Connecting;
+            MainSystem.Singleton.Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
+            LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
-                if (MainSystem.NetworkState <= ClientState.Disconnected)
+            if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
+                NetworkMain.ClientConnection.Start();
+
+            SystemBase.TaskFactory.StartNew(() =>
+            {
+                try
                 {
-                    if (endpoint == null) return;
+                    var outMsg = NetworkMain.ClientConnection.CreateMessage(password.GetByteCount());
+                    outMsg.Write(password);
 
-                    MainSystem.Singleton.Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
-                    LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
-
-                    MainSystem.NetworkState = ClientState.Connecting;
-                    try
+                    NetworkMain.ClientConnection.Connect(endpoint, outMsg);
+                    NetworkMain.ClientConnection.FlushSendQueue();
+                    Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
+                    
+                    var connectionTrials = 0;
+                    while (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected && 
+                           connectionTrials < SettingsSystem.CurrentSettings.ConnectionTries &&
+                           MainSystem.NetworkState == ClientState.Connecting)
                     {
-                        var outMsg = NetworkMain.ClientConnection.CreateMessage(password.GetByteCount());
-                        outMsg.Write(password);
+                        connectionTrials++;
+
+                        MainSystem.Singleton.Status = $"Connection retry [{connectionTrials+1}] ({endpoint.Address}:{endpoint.Port})";
+                        LunaLog.Log($"[LMP]: Connection retry [{connectionTrials}] ({endpoint.Address}:{endpoint.Port})");
 
                         NetworkMain.ClientConnection.Connect(endpoint, outMsg);
-
-                        //Force send of packets
                         NetworkMain.ClientConnection.FlushSendQueue();
-
-                        var connectionTrials = 0;
-                        while (MainSystem.NetworkState >= ClientState.Connecting &&
-                                NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected &&
-                               connectionTrials < SettingsSystem.CurrentSettings.ConnectionTries)
-                        {
-                            connectionTrials++;
-                            Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
-                        }
-
-                        if (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Connected)
-                        {
-                            LunaLog.Log($"[LMP]: Connected to {endpoint.Address}:{endpoint.Port}");
-                            MainSystem.NetworkState = ClientState.Connected;
-                        }
-                        else
-                        {
-                            Disconnect(MainSystem.NetworkState == ClientState.Connecting ? "Initial connection timeout" : "Cancelled connection");
-                        }
+                        Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
                     }
-                    catch (Exception e)
+
+                    if (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Connected)
                     {
-                        NetworkMain.HandleDisconnectException(e);
+                        LunaLog.Log($"[LMP]: Connected to {endpoint.Address}:{endpoint.Port}");
+                        MainSystem.NetworkState = ClientState.Connected;
+                    }
+                    else
+                    {
+                        Disconnect(MainSystem.NetworkState == ClientState.Connecting ? "Initial connection timeout" : "Cancelled connection");
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    LunaLog.LogError("[LMP]: Cannot connect when we are already trying to connect");
+                    NetworkMain.HandleDisconnectException(e);
                 }
             });
         }

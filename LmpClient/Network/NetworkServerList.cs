@@ -135,6 +135,10 @@ namespace LmpClient.Network
                 LunaLog.Log($"[LMP]: Nat introduction success against {msg.SenderEndPoint}. Token: {MainSystem.UniqueIdentifier}");
                 NetworkConnection.ConnectToServer(msg.SenderEndPoint, Password);
             }
+            else
+            {
+                LunaLog.LogError($"[LMP]: Nat introduction failed against {msg.SenderEndPoint}. Token: {MainSystem.UniqueIdentifier}");
+            }
         }
     }
 }
