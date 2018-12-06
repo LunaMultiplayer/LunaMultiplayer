@@ -76,10 +76,6 @@ namespace LmpCommon.RepoRetrievers
             {
                 //Ignored
             }
-
-#if DEBUG
-            MasterServersEndpoints.Add(new IPEndPoint(IPAddress.Loopback, 8700));
-#endif
         }
     }
 }

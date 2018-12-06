@@ -69,9 +69,6 @@ namespace LmpClient.Network
 
                         message.Serialize(lidgrenMsg);
                         NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
-
-                        //Force send of packets
-                        NetworkMain.ClientConnection.FlushSendQueue();
                     }
                 }
                 else

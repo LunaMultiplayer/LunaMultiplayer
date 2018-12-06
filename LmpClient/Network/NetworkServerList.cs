@@ -105,6 +105,7 @@ namespace LmpClient.Network
 
                         var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
+                        MainSystem.Singleton.Status = string.Empty;
                         LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {MainSystem.UniqueIdentifier}");
                         NetworkSender.QueueOutgoingMessage(introduceMsg);
                     }
