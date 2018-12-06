@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace LmpClient.Utilities
+namespace LmpClient.Extensions
 {
     public static class ConfigNodeSerializer
     {
@@ -75,7 +75,7 @@ namespace LmpClient.Utilities
             }
         }
         
-        public static ConfigNode Deserialize(byte[] data, int numBytes)
+        public static ConfigNode DeserializeToConfigNode(this byte[] data, int numBytes)
         {
             if (data == null || data.Length == 0 || data.All(b => b == 0)) return null;
 

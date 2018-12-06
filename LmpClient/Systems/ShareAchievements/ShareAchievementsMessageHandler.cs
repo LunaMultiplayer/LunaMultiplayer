@@ -1,9 +1,9 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Extensions;
 using LmpClient.Systems.ShareFunds;
 using LmpClient.Systems.ShareReputation;
 using LmpClient.Systems.ShareScience;
-using LmpClient.Utilities;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
@@ -91,7 +91,7 @@ namespace LmpClient.Systems.ShareAchievements
             ConfigNode node;
             try
             {
-                node = ConfigNodeSerializer.Deserialize(data, numBytes);
+                node = data.DeserializeToConfigNode(numBytes);
             }
             catch (Exception e)
             {

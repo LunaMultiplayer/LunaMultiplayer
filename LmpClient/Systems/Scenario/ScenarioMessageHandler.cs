@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
-using LmpClient.Utilities;
+using LmpClient.Extensions;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Scenario;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.Scenario
 {
@@ -46,7 +46,7 @@ namespace LmpClient.Systems.Scenario
 
         private static void QueueScenarioBytes(string scenarioModule, byte[] scenarioData, int numBytes)
         {
-            var scenarioNode = ConfigNodeSerializer.Deserialize(scenarioData, numBytes);
+            var scenarioNode = scenarioData.DeserializeToConfigNode(numBytes);
             if (scenarioNode != null)
             {
                 var entry = new ScenarioEntry

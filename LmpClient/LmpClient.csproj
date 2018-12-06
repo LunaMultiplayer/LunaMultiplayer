@@ -442,7 +442,7 @@
     <Compile Include="Systems\Warp\WarpMessageSender.cs" />
     <Compile Include="Systems\Warp\WarpStructures.cs" />
     <Compile Include="Utilities\CommonUtil.cs" />
-    <Compile Include="Utilities\ConfigNodeSerializer.cs" />
+    <Compile Include="Extensions\ConfigNodeSerializer.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />
     <Compile Include="Base\System.cs" />

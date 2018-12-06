@@ -1,4 +1,5 @@
-﻿using LmpCommon;
+﻿using LmpClient.Extensions;
+using LmpCommon;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;

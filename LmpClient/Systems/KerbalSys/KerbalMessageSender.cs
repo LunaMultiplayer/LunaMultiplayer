@@ -1,7 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Extensions;
 using LmpClient.Network;
-using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Kerbal;

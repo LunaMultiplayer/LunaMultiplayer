@@ -21,7 +21,7 @@ namespace LmpClient.Systems.VesselProtoSys
 
         public ProtoVessel CreateProtoVessel()
         {
-            var configNode = ConfigNodeSerializer.Deserialize(RawData, NumBytes);
+            var configNode = RawData.DeserializeToConfigNode(NumBytes);
             if (configNode == null || configNode.VesselHasNaNPosition())
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");

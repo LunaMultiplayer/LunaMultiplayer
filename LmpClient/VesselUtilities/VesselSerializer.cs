@@ -13,7 +13,7 @@ namespace LmpClient.VesselUtilities
         {
             try
             {
-                var vesselNode = ConfigNodeSerializer.Deserialize(data, numBytes);
+                var vesselNode = data.DeserializeToConfigNode(numBytes);
                 var configGuid = vesselNode?.GetValue("pid");
 
                 return CreateSafeProtoVesselFromConfigNode(vesselNode, new Guid(configGuid));

@@ -1,8 +1,8 @@
 ﻿using Harmony;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Extensions;
 using LmpClient.Network;
-using LmpClient.Utilities;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
