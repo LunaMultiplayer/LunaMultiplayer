@@ -75,29 +75,17 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                 vessel.vesselTransform.position = position;
                 vessel.vesselTransform.rotation = rotation;
             }
-            else if (!vessel.packed)
-            {
-                for (var i = 0; i < vessel.parts.Count; i++)
-                {
-                    if (vessel.parts[i].physicalSignificance == Part.PhysicalSignificance.FULL)
-                    {
-                        //Apply rotation to part
-                        vessel.parts[i].partTransform.rotation = rotation * vessel.parts[i].orgRot;
-                        vessel.parts[i].partTransform.position = vessel.vesselTransform.rotation * vessel.parts[i].orgPos + position;
-                        //Always run this at the end!!
-                        //Otherwise during docking, the orbital positions/speeds are not displayed correctly and you won't be able to dock
-                        vessel.parts[i].ResumeVelocity();
-                    }
-                }
-            }
             else
             {
                 for (var i = 0; i < vessel.parts.Count; i++)
                 {
+                    //Apply rotation to part
                     vessel.parts[i].partTransform.rotation = rotation * vessel.parts[i].orgRot;
-                    vessel.parts[i].partTransform.position = position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
-                    //Always run this at the end!!
-                    //Otherwise during docking, the orbital positions/speeds are not displayed correctly and you won't be able to dock
+                    if (vessel.packed || vessel.parts[i].physicalSignificance == Part.PhysicalSignificance.FULL)
+                    {
+                        vessel.parts[i].partTransform.position = position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
+                    }                        
+                    //We always need to set the part velocity (ant it's rigidbody velocity)! Otherwise during dockings it won't be possible to dock
                     vessel.parts[i].ResumeVelocity();
                 }
             }
