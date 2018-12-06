@@ -18,16 +18,12 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
-            GUILayout.BeginHorizontal();
             if (GUILayout.Button(RefreshBigIcon))
             {
                 NetworkServerList.RequestServers();
             }
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
+            ServerFilter.DrawFilters();
             DrawServersGrid();
-            GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
 
@@ -35,12 +31,14 @@ namespace LmpClient.Windows.ServerList
         {
             GUILayout.BeginHorizontal();
             _verticalScrollPosition = GUILayout.BeginScrollView(_verticalScrollPosition);
+
             GUILayout.BeginVertical();
             _horizontalScrollPosition = GUILayout.BeginScrollView(_horizontalScrollPosition);
             DrawGridHeader();
             DrawServerList();
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
+
             GUILayout.EndScrollView();
             GUILayout.EndHorizontal();
         }

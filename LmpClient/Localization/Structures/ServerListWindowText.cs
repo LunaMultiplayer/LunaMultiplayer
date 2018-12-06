@@ -1,22 +1,10 @@
 ﻿namespace LmpClient.Localization.Structures
 {
-    public class ServerListWindowText
+    public class ServerListFiltersText
     {
-        public string Title { get; set; } = "Server list";
-        public string NoServers { get; set; } = "No servers!";
-        public string Ping { get; set; } = "Ping";
-        public string Players { get; set; } = "Players";
-        public string MaxPlayers { get; set; } = "Max players";
-        public string Mode { get; set; } = "Mode";
-        public string WarpMode { get; set; } = "Warp mode";
-        public string Terrain { get; set; } = "Terrain";
-        public string Cheats { get; set; } = "Cheats";
-        public string Name { get; set; } = "Name";
-        public string Description { get; set; } = "Description";
-        public string Website { get; set; } = "URL";
-        public string ServerDetailTitle { get; set; } = "Connect to server";
-        public string Password { get; set; } = "Password:";
-        public string Connect { get; set; } = "Connect";
-        public string Dedicated { get; set; } = "Dedicated";
+        public string HideFullServers { get; set; } = "Hide full servers";
+        public string HideEmptyServers { get; set; } = "Hide empty servers";
+        public string HidePrivateServers { get; set; } = "Hide private servers";
+        public string DedicatedServersOnly { get; set; } = "Show only dedicated servers";
     }
 }

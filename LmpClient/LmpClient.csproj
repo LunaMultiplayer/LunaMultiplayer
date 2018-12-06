@@ -148,6 +148,7 @@
     <Compile Include="Harmony\PauseMenu_DrawRevertOptions.cs" />
     <Compile Include="Harmony\Part_Decouple.cs" />
     <Compile Include="Localization\Structures\RevertDialogText.cs" />
+    <Compile Include="Localization\Structures\ServerListFiltersText.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_OnDeboardSeat.cs" />
     <Compile Include="ModuleStore\Harmony\KerbalEVA_BoardSeat.cs" />
     <Compile Include="Harmony\KerbalRoster_SackAvailable.cs" />
@@ -381,6 +382,7 @@
     <Compile Include="Windows\RainbowEffect.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotDrawer.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotWindow.cs" />
+    <Compile Include="Windows\ServerList\ServerFilter.cs" />
     <Compile Include="Windows\Status\StatusTexts.cs" />
     <Compile Include="Base\RoutineDefinition.cs" />
     <Compile Include="Base\StyleLibrary.cs" />

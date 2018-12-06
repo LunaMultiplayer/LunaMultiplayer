@@ -30,6 +30,7 @@ namespace LmpClient.Localization
         public static UpdateWindowText UpdateWindowText = new UpdateWindowText();
         public static CompatibleDialogText CompatibleDialogText = new CompatibleDialogText();
         public static RevertDialogText RevertDialogText = new RevertDialogText();
+        public static ServerListFiltersText ServerListFiltersText = new ServerListFiltersText();
 
         private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Localization");
 
@@ -90,6 +91,7 @@ namespace LmpClient.Localization
             LoadWindowTexts(language, ref UpdateWindowText);
             LoadWindowTexts(language, ref CompatibleDialogText);
             LoadWindowTexts(language, ref RevertDialogText);
+            LoadWindowTexts(language, ref ServerListFiltersText);
         }
 
         /// <summary>
@@ -121,6 +123,7 @@ namespace LmpClient.Localization
                 LunaXmlSerializer.WriteToXmlFile(UpdateWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(UpdateWindowText)}.xml"));
                 LunaXmlSerializer.WriteToXmlFile(CompatibleDialogText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(CompatibleDialogText)}.xml"));
                 LunaXmlSerializer.WriteToXmlFile(RevertDialogText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(RevertDialogText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(ServerListFiltersText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ServerListFiltersText)}.xml"));
             }
 
             LoadLanguage(currentLanguage);

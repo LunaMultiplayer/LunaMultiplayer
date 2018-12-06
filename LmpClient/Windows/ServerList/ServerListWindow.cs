@@ -140,7 +140,7 @@ namespace LmpClient.Windows.ServerList
             {
                 DisplayedServers.Clear();
                 DisplayedServers.AddRange(_ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)) :
-                    NetworkServerList.Servers.Values.OrderByDescending(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)));
+                    NetworkServerList.Servers.Values.OrderByDescending(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)).Where(ServerFilter.MatchesFilters));
             }
         }
 
