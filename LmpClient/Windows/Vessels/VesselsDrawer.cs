@@ -15,14 +15,14 @@ namespace LmpClient.Windows.Vessels
 
         private static void PrintVessels()
         {
-            FastUpdate = GUILayout.Toggle(FastUpdate, "Fast Update");
-            FilterAsteroids = GUILayout.Toggle(FilterAsteroids, "Filter Asteroids");
-            if (ActiveVesselDisplayStore != null)
-            { 
+            _fastUpdate = GUILayout.Toggle(_fastUpdate, "Fast Update");
+            VesselFilter.DrawFilters();
+            if (_activeVesselDisplayStore != null)
+            {
                 GUILayout.Label("Active vessel:");
                 GUILayout.BeginVertical(Skin.box);
-                ActiveVesselDisplayStore.Display = GUILayout.Toggle(ActiveVesselDisplayStore.Display, ActiveVesselDisplayStore.VesselId.ToString());
-                ActiveVesselDisplayStore.Print();
+                _activeVesselDisplayStore.Display = GUILayout.Toggle(_activeVesselDisplayStore.Display, _activeVesselDisplayStore.VesselId.ToString());
+                _activeVesselDisplayStore.Print();
                 GUILayout.EndVertical();
                 GUILayout.Label("Other vessels:");
             }
