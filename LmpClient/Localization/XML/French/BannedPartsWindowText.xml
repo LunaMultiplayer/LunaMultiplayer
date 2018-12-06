@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
+
 <BannedPartsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>LunaMultiplayer - Pièces bannies du serveur</Title>
   <Text>Lancement non-autorisé. Contient les pièces interdites suivantes :</Text>

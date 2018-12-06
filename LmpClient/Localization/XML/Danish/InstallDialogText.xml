@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
+
 <InstallDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>Forkert installation fundet</Title>
   <IncorrectInstall>LunaMultiplayer er ikke installeret korrekt.</IncorrectInstall>

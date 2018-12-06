@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
+
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <PlayerName>Nome Giocatore:</PlayerName>
   <Name>Nome:</Name>
@@ -6,4 +7,7 @@
   <Port>Porta:</Port>
   <Password>Password:</Password>
   <CustomServers>Server personalizzati:</CustomServers>
+  <Connect>Connect</Connect>
+  <Settings>Settings</Settings>
+  <Servers>Server List</Servers>
 </ConnectionWindowText>

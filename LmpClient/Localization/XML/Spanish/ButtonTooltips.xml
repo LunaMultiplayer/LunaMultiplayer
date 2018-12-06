@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
+
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SettingsIcon>Opciones</SettingsIcon>
   <ServerIcon>Servidores</ServerIcon>
@@ -11,6 +12,7 @@
   <PlusIcon>Añadir</PlusIcon>
   <SaveIcon>Guardar</SaveIcon>
   <KeyIcon>Password</KeyIcon>
+  <GlobeIcon>Country</GlobeIcon>
   <ChatIcon>Chat</ChatIcon>
   <CameraIcon>Fotos</CameraIcon>
   <RocketIcon>Naves</RocketIcon>
@@ -20,4 +22,9 @@
   <DekesslerIcon>Dekessler</DekesslerIcon>
   <NukeIcon>Nuke KSC</NukeIcon>
   <RestartServerIcon>Reiniciar server</RestartServerIcon>
+  <DownloadIcon>Download</DownloadIcon>
+  <CycleFirstIcon>First</CycleFirstIcon>
+  <CyclePreviousIcon>Previous</CyclePreviousIcon>
+  <CycleNextIcon>Next</CycleNextIcon>
+  <CycleLastIcon>Last</CycleLastIcon>
 </ButtonTooltips>

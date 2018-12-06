@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
+
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SettingsIcon>设置</SettingsIcon>
   <ServerIcon>服务器</ServerIcon>
@@ -11,6 +12,7 @@
   <PlusIcon>添加</PlusIcon>
   <SaveIcon>保存</SaveIcon>
   <KeyIcon>密码</KeyIcon>
+  <GlobeIcon>Country</GlobeIcon>
   <ChatIcon>聊天</ChatIcon>
   <CameraIcon>截图</CameraIcon>
   <RocketIcon>载具</RocketIcon>
@@ -20,4 +22,9 @@
   <DekesslerIcon>清理垃圾</DekesslerIcon>
   <NukeIcon>清空KSC</NukeIcon>
   <RestartServerIcon>重启服务器</RestartServerIcon>
+  <DownloadIcon>Download</DownloadIcon>
+  <CycleFirstIcon>First</CycleFirstIcon>
+  <CyclePreviousIcon>Previous</CyclePreviousIcon>
+  <CycleNextIcon>Next</CycleNextIcon>
+  <CycleLastIcon>Last</CycleLastIcon>
 </ButtonTooltips>

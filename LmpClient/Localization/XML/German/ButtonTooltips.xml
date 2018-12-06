@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
+
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SettingsIcon>Optionen</SettingsIcon>
   <ServerIcon>Server</ServerIcon>
@@ -11,6 +12,7 @@
   <PlusIcon>Hinzufügen</PlusIcon>
   <SaveIcon>Speichern</SaveIcon>
   <KeyIcon>Passwort</KeyIcon>
+  <GlobeIcon>Country</GlobeIcon>
   <ChatIcon>Chat</ChatIcon>
   <CameraIcon>Screenshots</CameraIcon>
   <RocketIcon>Fahrzeugbibliothek</RocketIcon>
@@ -20,4 +22,9 @@
   <DekesslerIcon>Dekessler (löscht alle Debris)</DekesslerIcon>
   <NukeIcon>Nuke KSC (löscht alle Fahrzeuge am KSC)</NukeIcon>
   <RestartServerIcon>Server Neustart</RestartServerIcon>
+  <DownloadIcon>Download</DownloadIcon>
+  <CycleFirstIcon>First</CycleFirstIcon>
+  <CyclePreviousIcon>Previous</CyclePreviousIcon>
+  <CycleNextIcon>Next</CycleNextIcon>
+  <CycleLastIcon>Last</CycleLastIcon>
 </ButtonTooltips>
