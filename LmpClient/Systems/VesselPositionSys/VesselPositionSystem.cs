@@ -230,7 +230,7 @@ namespace LmpClient.Systems.VesselPositionSys
 
         private static bool PositionUpdateIsTooOld(VesselPositionUpdate update)
         {
-            return update.GameTimeStamp < TimeSyncSystem.UniversalTime - VesselCommon.PositionAndFlightStateMessageOffsetSec(update.PingMs);
+            return update.GameTimeStamp < TimeSyncSystem.UniversalTime - VesselCommon.PositionAndFlightStateMessageOffsetSec(update.PingSec);
         }
 
         /// <summary>

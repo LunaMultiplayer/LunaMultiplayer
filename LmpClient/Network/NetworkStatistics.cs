@@ -4,36 +4,46 @@ using System;
 
 namespace LmpClient.Network
 {
+    public enum Statistic
+    {
+        Ping,
+        SentBytes,
+        ReceivedBytes,
+        TimeOffset,
+        LastSendTime,
+        LastReceiveTime,
+        MessagesInCache,
+        MessageDataInCache
+    }
+
     public class NetworkStatistics
     {
-        public static float PingMs { get; set; }
         public static DateTime LastReceiveTime { get; set; }
         public static DateTime LastSendTime { get; set; }
-        
-        public static long GetStatistics(string statType)
+
+        public static float GetStatistics(Statistic statType)
         {
             switch (statType)
             {
-                case "Ping":
-                    return (long)PingMs;
-                case "SentBytes":
+                case Statistic.Ping:
+                    return NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
+                case Statistic.SentBytes:
                     return NetworkMain.ClientConnection.Statistics.SentBytes;
-                case "ReceivedBytes":
+                case Statistic.ReceivedBytes:
                     return NetworkMain.ClientConnection.Statistics.ReceivedBytes;
-                case "Latency":
-                    return (long)NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
-                case "TimeOffset":
-                    return (long)TimeSpan.FromSeconds(NetworkMain.ClientConnection?.ServerConnection?.RemoteTimeOffset ?? 0).TotalMilliseconds;
-                case "LastSendTime":
-                    return (long)(LunaNetworkTime.UtcNow - LastSendTime).TotalMilliseconds;
-                case "LastReceiveTime":
-                    return (long)(LunaNetworkTime.UtcNow - LastReceiveTime).TotalMilliseconds;
-                case "MessagesInCache":
+                case Statistic.TimeOffset:
+                    return (float)TimeSpan.FromSeconds(NetworkMain.ClientConnection?.ServerConnection?.RemoteTimeOffset ?? 0).TotalMilliseconds;
+                case Statistic.LastSendTime:
+                    return (float)(LunaNetworkTime.UtcNow - LastSendTime).TotalMilliseconds;
+                case Statistic.LastReceiveTime:
+                    return (float)(LunaNetworkTime.UtcNow - LastReceiveTime).TotalMilliseconds;
+                case Statistic.MessagesInCache:
                     return MessageStore.GetMessageCount(null);
-                case "MessageDataInCache":
+                case Statistic.MessageDataInCache:
                     return MessageStore.GetMessageDataCount(null);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(statType), statType, null);
             }
-            return 0;
         }
     }
 }

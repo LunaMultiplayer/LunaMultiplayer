@@ -79,7 +79,7 @@ namespace LmpClient.Network
                                 NetworkServerList.HandleNatIntroduction(msg);
                                 break;
                             case NetIncomingMessageType.ConnectionLatencyUpdated:
-                                NetworkStatistics.PingMs = (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
+                                LunaLog.Log($"[Lidgren PING] New ping value : {TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds} ms");
                                 break;
                             case NetIncomingMessageType.UnconnectedData:
                                 NetworkServerList.HandleServersList(msg);

@@ -12,7 +12,7 @@ namespace LmpClient.Systems.VesselPositionSys
             value.SubspaceId = msgData.SubspaceId;
             value.BodyIndex = msgData.BodyIndex;
             value.HeightFromTerrain = msgData.HeightFromTerrain;
-            value.PingMs = msgData.PingMs;
+            value.PingSec = msgData.PingSec;
             value.Landed = msgData.Landed;
             value.Splashed = msgData.Splashed;
             value.GameTimeStamp = msgData.GameTime;

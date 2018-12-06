@@ -11,7 +11,7 @@ namespace LmpCommon.Message.Data.Vessel
 
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often.
         public int SubspaceId;
-        public float PingMs;
+        public float PingSec;
         public float MainThrottle;
         public float WheelThrottleTrim;
         public float X;
@@ -38,7 +38,7 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(SubspaceId);
-            lidgrenMsg.Write(PingMs);
+            lidgrenMsg.Write(PingSec);
             lidgrenMsg.Write(MainThrottle);
             lidgrenMsg.Write(WheelThrottle);
             lidgrenMsg.Write(WheelThrottleTrim);
@@ -64,7 +64,7 @@ namespace LmpCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
 
             SubspaceId = lidgrenMsg.ReadInt32();
-            PingMs = lidgrenMsg.ReadFloat();
+            PingSec = lidgrenMsg.ReadFloat();
             MainThrottle = lidgrenMsg.ReadFloat();
             WheelThrottle = lidgrenMsg.ReadFloat();
             WheelThrottleTrim = lidgrenMsg.ReadFloat();

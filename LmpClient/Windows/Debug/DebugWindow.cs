@@ -81,15 +81,14 @@ namespace LmpClient.Windows.Debug
 
                 if (_displayConnectionQueue)
                 {
-                    StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.");
-                    StringBuilder.AppendLine($"Latency: {NetworkStatistics.GetStatistics("Latency")}s.");
-                    StringBuilder.AppendLine($"TimeOffset: {TimeSpan.FromTicks(NetworkStatistics.GetStatistics("TimeOffset")).TotalMilliseconds}ms.");
-                    StringBuilder.AppendLine($"Last send time: {NetworkStatistics.GetStatistics("LastSendTime")}ms ago.");
-                    StringBuilder.AppendLine($"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.");
-                    StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.GetStatistics("MessagesInCache")}.");
-                    StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.GetStatistics("MessageDataInCache")}.");
-                    StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.");
-                    StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n");
+                    StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics(Statistic.Ping)}ms.");
+                    StringBuilder.AppendLine($"TimeOffset: {NetworkStatistics.GetStatistics(Statistic.TimeOffset)}ms.");
+                    StringBuilder.AppendLine($"Last send time: {NetworkStatistics.GetStatistics(Statistic.LastSendTime)}ms ago.");
+                    StringBuilder.AppendLine($"Last receive time: {NetworkStatistics.GetStatistics(Statistic.LastReceiveTime)}ms ago.");
+                    StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.GetStatistics(Statistic.MessagesInCache)}.");
+                    StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.GetStatistics(Statistic.MessageDataInCache)}.");
+                    StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics(Statistic.SentBytes)}.");
+                    StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics(Statistic.ReceivedBytes)}.\n");
                     _connectionText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }

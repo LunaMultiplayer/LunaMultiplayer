@@ -45,7 +45,7 @@ namespace LmpClient.Systems.VesselPositionSys
         public double[] NormalVector { get; set; } = new double[3];
         public double[] Orbit { get; set; } = new double[8];
         public float[] SrfRelRotation { get; set; } = new float[4];
-        public float PingMs { get; set; }
+        public float PingSec { get; set; }
         public float HeightFromTerrain { get; set; }
         public double GameTimeStamp { get; set; }
         public int SubspaceId { get; set; }
@@ -92,7 +92,7 @@ namespace LmpClient.Systems.VesselPositionSys
             VesselId = msgData.VesselId;
             BodyIndex = msgData.BodyIndex;
             SubspaceId = msgData.SubspaceId;
-            PingMs = msgData.PingMs;
+            PingSec = msgData.PingSec;
             HeightFromTerrain = msgData.HeightFromTerrain;
             Landed = msgData.Landed;
             Splashed = msgData.Splashed;
@@ -111,7 +111,7 @@ namespace LmpClient.Systems.VesselPositionSys
             VesselId = update.VesselId;
             BodyIndex = update.BodyIndex;
             SubspaceId = update.SubspaceId;
-            PingMs = update.PingMs;
+            PingSec = update.PingSec;
             HeightFromTerrain = update.HeightFromTerrain;
             Landed = update.Landed;
             Splashed = update.Splashed;
@@ -142,7 +142,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 {
                     //We enter in this clause when it's the first iteration
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds;
-                    PingMs = 0;
+                    PingSec = 0;
 
                     CopyFrom(targetUpdate);
                 }
@@ -284,7 +284,7 @@ namespace LmpClient.Systems.VesselPositionSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs);
+            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingSec);
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
