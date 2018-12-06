@@ -45,7 +45,7 @@ namespace LmpClient.Windows.Vessels.Structures
             StringBuilder.Append("Amt: ").AppendLine(Amount.ToString())
                 .Append("Duration: ").AppendLine($"{Duration:F0}ms")
                 .Append("TimeDiff: ").AppendLine($"{TimeDifference:F0}ms")
-                .Append("ExtraInterpolationTime: ").AppendLine($"+{ExtraInterpolationTime:F0}ms")
+                .Append("ExtraInterpolationTime: ").AppendLine($"{ExtraInterpolationTime:F0}ms")
                 .Append("Percentage: ").Append($"{Percentage:F0}%");
             
             GUILayout.Label(StringBuilder.ToString());
