@@ -52,7 +52,7 @@ namespace LmpClient.Systems.VesselPositionSys
             if (!OrbitParametersAreOk(vessel)) return null;
 
             var msgData = MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
-            msgData.PingSec = NetworkStatistics.GetStatistics(Statistic.Ping);
+            msgData.PingSec = NetworkStatistics.PingSec;
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
             msgData.GameTime = TimeSyncSystem.UniversalTime;
             try

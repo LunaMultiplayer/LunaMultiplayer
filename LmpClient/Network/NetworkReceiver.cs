@@ -66,7 +66,6 @@ namespace LmpClient.Network
                 {
                     if (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {
-                        NetworkStatistics.LastReceiveTime = LunaNetworkTime.UtcNow;
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.DebugMessage:

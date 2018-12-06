@@ -81,14 +81,12 @@ namespace LmpClient.Windows.Debug
 
                 if (_displayConnectionQueue)
                 {
-                    StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics(Statistic.Ping)}ms.");
-                    StringBuilder.AppendLine($"TimeOffset: {NetworkStatistics.GetStatistics(Statistic.TimeOffset)}ms.");
-                    StringBuilder.AppendLine($"Last send time: {NetworkStatistics.GetStatistics(Statistic.LastSendTime)}ms ago.");
-                    StringBuilder.AppendLine($"Last receive time: {NetworkStatistics.GetStatistics(Statistic.LastReceiveTime)}ms ago.");
-                    StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.GetStatistics(Statistic.MessagesInCache)}.");
-                    StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.GetStatistics(Statistic.MessageDataInCache)}.");
-                    StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics(Statistic.SentBytes)}.");
-                    StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics(Statistic.ReceivedBytes)}.\n");
+                    StringBuilder.AppendLine($"Ping: {TimeSpan.FromSeconds(NetworkStatistics.PingSec).TotalMilliseconds}ms.");
+                    StringBuilder.AppendLine($"TimeOffset: {TimeSpan.FromSeconds(NetworkStatistics.TimeOffset).TotalMilliseconds}ms.");
+                    StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.MessagesInCache}.");
+                    StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.MessageDataInCache}.");
+                    StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.SentBytes}.");
+                    StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.ReceivedBytes}.\n");
                     _connectionText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }

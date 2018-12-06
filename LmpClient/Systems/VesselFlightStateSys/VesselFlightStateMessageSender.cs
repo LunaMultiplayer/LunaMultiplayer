@@ -22,7 +22,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             flightState.CopyFrom(FlightGlobals.ActiveVessel.ctrlState);
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFlightStateMsgData>();
-            msgData.PingSec = NetworkStatistics.GetStatistics(Statistic.Ping);
+            msgData.PingSec = NetworkStatistics.PingSec;
 
             msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
