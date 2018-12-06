@@ -81,7 +81,7 @@ namespace LmpCommon.Xml
 
         public static string SerializeToXml(object objectToSerialize)
         {
-            string returnString = null;
+            string returnString;
             try
             {
                 using (var s = new StringWriter())
@@ -90,62 +90,59 @@ namespace LmpCommon.Xml
                     w.Formatting = Formatting.Indented;
                     var serializer = new XmlSerializer(objectToSerialize.GetType());
                     serializer.Serialize(w, objectToSerialize);
-                    string tempString = WriteComments(objectToSerialize, s.ToString());
-                    using (StringWriter sw = new StringWriter())
+                    var tempString = WriteComments(objectToSerialize, s.ToString());
+                    using (var sw = new StringWriter())
+                    using (var sr = new StringReader(tempString))
+                    using (var xmlReader = new XmlTextReader(sr))
                     {
-                        using (StringReader sr = new StringReader(tempString))
+                        var xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings { Indent = true });
+                        while (xmlReader.Read())
                         {
-                            using (XmlTextReader xmlReader = new XmlTextReader(sr))
+                            switch (xmlReader.NodeType)
                             {
-                                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
-                                xmlWriterSettings = new XmlWriterSettings();
-                                xmlWriterSettings.Indent = true;
-                                XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
-                                while (xmlReader.Read())
-                                {
-                                    switch (xmlReader.NodeType)
+                                case XmlNodeType.Element:
+                                    xmlWriter.WriteStartElement(xmlReader.Prefix, xmlReader.LocalName,
+                                        xmlReader.NamespaceURI);
+                                    xmlWriter.WriteAttributes(xmlReader, true);
+                                    if (xmlReader.IsEmptyElement)
                                     {
-                                        case XmlNodeType.Element:
-                                            xmlWriter.WriteStartElement(xmlReader.Prefix, xmlReader.LocalName, xmlReader.NamespaceURI);
-                                            xmlWriter.WriteAttributes(xmlReader, true);
-                                            if (xmlReader.IsEmptyElement)
-                                            {
-                                                xmlWriter.WriteFullEndElement();
-                                            }
-                                            break;
-                                        case XmlNodeType.Text:
-                                            xmlWriter.WriteString(xmlReader.Value);
-                                            break;
-                                        case XmlNodeType.Whitespace:
-                                        case XmlNodeType.SignificantWhitespace:
-                                            xmlWriter.WriteWhitespace(xmlReader.Value);
-                                            break;
-                                        case XmlNodeType.CDATA:
-                                            xmlWriter.WriteCData(xmlReader.Value);
-                                            break;
-                                        case XmlNodeType.EntityReference:
-                                            xmlWriter.WriteEntityRef(xmlReader.Name);
-                                            break;
-                                        case XmlNodeType.XmlDeclaration:
-                                        case XmlNodeType.ProcessingInstruction:
-                                            xmlWriter.WriteProcessingInstruction(xmlReader.Name, xmlReader.Value);
-                                            break;
-                                        case XmlNodeType.DocumentType:
-                                            xmlWriter.WriteDocType(xmlReader.Name, xmlReader.GetAttribute("PUBLIC"), xmlReader.GetAttribute("SYSTEM"), xmlReader.Value);
-                                            break;
-                                        case XmlNodeType.Comment:
-                                            xmlWriter.WriteComment(xmlReader.Value);
-                                            break;
-                                        case XmlNodeType.EndElement:
-                                            xmlWriter.WriteFullEndElement();
-                                            break;
+                                        xmlWriter.WriteFullEndElement();
                                     }
-                                }
-                                xmlWriter.WriteEndDocument();
-                                xmlWriter.Flush();
-                                xmlWriter.Close();
+
+                                    break;
+                                case XmlNodeType.Text:
+                                    xmlWriter.WriteString(xmlReader.Value);
+                                    break;
+                                case XmlNodeType.Whitespace:
+                                case XmlNodeType.SignificantWhitespace:
+                                    xmlWriter.WriteWhitespace(xmlReader.Value);
+                                    break;
+                                case XmlNodeType.CDATA:
+                                    xmlWriter.WriteCData(xmlReader.Value);
+                                    break;
+                                case XmlNodeType.EntityReference:
+                                    xmlWriter.WriteEntityRef(xmlReader.Name);
+                                    break;
+                                case XmlNodeType.XmlDeclaration:
+                                case XmlNodeType.ProcessingInstruction:
+                                    xmlWriter.WriteProcessingInstruction(xmlReader.Name, xmlReader.Value);
+                                    break;
+                                case XmlNodeType.DocumentType:
+                                    xmlWriter.WriteDocType(xmlReader.Name, xmlReader.GetAttribute("PUBLIC"),
+                                        xmlReader.GetAttribute("SYSTEM"), xmlReader.Value);
+                                    break;
+                                case XmlNodeType.Comment:
+                                    xmlWriter.WriteComment(xmlReader.Value);
+                                    break;
+                                case XmlNodeType.EndElement:
+                                    xmlWriter.WriteFullEndElement();
+                                    break;
                             }
                         }
+
+                        xmlWriter.WriteEndDocument();
+                        xmlWriter.Flush();
+                        xmlWriter.Close();
                         returnString = sw.ToString();
                     }
                 }
