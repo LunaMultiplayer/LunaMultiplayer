@@ -26,7 +26,7 @@ namespace LmpClient.VesselUtilities
     public class VesselCommon
     {
         public static float PositionAndFlightStateMessageOffsetSec(float targetPingMs) => (float)TimeSpan.FromMilliseconds(PositionAndFlightStateMessageOffsetMs(targetPingMs)).TotalSeconds;
-        public static int PositionAndFlightStateMessageOffsetMs(float targetPingMs) => (int)Mathf.Clamp(NetworkStatistics.PingMs + targetPingMs, 250, 1000);
+        public static int PositionAndFlightStateMessageOffsetMs(float targetPingMs) => (int)Mathf.Clamp(NetworkStatistics.PingMs + targetPingMs * 2, 250, 1000);
 
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
