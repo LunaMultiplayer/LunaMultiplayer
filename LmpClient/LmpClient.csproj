@@ -441,7 +441,6 @@
     <Compile Include="Systems\Warp\WarpMessageHandler.cs" />
     <Compile Include="Systems\Warp\WarpMessageSender.cs" />
     <Compile Include="Systems\Warp\WarpStructures.cs" />
-    <Compile Include="Utilities\ClockHandler.cs" />
     <Compile Include="Utilities\CommonUtil.cs" />
     <Compile Include="Utilities\ConfigNodeSerializer.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
