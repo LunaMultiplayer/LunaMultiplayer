@@ -27,6 +27,6 @@ namespace LmpCommon
         public int VesselUpdatesSendMsInterval { get; set; }
         public int SecondaryVesselUpdatesSendMsInterval { get; set; }
         public bool RainbowEffect { get; set; }
-        public byte[] Color { get; set; }
+        public byte[] Color { get; } = new byte[3];
     }
 }

@@ -7,26 +7,26 @@ using uhttpsharp.Handlers;
 
 namespace LmpMasterServer.Http.Handlers
 {
-    public class ServerInfoRestHandler : IRestController<ServerInfo>
+    public class ServerInfoRestHandler : IRestController<ServerJson>
     {
-        public Task<IEnumerable<ServerInfo>> Get(IHttpRequest request)
+        public Task<IEnumerable<ServerJson>> Get(IHttpRequest request)
         {
-            return Task.FromResult(Lidgren.MasterServer.ServerDictionary.Values.Select(s => (ServerInfo)s));
+            return Task.FromResult(Lidgren.MasterServer.ServerDictionary.Values.Select(s => new ServerJson(s)));
         }
-        public Task<ServerInfo> GetItem(IHttpRequest request)
+        public Task<ServerJson> GetItem(IHttpRequest request)
         {
             throw new HttpException(HttpResponseCode.MethodNotAllowed, "The method is not allowed");
         }
 
-        public Task<ServerInfo> Create(IHttpRequest request)
+        public Task<ServerJson> Create(IHttpRequest request)
         {
             throw new HttpException(HttpResponseCode.MethodNotAllowed, "The method is not allowed");
         }
-        public Task<ServerInfo> Upsert(IHttpRequest request)
+        public Task<ServerJson> Upsert(IHttpRequest request)
         {
             throw new HttpException(HttpResponseCode.MethodNotAllowed, "The method is not allowed");
         }
-        public Task<ServerInfo> Delete(IHttpRequest request)
+        public Task<ServerJson> Delete(IHttpRequest request)
         {
             throw new HttpException(HttpResponseCode.MethodNotAllowed, "The method is not allowed");
         }

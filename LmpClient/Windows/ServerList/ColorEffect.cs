@@ -45,7 +45,7 @@ namespace LmpClient.Windows
 
         public static void StartPaintingServer(ServerInfo server)
         {
-            if (server.DedicatedServer)
+            if (server.DedicatedServer || true)
             {
                 if (server.RainbowEffect)
                     StartRainbowEffect();

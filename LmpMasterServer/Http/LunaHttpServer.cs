@@ -25,7 +25,7 @@ namespace LmpMasterServer.Http
             Server.Use(new FileHandler());
             Server.Use(new HttpRouter()
                 .With(string.Empty, new ServerListHandler())
-                .With("json", new RestHandler<ServerInfo>(new ServerInfoRestHandler(), JsonResponseProvider.Default)));
+                .With("json", new RestHandler<ServerJson>(new ServerInfoRestHandler(), JsonResponseProvider.Default)));
 
             Server.Start();
         }
