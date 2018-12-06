@@ -30,7 +30,7 @@ namespace LmpClient.VesselUtilities
         /// </summary>
         public static byte[] SerializeVessel(ProtoVessel protoVessel)
         {
-            return PreSerializationChecks(protoVessel, out var configNode) ? ConfigNodeSerializer.Serialize(configNode) : new byte[0];
+            return PreSerializationChecks(protoVessel, out var configNode) ? configNode.Serialize() : new byte[0];
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace LmpClient.VesselUtilities
         {
             if (PreSerializationChecks(protoVessel, out var configNode))
             {
-                ConfigNodeSerializer.SerializeToArray(configNode, data, out numBytes);
+                configNode.SerializeToArray(data, out numBytes);
             }
             else
             {

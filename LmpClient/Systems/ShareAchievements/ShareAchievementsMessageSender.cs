@@ -1,5 +1,4 @@
-﻿using System;
-using Harmony;
+﻿using Harmony;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
@@ -7,6 +6,7 @@ using LmpClient.Utilities;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
+using System;
 
 namespace LmpClient.Systems.ShareAchievements
 {
@@ -40,7 +40,7 @@ namespace LmpClient.Systems.ShareAchievements
                 //Build the packet and send it.
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressAchievementsMsgData>();
                 msgData.Id = foundNode.Id;
-                msgData.Data = ConfigNodeSerializer.Serialize(configNode);
+                msgData.Data = configNode.Serialize();
                 msgData.NumBytes = msgData.Data.Length;
                 System.MessageSender.SendMessage(msgData);
             }

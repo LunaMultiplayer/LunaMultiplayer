@@ -77,7 +77,7 @@ namespace LmpClient.Extensions
 
             if (part.rb)
             {
-                part.rb.isKinematic = immortal;
+                //part.rb.isKinematic = immortal;
 
                 //Do not change this value as otherwise you can't grab ladders or right-click on vessels that are controlled by other players
                 //part.rb.detectCollisions = !immortal;

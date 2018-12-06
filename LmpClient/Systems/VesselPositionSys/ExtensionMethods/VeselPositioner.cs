@@ -79,7 +79,6 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             {
                 for (var i = 0; i < vessel.parts.Count; i++)
                 {
-                    //Apply rotation to part
                     vessel.parts[i].partTransform.rotation = rotation * vessel.parts[i].orgRot;
                     if (vessel.packed || vessel.parts[i].physicalSignificance == Part.PhysicalSignificance.FULL)
                     {

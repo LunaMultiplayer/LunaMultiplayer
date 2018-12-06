@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using LmpCommon;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using LmpCommon;
 
 namespace LmpClient.Utilities
 {
@@ -77,7 +77,7 @@ namespace LmpClient.Utilities
                     var vesselId = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
                     LunaLog.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("name")}");
 
-                    File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.txt"), Encoding.UTF8.GetString(ConfigNodeSerializer.Serialize(cn)));
+                    File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.txt"), Encoding.UTF8.GetString(cn.Serialize()));
                 }
             }
 
@@ -92,7 +92,7 @@ namespace LmpClient.Utilities
 
                     LunaLog.Log($"[LMP]: Saving scenario: {scenarioName}");
 
-                    File.WriteAllText(CommonUtil.CombinePaths(scenarioFolder, $"{scenarioName}.txt"), Encoding.UTF8.GetString(ConfigNodeSerializer.Serialize(cn)));
+                    File.WriteAllText(CommonUtil.CombinePaths(scenarioFolder, $"{scenarioName}.txt"), Encoding.UTF8.GetString(cn.Serialize()));
                 }
             }
 

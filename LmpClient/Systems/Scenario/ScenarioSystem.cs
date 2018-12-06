@@ -136,7 +136,7 @@ namespace LmpClient.Systems.Scenario
 
             foreach (var scenarioConfigNode in ScenariosConfigNodes)
             {
-                var scenarioBytes = ConfigNodeSerializer.Serialize(scenarioConfigNode.Item2);
+                var scenarioBytes = scenarioConfigNode.Item2.Serialize();
                 var scenarioHash = Common.CalculateSha256Hash(scenarioBytes);
 
                 if (scenarioBytes.Length == 0)

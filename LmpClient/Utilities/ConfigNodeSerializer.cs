@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace LmpClient.Utilities
 {
-    public class ConfigNodeSerializer
+    public static class ConfigNodeSerializer
     {
         static ConfigNodeSerializer()
         {
@@ -36,7 +36,7 @@ namespace LmpClient.Utilities
         private static PreFormatConfigDelegate PreFormatConfigThunk { get; }
         private static RecurseFormatDelegate RecurseFormatThunk { get; }
 
-        public static byte[] Serialize(ConfigNode node)
+        public static byte[] Serialize(this ConfigNode node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
 
@@ -53,7 +53,7 @@ namespace LmpClient.Utilities
         /// <summary>
         /// Use this method to serialize to a given array and avoid generating garbage (if you pool the array given as parameter)
         /// </summary>
-        public static void SerializeToArray(ConfigNode node, byte[] data, out int numBytes)
+        public static void SerializeToArray(this ConfigNode node, byte[] data, out int numBytes)
         {
             try
             {

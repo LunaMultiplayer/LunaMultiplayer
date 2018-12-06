@@ -1,5 +1,4 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Utilities;
@@ -7,6 +6,7 @@ using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.ShareProgress;
 using LmpCommon.Message.Interface;
 using Strategies;
+using System;
 
 namespace LmpClient.Systems.ShareStrategy
 {
@@ -25,7 +25,7 @@ namespace LmpClient.Systems.ShareStrategy
             var configNode = ConvertStrategyToConfigNode(strategy);
             if (configNode == null) return;
 
-            var data = ConfigNodeSerializer.Serialize(configNode);
+            var data = configNode.Serialize();
             var numBytes = data.Length;
 
             msgData.Strategy.NumBytes = numBytes;

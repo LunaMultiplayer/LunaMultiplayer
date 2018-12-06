@@ -40,7 +40,7 @@ namespace LmpClient.Systems.KerbalSys
             ConfigNode.ClearData();
             pcm.Save(ConfigNode);
 
-            var kerbalBytes = ConfigNodeSerializer.Serialize(ConfigNode);
+            var kerbalBytes = ConfigNode.Serialize();
             if (kerbalBytes == null || kerbalBytes.Length == 0)
             {
                 LunaLog.LogError("[LMP]: Error sending kerbal - bytes are null or 0");
