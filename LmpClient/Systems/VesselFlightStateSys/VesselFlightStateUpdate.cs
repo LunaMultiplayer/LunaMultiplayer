@@ -23,8 +23,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         public double GameTimeStamp { get; set; }
         public int SubspaceId { get; set; }
         public Guid VesselId { get; set; }
-
-        public float PingMs { get; set; }
+        public float PingSec { get; set; }
 
         #endregion
 
@@ -56,7 +55,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             VesselId = msgData.VesselId;
             GameTimeStamp = msgData.GameTime;
             SubspaceId = msgData.SubspaceId;
-            PingMs = msgData.PingSec;
+            PingSec = msgData.PingSec;
 
             CtrlState.CopyFrom(msgData);
         }
@@ -66,7 +65,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             VesselId = update.VesselId;
             GameTimeStamp = update.GameTimeStamp;
             SubspaceId = update.SubspaceId;
-            PingMs = update.PingMs;
+            PingSec = update.PingSec;
 
             CtrlState.CopyFrom(update.CtrlState);
         }
@@ -143,7 +142,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingMs);
+            TimeDifference = TimeSyncSystem.UniversalTime - GameTimeStamp - VesselCommon.PositionAndFlightStateMessageOffsetSec(PingSec);
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
