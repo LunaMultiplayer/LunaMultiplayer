@@ -115,6 +115,8 @@
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
     <Compile Include="Harmony\FlightDriver_SetStartupNewVessel.cs" />
     <Compile Include="Harmony\FlightDriver_Start.cs" />
+    <Compile Include="Harmony\OrbitDriver_TrackRigidbody.cs" />
+    <Compile Include="Harmony\OrbitDriver_UpdateFromParameters.cs" />
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
     <Compile Include="Harmony\FlightResultsDialog_SetupGUI.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
