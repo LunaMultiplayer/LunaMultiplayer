@@ -77,9 +77,6 @@ namespace LmpClient.Network
                             case NetIncomingMessageType.NatIntroductionSuccess:
                                 NetworkServerList.HandleNatIntroduction(msg);
                                 break;
-                            case NetIncomingMessageType.ConnectionLatencyUpdated:
-                                LunaLog.Log($"[Lidgren PING] New ping value : {TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds} ms");
-                                break;
                             case NetIncomingMessageType.UnconnectedData:
                                 NetworkServerList.HandleServersList(msg);
                                 break;
