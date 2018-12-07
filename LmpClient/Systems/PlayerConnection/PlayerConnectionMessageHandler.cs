@@ -2,7 +2,6 @@
 using LmpClient.Base.Interface;
 using LmpClient.Systems.Status;
 using LmpClient.Systems.Warp;
-using LmpClient.Utilities;
 using LmpCommon.Message.Data.PlayerConnection;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
@@ -23,7 +22,6 @@ namespace LmpClient.Systems.PlayerConnection
             {
                 case PlayerConnectionMessageType.Join:
                     LunaScreenMsg.PostScreenMessage($"{playerName} has joined the server", 3f, ScreenMessageStyle.UPPER_CENTER);
-                    CommonUtil.Reserve20Mb();
                     break;
                 case PlayerConnectionMessageType.Leave:
                     WarpSystem.Singleton.RemovePlayer(playerName);
