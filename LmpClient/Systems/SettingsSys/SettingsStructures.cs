@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpClient.Systems.PlayerColorSys;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LmpClient.Systems.SettingsSys
@@ -27,6 +27,7 @@ namespace LmpClient.Systems.SettingsSys
         public int Mtu { get; set; } = NetPeerConfiguration.kDefaultMTU;
         public bool AutoExpandMtu { get; set; } = false;
         public float TimeoutSeconds { get; set; } = 15;
+        public ServerFilters ServerFilters { get; set; } = new ServerFilters();
 
         /*
          * You can use this debug switches for testing purposes. 
@@ -52,5 +53,14 @@ namespace LmpClient.Systems.SettingsSys
         public string Name { get; set; } = "Local";
         public string Address { get; set; } = "127.0.0.1";
         public string Password { get; set; } = string.Empty;
+    }
+
+    [Serializable]
+    public class ServerFilters
+    {
+        public bool HidePrivateServers { get; set; } = false;
+        public bool HideFullServers { get; set; } = true;
+        public bool HideEmptyServers { get; set; } = false;
+        public bool DedicatedServersOnly { get; set; } = false;
     }
 }

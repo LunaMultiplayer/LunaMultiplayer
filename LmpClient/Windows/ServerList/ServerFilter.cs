@@ -1,4 +1,5 @@
 ﻿using LmpClient.Localization;
+using LmpClient.Systems.SettingsSys;
 using LmpCommon;
 using UnityEngine;
 
@@ -6,38 +7,53 @@ namespace LmpClient.Windows.ServerList
 {
     public class ServerFilter
     {
-        public static bool HidePrivateServers = false;
-        public static bool HideFullServers = true;
-        public static bool HideEmptyServers = false;
-        public static bool DedicatedServersOnly = false;
-
         public static void DrawFilters()
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            HideFullServers = GUILayout.Toggle(HideFullServers, LocalizationContainer.ServerListFiltersText.HideFullServers);
+            var hideFullServers = GUILayout.Toggle(SettingsSystem.CurrentSettings.ServerFilters.HideFullServers, LocalizationContainer.ServerListFiltersText.HideFullServers);
+            if (hideFullServers != SettingsSystem.CurrentSettings.ServerFilters.HideFullServers)
+            {
+                SettingsSystem.CurrentSettings.ServerFilters.HideFullServers = hideFullServers;
+                SettingsSystem.SaveSettings();
+            }
             GUILayout.FlexibleSpace();
-            HideEmptyServers = GUILayout.Toggle(HideEmptyServers, LocalizationContainer.ServerListFiltersText.HideEmptyServers);
+            var hideEmptyServers = GUILayout.Toggle(SettingsSystem.CurrentSettings.ServerFilters.HideEmptyServers, LocalizationContainer.ServerListFiltersText.HideEmptyServers);
+            if (hideEmptyServers != SettingsSystem.CurrentSettings.ServerFilters.HideEmptyServers)
+            {
+                SettingsSystem.CurrentSettings.ServerFilters.HideEmptyServers = hideEmptyServers;
+                SettingsSystem.SaveSettings();
+            }
             GUILayout.FlexibleSpace();
-            HidePrivateServers = GUILayout.Toggle(HidePrivateServers, LocalizationContainer.ServerListFiltersText.HidePrivateServers);
+            var hidePrivateServers = GUILayout.Toggle(SettingsSystem.CurrentSettings.ServerFilters.HidePrivateServers, LocalizationContainer.ServerListFiltersText.HidePrivateServers);
+            if (hidePrivateServers != SettingsSystem.CurrentSettings.ServerFilters.HidePrivateServers)
+            {
+                SettingsSystem.CurrentSettings.ServerFilters.HidePrivateServers = hidePrivateServers;
+                SettingsSystem.SaveSettings();
+            }
             GUILayout.FlexibleSpace();
-            DedicatedServersOnly = GUILayout.Toggle(DedicatedServersOnly, LocalizationContainer.ServerListFiltersText.DedicatedServersOnly);
+            var dedicatedServersOnly = GUILayout.Toggle(SettingsSystem.CurrentSettings.ServerFilters.DedicatedServersOnly, LocalizationContainer.ServerListFiltersText.DedicatedServersOnly);
+            if (dedicatedServersOnly != SettingsSystem.CurrentSettings.ServerFilters.DedicatedServersOnly)
+            {
+                SettingsSystem.CurrentSettings.ServerFilters.DedicatedServersOnly = dedicatedServersOnly;
+                SettingsSystem.SaveSettings();
+            }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
 
         public static bool MatchesFilters(ServerInfo server)
         {
-            if (HidePrivateServers && server.Password)
+            if (SettingsSystem.CurrentSettings.ServerFilters.HidePrivateServers && server.Password)
                 return false;
 
-            if (HideFullServers && server.PlayerCount == server.MaxPlayers)
+            if (SettingsSystem.CurrentSettings.ServerFilters.HideFullServers && server.PlayerCount == server.MaxPlayers)
                 return false;
 
-            if (HideEmptyServers && server.PlayerCount == 0)
+            if (SettingsSystem.CurrentSettings.ServerFilters.HideEmptyServers && server.PlayerCount == 0)
                 return false;
 
-            if (DedicatedServersOnly && !server.DedicatedServer)
+            if (SettingsSystem.CurrentSettings.ServerFilters.DedicatedServersOnly && !server.DedicatedServer)
                 return false;
 
             return true;
