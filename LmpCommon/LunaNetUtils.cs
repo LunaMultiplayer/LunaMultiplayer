@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -55,7 +56,7 @@ namespace LmpCommon
                     return unicastAddress.Address;
                 }
             }
-            
+
             return IPAddress.Loopback;
         }
 
@@ -72,6 +73,42 @@ namespace LmpCommon
 
             return IPAddress.TryParse(currentIpAddress, out var ipAddress) ? ipAddress : null;
         }
+
+        public static IPEndPoint CreateEndpointFromString(string endpoint)
+        {
+            try
+            {
+                if (IPAddress.TryParse(endpoint.Split(':')[0].Trim(), out var ip))
+                {
+                    return new IPEndPoint(ip, int.Parse(endpoint.Split(':')[1].Trim()));
+                }
+
+                return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0].Trim())[0], int.Parse(endpoint.Split(':')[1].Trim()));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public static IPAddress CreateAddressFromString(string ipAddress)
+        {
+            try
+            {
+                if (IPAddress.TryParse(ipAddress, out var ip))
+                {
+                    return ip;
+                }
+
+                return Dns.GetHostAddresses(ipAddress)[0];
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        #region Private
 
         private static string TryGetIpAddress(string url)
         {
@@ -130,5 +167,7 @@ namespace LmpCommon
             }
             return best;
         }
+
+        #endregion
     }
 }

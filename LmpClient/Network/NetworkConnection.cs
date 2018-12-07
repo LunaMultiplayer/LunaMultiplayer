@@ -2,6 +2,7 @@
 using LmpClient.Base;
 using LmpClient.Systems.Network;
 using LmpClient.Systems.SettingsSys;
+using LmpCommon;
 using LmpCommon.Enums;
 using LmpCommon.Message.Base;
 using System;
@@ -50,7 +51,7 @@ namespace LmpClient.Network
 
         public static void ConnectToServer(string address, int port, string password)
         {
-            ConnectToServer(new IPEndPoint(IPAddress.Parse(address), port), password);
+            ConnectToServer(new IPEndPoint(LunaNetUtils.CreateAddressFromString(address), port), password);
         }
 
         public static void ConnectToServer(IPEndPoint endpoint, string password)

@@ -62,7 +62,7 @@ namespace LmpCommon.RepoRetrievers
                         {
                             try
                             {
-                                MasterServersEndpoints.Add(Common.CreateEndpointFromString(server));
+                                MasterServersEndpoints.Add(LunaNetUtils.CreateEndpointFromString(server));
                             }
                             catch (Exception)
                             {

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -86,24 +85,7 @@ namespace LmpCommon
             }
             return cnt.Values.All(c => c == 0);
         }
-
-        public static IPEndPoint CreateEndpointFromString(string endpoint)
-        {
-            try
-            {
-                if (IPAddress.TryParse(endpoint.Split(':')[0].Trim(), out var ip))
-                {
-                    return new IPEndPoint(ip, int.Parse(endpoint.Split(':')[1].Trim()));
-                }
-
-                return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0].Trim())[0], int.Parse(endpoint.Split(':')[1].Trim()));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
+        
         public string CalculateSha256StringHash(string input)
         {
             return CalculateSha256Hash(Encoding.UTF8.GetBytes(input));
