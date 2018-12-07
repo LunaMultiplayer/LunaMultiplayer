@@ -10,7 +10,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
     {
         public void DecoupleStart(Part part, float breakForce)
         {
-            if (VesselCommon.IsSpectating || System.IgnoreEvents) return;
+            if (VesselCommon.IsSpectating || System.IgnoreEvents || !part) return;
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(part.vessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             LunaLog.Log($"Detected decouple! Part: {part.partName} Vessel: {part.vessel.id}");
@@ -18,7 +18,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
 
         public void DecoupleComplete(Part part, float breakForce, Vessel originalVessel)
         {
-            if (VesselCommon.IsSpectating || System.IgnoreEvents) return;
+            if (VesselCommon.IsSpectating || System.IgnoreEvents || !part || !originalVessel) return;
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             LockSystem.Singleton.AcquireUnloadedUpdateLock(part.vessel.id, true, true);
