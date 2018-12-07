@@ -82,6 +82,7 @@ namespace LmpClient.Windows.Debug
                 if (_displayConnectionQueue)
                 {
                     StringBuilder.AppendLine($"Ping: {TimeSpan.FromSeconds(NetworkStatistics.PingSec).TotalMilliseconds}ms.");
+                    StringBuilder.AppendLine($"Average Ping: {TimeSpan.FromSeconds(NetworkStatistics.AvgPingSec).TotalMilliseconds}ms.");
                     StringBuilder.AppendLine($"TimeOffset: {TimeSpan.FromSeconds(NetworkStatistics.TimeOffset).TotalMilliseconds}ms.");
                     StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.MessagesInCache}.");
                     StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.MessageDataInCache}.");

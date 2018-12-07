@@ -80,6 +80,9 @@ namespace LmpClient.Network
                             case NetIncomingMessageType.UnconnectedData:
                                 NetworkServerList.HandleServersList(msg);
                                 break;
+                            case NetIncomingMessageType.ConnectionLatencyUpdated:
+                                NetworkStatistics.PingSec = msg.ReadFloat();
+                                break;
                             case NetIncomingMessageType.Data:
                                 try
                                 {

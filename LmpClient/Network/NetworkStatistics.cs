@@ -4,7 +4,8 @@ namespace LmpClient.Network
 {
     public class NetworkStatistics
     {
-        public static float PingSec => NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
+        public static volatile float PingSec;
+        public static float AvgPingSec => NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
         public static int SentBytes => NetworkMain.ClientConnection.Statistics.SentBytes;
         public static int ReceivedBytes => NetworkMain.ClientConnection.Statistics.ReceivedBytes;
         public static float TimeOffset => NetworkMain.ClientConnection?.ServerConnection?.RemoteTimeOffset ?? 0;
