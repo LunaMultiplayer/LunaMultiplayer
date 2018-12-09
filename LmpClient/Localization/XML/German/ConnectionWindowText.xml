@@ -7,7 +7,7 @@
   <Port>Port:</Port>
   <Password>Passwort:</Password>
   <CustomServers>Benutzerdefinierte Server:</CustomServers>
-  <Connect>Connect</Connect>
-  <Settings>Settings</Settings>
-  <Servers>Server List</Servers>
+  <Connect>Verbinden</Connect>
+  <Settings>Einstellungen</Settings>
+  <Servers>Serverliste</Servers>
 </ConnectionWindowText>

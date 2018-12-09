@@ -12,7 +12,7 @@
   <PlusIcon>Hinzufügen</PlusIcon>
   <SaveIcon>Speichern</SaveIcon>
   <KeyIcon>Passwort</KeyIcon>
-  <GlobeIcon>Country</GlobeIcon>
+  <GlobeIcon>Land</GlobeIcon>
   <ChatIcon>Chat</ChatIcon>
   <CameraIcon>Screenshots</CameraIcon>
   <RocketIcon>Fahrzeugbibliothek</RocketIcon>
@@ -23,8 +23,8 @@
   <NukeIcon>Nuke KSC (löscht alle Fahrzeuge am KSC)</NukeIcon>
   <RestartServerIcon>Server Neustart</RestartServerIcon>
   <DownloadIcon>Download</DownloadIcon>
-  <CycleFirstIcon>First</CycleFirstIcon>
-  <CyclePreviousIcon>Previous</CyclePreviousIcon>
-  <CycleNextIcon>Next</CycleNextIcon>
-  <CycleLastIcon>Last</CycleLastIcon>
+  <CycleFirstIcon>Erster</CycleFirstIcon>
+  <CyclePreviousIcon>Vorheriger</CyclePreviousIcon>
+  <CycleNextIcon>Nächster</CycleNextIcon>
+  <CycleLastIcon>Letzter</CycleLastIcon>
 </ButtonTooltips>
