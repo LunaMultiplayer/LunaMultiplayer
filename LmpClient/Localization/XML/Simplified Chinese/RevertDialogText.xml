@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <RevertDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CannotRevertTitle>CannotRevert</CannotRevertTitle>
-  <CannotRevertText>Due to LMP limitations you cannot revert after switching to another vessel or while spectating. Check the wiki for more details</CannotRevertText>
-  <CloseBtn>Close</CloseBtn>
+  <CannotRevertTitle>无法还原</CannotRevertTitle>
+  <CannotRevertText>由于LMP限制，您无法在切换到另一艘船后或观看他人时进行恢复。 查看Wiki以获取更多详细信息.</CannotRevertText>
+  <CloseBtn>关闭</CloseBtn>
 </RevertDialogText>
