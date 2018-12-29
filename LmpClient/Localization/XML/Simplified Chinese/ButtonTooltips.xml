@@ -26,5 +26,5 @@
   <CycleFirstIcon>第一页</CycleFirstIcon>
   <CyclePreviousIcon>上一页</CyclePreviousIcon>
   <CycleNextIcon>下一页</CycleNextIcon>
-  <CycleLastIcon>尾页</CycleLastIcon>
+  <CycleLastIcon>末页</CycleLastIcon>
 </ButtonTooltips>
