@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ServerListFiltersText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <HideFullServers>Hide full servers</HideFullServers>
-  <HideEmptyServers>Hide empty servers</HideEmptyServers>
-  <HidePrivateServers>Hide private servers</HidePrivateServers>
-  <DedicatedServersOnly>Show only dedicated servers</DedicatedServersOnly>
+  <HideFullServers>隐藏满员服务器</HideFullServers>
+  <HideEmptyServers>隐藏空服务器</HideEmptyServers>
+  <HidePrivateServers>隐藏私人服务器</HidePrivateServers>
+  <DedicatedServersOnly>仅显示专用服务器</DedicatedServersOnly>
 </ServerListFiltersText>

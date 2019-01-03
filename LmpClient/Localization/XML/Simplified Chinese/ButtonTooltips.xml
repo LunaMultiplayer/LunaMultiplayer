@@ -22,9 +22,9 @@
   <DekesslerIcon>清理垃圾</DekesslerIcon>
   <NukeIcon>清空KSC</NukeIcon>
   <RestartServerIcon>重启服务器</RestartServerIcon>
-  <DownloadIcon>Download</DownloadIcon>
-  <CycleFirstIcon>First</CycleFirstIcon>
-  <CyclePreviousIcon>Previous</CyclePreviousIcon>
-  <CycleNextIcon>Next</CycleNextIcon>
-  <CycleLastIcon>Last</CycleLastIcon>
+  <DownloadIcon>下载</DownloadIcon>
+  <CycleFirstIcon>第一页</CycleFirstIcon>
+  <CyclePreviousIcon>上一页</CyclePreviousIcon>
+  <CycleNextIcon>下一页</CycleNextIcon>
+  <CycleLastIcon>末页</CycleLastIcon>
 </ButtonTooltips>
