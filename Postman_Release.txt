@@ -9,16 +9,16 @@
       "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
       "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png"
     },
-    "title": "New Release Available - 0.20.0",
+    "title": "New Release Available - 0.20.1",
     "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
     "description": "A new version of Luna MultiPlayer is available! You can download it at [GitHub](https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest)",
     "fields": [
       {
-        "name": "About version 0.20.0",
-        "value": "Build 0.20.0.171\n\n### 22th BETA version of LMP\n\n- Fixed vessel jumping issues when syncing clock\n- Added server filters\n- Better LAN introduction for master servers\n- Fixed stuck vessel markers\n- Better immortal logic\n- Fix tourist contracts\n- Allow loading vessels with modded resources\n- Added server setting to show MOTD in chat\n- Added color configuration for dedicated servers\n- Better interpolation for slow connections\n- Better random color generation\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.18.0...0.20.0>"
+        "name": "About version 0.20.1",
+        "value": "Build 0.20.1.181\n\n### 23th BETA version of LMP\n\n- Fixed the nasty warping bug on active vessel\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.20.0...0.20.1>"
       }
     ],
-    "timestamp": "2018-12-06T23:00:00Z",
+    "timestamp": "2019-01-10T12:00:00Z",
     "footer": {
       "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png",
       "text": "Luna multiplayer"
