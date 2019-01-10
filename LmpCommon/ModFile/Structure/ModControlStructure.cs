@@ -465,6 +465,14 @@ namespace LmpCommon.ModFile.Structure
                 "probeCoreSphere.v2",
                 "solidBooster.v2",
                 "solidBooster.sm.v2",
+                "rocketNoseCone.v2",
+                "mk2LanderCabin.v2",
+                "liquidEngineMini.v2",
+                "liquidEngine3.v2",
+                "liquidEngine2-2.v2",
+                "Size3To2Adapter.v2",
+                "stackBiCoupler.v2",
+                "stackTriCoupler.v2"
             };
         }
     }
