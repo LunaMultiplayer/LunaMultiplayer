@@ -14,8 +14,8 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: Guid("fa6e9184-e243-49cc-94fa-ac557493b900")]
 
-[assembly: AssemblyVersion("0.20.1")]
-[assembly: AssemblyFileVersion("0.20.1")]
-[assembly: AssemblyInformationalVersion("0.20.1-compiled")]
+[assembly: AssemblyVersion("0.20.2")]
+[assembly: AssemblyFileVersion("0.20.2")]
+[assembly: AssemblyInformationalVersion("0.20.2-compiled")]
 
 [assembly: InternalsVisibleTo("ServerTest")]
