@@ -43,7 +43,7 @@
 - [x] Better creation of network messages so they are easier to modify and serialize.
 - [x] Every network message is cached in order to reduce the garbage collector spikes.
 - [x] Based on tasks instead of threads.
-- [x] Supports career and science modes.
+- [x] Supports career and science modes (funds, science, strategies, etc are shared between all players).
 - [x] Cached [QuickLZ](http://www.quicklz.com) for fast compression without generating garbage.
 - [ ] Support for groups/companies inside career and science modes.
 
