@@ -19,7 +19,7 @@ namespace Server.System
             if (enumResponse == HandshakeReply.HandshookSuccessfully)
             {
                 msgData.ModControl = GeneralSettings.SettingsStore.ModControl;
-                msgData.ServerStartTime = ServerContext.StartTime;
+                msgData.ServerStartTime = TimeContext.StartTime.Ticks;
 
                 if (GeneralSettings.SettingsStore.ModControl)
                 {

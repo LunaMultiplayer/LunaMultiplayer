@@ -91,6 +91,7 @@
     <Compile Include="Command\Common\CommandSystemHelperMethods.cs" />
     <Compile Include="Context\ServerContext.cs" />
     <Compile Include="Context\Universe.cs" />
+    <Compile Include="Context\TimeContext.cs" />
     <Compile Include="Context\WarpContext.cs" />
     <Compile Include="Events\ExitEvent.cs" />
     <Compile Include="Exit\WinExitSignal.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="System\Vessel\VesselFlightStateDataUpdater.cs" />
     <Compile Include="System\Vessel\VesselPositionDataUpdater.cs" />
     <Compile Include="System\Vessel\VesselFairingDataUpdater.cs" />
+    <Compile Include="System\TimeSystem.cs" />
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />
     <Compile Include="System\WarpSystemSender.cs" />

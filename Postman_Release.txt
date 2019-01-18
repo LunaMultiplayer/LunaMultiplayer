@@ -15,7 +15,7 @@
     "fields": [
       {
         "name": "About version 0.20.2",
-        "value": "Build 0.20.2.181\n\n### 24th BETA version of LMP\n\n- Fixed the dissapearing warping bug on secondary vessels\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.20.1...0.20.2>"
+        "value": "Build 0.20.2.189\n\n### 24th BETA version of LMP\n\n- Fixed the dissapearing warping bug on secondary vessels\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.20.1...0.20.2>"
       }
     ],
     "timestamp": "2019-01-10T12:00:00Z",

@@ -25,7 +25,6 @@ namespace Server.Context
         public static bool UsePassword => !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
 
         public static Stopwatch ServerClock = new Stopwatch();
-        public static long StartTime;
         public static string ModFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.xml");
         public static string UniverseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe");
         public static string ConfigDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");

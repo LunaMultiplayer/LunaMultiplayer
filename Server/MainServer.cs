@@ -44,7 +44,6 @@ namespace Server
                 Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
 
                 Console.OutputEncoding = Encoding.Unicode;
-                ServerContext.StartTime = LunaNetworkTime.UtcNow.Ticks;
 
                 LunaLog.Info("Remember! Quit the server by using 'Control + C' so a backup is properly made before closing!");
 
@@ -82,6 +81,7 @@ namespace Server
                 ScenarioStoreSystem.LoadExistingScenarios(scenariosCreated);
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
+                TimeSystem.Reset();
 
                 LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
                 

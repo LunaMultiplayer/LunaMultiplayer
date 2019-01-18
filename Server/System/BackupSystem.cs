@@ -41,6 +41,7 @@ namespace Server.System
                 LunaLog.Debug("Performing backups...");
                 VesselStoreSystem.BackupVessels();
                 WarpSystem.BackupSubspaces();
+                TimeSystem.BackupStartTime();
                 ScenarioStoreSystem.BackupScenarios();
             }
         }
