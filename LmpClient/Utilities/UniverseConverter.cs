@@ -70,6 +70,9 @@ namespace LmpClient.Utilities
                 return;
             }
 
+            //Save subspace time
+            File.WriteAllText(CommonUtil.CombinePaths(universeFolder, "Subspace.txt"), $"0:{flightState.GetValue("UT")}");
+
             var vesselNodes = flightState.GetNodes("VESSEL");
             if (vesselNodes != null)
             {
