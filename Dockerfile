@@ -1,19 +1,11 @@
-FROM eclipse/dotnet_core
+FROM alpine:3.9
 
 ENV LMP_URL https://luna-endpoint.glitch.me/latest
-ENV LMP_REPO_UPDATE https://luna-endpoint.glitch.me/update
 
-RUN set -ex \
-&& sudo apt-get update \
-&& sudo apt-get install -y \
-    tzdata \
-    mono-devel \
-    zip \
-    curl \
-&& sudo curl -Ss $LMP_REPO_UPDATE \
-&& sudo wget $LMP_URL \
-&& sudo unzip latest \
-&& sudo rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing && \
+    wget $LMP_URL && \
+    unzip latest && \
+    rm -rf latest LMPClient LMP\ Readme.txt
 
 WORKDIR LMPServer
 
@@ -22,4 +14,4 @@ EXPOSE 8801/udp
 
 VOLUME ["Universe", "Config", "Plugins"]
 
-CMD ["sudo" ,"mono", "Server.exe"]
+CMD ["mono", "Server.exe"]
