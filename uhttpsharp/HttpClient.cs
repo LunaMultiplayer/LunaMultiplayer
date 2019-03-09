@@ -135,7 +135,8 @@ namespace uhttpsharp
 
             // Empty Line
             await writer.WriteLineAsync().ConfigureAwait(false);
-
+            //Flush to make sure headers are first.
+            await writer.FlushAsync().ConfigureAwait(false);
             // Body
             await response.WriteBody(writer).ConfigureAwait(false);
             await writer.FlushAsync().ConfigureAwait(false);

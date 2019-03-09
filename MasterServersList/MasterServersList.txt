@@ -12,3 +12,7 @@ pictocube.ddns.net:8710
 tekbot.lunamultiplayer.com:8701
 #Tekbot Nightly. List: http://tekbot.lunamultiplayer.com:8751/
 tekbot.lunamultiplayer.com:8751
+#Angryjoshi. List: http://anschuetznet.de:8701/
+anschuetznet.de:8700
+#Angryjoshi Nightly. List: http://anschuetznet.de:8751/
+anschuetznet.de:8750
