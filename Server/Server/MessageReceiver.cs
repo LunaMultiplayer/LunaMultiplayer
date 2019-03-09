@@ -6,11 +6,11 @@ using LmpCommon.Time;
 using Server.Client;
 using Server.Context;
 using Server.Log;
+using Server.Message;
+using Server.Message.Base;
 using Server.Plugin;
 using System;
 using System.Collections.Generic;
-using Server.Message;
-using Server.Message.Base;
 
 namespace Server.Server
 {
@@ -73,7 +73,14 @@ namespace Server.Server
             }
 
             //Handle the message
-            HandlerDictionary[message.MessageType].HandleMessage(client, message);
+            try
+            {
+                HandlerDictionary[message.MessageType].HandleMessage(client, message);
+            }
+            catch (Exception e)
+            {
+                LunaLog.Error($"Error handling a message from {client.PlayerName}! {e}");
+            }
         }
 
         private static IClientMessageBase DeserializeMessage(NetIncomingMessage msg)
