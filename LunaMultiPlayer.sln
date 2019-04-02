@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterServer", "MasterServer\MasterServer.csproj", "{776706B0-F5A1-43A5-B13A-1ADA5E77D0A5}"
 EndProject
@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor.yml = appveyor.yml
 		appveyor_discord.ps = appveyor_discord.ps
 		Scripts\CopyToKSPDirectory.bat = Scripts\CopyToKSPDirectory.bat
+		Dockerfile = Dockerfile
 		LMP Readme.txt = LMP Readme.txt
 		Postman_Release.txt = Postman_Release.txt
 		README.md = README.md
