@@ -38,7 +38,7 @@ namespace LmpClient.Harmony
             driver.lastMode = driver.updateMode;
 
             //Always call updateFromParameters so the vessel is positioned based on the orbital data
-            if ((VesselPositionSystem.Singleton.VesselHavePositionUpdatesQueued(driver.vessel.id) && driver.updateMode == OrbitDriver.UpdateMode.TRACK_Phys) 
+            if ((VesselPositionSystem.Singleton.VesselHavePositionUpdatesQueued(driver.vessel.id) && driver.updateMode == OrbitDriver.UpdateMode.TRACK_Phys)
                 || driver.updateMode == OrbitDriver.UpdateMode.UPDATE)
             {
                 driver.updateFromParameters();

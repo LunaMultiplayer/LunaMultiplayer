@@ -44,7 +44,7 @@ namespace LmpClient.Systems.VesselUpdateSys
             msgData.Com[0] = vessel.localCoM.x;
             msgData.Com[1] = vessel.localCoM.y;
             msgData.Com[2] = vessel.localCoM.z;
-            
+
             SendMessage(msgData);
         }
     }

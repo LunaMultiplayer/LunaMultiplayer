@@ -9,7 +9,7 @@ namespace LmpClient.Windows.Options
     public partial class OptionsWindow : Window<OptionsWindow>
     {
         #region Fields
-        
+
         private const float WindowHeight = 400;
         private const float WindowWidth = 300;
         private const float UniverseConverterWindowHeight = 300;
@@ -59,14 +59,14 @@ namespace LmpClient.Windows.Options
                     _universeConverterWindowRect, DrawUniverseConverterDialog, "Universe converter", _universeConverterLayoutOptions));
             }
         }
-        
+
         public override void SetStyles()
         {
             WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             _universeConverterWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
 
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
-            
+
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.Width(WindowWidth);
             LayoutOptions[1] = GUILayout.Height(WindowHeight);

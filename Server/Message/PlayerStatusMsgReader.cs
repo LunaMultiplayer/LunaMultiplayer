@@ -35,7 +35,7 @@ namespace Server.Message
 
         private static void SendOtherPlayerStatusesToNewPlayer(ClientStructure client)
         {
-            var otherClientsStatus = ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client)).Select(c=> new PlayerStatusInfo
+            var otherClientsStatus = ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client)).Select(c => new PlayerStatusInfo
             {
                 PlayerName = c.PlayerName,
                 StatusText = c.PlayerStatus.StatusText,

@@ -29,7 +29,7 @@ namespace Server.Message
                     message.Recycle();
                     break;
                 case GroupMessageType.CreateGroup:
-                    GroupSystem.CreateGroup(client.PlayerName, ((GroupCreateMsgData) data).GroupName);
+                    GroupSystem.CreateGroup(client.PlayerName, ((GroupCreateMsgData)data).GroupName);
                     break;
                 case GroupMessageType.RemoveGroup:
                     GroupSystem.RemoveGroup(client.PlayerName, ((GroupRemoveMsgData)data).GroupName);

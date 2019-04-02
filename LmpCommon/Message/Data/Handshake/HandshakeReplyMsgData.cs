@@ -16,7 +16,7 @@ namespace LmpCommon.Message.Data.Handshake
         public bool ModControl;
         public long ServerStartTime;
         public string ModFileData;
-        
+
         public override string ClassName { get; } = nameof(HandshakeReplyMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
@@ -47,7 +47,7 @@ namespace LmpCommon.Message.Data.Handshake
 
             ModFileData = lidgrenMsg.ReadString();
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(HandshakeReply) + Reason.GetByteCount() + sizeof(byte) //We write pad bits so it's size of byte

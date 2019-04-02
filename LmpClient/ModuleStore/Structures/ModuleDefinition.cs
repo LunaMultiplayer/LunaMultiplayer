@@ -10,10 +10,10 @@ namespace LmpClient.ModuleStore.Structures
     {
         [XmlComment(Value = "Module that we are modifying")]
         public string ModuleName { get; set; }
-        
+
         [XmlComment(Value = "Fields to sync")]
         public List<FieldDefinition> Fields { get; set; } = new List<FieldDefinition>();
-        
+
         [XmlComment(Value = "Methods to sync")]
         public List<MethodDefinition> Methods { get; set; } = new List<MethodDefinition>();
 
@@ -25,10 +25,10 @@ namespace LmpClient.ModuleStore.Structures
 
         public void Init()
         {
-            CustomizedFields = Fields.DistinctBy(f=> f.FieldName).ToDictionary(f => f.FieldName, f => f);
+            CustomizedFields = Fields.DistinctBy(f => f.FieldName).ToDictionary(f => f.FieldName, f => f);
             CustomizedMethods = Methods.DistinctBy(m => m.MethodName).ToDictionary(f => f.MethodName, f => f);
         }
-        
+
         public void MergeWith(ModuleDefinition other)
         {
             Fields.AddRange(other.Fields);

@@ -36,7 +36,7 @@ namespace LmpCommon.FastMember
         public ObjectReader(Type type, IEnumerable source, params string[] members)
         {
             if (source == null) throw new ArgumentOutOfRangeException(nameof(source));
-            
+
             var allMembers = members == null || members.Length == 0;
 
             _accessor = TypeAccessor.Create(type);

@@ -36,8 +36,8 @@ namespace LmpCommon.Message.Data.ShareProgress
             ContractCount = lidgrenMsg.ReadInt32();
             if (Contracts.Length < ContractCount)
                 Contracts = new ContractInfo[ContractCount];
-            
-            
+
+
             for (var i = 0; i < ContractCount; i++)
             {
                 if (Contracts[i] == null)

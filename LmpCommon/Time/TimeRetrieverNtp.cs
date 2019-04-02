@@ -43,7 +43,7 @@ namespace LmpCommon.Time
             var netTicks = intPart * TimeSpan.TicksPerSecond + (fractPart * TimeSpan.TicksPerSecond >> 32);
 
             var networkDateTime = new DateTime(TicksTo1900 + netTicks + pingTicks / 2);
-            
+
             return networkDateTime;
         }
 

@@ -34,13 +34,13 @@ namespace Server.System
             var serverFlags = FileHandler.GetFilesInPath(FlagPath, SearchOption.AllDirectories);
             foreach (var serverFlag in serverFlags)
             {
-                var flagName = Path.GetFileNameWithoutExtension(serverFlag)?.Replace('$','/');
+                var flagName = Path.GetFileNameWithoutExtension(serverFlag)?.Replace('$', '/');
 
                 //2 playes have the same flag name so in this case we only send the first one
                 if (string.IsNullOrEmpty(flagName) || flagList.ContainsKey(flagName)) continue;
 
                 var flagOwner = Path.GetDirectoryName(serverFlag);
-                if(flagOwner == null) continue;
+                if (flagOwner == null) continue;
                 flagList.Add(flagName, new FlagInfo
                 {
                     Owner = flagOwner,

@@ -18,7 +18,7 @@ namespace LmpCommon.Message.Data.Vessel
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);
-            
+
             lidgrenMsg.Write(ForceReload);
             Common.ThreadSafeCompress(this, ref Data, ref NumBytes);
 

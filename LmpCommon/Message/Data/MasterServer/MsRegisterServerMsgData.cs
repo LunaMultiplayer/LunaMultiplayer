@@ -97,10 +97,10 @@ namespace LmpCommon.Message.Data.MasterServer
         }
 
         internal override int InternalGetMessageSize()
-        {            
+        {
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
             return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() + sizeof(byte) +
-                sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + CountryCode.GetByteCount() + Website.GetByteCount() + 
+                sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + CountryCode.GetByteCount() + Website.GetByteCount() +
                    WebsiteText.GetByteCount() + sizeof(bool) * 3;
         }
     }

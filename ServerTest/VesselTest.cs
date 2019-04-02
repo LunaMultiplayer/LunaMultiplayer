@@ -37,7 +37,7 @@ namespace ServerTest
         public void TestEditVessel()
         {
             var vessel = new Vessel(File.ReadAllText(Path.Combine(XmlExamplePath, "99969baa-2618-49fa-a197-2c0c995ad3e0.txt")));
-            
+
             vessel.GetPart(1985344313).GetSingleModule("ModuleProceduralFairing").Values.Update("fsm", "st_flight_deployed");
             var extraNodes = vessel.GetPart(1985344313).GetSingleModule("ModuleProceduralFairing").Nodes;
             extraNodes.Remove("XSECTION");

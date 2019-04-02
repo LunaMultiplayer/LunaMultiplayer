@@ -55,7 +55,7 @@ namespace LmpCommon.Message.Base
         }
 
         internal abstract void InternalDeserialize(NetIncomingMessage lidgrenMsg);
-        
+
         public int GetMessageSize()
         {
             return sizeof(long) + sizeof(ushort) * 3 + InternalGetMessageSize();

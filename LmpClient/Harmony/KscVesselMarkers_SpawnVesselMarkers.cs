@@ -18,7 +18,7 @@ namespace LmpClient.Harmony
     public class KscVesselMarkers_SpawnVesselMarkers
     {
         private static readonly List<KSCVesselMarker> MarkersToRemove = new List<KSCVesselMarker>();
-        
+
         [HarmonyPostfix]
         private static void PostfixVesselMarkers()
         {

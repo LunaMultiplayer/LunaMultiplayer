@@ -26,7 +26,7 @@ namespace LmpCommon.Message.Data.Flag
 
             Flag.Deserialize(lidgrenMsg);
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + Flag.GetByteCount();

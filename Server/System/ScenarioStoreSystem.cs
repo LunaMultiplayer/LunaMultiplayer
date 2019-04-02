@@ -18,7 +18,7 @@ namespace Server.System
         public static ConcurrentDictionary<string, ConfigNode> CurrentScenarios = new ConcurrentDictionary<string, ConfigNode>();
 
         private static readonly object BackupLock = new object();
-        
+
         /// <summary>
         /// Returns a scenario in the standard KSP format
         /// </summary>

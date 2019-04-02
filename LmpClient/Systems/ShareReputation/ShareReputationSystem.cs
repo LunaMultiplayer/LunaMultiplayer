@@ -45,7 +45,7 @@ namespace LmpClient.Systems.ShareReputation
             _lastReputation = 0;
             Reverting = false;
         }
-        
+
         public override void SaveState()
         {
             base.SaveState();

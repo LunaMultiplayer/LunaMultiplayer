@@ -29,7 +29,7 @@ namespace LmpClient.Systems.VesselResourceSys
 
             UpdateVesselFields(vessel);
         }
-        
+
         private void UpdateVesselFields(Vessel vessel)
         {
             if (vessel.protoVessel == null) return;

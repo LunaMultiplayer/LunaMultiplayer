@@ -60,7 +60,7 @@ namespace LmpClient.Systems.SettingsSys
             var defaultSettings = new SettingStructure();
             LunaXmlSerializer.WriteToXmlFile(defaultSettings, SettingsFilePath);
         }
-        
+
         private static void RestoreBackupIfNoSettings()
         {
             if (File.Exists(BackupSettingsFilePath) && !File.Exists(SettingsFilePath))
@@ -69,7 +69,7 @@ namespace LmpClient.Systems.SettingsSys
                 File.Copy(BackupSettingsFilePath, SettingsFilePath);
             }
         }
-        
+
         #endregion
     }
 }

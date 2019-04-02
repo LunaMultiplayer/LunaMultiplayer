@@ -4,7 +4,7 @@ using LmpCommon.Locks;
 namespace LmpClient.Systems.VesselImmortalSys
 {
     public class VesselImmortalEvents : SubSystem<VesselImmortalSystem>
-    {        
+    {
         /// <summary>
         /// This event is called after a vessel has changed. Also called when starting a flight
         /// </summary>
@@ -42,7 +42,7 @@ namespace LmpClient.Systems.VesselImmortalSys
         /// </summary>
         public void OnLockAcquire(LockDefinition lockDefinition)
         {
-            if(lockDefinition.Type != LockType.Control && lockDefinition.Type != LockType.Update && lockDefinition.Type != LockType.UnloadedUpdate) return;
+            if (lockDefinition.Type != LockType.Control && lockDefinition.Type != LockType.Update && lockDefinition.Type != LockType.UnloadedUpdate) return;
 
             var vessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
             System.SetImmortalStateBasedOnLock(vessel);

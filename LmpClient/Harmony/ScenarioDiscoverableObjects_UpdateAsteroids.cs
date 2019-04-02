@@ -22,7 +22,7 @@ namespace LmpClient.Harmony
 
             if (!LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
                 return false;
-            
+
             var currentAsteroids = AsteroidSystem.Singleton.GetAsteroidCount();
             if (currentAsteroids >= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
             {

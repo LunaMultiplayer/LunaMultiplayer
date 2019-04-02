@@ -37,7 +37,7 @@ namespace LmpCommon.RepoRetrievers
 
         private static readonly TimeSpan MaxRequestInterval = TimeSpan.FromMinutes(10);
         private static DateTime _lastRequestTime = DateTime.MinValue;
-        
+
         public static bool IsBanned(IPEndPoint endpoint)
         {
             return BannedIps.Contains(endpoint.Address);

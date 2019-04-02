@@ -24,9 +24,9 @@ namespace Server.Server
             ServerContext.Config.AutoExpandMTU = ConnectionSettings.SettingsStore.AutoExpandMtu;
             ServerContext.Config.MaximumTransmissionUnit = ConnectionSettings.SettingsStore.MaximumTransmissionUnit;
             ServerContext.Config.MaximumConnections = GeneralSettings.SettingsStore.MaxPlayers;
-            ServerContext.Config.PingInterval = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.HearbeatMsInterval).TotalSeconds;
-            ServerContext.Config.ConnectionTimeout = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds;
-            
+            ServerContext.Config.PingInterval = (float)TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.HearbeatMsInterval).TotalSeconds;
+            ServerContext.Config.ConnectionTimeout = (float)TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds;
+
             if (LunaNetUtils.IsUdpPortInUse(ServerContext.Config.Port))
             {
                 throw new HandledException($"Port {ServerContext.Config.Port} is already in use");
@@ -53,8 +53,8 @@ namespace Server.Server
             {
                 ServerContext.Config.SimulatedDuplicatesChance = DebugSettings.SettingsStore.SimulatedDuplicatesChance / 100f;
             }
-            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds((double) DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs).TotalSeconds;
-            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds((double) DebugSettings.SettingsStore?.MinSimulatedLatencyMs).TotalSeconds;
+            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds((double)DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs).TotalSeconds;
+            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds((double)DebugSettings.SettingsStore?.MinSimulatedLatencyMs).TotalSeconds;
 
             Server = new NetServer(ServerContext.Config);
             Server.Start();
@@ -154,7 +154,7 @@ namespace Server.Server
 
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;
             client.BytesSent += outmsg.LengthBytes;
-            
+
             var sendResult = Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
 
             //Force send of packets

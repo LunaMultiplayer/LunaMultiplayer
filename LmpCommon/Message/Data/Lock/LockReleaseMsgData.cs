@@ -36,7 +36,7 @@ namespace LmpCommon.Message.Data.Lock
         }
 
         internal override int InternalGetMessageSize()
-        {            
+        {
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
             return base.InternalGetMessageSize() + Lock.GetByteCount() + sizeof(byte);
         }

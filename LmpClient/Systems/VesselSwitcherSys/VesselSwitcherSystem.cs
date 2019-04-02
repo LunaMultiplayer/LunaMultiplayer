@@ -77,7 +77,7 @@ namespace LmpClient.Systems.VesselSwitcherSys
                     }
                 }
 
-                if(!VesselToSwitchTo.loaded)
+                if (!VesselToSwitchTo.loaded)
                     VesselToSwitchTo.Load();
 
                 FlightGlobals.ForceSetActiveVessel(VesselToSwitchTo);

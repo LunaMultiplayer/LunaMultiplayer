@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselCoupleSys
                 return;
 
             var affectsActiveVessel = FlightGlobals.ActiveVessel && (FlightGlobals.ActiveVessel.id == msgData.VesselId || FlightGlobals.ActiveVessel.id == msgData.CoupledVesselId);
-            
+
             //If the coupling packet affects our active vessel (even if we are spectating) jump to the future subspace
             if (affectsActiveVessel)
             {

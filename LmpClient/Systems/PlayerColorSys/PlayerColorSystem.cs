@@ -101,7 +101,7 @@ namespace LmpClient.Systems.PlayerColorSys
                 if (vessel.orbitDriver.Renderer) vessel.orbitDriver.Renderer.SetColor(colour);
             }
         }
-        
+
         #endregion
     }
 }

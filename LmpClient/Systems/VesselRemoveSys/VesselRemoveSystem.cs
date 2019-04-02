@@ -69,7 +69,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         {
             RemovedVessels.Clear();
         }
-        
+
         /// <summary>
         /// Check if vessel is in the kill list
         /// </summary>

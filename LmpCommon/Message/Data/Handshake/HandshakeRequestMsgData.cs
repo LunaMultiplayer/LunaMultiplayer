@@ -18,7 +18,7 @@ namespace LmpCommon.Message.Data.Handshake
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);
-            
+
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(UniqueIdentifier);
         }

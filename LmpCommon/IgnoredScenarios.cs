@@ -4,7 +4,7 @@ namespace LmpCommon
 {
     public class IgnoredScenarios
     {
-        public static List<string> IgnoreReceive { get; }= new List<string>
+        public static List<string> IgnoreReceive { get; } = new List<string>
         {
             "ScenarioDiscoverableObjects", //Asteroids have their own system
             "ScenarioCustomWaypoints", //Don't sync this

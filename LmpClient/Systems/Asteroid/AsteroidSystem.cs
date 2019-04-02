@@ -63,7 +63,7 @@ namespace LmpClient.Systems.Asteroid
 
         public IEnumerable<Vessel> GetCurrentAsteroids()
         {
-            return FlightGlobals.Vessels.Where(v=> v.IsAsteroid());
+            return FlightGlobals.Vessels.Where(v => v.IsAsteroid());
         }
 
         #endregion

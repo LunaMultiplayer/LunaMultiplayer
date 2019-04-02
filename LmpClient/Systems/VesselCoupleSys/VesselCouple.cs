@@ -42,7 +42,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             var coupleResult = ProcessCoupleInternal(VesselId, CoupledVesselId, PartFlightId, CoupledPartFlightId, Trigger);
             AfterCouplingEvent();
 
-            if(!coupleResult)
+            if (!coupleResult)
                 VesselRemoveSystem.Singleton.KillVessel(CoupledVesselId, false, "Killing coupled vessel during a undetected coupling");
 
             return coupleResult;

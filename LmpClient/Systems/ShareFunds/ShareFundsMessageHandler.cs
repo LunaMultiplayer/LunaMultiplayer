@@ -16,7 +16,7 @@ namespace LmpClient.Systems.ShareFunds
         {
             if (!(msg.Data is ShareProgressBaseMsgData msgData)) return;
             if (msgData.ShareProgressMessageType != ShareProgressMessageType.FundsUpdate) return;
-            
+
             if (msgData is ShareProgressFundsMsgData data)
             {
                 var funds = data.Funds; //create a copy of the funds value so it will not change in the future.

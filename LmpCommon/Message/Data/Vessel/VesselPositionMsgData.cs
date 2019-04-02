@@ -45,7 +45,7 @@ namespace LmpCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(NormalVector[i]);
-            
+
             for (var i = 0; i < 4; i++)
                 lidgrenMsg.Write(SrfRelRotation[i]);
 
@@ -80,10 +80,10 @@ namespace LmpCommon.Message.Data.Vessel
             for (var i = 0; i < 8; i++)
                 Orbit[i] = lidgrenMsg.ReadDouble();
         }
-        
+
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(float) * 2 + sizeof(bool) * 3 + sizeof(double) * 3 * 3 + 
+            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(float) * 2 + sizeof(bool) * 3 + sizeof(double) * 3 * 3 +
                 sizeof(float) * 4 * 1 + sizeof(double) * 8;
         }
     }

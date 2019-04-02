@@ -13,7 +13,7 @@ namespace LmpClient.Systems.Facility
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<FacilityCliMsg>(msg)));
         }
-        
+
         public void SendFacilityCollapseMsg(string objectId)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<FacilityCollapseMsgData>();

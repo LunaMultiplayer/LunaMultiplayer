@@ -13,14 +13,14 @@ namespace LmpClient.Windows.Connection
         protected override void DrawWindowContent(int windowId)
         {
             GUI.DragWindow(MoveRect);
-            
+
             GUILayout.BeginVertical();
             DrawPlayerNameSection();
             DrawTopButtons();
             DrawCustomServers();
-            
+
             GUILayout.Label(MainSystem.Singleton.Status, StatusStyle);
-            GUILayout.EndVertical();                    
+            GUILayout.EndVertical();
         }
 
         private void DrawCustomServers()
@@ -36,7 +36,7 @@ namespace LmpClient.Windows.Connection
                 SettingsSystem.CurrentSettings.Servers.Insert(0, new ServerEntry());
                 SettingsSystem.SaveSettings();
             }
-            
+
             for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
             {
                 GUILayout.BeginHorizontal();
@@ -130,7 +130,7 @@ namespace LmpClient.Windows.Connection
 
             GUI.enabled = true;
             OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsBigIcon, ToggleButtonStyle);
-            
+
             ServerListWindow.Singleton.Display = GUILayout.Toggle(ServerListWindow.Singleton.Display, ServerBigIcon, ToggleButtonStyle);
             GUILayout.EndHorizontal();
         }

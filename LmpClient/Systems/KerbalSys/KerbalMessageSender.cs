@@ -46,7 +46,7 @@ namespace LmpClient.Systems.KerbalSys
                 LunaLog.LogError("[LMP]: Error sending kerbal - bytes are null or 0");
                 return;
             }
-            
+
             SendKerbalProtoMessage(pcm.name, kerbalBytes);
         }
 

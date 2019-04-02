@@ -19,7 +19,7 @@ namespace Server.System.Vessel.Classes
         public Part(ConfigNode cfgNode)
         {
             Fields = new MixedCollection<string, string>(cfgNode.GetAllValues());
-            Modules = new MixedCollection<string, ConfigNode>(cfgNode.GetNodes("MODULE").Select(m=> new CfgNodeValue<string, ConfigNode>(m.Value.GetValue("name").Value, m.Value)));
+            Modules = new MixedCollection<string, ConfigNode>(cfgNode.GetNodes("MODULE").Select(m => new CfgNodeValue<string, ConfigNode>(m.Value.GetValue("name").Value, m.Value)));
             Resources = new MixedCollection<string, ConfigNode>(cfgNode.GetNodes("RESOURCE").Select(m => new CfgNodeValue<string, ConfigNode>(m.Value.GetValue("name").Value, m.Value)));
 
             Events = cfgNode.GetNode("EVENTS")?.Value;
@@ -33,7 +33,7 @@ namespace Server.System.Vessel.Classes
         {
             return Modules.GetSingle(moduleName).Value;
         }
-        
+
         public override string ToString()
         {
             var builder = new StringBuilder();
@@ -42,7 +42,7 @@ namespace Server.System.Vessel.Classes
 
             CfgNodeWriter.WriteValues(Fields.GetAll(), 1, builder);
 
-            if (Events!= null) builder.AppendLine(CfgNodeWriter.WriteConfigNode(Events));
+            if (Events != null) builder.AppendLine(CfgNodeWriter.WriteConfigNode(Events));
             if (Actions != null) builder.AppendLine(CfgNodeWriter.WriteConfigNode(Actions));
             if (Effects != null) builder.AppendLine(CfgNodeWriter.WriteConfigNode(Effects));
             if (Partdata != null) builder.AppendLine(CfgNodeWriter.WriteConfigNode(Partdata));

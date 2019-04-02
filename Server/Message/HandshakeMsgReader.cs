@@ -23,7 +23,7 @@ namespace Server.Message
                 default:
                     throw new NotImplementedException("Handshake type not implemented");
             }
-            
+
             message.Recycle();
         }
     }

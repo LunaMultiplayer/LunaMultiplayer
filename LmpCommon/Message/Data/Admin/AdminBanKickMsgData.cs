@@ -10,7 +10,7 @@ namespace LmpCommon.Message.Data.Admin
 
         public string PlayerName;
         public string Reason;
-        
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);

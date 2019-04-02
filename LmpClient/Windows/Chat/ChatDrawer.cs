@@ -45,11 +45,11 @@ namespace LmpClient.Windows.Chat
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
         }
-        
+
         private static void DrawTextInput(bool pressedEnter)
         {
             GUILayout.BeginHorizontal();
-            
+
             if (pressedEnter || GUILayout.Button(LocalizationContainer.ChatWindowText.Send, GUILayout.Width(WindowWidth * .25f)))
             {
                 if (!string.IsNullOrEmpty(_chatInputText))

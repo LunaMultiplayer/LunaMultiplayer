@@ -6,7 +6,7 @@ using LmpCommon.Message.Data.Chat;
 namespace LmpCommon.Message.Client
 {
     public class ChatCliMsg : CliMsgBase<ChatMsgData>
-    {        
+    {
         /// <inheritdoc />
         internal ChatCliMsg() { }
 

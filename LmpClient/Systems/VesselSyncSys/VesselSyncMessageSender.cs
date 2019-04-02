@@ -16,13 +16,13 @@ namespace LmpClient.Systems.VesselSyncSys
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
-        
+
         public void SendVesselsSyncMsg()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselSyncMsgData>();
             msgData.GameTime = TimeSyncSystem.UniversalTime;
 
-            var vesselIds = FlightGlobals.Vessels.Where(v=> v!= null).Select(v => v.id).ToArray();
+            var vesselIds = FlightGlobals.Vessels.Where(v => v != null).Select(v => v.id).ToArray();
             msgData.VesselsCount = vesselIds.Length;
 
             //Always clear the array just for safety...

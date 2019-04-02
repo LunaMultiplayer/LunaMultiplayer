@@ -23,7 +23,7 @@ namespace LmpClient.Systems
         public static void FillUpSystemsList()
         {
             var systemsList = new List<ISystem>();
-            
+
             var systems = Assembly.GetExecutingAssembly().GetLoadableTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
             foreach (var system in systems)
             {

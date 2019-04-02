@@ -13,7 +13,7 @@ namespace LmpClient.Systems.Lock
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<LockCliMsg>(msg)));
         }
-        
+
         public void SendLocksRequest()
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<LockCliMsg, LockListRequestMsgData>()));

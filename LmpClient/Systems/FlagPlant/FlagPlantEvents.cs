@@ -8,7 +8,7 @@ namespace LmpClient.Systems.FlagPlant
     {
         public void AfterFlagPlanted(FlagSite data)
         {
-            if(data.vessel.id == Guid.Empty)
+            if (data.vessel.id == Guid.Empty)
                 data.vessel.id = Guid.NewGuid();
 
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.vessel, true);

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace LmpCommon.Message.MasterServer
 {
     public class MainMstSrvMsg : MstSrvMsgBase<MsBaseMsgData>
-    {        
+    {
         /// <inheritdoc />
         internal MainMstSrvMsg() { }
 

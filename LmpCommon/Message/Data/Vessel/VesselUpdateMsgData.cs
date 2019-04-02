@@ -9,7 +9,7 @@ namespace LmpCommon.Message.Data.Vessel
         /// <inheritdoc />
         internal VesselUpdateMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Update;
-        
+
         public string Name;
         public string Type;
         public double DistanceTraveled;
@@ -83,12 +83,12 @@ namespace LmpCommon.Message.Data.Vessel
             for (var i = 0; i < 3; i++)
                 Com[i] = lidgrenMsg.ReadFloat();
         }
-        
+
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() 
+            return base.InternalGetMessageSize()
                 + sizeof(double) * 4 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int)
-                + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() 
+                + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount()
                 + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount();
         }
     }

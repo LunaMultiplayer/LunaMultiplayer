@@ -59,7 +59,7 @@ namespace LmpClient.Extensions
                     partPrice -= resource.info.unitCost * (float)resource.maxAmount;
                     partResourcePrice += resource.info.unitCost * (float)resource.amount;
                 }
-                
+
                 dryCost += partPrice;
                 fuelCost += partResourcePrice;
             }
@@ -132,7 +132,7 @@ namespace LmpClient.Extensions
         }
 
         public static bool IsImmortal(this Vessel vessel)
-        {            
+        {
             //Do not check against the locks as they generate garbage. Instead check if the vessel is immortal by looking at the crash tolerance first
             if (vessel.rootPart)
                 return float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
@@ -154,7 +154,7 @@ namespace LmpClient.Extensions
                 var isCurrentlyImmortal = float.IsPositiveInfinity(vessel.rootPart.crashTolerance);
                 if (isCurrentlyImmortal == immortal) return;
             }
-            
+
             var buoyancy = vessel.GetComponent<PartBuoyancy>();
             if (buoyancy)
             {

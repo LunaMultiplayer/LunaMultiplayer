@@ -20,7 +20,7 @@ namespace LmpClient.Extensions
 
             return null;
         }
-        
+
         public static PartResource FindResource(this Part part, string resourceName)
         {
             if (part == null) return null;
@@ -34,7 +34,7 @@ namespace LmpClient.Extensions
 
             return null;
         }
-        
+
         public static void AddCrew(this Part part, ProtoCrewMember crew)
         {
             part.protoModuleCrew.Add(crew);

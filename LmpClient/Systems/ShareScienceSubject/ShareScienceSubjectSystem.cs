@@ -27,7 +27,7 @@ namespace LmpClient.Systems.ShareScienceSubject
                 return _scienceSubjects;
             }
         }
-        
+
         protected override bool ShareSystemReady => ResearchAndDevelopment.Instance != null;
 
         protected override GameMode RelevantGameModes => GameMode.Career | GameMode.Science;

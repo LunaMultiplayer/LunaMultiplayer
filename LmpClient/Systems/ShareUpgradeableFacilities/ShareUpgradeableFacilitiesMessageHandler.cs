@@ -35,7 +35,7 @@ namespace LmpClient.Systems.ShareUpgradeableFacilities
         private static void FacilityLevelUpdate(string facilityId, int newLevel)
         {
             System.StartIgnoringEvents();
-            
+
             var facility = Object.FindObjectsOfType<UpgradeableFacility>().FirstOrDefault(o => o.id == facilityId);
             if (facility != null)
             {

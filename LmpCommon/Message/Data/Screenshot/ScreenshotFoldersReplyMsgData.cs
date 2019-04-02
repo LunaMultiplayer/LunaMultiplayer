@@ -14,7 +14,7 @@ namespace LmpCommon.Message.Data.Screenshot
         public string[] Folders = new string[0];
 
         public override string ClassName { get; } = nameof(ScreenshotFoldersReplyMsgData);
-        
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);

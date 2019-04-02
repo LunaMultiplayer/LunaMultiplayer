@@ -8,7 +8,7 @@ namespace LmpCommon.Message.Interface
         /// Name of the class
         /// </summary>
         string ClassName { get; }
-        
+
         /// <summary>
         /// Retrieves the major version of the multiplayer
         /// </summary>

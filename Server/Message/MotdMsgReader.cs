@@ -13,12 +13,12 @@ namespace Server.Message
     public class MotdMsgReader : ReaderBase
     {
         public override void HandleMessage(ClientStructure client, IClientMessageBase message)
-        {                    
+        {
             //We don't use this message anymore so we can recycle it
             message.Recycle();
 
             var newMotd = GeneralSettings.SettingsStore.ServerMotd;
-                
+
             if (newMotd.Length > 255)
                 newMotd = newMotd.Substring(0, 255); //We don't wanna send a huuuge message!
 

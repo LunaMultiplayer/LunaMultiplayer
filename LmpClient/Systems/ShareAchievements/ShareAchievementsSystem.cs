@@ -70,7 +70,7 @@ namespace LmpClient.Systems.ShareAchievements
                 //GameScenes.Editor into it's values :(
                 var achievementsScn = HighLogic.CurrentGame.scenarios.FirstOrDefault(s => s.moduleName == "ProgressTracking");
                 var moduleValues = Traverse.Create(achievementsScn).Field<ConfigNode>("moduleValues").Value;
-                
+
                 var progressNode = moduleValues.GetNode("Progress");
                 progressNode.ClearNodes();
 

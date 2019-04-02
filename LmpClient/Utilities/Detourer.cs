@@ -9,7 +9,7 @@ namespace LmpClient.Utilities
     /// </summary>
     public static class Detourer
     {
-        private static readonly Dictionary<string,string> Detours = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> Detours = new Dictionary<string, string>();
 
         /// <summary>
         /// Taken from https://github.com/RimWorldCCLTeam/CommunityCoreLibrary
@@ -34,10 +34,10 @@ namespace LmpClient.Utilities
             {
                 Create32BitsDetour(source, destination);
             }
-            
+
             return true;
         }
-        
+
         private static bool CheckDetouring(MethodInfo source, MethodInfo destination)
         {
             var sourceStr = source.DeclaringType?.FullName + "." + source.Name + " @ 0x" +
@@ -53,7 +53,7 @@ namespace LmpClient.Utilities
                 {
                     LunaLog.LogWarning($"[Detour] Source method('{sourceStr}') was previously detoured to '{Detours[sourceStr]}'");
                 }
-                
+
                 return false;
             }
 
@@ -71,12 +71,12 @@ namespace LmpClient.Utilities
             // Get function pointers
             var sourceBase = source.MethodHandle.GetFunctionPointer().ToInt32();
             var destinationBase = destination.MethodHandle.GetFunctionPointer().ToInt32();
-            
+
             // Native source address
-            var pointerRawSource = (byte*) sourceBase;
+            var pointerRawSource = (byte*)sourceBase;
 
             // Pointer to insert jump address into native code
-            var pointerRawAddress = (int*) (pointerRawSource + 1);
+            var pointerRawAddress = (int*)(pointerRawSource + 1);
 
             // Jump offset (less instruction size)
             var offset = (destinationBase - sourceBase) - 5;
@@ -96,10 +96,10 @@ namespace LmpClient.Utilities
             var destinationBase = destination.MethodHandle.GetFunctionPointer().ToInt64();
 
             // Native source address
-            var pointerRawSource = (byte*) sourceBase;
+            var pointerRawSource = (byte*)sourceBase;
 
             // Pointer to insert jump address into native code
-            var pointerRawAddress = (long*) (pointerRawSource + 0x02);
+            var pointerRawAddress = (long*)(pointerRawSource + 0x02);
 
             // Insert 64-bit absolute jump into native code (address in rax)
             // mov rax, immediate64

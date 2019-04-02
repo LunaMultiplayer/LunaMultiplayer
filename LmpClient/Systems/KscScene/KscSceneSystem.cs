@@ -19,7 +19,7 @@ namespace LmpClient.Systems.KscScene
         #region Base overrides
 
         public override string SystemName { get; } = nameof(KscSceneSystem);
-        
+
         protected override void OnEnabled()
         {
             LockEvent.onLockAcquire.Add(KscSceneEvents.OnLockAcquire);
@@ -45,7 +45,7 @@ namespace LmpClient.Systems.KscScene
         #endregion
 
         #region Routines
-        
+
         /// <summary>
         /// While in editor the time doesn't advance so here we make it advance
         /// </summary>

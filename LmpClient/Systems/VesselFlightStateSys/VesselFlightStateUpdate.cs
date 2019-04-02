@@ -49,7 +49,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         #region Constructor
 
         public VesselFlightStateUpdate() { }
-        
+
         public VesselFlightStateUpdate(VesselFlightStateMsgData msgData)
         {
             VesselId = msgData.VesselId;

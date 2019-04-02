@@ -25,7 +25,7 @@ namespace LmpClient.Extensions
 
             PreFormatConfigThunk = (PreFormatConfigDelegate)Delegate.CreateDelegate(typeof(PreFormatConfigDelegate), null, preFormatConfigMethodInfo);
 
-            var recurseFormatMethodInfo = configNodeType.GetMethod("RecurseFormat", 
+            var recurseFormatMethodInfo = configNodeType.GetMethod("RecurseFormat",
                 BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(List<string[]>) }, null);
             if (recurseFormatMethodInfo == null) return;
 
@@ -74,7 +74,7 @@ namespace LmpClient.Extensions
                 numBytes = 0;
             }
         }
-        
+
         public static ConfigNode DeserializeToConfigNode(this byte[] data, int numBytes)
         {
             if (data == null || data.Length == 0 || data.All(b => b == 0)) return null;

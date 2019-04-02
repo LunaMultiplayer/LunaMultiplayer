@@ -30,9 +30,9 @@ namespace LmpClient.Windows.Options
                 SettingsSystem.SaveSettings();
             }
             GUILayout.EndHorizontal();
-            
+
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Color);
-            
+
             GUILayout.BeginHorizontal(Skin.box, GUILayout.ExpandWidth(true));
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, _tempColorLabelStyle);
             GUILayout.EndHorizontal();
@@ -41,12 +41,12 @@ namespace LmpClient.Windows.Options
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, _smallOption);
             _tempColor.r = GUILayout.HorizontalScrollbar(_tempColor.r, 0, 0, 1);
             GUILayout.EndHorizontal();
-            
+
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Green, _smallOption);
             _tempColor.g = GUILayout.HorizontalScrollbar(_tempColor.g, 0, 0, 1);
             GUILayout.EndHorizontal();
-            
+
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Blue, _smallOption);
             _tempColor.b = GUILayout.HorizontalScrollbar(_tempColor.b, 0, 0, 1);
@@ -57,11 +57,11 @@ namespace LmpClient.Windows.Options
             _tempColorLabelStyle.alignment = TextAnchor.MiddleCenter;
             _tempColorLabelStyle.active.textColor = _tempColor;
             _tempColorLabelStyle.normal.textColor = _tempColor;
-            
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Random))
             {
-                _tempColor = PlayerColorSystem.GenerateRandomColor();                
+                _tempColor = PlayerColorSystem.GenerateRandomColor();
             }
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Set))
             {
@@ -92,7 +92,7 @@ namespace LmpClient.Windows.Options
 
         private static void DrawGeneralSettings()
         {
-            _showGeneralSettings = GUILayout.Toggle(_showGeneralSettings, LocalizationContainer.OptionsWindowText.GeneralSettings,ToggleButtonStyle);
+            _showGeneralSettings = GUILayout.Toggle(_showGeneralSettings, LocalizationContainer.OptionsWindowText.GeneralSettings, ToggleButtonStyle);
             if (_showGeneralSettings)
             {
                 var settingSyncCheck = GUILayout.Toggle(SettingsSystem.CurrentSettings.IgnoreSyncChecks, LocalizationContainer.OptionsWindowText.IgnoreSyncChecks);
@@ -208,7 +208,7 @@ namespace LmpClient.Windows.Options
                     NetworkMain.Config.SimulatedMinimumLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3), 4);
             }
 
-            _showClockOffsetSettings = GUILayout.Toggle(_showClockOffsetSettings, "Clock offset simulation",ToggleButtonStyle);
+            _showClockOffsetSettings = GUILayout.Toggle(_showClockOffsetSettings, "Clock offset simulation", ToggleButtonStyle);
             if (_showClockOffsetSettings)
             {
                 GUILayout.Label($"Computer clock offset: {LunaComputerTime.SimulatedMinutesTimeOffset:F1} min");

@@ -171,7 +171,7 @@ namespace LmpClient.Systems.VesselProtoSys
         #endregion
 
         #region Public methods
-        
+
         /// <summary>
         /// Sends a delayed vessel definition to the server.
         /// Call this method if you expect to do a lot of modifications to a vessel and you want to send it only once

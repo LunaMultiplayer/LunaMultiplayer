@@ -35,7 +35,7 @@ namespace Server.System
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ModMsgData>();
             msgData.Data = messageData;
             msgData.ModName = modName;
-            
+
             MessageQueuer.SendToClient<ModSrvMsg>(client, msgData);
         }
     }

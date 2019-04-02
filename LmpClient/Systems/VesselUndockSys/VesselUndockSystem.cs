@@ -12,7 +12,7 @@ namespace LmpClient.Systems.VesselUndockSys
     public class VesselUndockSystem : MessageSystem<VesselUndockSystem, VesselUndockMessageSender, VesselUndockMessageHandler>
     {
         #region Fields & properties
-        
+
         public ConcurrentDictionary<Guid, VesselUndockQueue> VesselUndocks { get; } = new ConcurrentDictionary<Guid, VesselUndockQueue>();
         private VesselUndockEvents VesselUndockEvents { get; } = new VesselUndockEvents();
         public bool IgnoreEvents { get; set; }
@@ -72,7 +72,7 @@ namespace LmpClient.Systems.VesselUndockSys
         {
             VesselUndocks.TryRemove(vesselId, out _);
         }
-        
+
         #endregion
     }
 }

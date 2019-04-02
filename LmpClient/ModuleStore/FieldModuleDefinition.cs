@@ -13,7 +13,7 @@ namespace LmpClient.ModuleStore
         public FieldModuleDefinition(Type moduleType, IEnumerable<FieldInfo> persistentFields)
         {
             ModuleType = moduleType;
-            PersistentModuleField = persistentFields.ToDictionary(k=> k.Name, k => k);
+            PersistentModuleField = persistentFields.ToDictionary(k => k.Name, k => k);
         }
     }
 }

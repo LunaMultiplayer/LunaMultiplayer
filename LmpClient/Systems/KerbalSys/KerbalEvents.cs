@@ -96,7 +96,7 @@ namespace LmpClient.Systems.KerbalSys
         public void OnVesselTerminated(ProtoVessel terminatedVessel)
         {
             if (terminatedVessel == null) return;
-            
+
             //Force setting the kerbals as missing as we don't have their kerbal lock
             var kerbals = terminatedVessel.GetVesselCrew();
             foreach (var kerbal in kerbals)

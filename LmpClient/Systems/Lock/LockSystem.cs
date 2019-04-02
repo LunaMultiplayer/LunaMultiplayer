@@ -281,7 +281,7 @@ namespace LmpClient.Systems.Lock
         /// </summary>
         public void FireVesselLocksEvents(Guid vesselId)
         {
-            if(LockQuery.ControlLockExists(vesselId))
+            if (LockQuery.ControlLockExists(vesselId))
                 LockEvent.onLockAcquire.Fire(LockQuery.GetControlLock(vesselId));
             if (LockQuery.UpdateLockExists(vesselId))
                 LockEvent.onLockAcquire.Fire(LockQuery.GetUpdateLock(vesselId));

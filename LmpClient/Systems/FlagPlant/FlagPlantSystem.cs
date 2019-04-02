@@ -8,9 +8,9 @@ namespace LmpClient.Systems.FlagPlant
     public class FlagPlantSystem : System<FlagPlantSystem>
     {
         #region Fields & properties
-        
+
         private FlagPlantEvents FlagPlantEvents { get; } = new FlagPlantEvents();
-        
+
         #endregion
 
         #region Base overrides

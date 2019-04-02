@@ -20,8 +20,8 @@ namespace LmpClient.Systems.ShareCareer
         private Queue<Action> _actionQueue;
 
         //Dependencies to run the queue
-        protected bool ShareSystemReady => ContractSystem.Instance != null && Funding.Instance != null && 
-                                           ResearchAndDevelopment.Instance != null && Reputation.Instance != null && 
+        protected bool ShareSystemReady => ContractSystem.Instance != null && Funding.Instance != null &&
+                                           ResearchAndDevelopment.Instance != null && Reputation.Instance != null &&
                                            Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene >= GameScenes.SPACECENTER && HighLogic.LoadedScene <= GameScenes.TRACKSTATION;
 
         protected override void OnEnabled()

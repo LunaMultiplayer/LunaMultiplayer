@@ -10,7 +10,7 @@ namespace LmpClient.ModuleStore.Patching
     internal class TestModule : PartModule
     {
         public static readonly MethodInfo AfterMethodCallMethodInfo = typeof(TestModule).GetMethod(nameof(AfterMethodCall), AccessTools.all);
-        
+
         private void AfterMethodCall() => PartModuleEvent.onPartModuleMethodCalling.Fire(this, "METHODNAME");
     }
 }

@@ -14,7 +14,7 @@ namespace LmpClient.Systems.PlayerColorSys
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<PlayerColorCliMsg>(msg)));
         }
-        
+
         public void SendColorsRequest()
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<PlayerColorCliMsg, PlayerColorRequestMsgData>()));
@@ -25,7 +25,7 @@ namespace LmpClient.Systems.PlayerColorSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<PlayerColorSetMsgData>();
             msgData.PlayerColor.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
             msgData.PlayerColor.Color = SettingsSystem.CurrentSettings.PlayerColor;
-            
+
             SendMessage(msgData);
         }
     }

@@ -42,7 +42,7 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Enable Comm Network")]
         public bool CommNetwork { get; set; } = true;
-        
+
         // Career Settings
 
         [XmlComment(Value = "Starting Funds")]
@@ -94,7 +94,7 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Kerbal G tolerance multiplier")]
         public float KerbalGToleranceMult { get; set; } = 1.0f;
-        
+
         [XmlComment(Value = "Resource Transfer Obeys Crossfeed Rules")]
         public bool ObeyCrossfeedRules { get; set; } = false;
 

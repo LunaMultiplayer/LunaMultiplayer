@@ -15,7 +15,7 @@ namespace LmpCommon.Message.Data.ShareProgress
 
         public StrategyInfo()
         {
-            
+
         }
 
         /// <summary>

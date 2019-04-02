@@ -31,7 +31,7 @@ namespace LmpCommon.Message.Data.ShareProgress
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             GuidUtil.Serialize(ContractGuid, lidgrenMsg);
-            
+
             Common.ThreadSafeCompress(this, ref Data, ref NumBytes);
 
             lidgrenMsg.Write(NumBytes);

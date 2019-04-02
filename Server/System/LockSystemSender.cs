@@ -28,7 +28,7 @@ namespace Server.System
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockReleaseMsgData>();
                 msgData.Lock = lockDefinition;
                 msgData.LockResult = true;
-                
+
                 MessageQueuer.RelayMessage<LockSrvMsg>(client, msgData);
                 LunaLog.Debug($"{lockDefinition.PlayerName} released lock {lockDefinition}");
             }
@@ -50,7 +50,7 @@ namespace Server.System
                 MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
 
                 //Just log it if we actually changed the value. Users might send repeated acquire locks as they take a bit of time to reach them...
-                if (!repeatedAcquire) 
+                if (!repeatedAcquire)
                     LunaLog.Debug($"{lockDefinition.PlayerName} acquired lock {lockDefinition}");
             }
             else

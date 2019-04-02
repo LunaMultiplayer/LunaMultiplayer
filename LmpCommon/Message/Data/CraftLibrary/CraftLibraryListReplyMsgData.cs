@@ -40,13 +40,13 @@ namespace LmpCommon.Message.Data.CraftLibrary
 
             for (var i = 0; i < PlayerCraftsCount; i++)
             {
-                if(PlayerCrafts[i] == null)
+                if (PlayerCrafts[i] == null)
                     PlayerCrafts[i] = new CraftBasicInfo();
 
                 PlayerCrafts[i].Deserialize(lidgrenMsg);
             }
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             var arraySize = 0;

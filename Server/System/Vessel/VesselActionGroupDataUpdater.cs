@@ -10,7 +10,7 @@ namespace Server.System.Vessel
     /// This way we send the whole vessel definition only when there are parts that have changed 
     /// </summary>
     public partial class VesselDataUpdater
-    {        
+    {
         /// <summary>
         /// We received a action group information from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto

@@ -11,7 +11,7 @@ namespace LmpClient.Systems.VesselFairingsSys
     public class VesselFairingsSystem : MessageSystem<VesselFairingsSystem, VesselFairingsMessageSender, VesselFairingsMessageHandler>
     {
         #region Fields & properties
-        
+
         public ConcurrentDictionary<Guid, VesselFairingQueue> VesselFairings { get; } = new ConcurrentDictionary<Guid, VesselFairingQueue>();
         private VesselFairingEvents VesselFairingEvents { get; } = new VesselFairingEvents();
 
@@ -65,7 +65,7 @@ namespace LmpClient.Systems.VesselFairingsSys
         {
             VesselFairings.TryRemove(vesselId, out _);
         }
-        
+
         #endregion
     }
 }

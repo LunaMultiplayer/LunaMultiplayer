@@ -36,7 +36,7 @@ namespace LmpCommon.Message.Data.Flag
 
             for (var i = 0; i < FlagCount; i++)
             {
-                if(FlagFiles[i] == null)
+                if (FlagFiles[i] == null)
                     FlagFiles[i] = new FlagInfo();
 
                 FlagFiles[i].Deserialize(lidgrenMsg);

@@ -35,7 +35,7 @@ namespace LmpClient.Systems.Facility
         /// </summary>
         public void FlightReady()
         {
-            var buildings = Object.FindObjectsOfType<DestructibleBuilding>().Where(b=> !b.IsDestroyed);
+            var buildings = Object.FindObjectsOfType<DestructibleBuilding>().Where(b => !b.IsDestroyed);
             foreach (var building in buildings)
             {
                 if (System.DestroyedFacilities.Contains(building.id))

@@ -144,8 +144,8 @@ namespace LmpClient.Windows.Screenshots
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 
-                var shouldLock = WindowRect.Contains(mousePos) 
-                                 || !string.IsNullOrEmpty(_selectedFolder) && _libraryWindowRect.Contains(mousePos) 
+                var shouldLock = WindowRect.Contains(mousePos)
+                                 || !string.IsNullOrEmpty(_selectedFolder) && _libraryWindowRect.Contains(mousePos)
                                  || _selectedImage > 0 && _imageWindowRect.Contains(mousePos);
 
                 if (shouldLock && !IsWindowLocked)

@@ -72,7 +72,7 @@ namespace LmpClient.Windows.CraftLibrary
 
                 if (!string.IsNullOrEmpty(_selectedFolder) && System.CraftInfo.TryGetValue(_selectedFolder, out var craftsDictionary))
                 {
-                    var allValues = craftsDictionary.Values.GroupBy(v=> v.CraftType).ToArray();
+                    var allValues = craftsDictionary.Values.GroupBy(v => v.CraftType).ToArray();
                     foreach (var groupedValues in allValues)
                     {
                         switch (groupedValues.Key)
@@ -114,9 +114,9 @@ namespace LmpClient.Windows.CraftLibrary
                 _uploadWindowRect = FixWindowPos(GUILayout.Window(6709 + MainSystem.WindowOffset,
                     _uploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload,
                     _uploadLayoutOptions));
-            }         
+            }
         }
-        
+
         public override void SetStyles()
         {
             WindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);

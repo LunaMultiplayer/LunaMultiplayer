@@ -90,12 +90,12 @@ namespace LmpCommon.Message.Data.MasterServer
             TerrainQuality = lidgrenMsg.ReadInt32();
             VesselUpdatesSendMsInterval = lidgrenMsg.ReadInt32();
         }
-        
+
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + 
+            return base.InternalGetMessageSize() +
                 sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
-                ExternalEndpoint.GetByteCount() + ServerName.GetByteCount() + Description.GetByteCount() + Country .GetByteCount() + Website.GetByteCount() + WebsiteText.GetByteCount() +
+                ExternalEndpoint.GetByteCount() + ServerName.GetByteCount() + Description.GetByteCount() + Country.GetByteCount() + Website.GetByteCount() + WebsiteText.GetByteCount() +
                 sizeof(bool) * 5 + sizeof(int) * 6 + sizeof(byte) * 3;
         }
     }

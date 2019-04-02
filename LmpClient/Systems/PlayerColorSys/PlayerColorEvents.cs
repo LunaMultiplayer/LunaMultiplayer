@@ -37,13 +37,13 @@ namespace LmpClient.Systems.PlayerColorSys
             if (lockDefinition.Type == LockType.Control)
                 UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
         }
-        
+
         /// <summary>
         /// Called when you enter the map view.
         /// </summary>
         public void MapEntered()
         {
-            foreach (var vessel in FlightGlobals.Vessels.Where(v=> v != null && v.orbitDriver && v.orbitDriver.Renderer))
+            foreach (var vessel in FlightGlobals.Vessels.Where(v => v != null && v.orbitDriver && v.orbitDriver.Renderer))
             {
                 System.SetVesselOrbitColor(vessel);
             }

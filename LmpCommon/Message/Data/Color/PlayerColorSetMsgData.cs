@@ -6,7 +6,7 @@ namespace LmpCommon.Message.Data.Color
     public class PlayerColorSetMsgData : PlayerColorBaseMsgData
     {
         /// <inheritdoc />
-        internal PlayerColorSetMsgData(){}
+        internal PlayerColorSetMsgData() { }
         public override PlayerColorMessageType PlayerColorMessageType => PlayerColorMessageType.Set;
 
         public PlayerColor PlayerColor = new PlayerColor();

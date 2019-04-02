@@ -22,7 +22,7 @@ namespace LmpCommon.Message.Data.Kerbal
         {
             //Nothing to implement here
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return 0;

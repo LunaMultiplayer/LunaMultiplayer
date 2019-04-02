@@ -22,7 +22,7 @@ namespace Server.System.Scenario
                     var scenariosParentNode = scenario.GetNode("CONTRACTS")?.Value;
                     if (scenariosParentNode == null) return;
 
-                    var existingContracts = scenariosParentNode.GetNodes("CONTRACT").Select(c=> c.Value).ToArray();
+                    var existingContracts = scenariosParentNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
                     if (existingContracts.Any())
                     {
                         foreach (var contract in contractsMsg.Contracts.Select(v => new ConfigNode(Encoding.UTF8.GetString(v.Data, 0, v.NumBytes)) { Name = "CONTRACT" }))

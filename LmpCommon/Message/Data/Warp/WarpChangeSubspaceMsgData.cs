@@ -7,7 +7,7 @@ namespace LmpCommon.Message.Data.Warp
     public class WarpChangeSubspaceMsgData : WarpBaseMsgData
     {
         /// <inheritdoc />
-        internal WarpChangeSubspaceMsgData(){}
+        internal WarpChangeSubspaceMsgData() { }
         public override WarpMessageType WarpMessageType => WarpMessageType.ChangeSubspace;
 
         public string PlayerName;

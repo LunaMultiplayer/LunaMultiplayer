@@ -8,7 +8,7 @@ using System;
 namespace LmpClient.Systems.VesselProtoSys
 {
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
-    {        
+    {
         /// <summary>
         /// When stop warping, spawn the missing vessels
         /// </summary>
@@ -24,7 +24,7 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                 return;
-            
+
             System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
         }
 
@@ -39,14 +39,14 @@ namespace LmpClient.Systems.VesselProtoSys
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
             }
         }
-        
+
         /// <summary>
         /// Triggered when transmitting science. Science experiment is stored in the vessel so send the definition to the server
         /// </summary>
         public void TriggeredDataTransmission(ScienceData science, Vessel vessel, bool data)
         {
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
-            {                
+            {
                 //We must send the science subject aswell!
                 var subject = ResearchAndDevelopment.GetSubjectByID(science.subjectID);
                 if (subject != null)

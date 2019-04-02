@@ -12,7 +12,7 @@ namespace Server.System.Vessel
     /// This way we send the whole vessel definition only when there are parts that have changed 
     /// </summary>
     public partial class VesselDataUpdater
-    {        
+    {
         /// <summary>
         /// Update the vessel files with resource data max at a 2,5 seconds interval
         /// </summary>

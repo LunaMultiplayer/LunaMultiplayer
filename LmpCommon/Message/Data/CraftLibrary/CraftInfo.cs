@@ -30,7 +30,7 @@ namespace LmpCommon.Message.Data.CraftLibrary
             FolderName = lidgrenMsg.ReadString();
             CraftName = lidgrenMsg.ReadString();
             CraftType = (CraftType)lidgrenMsg.ReadInt32();
-            
+
             NumBytes = lidgrenMsg.ReadInt32();
 
             if (Data.Length < NumBytes)

@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace LmpClient.Windows.Admin
 {
-    public partial class AdminWindow : SystemWindow<AdminWindow,AdminSystem>
+    public partial class AdminWindow : SystemWindow<AdminWindow, AdminSystem>
     {
         #region Fields
-        
+
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
         private const float ConfirmationWindowHeight = 50;
@@ -47,14 +47,14 @@ namespace LmpClient.Windows.Admin
             {
                 _reason = string.Empty;    //FIXME: State being changed when this window isn't likely to even be called. (after we're done with the refactor)
                 _selectedPlayer = null;
-            }       
+            }
         }
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width/2f - WindowWidth/2f, Screen.height/2f - WindowHeight/2f, WindowWidth, WindowHeight);
+            WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 40);
-            
+
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
             LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);

@@ -14,7 +14,7 @@ namespace LmpClient.Network
     {
         public static string Password { get; set; } = string.Empty;
         public static ConcurrentDictionary<long, ServerInfo> Servers { get; } = new ConcurrentDictionary<long, ServerInfo>();
-        
+
         /// <summary>
         /// Sends a request servers to the master servers
         /// </summary>
@@ -34,7 +34,7 @@ namespace LmpClient.Network
             try
             {
                 var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
-                
+
                 //Sometimes we receive other type of unconnected messages. 
                 //Therefore we assert that the received message data is of MsReplyServersMsgData
                 if (msgDeserialized.Data is MsReplyServersMsgData data)

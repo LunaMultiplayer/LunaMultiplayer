@@ -3,7 +3,7 @@
 namespace LmpCommon.Message.Data.Admin
 {
     public class AdminRestartServerMsgData : AdminBaseMsgData
-    {        
+    {
         /// <inheritdoc />
         internal AdminRestartServerMsgData() { }
         public override AdminMessageType AdminMessageType => AdminMessageType.RestartServer;

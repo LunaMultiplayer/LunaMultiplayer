@@ -44,7 +44,7 @@ namespace LmpClient.Localization
         public static void LoadLanguages()
         {
             Languages.Clear();
-            Languages.AddRange(Directory.GetDirectories(LocalizationFolder).Select(d=> new DirectoryInfo(d).Name));
+            Languages.AddRange(Directory.GetDirectories(LocalizationFolder).Select(d => new DirectoryInfo(d).Name));
         }
 
         public static string GetNextLanguage()
@@ -132,7 +132,7 @@ namespace LmpClient.Localization
         #endregion
 
         #region Private
-        
+
         private static void LoadWindowTexts<T>(string language, ref T classToReplace) where T : class, new()
         {
             try

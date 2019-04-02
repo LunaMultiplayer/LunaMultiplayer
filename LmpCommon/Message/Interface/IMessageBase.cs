@@ -3,7 +3,7 @@
 namespace LmpCommon.Message.Interface
 {
     public interface IMessageBase
-    {        
+    {
         /// <summary>
         /// Name of the class
         /// </summary>
@@ -43,7 +43,7 @@ namespace LmpCommon.Message.Interface
         /// Attaches the data to the message
         /// </summary>
         void SetData(IMessageData data);
-        
+
         /// <summary>
         /// Retrieves a message data from the pool based on the subtype
         /// </summary>

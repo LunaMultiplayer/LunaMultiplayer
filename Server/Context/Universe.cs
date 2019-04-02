@@ -19,7 +19,7 @@ namespace Server.Context
 
             var size = ByteSize.FromBytes(Directory.GetFiles(ServerContext.UniverseDirectory, "*.*")
                 .Select(f => new FileInfo(f)).Select(i => i.Length).Sum()).KiloBytes;
-            
+
             return Math.Round(size, 3);
         }
 

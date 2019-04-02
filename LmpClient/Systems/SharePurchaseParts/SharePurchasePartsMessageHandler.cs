@@ -62,15 +62,15 @@ namespace LmpClient.Systems.SharePurchaseParts
             }
 
             //Refresh RD nodes in case we are in the RD screen
-            if(RDController.Instance && RDController.Instance.partList)
+            if (RDController.Instance && RDController.Instance.partList)
             {
-                RDController.Instance.partList.Refresh();                
+                RDController.Instance.partList.Refresh();
                 RDController.Instance.UpdatePanel();
             }
 
             //Refresh the part list in case we are in the VAB/SPH
             if (EditorPartList.Instance) EditorPartList.Instance.Refresh();
-            
+
             ShareFundsSystem.Singleton.StopIgnoringEvents();
             System.StopIgnoringEvents();
             LunaLog.Log($"Part purchase received tech: {techId} part: {partName}");

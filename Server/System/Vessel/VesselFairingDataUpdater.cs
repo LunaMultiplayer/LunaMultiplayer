@@ -26,7 +26,7 @@ namespace Server.System.Vessel
                 lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                 {
                     if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel)) return;
-                    
+
                     var part = vessel.GetPart(msgData.PartFlightId);
                     var module = part?.GetSingleModule("ModuleProceduralFairing");
                     if (module != null)

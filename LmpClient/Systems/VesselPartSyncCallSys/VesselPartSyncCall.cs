@@ -19,7 +19,7 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
         public uint PartFlightId;
         public string ModuleName;
         public string MethodName;
-        
+
         #endregion
 
         public void ProcessPartMethodCallSync()

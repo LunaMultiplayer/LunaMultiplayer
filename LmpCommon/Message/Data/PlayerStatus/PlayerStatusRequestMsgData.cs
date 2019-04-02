@@ -2,7 +2,7 @@
 
 namespace LmpCommon.Message.Data.PlayerStatus
 {
-    public class PlayerStatusRequestMsgData: PlayerStatusBaseMsgData
+    public class PlayerStatusRequestMsgData : PlayerStatusBaseMsgData
     {
         /// <inheritdoc />
         internal PlayerStatusRequestMsgData() { }

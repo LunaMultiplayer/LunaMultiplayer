@@ -31,7 +31,7 @@ namespace LmpClient.Systems.VesselPositionSys
             if (vessel == null) return;
 
             if (doOrbitDriverReadyCheck && !vessel.orbitDriver.Ready())
-            {                
+            {
                 //Orbit driver is not ready so wait max 10 frames until it's ready
                 CoroutineUtil.StartConditionRoutine("SendVesselPositionUpdate",
                     () => SendVesselPositionUpdate(vessel),
@@ -46,7 +46,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 SendMessage(msg);
             }
         }
-        
+
         public static VesselPositionMsgData CreateMessageFromVessel(Vessel vessel)
         {
             if (!OrbitParametersAreOk(vessel)) return null;

@@ -20,7 +20,7 @@ namespace Server.System
             {
                 var players = ClientRetriever.GetAuthenticatedClients()
                     .Where(c => !Equals(c, client) && c.Subspace == s.Key)
-                    .Select(c=> c.PlayerName)
+                    .Select(c => c.PlayerName)
                     .ToArray();
 
                 return new SubspaceInfo

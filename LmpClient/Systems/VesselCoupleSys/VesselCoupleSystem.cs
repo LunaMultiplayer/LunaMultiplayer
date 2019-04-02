@@ -12,7 +12,7 @@ namespace LmpClient.Systems.VesselCoupleSys
     public class VesselCoupleSystem : MessageSystem<VesselCoupleSystem, VesselCoupleMessageSender, VesselCoupleMessageHandler>
     {
         #region Fields & properties
-        
+
         public ConcurrentDictionary<Guid, VesselCoupleQueue> VesselCouples { get; } = new ConcurrentDictionary<Guid, VesselCoupleQueue>();
         private VesselCoupleEvents VesselCoupleEvents { get; } = new VesselCoupleEvents();
         public bool IgnoreEvents { get; set; }
@@ -74,7 +74,7 @@ namespace LmpClient.Systems.VesselCoupleSys
         {
             VesselCouples.TryRemove(vesselId, out _);
         }
-        
+
         #endregion
     }
 }

@@ -7,7 +7,7 @@ namespace LmpCommon.Message.Data.MasterServer
         /// <inheritdoc />
         internal MsRequestServersMsgData() { }
         public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.RequestServers;
-        
+
         public override string ClassName { get; } = nameof(MsRequestServersMsgData);
     }
 }

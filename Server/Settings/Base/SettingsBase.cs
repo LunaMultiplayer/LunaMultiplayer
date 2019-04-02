@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Server.Settings.Base
 {
-    public abstract class SettingsBase<T>: ISettings
+    public abstract class SettingsBase<T> : ISettings
         where T : class, new()
     {
         protected abstract string Filename { get; }

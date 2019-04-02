@@ -22,7 +22,7 @@ namespace Server.System.Vessel
         private static readonly ConcurrentDictionary<Guid, object> Semaphore = new ConcurrentDictionary<Guid, object>();
 
         #endregion
-        
+
         /// <summary>
         /// Raw updates a vessel in the dictionary and takes care of the locking in case we received another vessel message type
         /// </summary>

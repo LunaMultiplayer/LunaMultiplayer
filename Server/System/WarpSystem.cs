@@ -50,7 +50,7 @@ namespace Server.System
         }
 
         #region Private methods
-        
+
         private static void LoadSavedSubspace()
         {
             if (FileHandler.FileExists(SubspaceFile))
@@ -77,11 +77,11 @@ namespace Server.System
             if (subspaceLines.Length == 0)
             {
                 LunaLog.Error("Incorrect Subspace.txt file!");
-                return new KeyValuePair<int, double>(0,0);
+                return new KeyValuePair<int, double>(0, 0);
             }
-            
+
             //TODO: Retrocompatibility - Remove next 2 lines 2/3 months after 1/july/2018
-            if (subspaceLines.Length > 1) 
+            if (subspaceLines.Length > 1)
                 return subspaceLines.OrderByDescending(s => s.Value).First();
 
             //TODO: Uncomment this 2/3 months after 1/july/2018

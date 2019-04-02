@@ -120,7 +120,7 @@ namespace LmpClient.Systems.TimeSync
             //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, () => LunaLog.Log($"BetterLateThanNever {Planetarium.GetUniversalTime() - UniversalTime}"));
 
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, CheckGameTime);
-            
+
             SpectateEvent.onStartSpectating.Add(TimerSyncEvents.OnStartSpectating);
         }
 
@@ -129,7 +129,7 @@ namespace LmpClient.Systems.TimeSync
             base.OnDisabled();
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, UpdateUniversalTime);
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, CheckGameTime);
-            
+
             SpectateEvent.onStartSpectating.Remove(TimerSyncEvents.OnStartSpectating);
             ServerStartTime = 0;
         }

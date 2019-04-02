@@ -23,7 +23,7 @@ namespace LmpClient.ModuleStore
         /// Here we store our customized part modules behaviors
         /// </summary>
         public static Dictionary<string, ModuleDefinition> CustomizedModuleBehaviours = new Dictionary<string, ModuleDefinition>();
-        
+
         /// <summary>
         /// Here we store all the types that inherit from PartModule including the mod files
         /// </summary>

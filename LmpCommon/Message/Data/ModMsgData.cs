@@ -56,7 +56,7 @@ namespace LmpCommon.Message.Data
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return ModName.GetByteCount() + sizeof(bool) + sizeof(bool) + sizeof(int) + sizeof(byte) * NumBytes;

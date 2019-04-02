@@ -42,7 +42,7 @@ namespace LmpClient.Systems.SafetyBubble
         #endregion
 
         #region Public methods
-        
+
         /// <summary>
         /// Returns whether the given vessel is in a starting safety bubble or not.
         /// </summary>

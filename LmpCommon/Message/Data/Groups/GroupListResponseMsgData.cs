@@ -41,7 +41,7 @@ namespace LmpCommon.Message.Data.Groups
                 Groups[i].Deserialize(lidgrenMsg);
             }
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             var arraySize = 0;

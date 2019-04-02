@@ -25,7 +25,7 @@ namespace LmpClient.Network
             lock (DisconnectLock)
             {
                 if (MainSystem.NetworkState > ClientState.Disconnected)
-                {                    
+                {
                     //DO NOT set networkstate as disconnected as we are in another thread!
                     MainSystem.NetworkState = ClientState.DisconnectRequested;
 
@@ -41,7 +41,7 @@ namespace LmpClient.Network
                     }
 
                     MainSystem.Singleton.Status = $"Disconnected: {reason}";
-                    
+
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
                     NetworkMain.ResetConnectionStaticsAndQueues();
@@ -76,15 +76,15 @@ namespace LmpClient.Network
                     NetworkMain.ClientConnection.Connect(endpoint, outMsg);
                     NetworkMain.ClientConnection.FlushSendQueue();
                     Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
-                    
+
                     var connectionTrials = 0;
-                    while (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected && 
+                    while (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected &&
                            connectionTrials < SettingsSystem.CurrentSettings.ConnectionTries &&
                            MainSystem.NetworkState == ClientState.Connecting)
                     {
                         connectionTrials++;
 
-                        MainSystem.Singleton.Status = $"Connection retry [{connectionTrials+1}] ({endpoint.Address}:{endpoint.Port})";
+                        MainSystem.Singleton.Status = $"Connection retry [{connectionTrials + 1}] ({endpoint.Address}:{endpoint.Port})";
                         LunaLog.Log($"[LMP]: Connection retry [{connectionTrials}] ({endpoint.Address}:{endpoint.Port})");
 
                         NetworkMain.ClientConnection.Connect(endpoint, outMsg);

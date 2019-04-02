@@ -112,7 +112,7 @@ namespace LmpClient.Windows.ServerList
 
             _kspLabelStyle = new GUIStyle(Skin.label) { alignment = TextAnchor.MiddleCenter };
             _labelStyle = new GUIStyle(Skin.label) { alignment = TextAnchor.MiddleCenter, normal = GUI.skin.label.normal };
-            
+
             _serverDetailLayoutOptions = new GUILayoutOption[4];
             _serverDetailLayoutOptions[0] = GUILayout.MinWidth(ServerDetailWindowWidth);
             _serverDetailLayoutOptions[1] = GUILayout.MaxWidth(ServerDetailWindowWidth);

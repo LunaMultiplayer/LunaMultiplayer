@@ -97,7 +97,7 @@ namespace LmpCommon.FastMember
                 il.Emit(OpCodes.Ldloca_S, (byte)0);
                 il.EmitCall(OpCodes.Callvirt, TryGetValue, null);
                 il.Emit(OpCodes.Brfalse, fail);
-            }            
+            }
             var labels = new Label[members.Count];
             for (var i = 0; i < labels.Length; i++)
             {

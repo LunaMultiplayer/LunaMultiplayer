@@ -18,10 +18,10 @@ namespace LmpClient.Systems.VesselPositionSys
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
         #region Fields & properties
-        
+
         private static DateTime LastVesselUpdatesSentTime { get; set; } = LunaComputerTime.UtcNow;
 
-        private static int UpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval 
+        private static int UpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval
             / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
 
         private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval
@@ -68,7 +68,7 @@ namespace LmpClient.Systems.VesselPositionSys
 
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
             TimingManager.LateUpdateAdd(SendPositionsStage, SendVesselPositionUpdates);
-            
+
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendSecondaryVesselPositionUpdates));
@@ -80,7 +80,7 @@ namespace LmpClient.Systems.VesselPositionSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            
+
             TimingManager.FixedUpdateRemove(HandlePositionsStage, HandleVesselUpdates);
             TimingManager.LateUpdateRemove(SendPositionsStage, SendVesselPositionUpdates);
 
@@ -91,7 +91,7 @@ namespace LmpClient.Systems.VesselPositionSys
         private void HandleVesselUpdates()
         {
             Profiler.BeginSample(nameof(HandleVesselUpdates));
-            
+
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 keyVal.Value.ApplyInterpolatedVesselUpdate();

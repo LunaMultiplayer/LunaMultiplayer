@@ -96,7 +96,7 @@ namespace LmpClient.ModuleStore.Patching
         {
             return InstructionsBackup.AsEnumerable();
         }
-        
+
         public static IEnumerable<CodeInstruction> BackupAndCallTranspiler(ILGenerator generator, MethodBase originalMethod, IEnumerable<CodeInstruction> instructions)
         {
             if (originalMethod.DeclaringType == null) return instructions.AsEnumerable();

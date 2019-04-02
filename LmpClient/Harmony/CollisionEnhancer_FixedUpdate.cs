@@ -18,7 +18,7 @@ namespace LmpClient.Harmony
         private static bool PrefixFixedUpdate(CollisionEnhancer __instance)
         {
             if (MainSystem.NetworkState < ClientState.Connected || !__instance.part || !__instance.part.vessel) return true;
-            
+
             if (__instance.part.vessel.IsImmortal())
                 return false;
 

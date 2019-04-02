@@ -8,7 +8,7 @@ namespace LmpCommon.Message.Data.Kerbal
         /// <inheritdoc />
         internal KerbalProtoMsgData() { }
         public override KerbalMessageType KerbalMessageType => KerbalMessageType.Proto;
-        
+
         public KerbalInfo Kerbal = new KerbalInfo();
 
         public override string ClassName { get; } = nameof(KerbalProtoMsgData);
@@ -26,7 +26,7 @@ namespace LmpCommon.Message.Data.Kerbal
 
             Kerbal.Deserialize(lidgrenMsg);
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + Kerbal.GetByteCount();

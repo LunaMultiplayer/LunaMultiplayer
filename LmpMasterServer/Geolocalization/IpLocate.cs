@@ -5,7 +5,7 @@ using System.Net.Http;
 
 namespace LmpMasterServer.Geolocalization
 {
-    internal class IpLocate: BaseGeolocalization
+    internal class IpLocate : BaseGeolocalization
     {
         public static string GetCountry(IPEndPoint externalEndpoint)
         {

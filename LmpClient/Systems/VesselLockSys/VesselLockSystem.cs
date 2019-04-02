@@ -27,7 +27,7 @@ namespace LmpClient.Systems.VesselLockSys
             "";
 
         private VesselLockEvents VesselLockEvents { get; } = new VesselLockEvents();
-        
+
         private string SpectatingMessage => VesselCommon.IsSpectating ? LocalizationContainer.ScreenText.Spectating + $" {GetVesselOwner}." : "";
 
         #endregion
@@ -65,7 +65,7 @@ namespace LmpClient.Systems.VesselLockSys
         #endregion
 
         #region Update methods
-        
+
         /// <summary>
         /// Show a message on the screen if we are spectating
         /// </summary>
@@ -109,13 +109,13 @@ namespace LmpClient.Systems.VesselLockSys
         public void StopSpectating()
         {
             VesselCommon.IsSpectating = false;
-            
+
             //Unlock all vessel controls
             InputLockManager.RemoveControlLock(SpectateLock);
 
             if (LockSystem.LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName))
                 LockSystem.Singleton.ReleaseSpectatorLock();
-            
+
             //We are not spectating anymore so try to get as many unloaded update locks as possible
             foreach (var vessel in FlightGlobals.Vessels)
             {

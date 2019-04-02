@@ -30,7 +30,7 @@ namespace LmpClient.Windows.Status
         private const string CloseDeltaTime = ")";
 
         private static readonly StringBuilder StringBuilder = new StringBuilder();
-        
+
         public static string GetTimeLabel(SubspaceDisplayEntry currentEntry)
         {
             StringBuilder.Length = 0;

@@ -24,8 +24,8 @@ namespace LmpClient.Systems.ShareAchievements
             if (foundNode == null)
             {
                 var traverse = new Traverse(achievement).Field<CelestialBody>("body");
-                
-                var body = traverse.Value ? traverse.Value.name : null;                
+
+                var body = traverse.Value ? traverse.Value.name : null;
                 if (body != null)
                 {
                     foundNode = ProgressTracking.Instance.FindNode(body);

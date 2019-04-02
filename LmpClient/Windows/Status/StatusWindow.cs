@@ -14,7 +14,7 @@ namespace LmpClient.Windows.Status
 
         #region Public
 
-        public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui && 
+        public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui &&
                                         MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         public bool ColorEventHandled { get; set; } = true;
@@ -24,12 +24,12 @@ namespace LmpClient.Windows.Status
         private static Vector2 _scrollPosition;
         private static GUIStyle _subspaceStyle;
         private static GUIStyle _subspaceListStyle;
-        
+
         private static Dictionary<string, GUIStyle> _playerNameStyle;
         private static GUIStyle _stateTextStyle;
-        
+
         private static GUIStyle _highlightStyle;
-        
+
         private const float WindowHeight = 400;
         private const float WindowWidth = 300;
         private const float UpdateStatusInterval = 1f;
@@ -70,7 +70,7 @@ namespace LmpClient.Windows.Status
         {
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
-            
+
             _highlightStyle = new GUIStyle(GUI.skin.button)
             {
                 normal = { textColor = XKCDColors.Red },
@@ -95,10 +95,10 @@ namespace LmpClient.Windows.Status
             LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
             LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
-            
+
             _playerNameStyle = new Dictionary<string, GUIStyle>();
 
-            _stateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = XKCDColors.KSPNeutralUIGrey }};
+            _stateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = XKCDColors.KSPNeutralUIGrey } };
             _stateTextStyle.hover.textColor = _stateTextStyle.normal.textColor;
             _stateTextStyle.active.textColor = _stateTextStyle.normal.textColor;
             _stateTextStyle.fontStyle = FontStyle.Normal;

@@ -27,7 +27,7 @@ namespace LmpClient.Systems.Screenshot
             msgData.Screenshot.DateTaken = LunaNetworkTime.UtcNow.ToBinary();
             msgData.Screenshot.NumBytes = data.Length;
 
-            if(msgData.Screenshot.Data.Length < msgData.Screenshot.NumBytes)
+            if (msgData.Screenshot.Data.Length < msgData.Screenshot.NumBytes)
                 msgData.Screenshot.Data = new byte[msgData.Screenshot.NumBytes];
 
             Array.Copy(data, msgData.Screenshot.Data, msgData.Screenshot.NumBytes);

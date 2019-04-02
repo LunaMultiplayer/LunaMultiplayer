@@ -29,14 +29,16 @@ namespace LmpClient.Harmony
             ___Btn_revLaunch.onClick.RemoveAllListeners();
             ___Btn_revEditor.onClick.RemoveAllListeners();
 
-            ___Btn_revLaunch.onClick.AddListener(() => {
+            ___Btn_revLaunch.onClick.AddListener(() =>
+            {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "CannotRevertLaunch",
                     LocalizationContainer.RevertDialogText.CannotRevertTitle,
                     LocalizationContainer.RevertDialogText.CannotRevertText,
                     LocalizationContainer.RevertDialogText.CloseBtn, false, HighLogic.UISkin);
             });
 
-            ___Btn_revEditor.onClick.AddListener(() => {
+            ___Btn_revEditor.onClick.AddListener(() =>
+            {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "CannotRevertEditor",
                     LocalizationContainer.RevertDialogText.CannotRevertTitle,
                     LocalizationContainer.RevertDialogText.CannotRevertText,

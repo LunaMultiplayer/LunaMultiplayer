@@ -3,7 +3,7 @@ using LmpCommon.Message.Types;
 
 namespace LmpCommon.Message.Data.PlayerStatus
 {
-    public class PlayerStatusSetMsgData: PlayerStatusBaseMsgData
+    public class PlayerStatusSetMsgData : PlayerStatusBaseMsgData
     {
         /// <inheritdoc />
         internal PlayerStatusSetMsgData() { }

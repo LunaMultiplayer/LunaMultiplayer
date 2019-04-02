@@ -14,7 +14,7 @@ namespace LmpCommon.FastMember
 
         internal MemberSet(Type type) => _members = type.GetProperties().Concat(type.GetFields().Cast<MemberInfo>()).OrderBy(x => x.Name, StringComparer.InvariantCulture)
                 .Select(member => new Member(member)).ToArray();
-        
+
         /// <inheritdoc />
         /// <summary>
         /// Return a sequence of all defined members
@@ -51,7 +51,7 @@ namespace LmpCommon.FastMember
         void ICollection<Member>.CopyTo(Member[] array, int arrayIndex) { _members.CopyTo(array, arrayIndex); }
         bool ICollection<Member>.IsReadOnly => true;
         int IList<Member>.IndexOf(Member member) { return Array.IndexOf<Member>(_members, member); }
-        
+
     }
     /// <summary>
     /// Represents an abstracted view of an individual member defined for a type

@@ -204,7 +204,7 @@ namespace LmpClient.Windows.Screenshots
             GUILayout.EndVertical();
 
             if (Miniatures.Count > 1)
-            {   
+            {
                 //Draw screenshot cycle buttons if we have more than 1 screenshot
                 GUILayout.Space(15);
                 GUILayout.BeginHorizontal();

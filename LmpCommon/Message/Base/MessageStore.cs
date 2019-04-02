@@ -44,7 +44,7 @@ namespace LmpCommon.Message.Base
                 //We found a messageData that is already used so return it
                 return messageData as T;
             }
-            
+
             return CreateNewInstance<T>();
         }
 
@@ -54,7 +54,7 @@ namespace LmpCommon.Message.Base
             {
                 return messageData;
             }
-            
+
             return CreateNewMessageDataInstance(messageDataType);
         }
 
@@ -66,7 +66,7 @@ namespace LmpCommon.Message.Base
                 message.SetData(null);
                 return message as T;
             }
-            
+
             return CreateNewInstance<T>();
         }
 
@@ -77,7 +77,7 @@ namespace LmpCommon.Message.Base
                 //We found a messageData that is already used so return it
                 return message;
             }
-            
+
             return CreateNewMessageInstance(type);
         }
 

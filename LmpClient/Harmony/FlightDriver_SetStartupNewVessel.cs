@@ -22,7 +22,7 @@ namespace LmpClient.Harmony
 
             var configNode = ConfigNode.Load(FlightDriver.newShipToLoadPath);
             var shipName = configNode.GetValue("ship");
-            var partNames = configNode.GetNodes("PART").Select(n=> n.GetValue("part").Substring(0, n.GetValue("part").IndexOf('_'))).ToList();
+            var partNames = configNode.GetNodes("PART").Select(n => n.GetValue("part").Substring(0, n.GetValue("part").IndexOf('_'))).ToList();
 
             if (ModSystem.Singleton.ModControl)
             {

@@ -16,7 +16,7 @@ namespace LmpClient.Extensions
 
         public static void ForceStart(this OrbitDriver driver)
         {
-            if(!driver.Ready())
+            if (!driver.Ready())
                 OrbitDriverStart.Invoke(driver, null);
         }
     }

@@ -175,7 +175,7 @@ namespace LmpCommon.Locks
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         /// <summary>
         /// Retrieves a lock from the dictionary based on the given lock
         /// </summary>

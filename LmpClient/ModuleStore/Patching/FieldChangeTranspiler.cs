@@ -190,7 +190,7 @@ namespace LmpClient.ModuleStore.Patching
                         _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_S, evaluationVar.LocalIndex));
                         break;
                 }
-                
+
                 //If we are in the last field then return to the last "ret" of the function
                 if (i == fields.Count - 1)
                 {
@@ -382,7 +382,7 @@ namespace LmpClient.ModuleStore.Patching
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Vector3>), "Fire")));
             }
-            else if(fieldType.IsEnum)
+            else if (fieldType.IsEnum)
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int, string>), "Fire")));
             }

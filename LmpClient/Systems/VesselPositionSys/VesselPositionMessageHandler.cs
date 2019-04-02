@@ -18,7 +18,7 @@ namespace LmpClient.Systems.VesselPositionSys
             var vesselId = msgData.VesselId;
             if (!VesselCommon.DoVesselChecks(vesselId))
                 return;
-            
+
             if (!VesselPositionSystem.CurrentVesselUpdate.ContainsKey(vesselId))
             {
                 VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, new VesselPositionUpdate(msgData));

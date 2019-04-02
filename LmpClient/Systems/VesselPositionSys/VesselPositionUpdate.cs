@@ -199,7 +199,7 @@ namespace LmpClient.Systems.VesselPositionSys
             KspOrbit.SetOrbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], CalculateEpochTime(Orbit[6]), Body);
 
             lanFixFactor = GetLanFixFactor(Target.GameTimeStamp, Target.SubspaceId, Vessel, Target.Body);
-            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], 
+            Target.KspOrbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5],
                 CalculateTargetEpochTime(Target.Orbit[6]), Target.Body);
 
             var meanAnomalyFixFactor = GetMeanAnomalyFixFactor(GameTimeStamp, SubspaceId, Vessel, KspOrbit);

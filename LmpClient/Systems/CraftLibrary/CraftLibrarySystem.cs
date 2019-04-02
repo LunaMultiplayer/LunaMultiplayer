@@ -162,7 +162,7 @@ namespace LmpClient.Systems.CraftLibrary
             }
             else
             {
-                var msg = LocalizationContainer.ScreenText.CraftLibraryInterval.Replace("$1", 
+                var msg = LocalizationContainer.ScreenText.CraftLibraryInterval.Replace("$1",
                     TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs).TotalSeconds.ToString(CultureInfo.InvariantCulture));
 
                 LunaScreenMsg.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);

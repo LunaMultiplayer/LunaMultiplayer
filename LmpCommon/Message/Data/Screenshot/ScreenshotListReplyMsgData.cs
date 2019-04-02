@@ -15,7 +15,7 @@ namespace LmpCommon.Message.Data.Screenshot
         public ScreenshotInfo[] Screenshots = new ScreenshotInfo[0];
 
         public override string ClassName { get; } = nameof(ScreenshotListReplyMsgData);
-        
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);

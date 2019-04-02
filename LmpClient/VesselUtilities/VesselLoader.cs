@@ -31,7 +31,7 @@ namespace LmpClient.VesselUtilities
         }
 
         #region Private methods
-        
+
         /// <summary>
         /// Loads the vessel proto into the current game
         /// </summary>

@@ -84,7 +84,7 @@ namespace Server
                 TimeSystem.Reset();
 
                 LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
-                
+
                 LidgrenServer.SetupLidgrenServer();
                 LmpPortMapper.OpenLmpPort().Wait();
                 LmpPortMapper.OpenWebPort().Wait();
@@ -93,7 +93,7 @@ namespace Server
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
                 LongRunTaskFactory.StartNew(CommandHandler.ThreadMain, CancellationTokenSrc.Token);
-                
+
                 TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformation, CancellationTokenSrc.Token));
 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPort, CancellationTokenSrc.Token));
@@ -158,7 +158,7 @@ namespace Server
         {
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
             ExitEvent.Exit();
-            
+
             CancellationTokenSrc.Cancel();
             Task.WaitAll(TaskContainer.ToArray());
 
@@ -184,7 +184,7 @@ namespace Server
 
             //Start new server
             var serverExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Server.exe";
-            var newProcLmpServer = new ProcessStartInfo {FileName = serverExePath};
+            var newProcLmpServer = new ProcessStartInfo { FileName = serverExePath };
             Process.Start(newProcLmpServer);
         }
     }

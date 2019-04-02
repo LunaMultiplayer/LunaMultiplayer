@@ -13,7 +13,7 @@ namespace LmpClient.Windows
 
         private int _currentColorIndex = 0;
         private float _colorTime = 0;
-        
+
         public void Awake()
         {
             _defaultContentColor = GUI.contentColor;

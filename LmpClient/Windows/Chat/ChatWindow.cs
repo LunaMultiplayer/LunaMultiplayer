@@ -19,7 +19,7 @@ namespace LmpClient.Windows.Chat
 
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
-        
+
         private static Vector2 _chatScrollPos;
 
         private static GUIStyle _playerNameStyle;
@@ -36,7 +36,7 @@ namespace LmpClient.Windows.Chat
             // ReSharper disable once PossibleLossOfFraction
             WindowRect = new Rect(Screen.width / 10, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
-            
+
             _chatScrollPos = new Vector2(0, 0);
             _playerNameStyle = new GUIStyle(GUI.skin.label)
             {
@@ -53,7 +53,7 @@ namespace LmpClient.Windows.Chat
                 stretchWidth = false
             };
         }
-        
+
         public override void RemoveWindowLock()
         {
             if (IsWindowLocked)

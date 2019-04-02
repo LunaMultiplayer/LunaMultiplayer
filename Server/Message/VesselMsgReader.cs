@@ -85,7 +85,7 @@ namespace Server.Message
 
         private static void HandleVesselRemove(ClientStructure client, VesselBaseMsgData message)
         {
-            var data = (VesselRemoveMsgData) message;
+            var data = (VesselRemoveMsgData)message;
 
             if (LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
                 return;
@@ -105,7 +105,7 @@ namespace Server.Message
 
         private static void HandleVesselProto(ClientStructure client, VesselBaseMsgData message)
         {
-            var msgData = (VesselProtoMsgData) message;
+            var msgData = (VesselProtoMsgData)message;
 
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
@@ -126,7 +126,7 @@ namespace Server.Message
 
         private static void HandleVesselsSync(ClientStructure client, VesselBaseMsgData message)
         {
-            var msgData = (VesselSyncMsgData) message;
+            var msgData = (VesselSyncMsgData)message;
 
             var allVessels = VesselStoreSystem.CurrentVessels.Keys.ToList();
             for (var i = 0; i < msgData.VesselsCount; i++)
@@ -152,7 +152,7 @@ namespace Server.Message
             if (allVessels.Count > 0)
                 LunaLog.Debug($"Sending {client.PlayerName} {vesselsToSend.Count} vessels");
         }
-        
+
         private static void HandleVesselCouple(ClientStructure client, VesselBaseMsgData message)
         {
             var msgData = (VesselCoupleMsgData)message;

@@ -39,7 +39,7 @@ namespace LmpClient.Systems.ShareFunds
                 System.StopIgnoringEvents(true);
             }
         }
-        
+
         public void VesselSwitching(Vessel data0, Vessel data1)
         {
             System.CurrentShipCost = null;

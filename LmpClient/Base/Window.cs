@@ -107,7 +107,7 @@ namespace LmpClient.Base
             if (!Initialized)
             {
                 InitializeStyles();
-                
+
                 //We only set the styles once so we shouldn't worry so much about the memory footprint...
                 SetStyles();
 
@@ -121,7 +121,7 @@ namespace LmpClient.Base
             {
                 return;
             }
-            
+
             //Use our standard skin for rendering.
             GUI.skin = Skin;
 
@@ -160,7 +160,7 @@ namespace LmpClient.Base
                     ResizingWindow = true;
                 }
             }
-            
+
             DrawWindowContent(windowId);
 
             if (!string.IsNullOrEmpty(Tooltip))
@@ -184,8 +184,8 @@ namespace LmpClient.Base
             else
             {
                 _tipTime = Time.unscaledTime;
-            }            
-            
+            }
+
             //Collect the Tooltip, if any, in the Paint Event that follows the Layout events.
             //We do this here so we DO NOT change our layout between the two events.
             if (Event.current.type == EventType.Repaint)
@@ -208,7 +208,7 @@ namespace LmpClient.Base
 
             if (GUI.Button(new Rect(rect.width - 25, 4, 20, 20), CloseIcon, CloseButtonStyle))
             {
-                closeAction.Invoke();                
+                closeAction.Invoke();
             }
 
             GUI.backgroundColor = prev;
@@ -247,7 +247,7 @@ namespace LmpClient.Base
             //Let the user drag 3/4 of the window sideways off the screen
             var xMin = 0 - 3 / 4f * inputRect.width;
             var xMax = Screen.width - 1 / 4f * inputRect.width;
-            
+
             //Don't let the title bar move below the bottom of the screen
             float yMax = Screen.height - 20;
 

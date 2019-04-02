@@ -12,7 +12,7 @@ namespace LmpCommon.Message.Data.Flag
         public byte[] FlagData = new byte[0];
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
-        {            
+        {
             //Do not compress this message type. Flags are already compressed
 
             lidgrenMsg.Write(Owner);
@@ -26,7 +26,7 @@ namespace LmpCommon.Message.Data.Flag
             Owner = lidgrenMsg.ReadString();
             FlagName = lidgrenMsg.ReadString();
             NumBytes = lidgrenMsg.ReadInt32();
-            
+
             if (FlagData.Length < NumBytes)
                 FlagData = new byte[NumBytes];
 

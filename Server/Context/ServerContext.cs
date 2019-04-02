@@ -31,13 +31,13 @@ namespace Server.Context
 
         // Configuration object
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
-        {            
+        {
             SendBufferSize = 1500000, //500kb
             ReceiveBufferSize = 1500000, //500kb
             DefaultOutgoingMessageCapacity = 500000, //500kb
             SuppressUnreliableUnorderedAcks = true,
         };
-        
+
         public static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
         public static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory();
         public static ClientMessageFactory ClientMessageFactory { get; } = new ClientMessageFactory();

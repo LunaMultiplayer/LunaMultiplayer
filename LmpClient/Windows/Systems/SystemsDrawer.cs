@@ -43,7 +43,7 @@ namespace LmpClient.Windows.Systems
         {
             GUI.DragWindow(MoveRect);
 
-            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth), GUILayout.Height(WindowHeight));            
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth), GUILayout.Height(WindowHeight));
             PrintSystemButtons();
             GUILayout.EndScrollView();
         }
@@ -76,9 +76,9 @@ namespace LmpClient.Windows.Systems
 
             ScenarioSystem.Singleton.Enabled = GUILayout.Toggle(ScenarioSystem.Singleton.Enabled, ScenarioSystem.Singleton.SystemName);
             TimeSyncSystem.Singleton.Enabled = GUILayout.Toggle(TimeSyncSystem.Singleton.Enabled, TimeSyncSystem.Singleton.SystemName);
-            WarpSystem.Singleton.Enabled = GUILayout.Toggle(WarpSystem.Singleton.Enabled, WarpSystem.Singleton.SystemName);            
-            
-            
+            WarpSystem.Singleton.Enabled = GUILayout.Toggle(WarpSystem.Singleton.Enabled, WarpSystem.Singleton.SystemName);
+
+
             //Toolbar = GUILayout.Toggle(Toolbar, "Toolbar system");
             //if (Toolbar)
             //{
@@ -107,7 +107,7 @@ namespace LmpClient.Windows.Systems
             ShareContractsSystem.Singleton.Enabled = GUILayout.Toggle(ShareContractsSystem.Singleton.Enabled, ShareContractsSystem.Singleton.SystemName);
             ShareAchievementsSystem.Singleton.Enabled = GUILayout.Toggle(ShareAchievementsSystem.Singleton.Enabled, ShareAchievementsSystem.Singleton.SystemName);
             ShareStrategySystem.Singleton.Enabled = GUILayout.Toggle(ShareStrategySystem.Singleton.Enabled, ShareStrategySystem.Singleton.SystemName);
-            
+
         }
     }
 }

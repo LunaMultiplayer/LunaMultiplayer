@@ -10,7 +10,7 @@ namespace LmpClient.Utilities
         {
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog("DisclaimerWindow", LocalizationContainer.DisclaimerDialogText.Text, LocalizationContainer.DisclaimerDialogText.Title,
-                    HighLogic.UISkin, 
+                    HighLogic.UISkin,
                     new Rect(.5f, .5f, 425f, 150f),
                     new DialogGUIFlexibleSpace(),
                     new DialogGUIVerticalLayout(

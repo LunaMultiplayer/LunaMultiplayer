@@ -3,7 +3,7 @@
 namespace LmpCommon.Message.Data.Admin
 {
     public class AdminKickMsgData : AdminBanKickMsgData
-    {        
+    {
         /// <inheritdoc />
         internal AdminKickMsgData() { }
         public override AdminMessageType AdminMessageType => AdminMessageType.Kick;

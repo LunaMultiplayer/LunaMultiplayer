@@ -23,7 +23,7 @@ namespace LmpClient.Systems.Toolbar
         #region Fields
 
         public ToolbarEvents ToolbarEvents { get; } = new ToolbarEvents();
-        
+
         #endregion
 
         #region Base overrides

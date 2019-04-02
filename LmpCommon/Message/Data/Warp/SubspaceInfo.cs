@@ -27,13 +27,13 @@ namespace LmpCommon.Message.Data.Warp
             SubspaceTime = lidgrenMsg.ReadDouble();
 
             PlayerCount = lidgrenMsg.ReadInt32();
-            if (Players.Length < PlayerCount )
+            if (Players.Length < PlayerCount)
                 Players = new string[PlayerCount];
 
             for (var i = 0; i < PlayerCount; i++)
                 Players[i] = lidgrenMsg.ReadString();
         }
-        
+
         public int GetByteCount()
         {
             return sizeof(int) + sizeof(double) + sizeof(int) + Players.GetByteCount(PlayerCount);

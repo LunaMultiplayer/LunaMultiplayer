@@ -62,7 +62,7 @@ namespace LmpClient.Systems.Scenario
             AllScenarioTypesInAssemblies.Clear();
         }
 
-        private static readonly List<Tuple<string,ConfigNode>> ScenariosConfigNodes = new List<Tuple<string,ConfigNode>>();
+        private static readonly List<Tuple<string, ConfigNode>> ScenariosConfigNodes = new List<Tuple<string, ConfigNode>>();
 
         #endregion
 
@@ -113,7 +113,7 @@ namespace LmpClient.Systems.Scenario
             {
                 var scenarioType = scenarioModule.GetType().Name;
 
-                if(IgnoredScenarios.IgnoreSend.Contains(scenarioType))
+                if (IgnoredScenarios.IgnoreSend.Contains(scenarioType))
                     continue;
 
                 if (!IsScenarioModuleAllowed(scenarioType))
@@ -174,11 +174,11 @@ namespace LmpClient.Systems.Scenario
                 }
             }
         }
-        
+
         #endregion
 
         #region Private methods
-        
+
         private static bool LoadModuleByGameMode(KSPScenarioType validScenario)
         {
             switch (HighLogic.CurrentGame.Mode)
@@ -192,7 +192,7 @@ namespace LmpClient.Systems.Scenario
             }
             return false;
         }
-        
+
         private static bool IsScenarioModuleAllowed(string scenarioName)
         {
             if (string.IsNullOrEmpty(scenarioName)) return false;

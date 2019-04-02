@@ -18,7 +18,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
             //We received a msg for our own controlled/updated vessel so ignore it
             if (!VesselCommon.DoVesselChecks(msgData.VesselId))
                 return;
-            
+
             if (!System.VesselActionGroups.ContainsKey(msgData.VesselId))
             {
                 System.VesselActionGroups.TryAdd(msgData.VesselId, new VesselActionGroupQueue());

@@ -12,7 +12,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
     public class VesselActionGroupSystem : MessageSystem<VesselActionGroupSystem, VesselActionGroupMessageSender, VesselActionGroupMessageHandler>
     {
         #region Fields & properties
-        
+
         public ConcurrentDictionary<Guid, VesselActionGroupQueue> VesselActionGroups { get; } = new ConcurrentDictionary<Guid, VesselActionGroupQueue>();
 
         public static VesselActionGroupEvents VesselActionGroupEvents { get; } = new VesselActionGroupEvents();

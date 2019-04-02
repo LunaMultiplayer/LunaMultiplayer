@@ -17,7 +17,7 @@ namespace LmpClient.Systems.ShareContracts
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ShareProgressCliMsg>(msg)));
         }
-        
+
         public void SendContractMessage(Contract[] contracts)
         {
             //Convert the Contract's to ContractInfo's.

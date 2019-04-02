@@ -7,7 +7,7 @@ namespace LmpCommon.Message.Data.Vessel
     {
         public string FieldName;
         public string Value;
-        
+
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(FieldName);

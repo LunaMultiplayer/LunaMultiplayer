@@ -54,6 +54,6 @@ namespace LmpClient.Systems.ShareStrategy
             return configNode;
         }
 
-        
+
     }
 }

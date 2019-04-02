@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 
 namespace LmpClient.Base
 {
-    public abstract class MessageSystem<T, TS, TH> : System<T> 
+    public abstract class MessageSystem<T, TS, TH> : System<T>
         where T : System<T>, new()
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()
@@ -16,7 +16,7 @@ namespace LmpClient.Base
         /// from Unity and you have your collections as concurrent
         /// </summary>
         protected virtual bool ProcessMessagesInUnityThread => true;
-        
+
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
 
@@ -28,7 +28,7 @@ namespace LmpClient.Base
             }
             else
             {
-                TaskFactory.StartNew(()=> HandleMessage(msg));
+                TaskFactory.StartNew(() => HandleMessage(msg));
             }
         }
 

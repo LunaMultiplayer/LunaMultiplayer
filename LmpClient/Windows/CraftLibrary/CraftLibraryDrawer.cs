@@ -14,7 +14,7 @@ namespace LmpClient.Windows.CraftLibrary
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            DrawRefreshAndUploadButton(() => System.MessageSender.SendRequestFoldersMsg(), ()=> _drawUploadScreen = true);
+            DrawRefreshAndUploadButton(() => System.MessageSender.SendRequestFoldersMsg(), () => _drawUploadScreen = true);
             GUILayout.Space(15);
 
             GUILayout.BeginVertical();

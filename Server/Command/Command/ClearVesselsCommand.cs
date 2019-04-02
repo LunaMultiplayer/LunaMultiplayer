@@ -18,7 +18,7 @@ namespace Server.Command.Command
         public override bool Execute(string commandArgs)
         {
             CommandSystemHelperMethods.SplitCommandParamArray(commandArgs, out var parameters);
-            
+
             var msgUsage = $"{Environment.NewLine}{Environment.NewLine}" +
                            $"Usage:{Environment.NewLine}" +
                            "/clearvessels vesselType vesselSituation vesselSplashed vesselName";
@@ -69,7 +69,7 @@ namespace Server.Command.Command
             var removalCount = 0;
             var vesselList = VesselStoreSystem.CurrentVessels.ToArray();
 
-            foreach (var vesselKeyVal in vesselList.Where(v=> IsVesselFound(v.Value, vesselType, vesselSituation, vesselSplashed, vesselName)))
+            foreach (var vesselKeyVal in vesselList.Where(v => IsVesselFound(v.Value, vesselType, vesselSituation, vesselSplashed, vesselName)))
             {
                 LunaLog.Normal($"Removing vessel: {vesselKeyVal.Key}");
 
@@ -90,14 +90,14 @@ namespace Server.Command.Command
         /// </summary>
         private static bool IsVesselFound(Vessel vessel, string vesselType, string vesselSituation, string vesselSplashed, string vesselName)
         {
-            if (!string.IsNullOrEmpty(vesselType) && !string.IsNullOrEmpty(vesselSituation) && !string.IsNullOrEmpty(vesselSplashed) 
+            if (!string.IsNullOrEmpty(vesselType) && !string.IsNullOrEmpty(vesselSituation) && !string.IsNullOrEmpty(vesselSplashed)
                 && !string.IsNullOrEmpty(vesselName))
             {
                 var currentVesselType = vessel.Fields.GetSingle("type").Value;
                 var currentVesselSituation = vessel.Fields.GetSingle("sit").Value;
                 var currentVesselSplashed = vessel.Fields.GetSingle("splashed").Value;
                 var currentVesselName = vessel.Fields.GetSingle("name").Value;
-                
+
                 var isVesselType = vesselType == "*" || string.Equals(currentVesselType, vesselType, StringComparison.CurrentCultureIgnoreCase);
                 var isVesselSituation = vesselSituation == "*" || string.Equals(currentVesselSituation, vesselSituation, StringComparison.CurrentCultureIgnoreCase);
                 var isVesselSplashed = vesselSplashed == "*" || string.Equals(currentVesselSplashed, vesselSplashed, StringComparison.CurrentCultureIgnoreCase);

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace LmpClient.Systems.Mod
 {
-    public class ModFileHandler: SubSystem<ModSystem>
+    public class ModFileHandler : SubSystem<ModSystem>
     {
         private static readonly StringBuilder Sb = new StringBuilder();
 
@@ -75,7 +75,7 @@ namespace LmpClient.Systems.Mod
                 checkOk &= CheckMandatoryFile(requiredEntry);
             }
 
-            foreach (var part in PartLoader.LoadedPartsList.Select(p=> p.name))
+            foreach (var part in PartLoader.LoadedPartsList.Select(p => p.name))
             {
                 checkOk &= CheckExistingPart(modInfo, part);
             }

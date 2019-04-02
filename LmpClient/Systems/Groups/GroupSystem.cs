@@ -26,12 +26,12 @@ namespace LmpClient.Systems.Groups
         {
             if (Groups.TryGetValue(groupName, out var existingVal))
             {
-                if (existingVal.Members.All(m => m != SettingsSystem.CurrentSettings.PlayerName) && 
+                if (existingVal.Members.All(m => m != SettingsSystem.CurrentSettings.PlayerName) &&
                     existingVal.Invited.All(m => m != SettingsSystem.CurrentSettings.PlayerName))
                 {
                     var expectedGroup = existingVal.Clone();
 
-                    var newInvited = new List<string>(expectedGroup.Invited) {SettingsSystem.CurrentSettings.PlayerName};
+                    var newInvited = new List<string>(expectedGroup.Invited) { SettingsSystem.CurrentSettings.PlayerName };
                     expectedGroup.Invited = newInvited.ToArray();
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
@@ -66,7 +66,7 @@ namespace LmpClient.Systems.Groups
 
         public void AddMember(string groupName, string username)
         {
-            if (Groups.TryGetValue(groupName, out var existingVal) 
+            if (Groups.TryGetValue(groupName, out var existingVal)
                 && existingVal.Owner == SettingsSystem.CurrentSettings.PlayerName)
             {
                 //TODO: remove this clone and do as with flags to avoid garbage
@@ -75,7 +75,7 @@ namespace LmpClient.Systems.Groups
                 var newMembers = new List<string>(expectedGroup.Members) { username };
                 expectedGroup.Members = newMembers.ToArray();
 
-                var newInvited = new List<string>(expectedGroup.Invited.Except(new []{username}));
+                var newInvited = new List<string>(expectedGroup.Invited.Except(new[] { username }));
                 expectedGroup.Invited = newInvited.ToArray();
 
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();

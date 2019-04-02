@@ -10,7 +10,7 @@ namespace LmpCommon.Locks
         /// The contract lock is owned by only 1 player and it defines who can generate new contracts.
         /// </summary>
         Contract,
-        
+
         /// <summary>
         /// The asteroid lock is owned by only 1 player and it defines who spawns the asteroids
         /// </summary>
@@ -49,6 +49,6 @@ namespace LmpCommon.Locks
         /// The control lock specifies who controls a given vessel. 
         /// A user can have several control locks depending on the settings.
         /// </summary>
-        Control,        
+        Control,
     }
 }

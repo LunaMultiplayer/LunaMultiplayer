@@ -16,7 +16,7 @@ namespace LmpCommon.Message.Data.Groups
 
         public int InvitedCount;
         public string[] Invited = new string[0];
-        
+
         public Group Clone()
         {
             if (MemberwiseClone() is Group obj)
@@ -31,7 +31,7 @@ namespace LmpCommon.Message.Data.Groups
 
             return null;
         }
-        
+
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(Name);
@@ -67,7 +67,7 @@ namespace LmpCommon.Message.Data.Groups
         }
         public int GetByteCount()
         {
-            return Name.GetByteCount() + Owner.GetByteCount() + 
+            return Name.GetByteCount() + Owner.GetByteCount() +
                 sizeof(int) + Members.GetByteCount(MembersCount) +
                 sizeof(int) + Invited.GetByteCount(InvitedCount);
         }

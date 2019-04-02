@@ -38,7 +38,7 @@ namespace LmpCommon.RepoRetrievers
 
         private static readonly TimeSpan MaxRequestInterval = TimeSpan.FromMinutes(30);
         private static DateTime _lastRequestTime = DateTime.MinValue;
-        
+
         public static bool IsDedicatedServer(IPEndPoint endpoint)
         {
             return DedicatedServers.Contains(endpoint);

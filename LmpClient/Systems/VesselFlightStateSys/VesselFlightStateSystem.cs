@@ -151,7 +151,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         #endregion
 
         #region Public methods
-        
+
         public void AddVesselToSystem(Vessel vessel)
         {
             if (vessel == null || vessel.isEVA) return;

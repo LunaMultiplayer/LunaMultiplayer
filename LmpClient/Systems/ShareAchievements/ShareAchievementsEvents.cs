@@ -17,7 +17,7 @@ namespace LmpClient.Systems.ShareAchievements
         public void AchievementCompleted(ProgressNode progressNode)
         {
             if (System.IgnoreEvents) return;
-            
+
             System.MessageSender.SendAchievementsMessage(progressNode);
             LunaLog.Log($"Achievement completed: {progressNode.Id}");
         }

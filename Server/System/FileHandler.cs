@@ -154,7 +154,7 @@ namespace Server.System
         {
             lock (GetLockSemaphore(path))
             {
-                return File.Exists(path) ? File.ReadAllText(path): string.Empty;
+                return File.Exists(path) ? File.ReadAllText(path) : string.Empty;
             }
         }
 

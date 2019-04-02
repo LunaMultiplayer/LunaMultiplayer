@@ -5,7 +5,7 @@
 
 namespace LmpClient.Events
 {
-    public class ExperimentEvent: LmpBaseEvent
+    public class ExperimentEvent : LmpBaseEvent
     {
         public static EventData<Vessel> onExperimentReset;
     }

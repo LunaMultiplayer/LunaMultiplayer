@@ -30,7 +30,7 @@ namespace Server.System
             {
                 var newGroup = new Group
                 {
-                    Members = new[] {clientPlayerName},
+                    Members = new[] { clientPlayerName },
                     MembersCount = 1,
                     Owner = clientPlayerName,
                     Name = groupName
@@ -87,7 +87,7 @@ namespace Server.System
                             msgData.Group = group;
 
                             MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
-                            Task.Run(()=> SaveGroups());
+                            Task.Run(() => SaveGroups());
                         }
                     }
                 }

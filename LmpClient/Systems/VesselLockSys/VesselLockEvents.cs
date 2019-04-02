@@ -137,7 +137,7 @@ namespace LmpClient.Systems.VesselLockSys
                             LockSystem.LockStore.RemoveLock(LockSystem.LockQuery.GetUnloadedUpdateLock(lockDefinition.VesselId));
                             LockSystem.LockStore.AddOrUpdateLock(new LockDefinition(LockType.UnloadedUpdate, lockDefinition.PlayerName, lockDefinition.VesselId));
                         }
-                        
+
                         //TODO:We should release the kerbals locks?
                     }
                     else

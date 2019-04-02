@@ -18,7 +18,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
         public bool Value;
 
         #endregion
-        
+
         public void ProcessActionGroup()
         {
             var vessel = FlightGlobals.FindVessel(VesselId);

@@ -16,7 +16,7 @@ namespace LmpCommon.Message.Data.Screenshot
         public long[] AlreadyOwnedPhotoIds = new long[0];
 
         public override string ClassName { get; } = nameof(ScreenshotListRequestMsgData);
-        
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);

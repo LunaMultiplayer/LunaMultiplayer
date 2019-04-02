@@ -33,7 +33,7 @@ namespace LmpCommon.Locks
         internal LockDefinition()
         {
         }
-        
+
         /// <summary>
         /// Contract/Asteroid/Spectator constructor
         /// </summary>
@@ -73,7 +73,7 @@ namespace LmpCommon.Locks
 
         public override string ToString()
         {
-            return VesselId != Guid.Empty ? $"{Type} - {VesselId} - {PlayerName}" : 
+            return VesselId != Guid.Empty ? $"{Type} - {VesselId} - {PlayerName}" :
                 !string.IsNullOrEmpty(KerbalName) ? $"{Type} - {KerbalName} - {PlayerName}" :
                 $"{Type} - {PlayerName}";
         }
@@ -140,7 +140,7 @@ namespace LmpCommon.Locks
             return hashCode;
         }
 
-        public static bool operator == (LockDefinition lock1, LockDefinition lock2)
+        public static bool operator ==(LockDefinition lock1, LockDefinition lock2)
         {
             if ((object)lock1 == null || (object)lock2 == null)
                 return Equals(lock1, lock2);

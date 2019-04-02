@@ -34,7 +34,7 @@ namespace LmpClient.Systems.Scenario
 
         private static void QueueAllReceivedScenarios(ScenarioBaseMsgData msgData)
         {
-            var data = (ScenarioDataMsgData) msgData;
+            var data = (ScenarioDataMsgData)msgData;
             for (var i = 0; i < data.ScenarioCount; i++)
             {
                 QueueScenarioBytes(data.ScenariosData[i].Module, data.ScenariosData[i].Data, data.ScenariosData[i].NumBytes);

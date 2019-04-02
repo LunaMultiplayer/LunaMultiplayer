@@ -69,7 +69,7 @@ namespace LmpClient.Systems.Warp
                         SubspaceId = subspace.Key,
                         Players = subspace.Select(u => u.Key).ToList()
                     };
-                    
+
                     if (newSubspaceDisplay.SubspaceId == -1)
                     {
                         warpingSubspace = newSubspaceDisplay;
@@ -106,7 +106,7 @@ namespace LmpClient.Systems.Warp
 
             return false;
         }
-        
+
         /// <summary>
         /// Sorts the players
         /// </summary>

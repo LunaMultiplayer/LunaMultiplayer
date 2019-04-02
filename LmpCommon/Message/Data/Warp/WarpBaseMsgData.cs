@@ -21,7 +21,7 @@ namespace LmpCommon.Message.Data.Warp
         {
             //Nothing to implement here
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return 0;

@@ -13,7 +13,7 @@ namespace Server.Message
     public class SettingsMsgReader : ReaderBase
     {
         public override void HandleMessage(ClientStructure client, IClientMessageBase message)
-        {                    
+        {
             //We don't use this message anymore so we can recycle it
             message.Recycle();
 

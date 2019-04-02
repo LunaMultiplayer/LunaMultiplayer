@@ -47,7 +47,7 @@ namespace LmpCommon
         {
             return Environment.OSVersion.Platform == PlatformID.Win32NT;
         }
-        
+
         /// <summary>
         /// Compare two ienumerables and return if they are the same or not IGNORING the order
         /// </summary>
@@ -85,7 +85,7 @@ namespace LmpCommon
             }
             return cnt.Values.All(c => c == 0);
         }
-        
+
         public string CalculateSha256StringHash(string input)
         {
             return CalculateSha256Hash(Encoding.UTF8.GetBytes(input));

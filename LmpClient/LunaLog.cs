@@ -82,7 +82,7 @@ namespace LmpClient
         #endregion
 
         #region Process
-        
+
         /// <summary>
         /// Call this method FROM the unity thread so it reads all the queued log messages and prints them
         /// </summary>

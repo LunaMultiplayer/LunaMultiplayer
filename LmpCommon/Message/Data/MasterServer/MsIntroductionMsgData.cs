@@ -16,7 +16,7 @@ namespace LmpCommon.Message.Data.MasterServer
         public string Token;
 
         public override string ClassName { get; } = nameof(MsIntroductionMsgData);
-        
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);

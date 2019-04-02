@@ -43,10 +43,10 @@ namespace LmpClient.Systems.KerbalSys
         private static readonly MethodInfo CreateAvailableList = typeof(AstronautComplex).GetMethod("CreateAvailableList", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly MethodInfo CreateAssignedList = typeof(AstronautComplex).GetMethod("CreateAssignedList", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly MethodInfo CreateKiaList = typeof(AstronautComplex).GetMethod("CreateKiaList", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo InitiateGui = typeof(AstronautComplex).GetMethod("InitiateGUI",BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo InitiateGui = typeof(AstronautComplex).GetMethod("InitiateGUI", BindingFlags.NonPublic | BindingFlags.Instance);
 
         #endregion
-        
+
         #endregion
 
         #region Base overrides
@@ -157,7 +157,7 @@ namespace LmpClient.Systems.KerbalSys
         #endregion
 
         #region Private
-        
+
         /// <summary>
         /// Runs trough the concurrentKerbalQueue and process them
         /// </summary>
@@ -205,7 +205,7 @@ namespace LmpClient.Systems.KerbalSys
                 LunaLog.LogError("[LMP]: protoName is blank!");
                 return;
             }
-            
+
             if (!HighLogic.CurrentGame.CrewRoster.Exists(protoCrew.name))
             {
                 HighLogic.CurrentGame.CrewRoster.AddCrewMember(protoCrew);

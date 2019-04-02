@@ -23,7 +23,7 @@ namespace LmpCommon.Message.Data.PlayerConnection
         {
             PlayerName = lidgrenMsg.ReadString();
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return PlayerName.GetByteCount();

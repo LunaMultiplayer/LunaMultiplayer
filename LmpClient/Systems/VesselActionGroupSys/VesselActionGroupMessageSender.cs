@@ -25,7 +25,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
             msgData.ActionGroupString = actionGrp.ToString();
             msgData.ActionGroup = (int)actionGrp;
             msgData.Value = value;
-            
+
             SendMessage(msgData);
         }
     }

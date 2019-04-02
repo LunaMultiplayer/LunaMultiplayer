@@ -26,7 +26,7 @@ namespace LmpCommon.Time
         /// Retrieves the date time from specified provider and defend against flooding
         /// </summary>
         internal static DateTime? GetTime(TimeProvider provider)
-        {            
+        {
             //Max requests are every 4 seconds
             if (!CanRequestTime(provider))
                 throw new Exception("Too many time requests!");

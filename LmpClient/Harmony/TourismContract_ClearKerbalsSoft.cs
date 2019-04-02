@@ -21,7 +21,7 @@ namespace LmpClient.Harmony
             if (MainSystem.NetworkState < ClientState.Connected) return;
             if (ShareContractsSystem.Singleton.IgnoreEvents) return;
 
-            foreach ( var kerbal in __instance.Tourists)
+            foreach (var kerbal in __instance.Tourists)
                 KerbalSystem.Singleton.MessageSender.SendKerbalRemove(kerbal);
         }
     }

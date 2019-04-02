@@ -31,7 +31,7 @@ namespace LmpCommon.Message.Data.Color
             base.InternalDeserialize(lidgrenMsg);
 
             PlayerColorsCount = lidgrenMsg.ReadInt32();
-            
+
             if (PlayersColors.Length < PlayerColorsCount)
                 PlayersColors = new PlayerColor[PlayerColorsCount];
 
@@ -43,7 +43,7 @@ namespace LmpCommon.Message.Data.Color
                 PlayersColors[i].Deserialize(lidgrenMsg);
             }
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             var arraySize = 0;

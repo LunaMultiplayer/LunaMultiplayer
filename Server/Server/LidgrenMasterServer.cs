@@ -38,7 +38,7 @@ namespace Server.Server
                 msgData.Website = GeneralSettings.SettingsStore.Website;
                 msgData.WebsiteText = GeneralSettings.SettingsStore.WebsiteText;
                 msgData.RainbowEffect = DedicatedServerSettings.SettingsStore.UseRainbowEffect;
-                msgData.Color = new[]{ DedicatedServerSettings.SettingsStore.Red, DedicatedServerSettings.SettingsStore.Green, DedicatedServerSettings.SettingsStore.Blue };
+                msgData.Color = new[] { DedicatedServerSettings.SettingsStore.Red, DedicatedServerSettings.SettingsStore.Green, DedicatedServerSettings.SettingsStore.Blue };
                 msgData.GameMode = (int)GeneralSettings.SettingsStore.GameMode;
                 msgData.InternalEndpoint = endpoint;
                 msgData.MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers;

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace LmpClient.Systems.KscScene
 {
-    public class KscSceneEvents: SubSystem<KscSceneSystem>
+    public class KscSceneEvents : SubSystem<KscSceneSystem>
     {
         private static readonly MethodInfo ClearVesselMarkers = typeof(KSCVesselMarkers).GetMethod("ClearVesselMarkers", AccessTools.all);
 
@@ -45,7 +45,7 @@ namespace LmpClient.Systems.KscScene
                 RefreshMarkers();
             }
         }
-        
+
         public void OnVesselCreated(Vessel vessel)
         {
             System.RefreshTrackingStationVessels();

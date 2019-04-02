@@ -12,7 +12,7 @@ namespace LmpClient.Windows.Vessels.Structures
         {
             ButtonStyle = new GUIStyle(GUI.skin.button);
         }
-        
+
         public void Print()
         {
             if (Display)

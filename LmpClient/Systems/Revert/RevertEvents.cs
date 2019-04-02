@@ -17,7 +17,7 @@ namespace LmpClient.Systems.Revert
 
             System.StartingVesselId = Guid.Empty;
         }
-        
+
         public void VesselAssembled(Vessel vessel, ShipConstruct construct)
         {
             System.StartingVesselId = vessel.id;

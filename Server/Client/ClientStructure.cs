@@ -19,7 +19,7 @@ namespace Server.Client
         public IPEndPoint Endpoint => Connection.RemoteEndPoint;
 
         public string UniqueIdentifier { get; set; }
-        
+
         public bool Authenticated { get; set; }
 
         public long BytesReceived { get; set; }
@@ -60,7 +60,7 @@ namespace Server.Client
         {
             while (ConnectionStatus == ConnectionStatus.Connected)
             {
-                while(SendMessageQueue.TryDequeue(out var message) && message != null)
+                while (SendMessageQueue.TryDequeue(out var message) && message != null)
                 {
                     try
                     {

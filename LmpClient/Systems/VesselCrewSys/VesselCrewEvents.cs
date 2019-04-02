@@ -23,7 +23,7 @@ namespace LmpClient.Systems.VesselCrewSys
 
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
         }
-        
+
         /// <summary>
         /// Trigger an event once the kerbal in EVA is ready to be sent
         /// </summary>
@@ -45,7 +45,7 @@ namespace LmpClient.Systems.VesselCrewSys
         /// </summary>
         public void OnCrewModified(Vessel vessel)
         {
-            if(!vessel.isEVA && LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            if (!vessel.isEVA && LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
         }
     }

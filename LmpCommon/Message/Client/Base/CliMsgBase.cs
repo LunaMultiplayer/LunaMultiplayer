@@ -13,7 +13,7 @@ namespace LmpCommon.Message.Client.Base
         /// <inheritdoc />
         internal CliMsgBase() { }
 
-        protected override ushort MessageTypeId => (ushort)(int) MessageType;
+        protected override ushort MessageTypeId => (ushort)(int)MessageType;
 
         /// <summary>
         ///     Message type as a client type

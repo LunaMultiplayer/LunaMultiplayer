@@ -39,7 +39,7 @@ namespace LmpClient.Systems.Warp
                                 }
                             }
                         }
-                        
+
                         AddSubspace(-1, 0);//Add warping subspace
 
                         MainSystem.NetworkState = ClientState.WarpsubspacesSynced;

@@ -36,7 +36,7 @@ namespace LmpClient.Systems.Handshake
         public void HandleHandshakeReplyReceivedMessage(HandshakeReplyMsgData data)
         {
             TimeSyncSystem.ServerStartTime = data.ServerStartTime;
-            
+
             switch (data.Response)
             {
                 case HandshakeReply.HandshookSuccessfully:

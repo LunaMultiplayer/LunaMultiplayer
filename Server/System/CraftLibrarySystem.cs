@@ -98,7 +98,7 @@ namespace Server.System
                 CheckMaxFolders();
             });
         }
-        
+
         /// <summary>
         /// Send the craft folders that exist on the server
         /// </summary>
@@ -108,7 +108,7 @@ namespace Server.System
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryFoldersReplyMsgData>();
                 msgData.Folders = Directory.GetDirectories(CraftPath)
-                    .Where(d=> Directory.GetFiles(d, "*.craft", SearchOption.AllDirectories).Length > 0)
+                    .Where(d => Directory.GetFiles(d, "*.craft", SearchOption.AllDirectories).Length > 0)
                     .Select(d => new DirectoryInfo(d).Name).ToArray();
 
                 msgData.NumFolders = msgData.Folders.Length;
@@ -148,7 +148,7 @@ namespace Server.System
                 }
 
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryListReplyMsgData>();
-                
+
                 msgData.FolderName = data.FolderName;
                 msgData.PlayerCrafts = crafts.ToArray();
                 msgData.PlayerCraftsCount = crafts.Count;

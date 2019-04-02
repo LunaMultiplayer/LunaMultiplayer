@@ -20,7 +20,7 @@ namespace LmpClient.Systems.Screenshot
             {
                 case ScreenshotMessageType.ScreenshotData:
                     var screenshotMsg = (ScreenshotDataMsgData)msgData;
-                    var image = CreateImage(screenshotMsg.Screenshot.DateTaken, screenshotMsg.Screenshot.Width, screenshotMsg.Screenshot.Height, 
+                    var image = CreateImage(screenshotMsg.Screenshot.DateTaken, screenshotMsg.Screenshot.Width, screenshotMsg.Screenshot.Height,
                         screenshotMsg.Screenshot.Data, screenshotMsg.Screenshot.NumBytes);
 
                     if (System.DownloadedImages.TryGetValue(screenshotMsg.Screenshot.FolderName, out var folderImages))
@@ -40,7 +40,7 @@ namespace LmpClient.Systems.Screenshot
                     {
                         for (var i = 0; i < listMsg.NumScreenshots; i++)
                         {
-                            var miniImage = CreateImage(listMsg.Screenshots[i].DateTaken, listMsg.Screenshots[i].Width, listMsg.Screenshots[i].Height, 
+                            var miniImage = CreateImage(listMsg.Screenshots[i].DateTaken, listMsg.Screenshots[i].Width, listMsg.Screenshots[i].Height,
                                 listMsg.Screenshots[i].Data, listMsg.Screenshots[i].NumBytes);
 
                             folderMiniatureImages.AddOrUpdate(listMsg.Screenshots[i].DateTaken, miniImage, (key, existingVal) => miniImage);

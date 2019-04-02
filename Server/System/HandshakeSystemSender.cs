@@ -15,7 +15,7 @@ namespace Server.System
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<HandshakeReplyMsgData>();
             msgData.Response = enumResponse;
             msgData.Reason = reason;
-            
+
             if (enumResponse == HandshakeReply.HandshookSuccessfully)
             {
                 msgData.ModControl = GeneralSettings.SettingsStore.ModControl;

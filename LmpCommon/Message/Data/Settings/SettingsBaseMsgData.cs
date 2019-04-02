@@ -21,7 +21,7 @@ namespace LmpCommon.Message.Data.Settings
         {
             //Nothing to implement here
         }
-        
+
         internal override int InternalGetMessageSize()
         {
             return 0;

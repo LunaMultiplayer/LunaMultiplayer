@@ -40,7 +40,7 @@ namespace LmpCommonTest
             msgData.RefTransformId = (uint)Rnd.Next();
 
             var msg = Factory.CreateNew<VesselCliMsg>(msgData);
-            
+
             //Serialize
             var expectedDataSize = msg.GetMessageSize();
             var lidgrenMsgSend = Client.CreateMessage(expectedDataSize);
@@ -106,7 +106,7 @@ namespace LmpCommonTest
 
             for (var i = 0; i < numThreads; i++)
             {
-                taskPool.Add(new Task<bool>(()=>
+                taskPool.Add(new Task<bool>(() =>
                 {
                     try
                     {

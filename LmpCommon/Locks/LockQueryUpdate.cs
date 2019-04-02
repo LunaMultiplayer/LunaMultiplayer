@@ -24,7 +24,7 @@ namespace LmpCommon.Locks
         {
             return LockBelongsToPlayer(LockType.Update, vesselId, string.Empty, playerName);
         }
-        
+
         /// <summary>
         /// Get update lock for given vessel
         /// </summary>

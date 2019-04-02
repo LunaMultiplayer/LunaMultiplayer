@@ -13,7 +13,7 @@ namespace Server.System
     public class KerbalSystem
     {
         public static readonly string KerbalsPath = Path.Combine(ServerContext.UniverseDirectory, "Kerbals");
-        
+
         public static void GenerateDefaultKerbals()
         {
             FileHandler.CreateFile(Path.Combine(KerbalsPath, "Jebediah Kerman.txt"), Resources.Jebediah_Kerman);

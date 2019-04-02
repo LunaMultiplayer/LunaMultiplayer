@@ -98,7 +98,7 @@ namespace LmpMasterServer.Lidgren
         private static void CheckMasterServerListed()
         {
             var ownEndpoint = new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), Port);
-            if(!MasterServerRetriever.MasterServers.Contains(ownEndpoint))
+            if (!MasterServerRetriever.MasterServers.Contains(ownEndpoint))
             {
                 LunaLog.Error($"You're not in the master-servers URL ({RepoConstants.MasterServersListShortUrl}) Clients/Servers won't see you");
             }
@@ -217,7 +217,7 @@ namespace LmpMasterServer.Lidgren
                 {
                     var serversIdsToRemove = ServerDictionary
                         .Where(s => LunaNetworkTime.UtcNow.Ticks - s.Value.LastRegisterTime >
-                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks || 
+                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks ||
                                     BannedIpsRetriever.IsBanned(s.Value.ExternalEndpoint))
                         .ToArray();
 

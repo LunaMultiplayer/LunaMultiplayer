@@ -3,7 +3,7 @@ using LmpClient.Base;
 
 namespace LmpClient.Systems.Toolbar
 {
-    public class ToolbarEvents: SubSystem<ToolbarSystem>
+    public class ToolbarEvents : SubSystem<ToolbarSystem>
     {
         public void EnableToolBar()
         {

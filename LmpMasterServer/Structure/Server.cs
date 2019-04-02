@@ -73,13 +73,13 @@ namespace LmpMasterServer.Structure
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
             Id = msg.Id;
-            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? 
+            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ?
                 new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port) :
                 externalEndpoint;
 
             Update(msg);
         }
-        
+
         private void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
             Task.Run(() =>

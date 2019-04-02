@@ -18,7 +18,7 @@ namespace LmpClient.Systems.Flag
         public static string LmpFlagPath { get; } = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Flags");
         public ConcurrentDictionary<string, ExtendedFlagInfo> ServerFlags { get; } = new ConcurrentDictionary<string, ExtendedFlagInfo>();
         private bool FlagSystemReady => Enabled && HighLogic.CurrentGame?.flagURL != null;
-        
+
         #endregion
 
         #region Base overrides
@@ -62,7 +62,7 @@ namespace LmpClient.Systems.Flag
         #endregion
 
         #region Public methods
-        
+
         public bool FlagExists(string flagUrl)
         {
             return GameDatabase.Instance.ExistsTexture(flagUrl);
@@ -106,7 +106,7 @@ namespace LmpClient.Systems.Flag
         #endregion
 
         #region Private methods
-        
+
         /// <summary>
         /// Here we handle an unloaded flag and we load it into the game
         /// </summary>

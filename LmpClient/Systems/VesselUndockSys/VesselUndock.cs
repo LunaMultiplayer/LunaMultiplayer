@@ -41,7 +41,7 @@ namespace LmpClient.Systems.VesselUndockSys
 
                     protoPart.partRef.Undock(DockedInfo);
                     protoPart.partRef.vessel.id = NewVesselId;
-                    
+
                     LockSystem.Singleton.FireVesselLocksEvents(NewVesselId);
 
                     //Forcefully set the vessel as immortal

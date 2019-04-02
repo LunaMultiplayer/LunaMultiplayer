@@ -32,10 +32,10 @@ namespace LmpClient.Windows.Mod
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width/2f - WindowWidth/2f, Screen.height/2f - WindowHeight/2f, WindowWidth,
+            WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
                 WindowHeight);
             MoveRect = new Rect(0, 0, int.MaxValue, TitleHeight);
-            
+
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
             LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);

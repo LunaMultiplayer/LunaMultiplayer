@@ -105,7 +105,7 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             //Vessel is terminated so remove locks Do not remove the kerbal locks as that's done in the Kerbal system
             LockSystem.Singleton.ReleaseAllVesselLocks(null, terminatedVessel.vesselID, 1);
-            
+
             //We consider this vessel removed but we let KSP do the remove of the vessel
             System.RemovedVessels.TryAdd(terminatedVessel.vesselID, DateTime.Now);
             RemoveEvent.onLmpRecoveredVessel.Fire(terminatedVessel);
@@ -161,7 +161,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
             //vessel and remove them both from our game and server
             var vesselsToRemove = FlightGlobals.Vessels
-                .Where(v => v!= null && v.rootPart && v.rootPart.missionID == vessel.rootPart.missionID && v.id != vessel.id).Distinct();
+                .Where(v => v != null && v.rootPart && v.rootPart.missionID == vessel.rootPart.missionID && v.id != vessel.id).Distinct();
 
             foreach (var vesselToRemove in vesselsToRemove)
             {

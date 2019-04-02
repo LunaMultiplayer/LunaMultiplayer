@@ -12,7 +12,7 @@ namespace LmpCommon
         {
             //Implement your own after logging code
         }
-        
+
         #region Private methods
 
         private void WriteLog(LogLevels level, string type, string message)
@@ -24,7 +24,7 @@ namespace LmpCommon
                 AfterPrint(output);
             }
         }
-        
+
         #endregion
 
         #region Public methods

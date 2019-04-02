@@ -3,7 +3,7 @@ using System.Timers;
 
 namespace LmpMasterServer.Structure
 {
-    public class TimeoutConcurrentDictionary<TKey,TValue>
+    public class TimeoutConcurrentDictionary<TKey, TValue>
     {
         private readonly double _timeutInMs;
 
