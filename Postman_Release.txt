@@ -9,13 +9,13 @@
       "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
       "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png"
     },
-    "title": "New Release Available - 0.20.2",
+    "title": "New Release Available - 0.21.0",
     "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
     "description": "A new version of Luna MultiPlayer is available! You can download it at [GitHub](https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest)",
     "fields": [
       {
-        "name": "About version 0.20.2",
-        "value": "Build 0.20.2.189\n\n### 24th BETA version of LMP\n\n- Fixed the dissapearing warping bug on secondary vessels\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.20.1...0.20.2>"
+        "name": "About version 0.21.0",
+        "value": "Build 0.21.0.189\n\n### 24th BETA version of LMP\n\n- Fixed the dissapearing warping bug on secondary vessels\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.20.1...0.21.0>"
       }
     ],
     "timestamp": "2019-01-10T12:00:00Z",
