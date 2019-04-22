@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <CraftLibraryWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Crafts>Crafts</Crafts>
-  <Folders>Craft Library</Folders>
+  <Crafts>Крафты</Crafts>
+  <Folders>Библиотека крафтов</Folders>
   <Upload>Загрузить</Upload>
 </CraftLibraryWindowText>

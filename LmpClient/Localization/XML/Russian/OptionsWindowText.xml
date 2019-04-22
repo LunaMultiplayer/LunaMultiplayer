@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Options</Title>
+  <Title>Настройки</Title>
   <Language>Язык:</Language>
   <Color>Цвет имени:</Color>
   <Red>R:</Red>
@@ -11,15 +11,15 @@
   <Set>Подтвердить</Set>
   <InterpolationSettings>Настройки интерполяции</InterpolationSettings>
   <EnableInterpolation>Включить интерполяцию</EnableInterpolation>
-  <InterpolationOffset>Interpolation offset:</InterpolationOffset>
+  <InterpolationOffset>Смещение интерполяции:</InterpolationOffset>
   <GenerateLmpModControl>Сгенерировать LMPModControl.xml для сервера</GenerateLmpModControl>
   <GenerateUniverse>Сгенерировать вселенную из сохраненной игры</GenerateUniverse>
   <NetworkSettings>Настройки сети</NetworkSettings>
   <CannotChangeWhileConnected>Невозможно изменить настройки во время подключения</CannotChangeWhileConnected>
   <ResetNetwork>Сбросить сетевые настройки</ResetNetwork>
-  <Mtu>MTU (Default: 1408):</Mtu>
-  <AutoExpandMtu>Auto expand MTU</AutoExpandMtu>
+  <Mtu>MTU (Стандартный: 1408):</Mtu>
+  <AutoExpandMtu>Автоматически расширяемый MTU</AutoExpandMtu>
   <ConnectionTimeout>Время ожидания подключения (Default: 15):</ConnectionTimeout>
-  <GeneralSettings>General settings</GeneralSettings>
-  <IgnoreSyncChecks>Ignore warp sync safety checks</IgnoreSyncChecks>
+  <GeneralSettings>Главные настройки</GeneralSettings>
+  <IgnoreSyncChecks>Игнорировать проверки безопасности сихронизационного варпа.</IgnoreSyncChecks>
 </OptionsWindowText>

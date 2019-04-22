@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ModWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Failed Mod Validation</Title>
-  <MandatoryModsNotFound>Mandatory mods not found:</MandatoryModsNotFound>
-  <MissingExpansions>Missing expansions:</MissingExpansions>
-  <MandatoryModsDifferentShaFound>Mandatory mods with different SHA found:</MandatoryModsDifferentShaFound>
-  <Link>Link</Link>
-  <ForbiddenFilesFound>Forbidden mods found:</ForbiddenFilesFound>
-  <NonListedFilesFound>Non listed and forbidden mods found:</NonListedFilesFound>
-  <MandatoryPartsNotFound>Mandatory parts not found:</MandatoryPartsNotFound>
-  <ForbiddenPartsFound>Forbidden parts found:</ForbiddenPartsFound>
+  <Title>LunaMultiplayer - Ошибка проверки модов</Title>
+  <MandatoryModsNotFound>Обязательные моды не найдены!:</MandatoryModsNotFound>
+  <MissingExpansions>Пропущенные дополнения:</MissingExpansions>
+  <MandatoryModsDifferentShaFound>Обязательные моды с разными SHA найдены:</MandatoryModsDifferentShaFound>
+  <Link>Ссылка</Link>
+  <ForbiddenFilesFound>Запрещённых модов найдено:</ForbiddenFilesFound>
+  <NonListedFilesFound>Не указанных и запрещённых модов найдено:</NonListedFilesFound>
+  <MandatoryPartsNotFound>Обязательные части не найдены:</MandatoryPartsNotFound>
+  <ForbiddenPartsFound>Запрещённых частей найдено:</ForbiddenPartsFound>
 </ModWindowText>

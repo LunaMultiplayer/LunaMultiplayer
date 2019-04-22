@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Server list</Title>
+  <Title>Лист серверов</Title>
   <NoServers>Нет серверов!</NoServers>
   <Ping>Задержка</Ping>
   <Players>Игроки</Players>
@@ -13,8 +13,8 @@
   <Name>Имя</Name>
   <Description>Описание</Description>
   <Website>URL</Website>
-  <ServerDetailTitle>Connect to server</ServerDetailTitle>
-  <Password>Password</Password>
-  <Connect>Connect</Connect>
-  <Dedicated>Dedicated</Dedicated>
+  <ServerDetailTitle>Присоединиться к серверу</ServerDetailTitle>
+  <Password>Пароль</Password>
+  <Connect>Присоединиться</Connect>
+  <Dedicated>Посвящённый</Dedicated>
 </ServerListWindowText>
