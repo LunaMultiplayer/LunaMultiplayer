@@ -5,7 +5,7 @@
   <ServerIcon>Сервера</ServerIcon>
   <ConnectIcon>Подключиться</ConnectIcon>
   <DisconnectIcon>Отключиться</DisconnectIcon>
-  <SyncIcon>Синхронизироваться с</SyncIcon>
+  <SyncIcon>Синхр.</SyncIcon>
   <RefreshIcon>Обновить</RefreshIcon>
   <UploadIcon>Загрузить</UploadIcon>
   <DeleteIcon>Удалить</DeleteIcon>
@@ -14,7 +14,7 @@
   <KeyIcon>Пароль</KeyIcon>
   <GlobeIcon>Страна</GlobeIcon>
   <ChatIcon>Чат</ChatIcon>
-  <CameraIcon>Криншоты</CameraIcon>
+  <CameraIcon>Скриншоты</CameraIcon>
   <RocketIcon>Корабли</RocketIcon>
   <AdminIcon>Администрирование</AdminIcon>
   <KickIcon>Выгнать</KickIcon>
