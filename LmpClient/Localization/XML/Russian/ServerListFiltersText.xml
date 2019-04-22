@@ -4,5 +4,5 @@
   <HideFullServers>Спрятать полные сервера</HideFullServers>
   <HideEmptyServers>Спрятать пустые сервера</HideEmptyServers>
   <HidePrivateServers>Спрятать приватные сервера</HidePrivateServers>
-  <DedicatedServersOnly>Показывать только посвящённые сервера</DedicatedServersOnly>
+  <DedicatedServersOnly>Показывать только выделенные сервера</DedicatedServersOnly>
 </ServerListFiltersText>

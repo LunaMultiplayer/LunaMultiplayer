@@ -9,17 +9,17 @@
   <SafetyBubble>Помните!! Когда вы внутри защитного пузыря ты не будешь виден для других игроков!!</SafetyBubble>
   <CannotRecover>Невозможно вернуть корабль, он не ваш.</CannotRecover>
   <CannotTerminate>Невозможно уничтожить корабль, он не ваш.</CannotTerminate>
-  <SpectatingRemoved>Крафт за которыми вы наблюдали был удалён</SpectatingRemoved>
+  <SpectatingRemoved>Корабль за которыми вы наблюдали был удалён</SpectatingRemoved>
   <WarpDisabled>Невозможно ускорить время, функция не доступна</WarpDisabled>
   <WaitingSubspace>Невозможно ускорить время, ожидание subspace id от сервера</WaitingSubspace>
   <CannotWarpWhileSpectating>Нельзя варпить пока наблюдаешь</CannotWarpWhileSpectating>
   <ScreenshotInterval>Интервал между скриншотами $1 секунд. Не можем загрузить скриншот в данный момент</ScreenshotInterval>
-  <CraftLibraryInterval>Интервал между запросами в библиотеку крафтов это $1 секунд. Не можем продолжить запросы данный момент</CraftLibraryInterval>
+  <CraftLibraryInterval>Интервал между запросами в библиотеку кораблей это $1 секунд. Не можем продолжить запросы данный момент</CraftLibraryInterval>
   <ScreenshotTaken>Скриншот загружен!</ScreenshotTaken>
   <ImageSaved>Скриншот сохранён в GameData/LunaMultiplayer/Screenshots</ImageSaved>
   <IncreasedInterpolationOffset>Внимание! Ваше смещение интерполяции было очень низким для этого сервера. Нам прийдётся увеличить его.</IncreasedInterpolationOffset>
   <SackingKerbalsNotAllowed>Этот сервер не разрешает нанимать кербалов</SackingKerbalsNotAllowed>
   <CannotLoadGames>LMP не разрешает загружать сохранения</CannotLoadGames>
   <KerbalNotYours>Другой игрок уже использует этого кербала!</KerbalNotYours>
-  <UnsafeToSync>Не можем синхронизироваться в нестабильной орбите потому-что ваш крафт можете уничтожиться! Вы можете выключить эту проверку в настройках.</UnsafeToSync>
+  <UnsafeToSync>Не можем синхронизироваться в нестабильной орбите потому-что ваш корабль можете уничтожиться! Вы можете выключить эту проверку в настройках.</UnsafeToSync>
 </ScreenText>

@@ -4,10 +4,10 @@
   <Title>LunaMultiplayer - Ошибка проверки модов</Title>
   <MandatoryModsNotFound>Обязательные моды не найдены!:</MandatoryModsNotFound>
   <MissingExpansions>Пропущенные дополнения:</MissingExpansions>
-  <MandatoryModsDifferentShaFound>Обязательные моды с разными SHA найдены:</MandatoryModsDifferentShaFound>
+  <MandatoryModsDifferentShaFound>Обязательные моды с разными SHA:</MandatoryModsDifferentShaFound>
   <Link>Ссылка</Link>
-  <ForbiddenFilesFound>Запрещённых модов найдено:</ForbiddenFilesFound>
+  <ForbiddenFilesFound>Запрещённые модификации:</ForbiddenFilesFound>
   <NonListedFilesFound>Не указанных и запрещённых модов найдено:</NonListedFilesFound>
   <MandatoryPartsNotFound>Обязательные части не найдены:</MandatoryPartsNotFound>
-  <ForbiddenPartsFound>Запрещённых частей найдено:</ForbiddenPartsFound>
+  <ForbiddenPartsFound>Запрещённые части:</ForbiddenPartsFound>
 </ModWindowText>
