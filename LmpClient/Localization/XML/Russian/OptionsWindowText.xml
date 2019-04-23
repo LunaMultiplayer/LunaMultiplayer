@@ -19,7 +19,7 @@
   <ResetNetwork>Сбросить сетевые настройки</ResetNetwork>
   <Mtu>MTU (Стандартный: 1408):</Mtu>
   <AutoExpandMtu>Автоматически расширяемый MTU</AutoExpandMtu>
-  <ConnectionTimeout>Время ожидания подключения (Default: 15):</ConnectionTimeout>
+  <ConnectionTimeout>Время ожидания подключения (Стандартно: 15):</ConnectionTimeout>
   <GeneralSettings>Главные настройки</GeneralSettings>
   <IgnoreSyncChecks>Игнорировать проверки безопасности синхр. варпа</IgnoreSyncChecks>
 </OptionsWindowText>

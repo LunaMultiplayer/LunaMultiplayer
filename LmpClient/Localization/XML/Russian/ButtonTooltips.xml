@@ -5,7 +5,7 @@
   <ServerIcon>Сервера</ServerIcon>
   <ConnectIcon>Подключиться</ConnectIcon>
   <DisconnectIcon>Отключиться</DisconnectIcon>
-  <SyncIcon>Синхр.</SyncIcon>
+  <SyncIcon>Синх.</SyncIcon>
   <RefreshIcon>Обновить</RefreshIcon>
   <UploadIcon>Загрузить</UploadIcon>
   <DeleteIcon>Удалить</DeleteIcon>
@@ -19,7 +19,7 @@
   <AdminIcon>Администрирование</AdminIcon>
   <KickIcon>Выгнать</KickIcon>
   <BanIcon>Заблокировать</BanIcon>
-  <DekesslerIcon>Удалить муссор</DekesslerIcon>
+  <DekesslerIcon>Удалить мусор</DekesslerIcon>
   <NukeIcon>Очистить KSC</NukeIcon>
   <RestartServerIcon>Перезапустить сервер</RestartServerIcon>
   <DownloadIcon>Скачать</DownloadIcon>
