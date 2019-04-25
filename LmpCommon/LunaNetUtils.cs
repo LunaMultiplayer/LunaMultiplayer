@@ -12,12 +12,28 @@ namespace LmpCommon
     {
         public static bool IsTcpPortInUse(int port)
         {
-            return IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().Any(e => e.Port == port);
+            try
+            {
+                return IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().Any(e => e.Port == port);
+            }
+            catch (Exception)
+            {
+                //This fails on macOS High Sierra
+                return false;
+            }
         }
 
         public static bool IsUdpPortInUse(int port)
         {
-            return IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(e => e.Port == port);
+            try
+            {
+                return IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Any(e => e.Port == port);
+            }
+            catch (Exception)
+            {
+                //This fails on macOS High Sierra
+                return false;
+            }
         }
 
         public static IPAddress GetOwnSubnetMask()
