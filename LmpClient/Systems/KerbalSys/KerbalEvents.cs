@@ -1,4 +1,5 @@
-﻿using LmpClient.Base;
+﻿using System;
+using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
@@ -71,6 +72,21 @@ namespace LmpClient.Systems.KerbalSys
                 System.MessageSender.SendKerbal(kerbal);
                 System.RefreshCrewDialog();
             }
+        }
+
+        /// <summary>
+        /// This event is triggered when a kerbal level changes. We send the new kerbal definition to the server
+        /// </summary>
+        public void KerbalLevelUp(ProtoCrewMember kerbal)
+        {
+            //This is the case when we are spectating and the kerbal levels up. Ignore the event and let the controller send the update
+            if (LockSystem.LockQuery.KerbalLockExists(kerbal.name) && !LockSystem.LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
+            {
+                return;
+            }
+
+            System.MessageSender.SendKerbal(kerbal);
+            System.RefreshCrewDialog();
         }
 
         /// <summary>

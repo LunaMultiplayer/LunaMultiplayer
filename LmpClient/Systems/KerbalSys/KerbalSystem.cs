@@ -61,6 +61,7 @@ namespace LmpClient.Systems.KerbalSys
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedKerbals));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
             GameEvents.onGameSceneLoadRequested.Add(KerbalEvents.SwitchSceneRequested);
+            GameEvents.onKerbalLevelUp.Add(KerbalEvents.KerbalLevelUp);
             GameEvents.onKerbalStatusChange.Add(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Add(KerbalEvents.TypeChange);
             RevertEvent.onReturningToEditor.Add(KerbalEvents.ReturningToEditor);
