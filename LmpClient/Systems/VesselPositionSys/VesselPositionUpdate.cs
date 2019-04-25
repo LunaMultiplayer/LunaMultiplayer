@@ -156,7 +156,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 if (Target != null)
                 {
                     Target.CopyFrom(targetUpdate);
-                    VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(targetUpdate);
+                    queue.Recycle(targetUpdate);
                 }
                 else
                 {
