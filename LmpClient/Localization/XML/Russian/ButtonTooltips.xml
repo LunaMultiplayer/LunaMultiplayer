@@ -5,26 +5,26 @@
   <ServerIcon>Сервера</ServerIcon>
   <ConnectIcon>Подключиться</ConnectIcon>
   <DisconnectIcon>Отключиться</DisconnectIcon>
-  <SyncIcon>Warp to</SyncIcon>
+  <SyncIcon>Синх.</SyncIcon>
   <RefreshIcon>Обновить</RefreshIcon>
   <UploadIcon>Загрузить</UploadIcon>
   <DeleteIcon>Удалить</DeleteIcon>
   <PlusIcon>Добавить</PlusIcon>
   <SaveIcon>Сохранить</SaveIcon>
-  <KeyIcon>Password</KeyIcon>
-  <GlobeIcon>Country</GlobeIcon>
+  <KeyIcon>Пароль</KeyIcon>
+  <GlobeIcon>Страна</GlobeIcon>
   <ChatIcon>Чат</ChatIcon>
-  <CameraIcon>Криншоты</CameraIcon>
+  <CameraIcon>Скриншоты</CameraIcon>
   <RocketIcon>Корабли</RocketIcon>
   <AdminIcon>Администрирование</AdminIcon>
   <KickIcon>Выгнать</KickIcon>
   <BanIcon>Заблокировать</BanIcon>
-  <DekesslerIcon>Удалить муссор</DekesslerIcon>
+  <DekesslerIcon>Удалить мусор</DekesslerIcon>
   <NukeIcon>Очистить KSC</NukeIcon>
-  <RestartServerIcon>Restart server</RestartServerIcon>
-  <DownloadIcon>Download</DownloadIcon>
-  <CycleFirstIcon>First</CycleFirstIcon>
-  <CyclePreviousIcon>Previous</CyclePreviousIcon>
-  <CycleNextIcon>Next</CycleNextIcon>
-  <CycleLastIcon>Last</CycleLastIcon>
+  <RestartServerIcon>Перезапустить сервер</RestartServerIcon>
+  <DownloadIcon>Скачать</DownloadIcon>
+  <CycleFirstIcon>Первый</CycleFirstIcon>
+  <CyclePreviousIcon>Предыдущий</CyclePreviousIcon>
+  <CycleNextIcon>Следующий</CycleNextIcon>
+  <CycleLastIcon>Последний</CycleLastIcon>
 </ButtonTooltips>

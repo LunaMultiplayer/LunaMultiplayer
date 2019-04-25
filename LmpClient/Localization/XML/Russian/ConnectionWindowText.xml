@@ -7,7 +7,7 @@
   <Port>Порт:</Port>
   <Password>Пароль:</Password>
   <CustomServers>Ваши сервера:</CustomServers>
-  <Connect>Connect</Connect>
-  <Settings>Settings</Settings>
-  <Servers>Server List</Servers>
+  <Connect>Присоединиться</Connect>
+  <Settings>Настройки</Settings>
+  <Servers>Список серверов</Servers>
 </ConnectionWindowText>
