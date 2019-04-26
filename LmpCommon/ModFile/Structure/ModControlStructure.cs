@@ -472,7 +472,12 @@ namespace LmpCommon.ModFile.Structure
                 "liquidEngine2-2.v2",
                 "Size3To2Adapter.v2",
                 "stackBiCoupler.v2",
-                "stackTriCoupler.v2"
+                "stackTriCoupler.v2",
+                "rocketNoseConeSize3",
+                "smallRadialEngine.v2",
+                "radialEngineMini.v2",
+                "microEngine.v2",
+                "RCSBlock.v2",
             };
         }
     }
