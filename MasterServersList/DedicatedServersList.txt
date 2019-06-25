@@ -24,3 +24,5 @@ qingdao.211.network:8800
 143.167.132.10:27028
 #Tayaut Engineering
 kerbal.tayaut.net:8800
+#WhiteShield-Gaming
+vps8.wsg.ovh:8800
