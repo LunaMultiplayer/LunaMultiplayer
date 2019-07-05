@@ -73,23 +73,24 @@ namespace LmpClient.Systems.Mod
         public void BuildDllFileList()
         {
             DllList.Clear();
-            var checkList = Directory.GetFiles(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData"), "*",
-                SearchOption.AllDirectories);
+            var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
 
-            foreach (var checkFile in checkList.Where(f => f.ToLower().EndsWith(".dll")))
+            foreach (var modDirectory in Directory.GetDirectories(gameDataDir))
             {
-                //We want the relative path to check against, example: LunaMultiplayer/Plugins/LunaMultiplayer.dll
-                //Strip off everything from GameData
-                //Replace windows backslashes with mac/linux forward slashes.
-                //Make it lowercase so we don't worry about case sensitivity.
-                var relativeFilePath = checkFile.ToLowerInvariant()
-                    .Substring(checkFile.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
-                    .Replace('\\', '/');
+                var relPathFolder = modDirectory.Substring(modDirectory.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace("\\", "/");
+                if (relPathFolder.StartsWith("squad", StringComparison.OrdinalIgnoreCase) || relPathFolder.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase))
+                    continue;
 
-                var fileHash = Common.CalculateSha256FileHash(checkFile);
-                DllList.Add(relativeFilePath, fileHash);
+                var filesInModFolder = Directory.GetFiles(modDirectory, "*.dll", SearchOption.AllDirectories);
+                foreach (var file in filesInModFolder)
+                {
+                    var relativeFilePath = file.ToLowerInvariant()
+                        .Substring(file.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
+                        .Replace('\\', '/');
 
-                //LunaLog.Log($"[LMP]: Hashed file: {relativeFilePath}, hash: {fileHash}");
+                    var fileHash = Common.CalculateSha256FileHash(file);
+                    DllList.Add(relativeFilePath, fileHash);
+                }
             }
         }
 
