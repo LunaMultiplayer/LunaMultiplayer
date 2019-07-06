@@ -103,7 +103,7 @@ namespace LmpClient.Systems.VesselProtoSys
 
         public void PartDecoupled(Part part, float breakForce, Vessel originalVessel)
         {
-            if (VesselCommon.IsSpectating) return;
+            if (VesselCommon.IsSpectating || originalVessel == null) return;
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             System.MessageSender.SendVesselMessage(part.vessel);
