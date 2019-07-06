@@ -73,59 +73,35 @@ namespace LmpClient.Systems.Mod
         public void BuildDllFileList()
         {
             DllList.Clear();
-            var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
 
-            foreach (var modDirectory in Directory.GetDirectories(gameDataDir))
+            foreach (var modFile in GetModFiles())
             {
-                var relPathFolder = modDirectory.Substring(modDirectory.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace("\\", "/");
-                if (relPathFolder.StartsWith("squad", StringComparison.OrdinalIgnoreCase) || relPathFolder.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var filesInModFolder = Directory.GetFiles(modDirectory, "*.dll", SearchOption.AllDirectories);
-                foreach (var file in filesInModFolder)
-                {
-                    var relativeFilePath = file.ToLowerInvariant()
-                        .Substring(file.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
-                        .Replace('\\', '/');
-
-                    var fileHash = Common.CalculateSha256FileHash(file);
-                    DllList.Add(relativeFilePath, fileHash);
-                }
+                var fileHash = Common.CalculateSha256FileHash(modFile);
+                DllList.Add(GetRelativePath(modFile), fileHash);
             }
         }
 
         public void GenerateModControlFile(bool appendSha)
         {
-            var modFile = new ModControlStructure
+            var modCtrlStructure = new ModControlStructure
             {
                 RequiredExpansions = GetInstalledExpansions()
             };
 
-            var extraParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name)).Select(p => p.name);
-            modFile.AllowedParts.AddRange(extraParts);
+            var extraParts = PartLoader.LoadedPartsList.Where(p => !modCtrlStructure.AllowedParts.Contains(p.name)).Select(p => p.name);
+            modCtrlStructure.AllowedParts.AddRange(extraParts);
 
-            var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
-
-            foreach (var modDirectory in Directory.GetDirectories(gameDataDir))
+            foreach (var modFile in GetModFiles())
             {
-                var relPathFolder = modDirectory.Substring(modDirectory.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace("\\", "/");
-                if (relPathFolder.StartsWith("squad", StringComparison.OrdinalIgnoreCase) || relPathFolder.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var filesInModFolder = Directory.GetFiles(modDirectory, "*.dll", SearchOption.AllDirectories);
-                foreach (var file in filesInModFolder)
+                modCtrlStructure.MandatoryPlugins.Add(new MandatoryDllFile
                 {
-                    var relativeFilePath = file.Substring(file.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace("\\", "/");
-                    modFile.MandatoryPlugins.Add(new MandatoryDllFile
-                    {
-                        FilePath = relativeFilePath,
-                        Sha = appendSha ? Common.CalculateSha256FileHash(file) : string.Empty,
-                        Text = $"{Path.GetFileNameWithoutExtension(file)}. Version: {FileVersionInfo.GetVersionInfo(file).FileVersion}"
-                    });
-                }
+                    FilePath = GetRelativePath(modFile),
+                    Sha = appendSha ? Common.CalculateSha256FileHash(modFile) : string.Empty,
+                    Text = $"{Path.GetFileNameWithoutExtension(modFile)}. Version: {FileVersionInfo.GetVersionInfo(modFile).FileVersion}"
+                });
             }
 
-            LunaXmlSerializer.WriteToXmlFile(modFile, CommonUtil.CombinePaths(MainSystem.KspPath, "LMPModControl.xml"));
+            LunaXmlSerializer.WriteToXmlFile(modCtrlStructure, CommonUtil.CombinePaths(MainSystem.KspPath, "LMPModControl.xml"));
             LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.ModFileGenerated, 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
@@ -172,6 +148,39 @@ namespace LmpClient.Systems.Mod
             }
 
             return null;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Return the *.dll files that you have in the GameData folder and it's subdirectories except the ones from LMP and Squad
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<string> GetModFiles()
+        {
+            var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
+
+            foreach (var modDirectory in Directory.GetDirectories(gameDataDir))
+            {
+                var relPathFolder = modDirectory.Substring(modDirectory.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace("\\", "/");
+                if (relPathFolder.StartsWith("squad", StringComparison.OrdinalIgnoreCase) || relPathFolder.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var filesInModFolder = Directory.GetFiles(modDirectory, "*.dll", SearchOption.AllDirectories);
+                foreach (var file in filesInModFolder)
+                {
+                    yield return file;
+                }
+            }
+        }
+
+        private static string GetRelativePath(string file)
+        {
+            return file.ToLowerInvariant()
+                .Substring(file.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
+                .Replace('\\', '/');
         }
 
         #endregion
