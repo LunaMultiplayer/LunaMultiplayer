@@ -39,7 +39,7 @@ namespace LmpClient.Systems.VesselUpdateSys
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, SendVesselUpdates));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselUpdates));
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, SendSecondaryVesselUpdates));
-            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, SendUnloadedSecondaryVesselUpdates));
+            //SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, SendUnloadedSecondaryVesselUpdates));
         }
 
         protected override void OnDisabled()
