@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
 {
-    public static class VeselPositioner
+    public static class VesselPositioner
     {
         public static void SetVesselPosition(this Vessel vessel, VesselPositionUpdate update, VesselPositionUpdate target, float percentage)
         {

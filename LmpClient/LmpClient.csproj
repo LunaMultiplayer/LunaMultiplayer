@@ -332,10 +332,10 @@
     <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldMessageSender.cs" />
     <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldQueue.cs" />
     <Compile Include="Systems\VesselPartSyncUiFieldSys\VesselPartSyncUiFieldSystem.cs" />
+    <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VesselPositioner.cs" />
     <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VesselProtoUpdater.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionEvents.cs" />
     <Compile Include="Systems\VesselPositionSys\PositionUpdateQueue.cs" />
-    <Compile Include="Systems\VesselPositionSys\ExtensionMethods\VeselPositioner.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
