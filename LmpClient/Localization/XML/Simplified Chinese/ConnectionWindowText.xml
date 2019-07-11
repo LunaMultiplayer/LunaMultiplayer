@@ -7,7 +7,7 @@
   <Port>端口:</Port>
   <Password>密码：</Password>
   <CustomServers>自定义服务器:</CustomServers>
-  <Connect>Connect</Connect>
-  <Settings>Settings</Settings>
-  <Servers>Server List</Servers>
+  <Connect>连接</Connect>
+  <Settings>设置</Settings>
+  <Servers>服务器列表</Servers>
 </ConnectionWindowText>
