@@ -3,4 +3,5 @@
 <BannedPartsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>LunaMultiplayer - �g�p�֎~�p�[�c</Title>
   <Text>���̎g�p�֎~�p�[�c���܂��ł��邽�߁A�ł��グ�ł��܂����B</Text>
+  <TooManyParts>Your vessel has too many parts. This server allows vessels with a max part count of:</TooManyParts>
 </BannedPartsWindowText>

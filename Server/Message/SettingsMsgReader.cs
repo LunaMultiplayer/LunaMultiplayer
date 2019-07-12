@@ -28,6 +28,7 @@ namespace Server.Message
             msgData.ConsoleIdentifier = GeneralSettings.SettingsStore.ConsoleIdentifier;
             msgData.GameDifficulty = GeneralSettings.SettingsStore.GameDifficulty;
             msgData.SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance;
+            msgData.MaxVesselParts = GeneralSettings.SettingsStore.MaxVesselParts;
             msgData.VesselUpdatesMsInterval = IntervalSettings.SettingsStore.VesselUpdatesMsInterval;
             msgData.SecondaryVesselUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselUpdatesMsInterval;
             msgData.MinScreenshotIntervalMs = ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs;

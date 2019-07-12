@@ -13,6 +13,7 @@ namespace LmpClient.Windows.BannedParts
         private const float WindowWidth = 400;
 
         private static string[] _bannedParts = new string[0];
+        private static int _partCount = 0;
         private static string _vesselName;
 
         private static bool _display;
@@ -50,6 +51,18 @@ namespace LmpClient.Windows.BannedParts
             {
                 _vesselName = vesselName;
                 _bannedParts = bannedParts;
+                _partCount = 0;
+                Display = true;
+            }
+        }
+
+        public void DisplayBannedPartsDialog(string vesselName, int partCount)
+        {
+            if (!Display)
+            {
+                _vesselName = vesselName;
+                _partCount = partCount;
+                _bannedParts = new string[0];
                 Display = true;
             }
         }

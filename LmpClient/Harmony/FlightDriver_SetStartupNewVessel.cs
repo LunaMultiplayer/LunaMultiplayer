@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using LmpClient.Systems.Mod;
+using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.BannedParts;
 using LmpCommon.Enums;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace LmpClient.Harmony
             var configNode = ConfigNode.Load(FlightDriver.newShipToLoadPath);
             var shipName = configNode.GetValue("ship");
             var partNames = configNode.GetNodes("PART").Select(n => n.GetValue("part").Substring(0, n.GetValue("part").IndexOf('_'))).ToList();
+            var partCount = configNode.GetNodes("PART").Count();
 
             if (ModSystem.Singleton.ModControl)
             {
@@ -34,6 +36,14 @@ namespace LmpClient.Harmony
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
                     return false;
                 }
+            }
+
+            if (partCount > SettingsSystem.ServerSettings.MaxVesselParts)
+            {
+                LunaLog.LogError($"Vessel {shipName} has {partCount} parts and the max allowed in the server is: {SettingsSystem.ServerSettings.MaxVesselParts}");
+                BannedPartsWindow.Singleton.DisplayBannedPartsDialog(shipName, partCount);
+                HighLogic.LoadScene(GameScenes.SPACECENTER);
+                return false;
             }
 
             return true;

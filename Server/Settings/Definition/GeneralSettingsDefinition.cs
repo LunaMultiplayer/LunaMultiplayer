@@ -74,5 +74,8 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
         public float SafetyBubbleDistance { get; set; } = 100.0f;
+
+        [XmlComment(Value = "Max number of parts that a vessel can have when spawning")]
+        public int MaxVesselParts { get; set; } = 200;
     }
 }

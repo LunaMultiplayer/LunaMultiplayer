@@ -21,6 +21,7 @@ namespace LmpCommon.Message.Data.Settings
         public string ConsoleIdentifier;
         public GameDifficulty GameDifficulty;
         public float SafetyBubbleDistance;
+        public int MaxVesselParts;
         public int VesselUpdatesMsInterval;
         public int SecondaryVesselUpdatesMsInterval;
         public bool AllowOtherLaunchSites;
@@ -83,6 +84,7 @@ namespace LmpCommon.Message.Data.Settings
             lidgrenMsg.Write(ConsoleIdentifier);
             lidgrenMsg.Write((int)GameDifficulty);
             lidgrenMsg.Write(SafetyBubbleDistance);
+            lidgrenMsg.Write(MaxVesselParts);
             lidgrenMsg.Write(VesselUpdatesMsInterval);
             lidgrenMsg.Write(SecondaryVesselUpdatesMsInterval);
             lidgrenMsg.Write(AllowOtherLaunchSites);
@@ -144,6 +146,7 @@ namespace LmpCommon.Message.Data.Settings
             ConsoleIdentifier = lidgrenMsg.ReadString();
             GameDifficulty = (GameDifficulty)lidgrenMsg.ReadInt32();
             SafetyBubbleDistance = lidgrenMsg.ReadFloat();
+            MaxVesselParts = lidgrenMsg.ReadInt32();
             VesselUpdatesMsInterval = lidgrenMsg.ReadInt32();
             SecondaryVesselUpdatesMsInterval = lidgrenMsg.ReadInt32();
             AllowOtherLaunchSites = lidgrenMsg.ReadBoolean();
@@ -194,7 +197,7 @@ namespace LmpCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) +
-                sizeof(bool) * 23 + sizeof(int) * 7 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount();
+                sizeof(bool) * 23 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount();
         }
     }
 }

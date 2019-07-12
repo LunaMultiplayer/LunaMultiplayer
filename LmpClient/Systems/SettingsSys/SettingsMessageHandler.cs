@@ -25,6 +25,7 @@ namespace LmpClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.MaxNumberOfAsteroids = msgData.MaxNumberOfAsteroids;
             SettingsSystem.ServerSettings.ConsoleIdentifier = msgData.ConsoleIdentifier;
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
+            SettingsSystem.ServerSettings.MaxVesselParts = msgData.MaxVesselParts;
             SettingsSystem.ServerSettings.VesselUpdatesMsInterval = msgData.VesselUpdatesMsInterval;
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval = msgData.SecondaryVesselUpdatesMsInterval;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
