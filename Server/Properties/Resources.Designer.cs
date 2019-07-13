@@ -19,7 +19,7 @@ namespace Server.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -175,6 +175,16 @@ namespace Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name = DeployedScience
+        ///scene = 7, 8, 5, 6.
+        /// </summary>
+        internal static string DeployedScience {
+            get {
+                return ResourceManager.GetString("DeployedScience", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name = Funding
         ///scene = 7, 8, 5, 6
         ///funds = 25000.
@@ -296,6 +306,16 @@ namespace Server.Properties {
         internal static string ResourceScenario {
             get {
                 return ResourceManager.GetString("ResourceScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ROCScenario
+        ///scene = 7.
+        /// </summary>
+        internal static string ROCScenario {
+            get {
+                return ResourceManager.GetString("ROCScenario", resourceCulture);
             }
         }
         

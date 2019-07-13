@@ -270,12 +270,14 @@
   <ItemGroup>
     <Content Include="Resources\Scenario\CommNetScenario.txt" />
     <Content Include="Resources\Scenario\ContractSystem.txt" />
+    <Content Include="Resources\Scenario\DeployedScience.txt" />
     <Content Include="Resources\Scenario\Funding.txt" />
     <Content Include="Resources\Scenario\PartUpgradeManager.txt" />
     <Content Include="Resources\Scenario\ProgressTracking.txt" />
     <Content Include="Resources\Scenario\Reputation.txt" />
     <Content Include="Resources\Scenario\ResearchAndDevelopment.txt" />
     <Content Include="Resources\Scenario\ResourceScenario.txt" />
+    <Content Include="Resources\Scenario\ROCScenario.txt" />
     <Content Include="Resources\Scenario\ScenarioAchievements.txt" />
     <Content Include="Resources\Scenario\ScenarioContractEvents.txt" />
     <Content Include="Resources\Scenario\ScenarioDestructibles.txt" />

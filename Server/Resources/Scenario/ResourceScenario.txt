@@ -3,5 +3,6 @@ scene = 7, 8, 5, 6, 21
 RESOURCE_SETTINGS
 {
 	GameSeed = 162051528
+    ROCMissionSeed = 1675489568
 	MaxDeltaTime = 21600
 }

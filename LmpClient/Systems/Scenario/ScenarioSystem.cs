@@ -91,7 +91,7 @@ namespace LmpClient.Systems.Scenario
             {
                 try
                 {
-                    var modules = ScenarioRunner.GetLoadedModules();
+                    var modules = ScenarioRunner.GetLoadedModules().Where(s=> s != null);
                     ParseModulesToConfigNodes(modules);
                     TaskFactory.StartNew(SendModulesConfigNodes);
                 }

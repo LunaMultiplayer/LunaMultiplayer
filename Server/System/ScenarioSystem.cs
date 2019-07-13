@@ -22,6 +22,8 @@ namespace Server.System
         public static bool GenerateDefaultScenarios()
         {
             var scenarioFilesCreated =
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "ROCScenario.txt"), Resources.ROCScenario) &&
+            FileHandler.CreateFile(Path.Combine(ScenariosPath, "DeployedScience.txt"), Resources.DeployedScience) &&
             FileHandler.CreateFile(Path.Combine(ScenariosPath, "CommNetScenario.txt"), Resources.CommNetScenario) &&
             FileHandler.CreateFile(Path.Combine(ScenariosPath, "PartUpgradeManager.txt"), Resources.PartUpgradeManager) &&
             FileHandler.CreateFile(Path.Combine(ScenariosPath, "ProgressTracking.txt"), Resources.ProgressTracking) &&

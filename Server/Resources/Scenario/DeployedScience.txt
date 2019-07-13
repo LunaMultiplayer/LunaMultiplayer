@@ -1,0 +1,115 @@
+name = DeployedScience
+scene = 7, 8, 5, 6
+ScienceTimeDelay = 60
+DataSendFailedTimeDelay = 600
+SCIENCECLUSTERS
+{
+}
+DIMINISHINGRETURNS
+{
+	ENTRY
+	{
+		ExpCount = 1
+		Rate = 1
+	}
+	ENTRY
+	{
+		ExpCount = 2
+		Rate = 0.200000003
+	}
+	ENTRY
+	{
+		ExpCount = 3
+		Rate = 0.349999994
+	}
+	ENTRY
+	{
+		ExpCount = 4
+		Rate = 0.449999988
+	}
+	ENTRY
+	{
+		ExpCount = 5
+		Rate = 0.5
+	}
+}
+SEISMICENERGY
+{
+	MinimumEnergyRequired = 3000
+	SeismicScienceProcessingDelay = 3
+	ENTRY
+	{
+		BodyName = Moho
+		Energy = 2.02E+09
+	}
+	ENTRY
+	{
+		BodyName = Eve
+		Energy = 9.78000036E+10
+	}
+	ENTRY
+	{
+		BodyName = Gilly
+		Energy = 1000000
+	}
+	ENTRY
+	{
+		BodyName = Kerbin
+		Energy = 4.1840001E+10
+	}
+	ENTRY
+	{
+		BodyName = Mun
+		Energy = 782000000
+	}
+	ENTRY
+	{
+		BodyName = Minmus
+		Energy = 21200000
+	}
+	ENTRY
+	{
+		BodyName = Duna
+		Energy = 3.62E+09
+	}
+	ENTRY
+	{
+		BodyName = Ike
+		Energy = 223000000
+	}
+	ENTRY
+	{
+		BodyName = Dres
+		Energy = 258000000
+	}
+	ENTRY
+	{
+		BodyName = Laythe
+		Energy = 2.3600001E+10
+	}
+	ENTRY
+	{
+		BodyName = Vall
+		Energy = 2.48999987E+09
+	}
+	ENTRY
+	{
+		BodyName = Tylo
+		Energy = 3.38999992E+10
+	}
+	ENTRY
+	{
+		BodyName = Bop
+		Energy = 29900000
+	}
+	ENTRY
+	{
+		BodyName = Pol
+		Energy = 8660000
+	}
+	ENTRY
+	{
+		BodyName = Eeloo
+		Energy = 894000000
+	}
+}
