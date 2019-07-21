@@ -10,7 +10,6 @@ RUN apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/ed
 WORKDIR LMPServer
 
 EXPOSE 8800/udp
-EXPOSE 8801/udp
 
 VOLUME ["Universe", "Config", "Plugins"]
 
