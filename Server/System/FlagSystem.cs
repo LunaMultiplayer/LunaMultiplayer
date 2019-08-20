@@ -7,22 +7,29 @@ using Server.Server;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Server.System
 {
     public class FlagSystem
     {
+        private static readonly Regex ValidationRegex = new Regex(@"^[-_a-zA-Z0-9/]+$");
         public static string FlagPath => Path.Combine(ServerContext.UniverseDirectory, "Flags");
 
         public static void HandleFlagDataMessage(ClientStructure client, FlagDataMsgData message)
         {
+            if (!ValidationRegex.IsMatch(message.Flag.FlagName))
+            {
+                LunaLog.Warning($"Cannot save flag {message.Flag.FlagName} from {client.PlayerName} as it's flag name has invalid characters");
+                return;
+            }
+
             var playerFlagPath = Path.Combine(FlagPath, client.PlayerName);
             if (!FileHandler.FolderExists(playerFlagPath))
                 FileHandler.FolderCreate(playerFlagPath);
 
             LunaLog.Debug($"Saving flag {message.Flag.FlagName} from {client.PlayerName}");
-
-            var newFileName = message.Flag.FlagName.Replace('/', '$') + ".png";
+            var newFileName = $"{message.Flag.FlagName.Replace('/', '$')}.png";
             FileHandler.WriteToFile(Path.Combine(playerFlagPath, newFileName), message.Flag.FlagData, message.Flag.NumBytes);
 
             MessageQueuer.SendToAllClients<FlagSrvMsg>(message);
