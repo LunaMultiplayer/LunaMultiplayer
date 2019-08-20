@@ -1,12 +1,14 @@
-﻿using LmpGlobal;
-using LmpCommon;
+﻿using LmpCommon;
 using LmpCommon.Enums;
+using LmpGlobal;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI;
 using uhttpsharp;
+using HttpResponse = uhttpsharp.HttpResponse;
 
 namespace LmpMasterServer.Http.Handlers
 {
@@ -123,27 +125,34 @@ namespace LmpMasterServer.Http.Handlers
             writer.RenderBeginTag("tbody");
             foreach (var server in servers)
             {
-                writer.RenderBeginTag(HtmlTextWriterTag.Tr);
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.ExternalEndpoint); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.Country); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.Password); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.ServerName); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.Description); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td);
-                if (!string.IsNullOrEmpty(server.Website))
+                try
                 {
-                    writer.AddAttribute(HtmlTextWriterAttribute.Href, server.Website);
-                    writer.RenderBeginTag(HtmlTextWriterTag.A); writer.Write(server.WebsiteText); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Tr);
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.ExternalEndpoint)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.Country)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.Password)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.ServerName)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.Description)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td);
+                    if (!string.IsNullOrEmpty(server.Website))
+                    {
+                        writer.AddAttribute(HtmlTextWriterAttribute.Href, server.Website);
+                        writer.RenderBeginTag(HtmlTextWriterTag.A); writer.Write(HttpUtility.HtmlEncode(server.WebsiteText)); writer.RenderEndTag();
+                    }
+                    writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode((GameMode)server.GameMode)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.PlayerCount)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.MaxPlayers)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.DedicatedServer)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.ModControl)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode((TerrainQuality)server.TerrainQuality)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.Cheats)); writer.RenderEndTag();
+                    writer.RenderEndTag();
                 }
-                writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write((GameMode)server.GameMode); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.PlayerCount); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.MaxPlayers); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.DedicatedServer); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.ModControl); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write((TerrainQuality)server.TerrainQuality); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.Cheats); writer.RenderEndTag();
-                writer.RenderEndTag();
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
             writer.RenderEndTag();
 
