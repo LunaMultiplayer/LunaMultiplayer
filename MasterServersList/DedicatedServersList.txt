@@ -27,3 +27,6 @@ kerbal.tayaut.net:8800
 #WhiteShield-Gaming
 vps8.wsg.ovh:8800
 103.214.110.138:6712
+#Wicloz
+ksp.wilcodeboer.me:8800
+ksp.wdboer.nl:8800
