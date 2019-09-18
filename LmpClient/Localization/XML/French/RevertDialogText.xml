@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <RevertDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CannotRevertTitle>CannotRevert</CannotRevertTitle>
-  <CannotRevertText>Due to LMP limitations you cannot revert after switching to another vessel or while spectating. Check the wiki for more details</CannotRevertText>
-  <CloseBtn>Close</CloseBtn>
+  <CannotRevertTitle>Retour impossible</CannotRevertTitle>
+  <CannotRevertText>A cause d'une limitation de LMP vous ne pouvez pas revenir en arrière après avoir changé de vaisseau ou en étant spectateur. Consultez le wiki pour plus d'informations</CannotRevertText>
+  <CloseBtn>Fermer</CloseBtn>
 </RevertDialogText>
