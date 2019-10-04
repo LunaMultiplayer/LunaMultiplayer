@@ -12,7 +12,7 @@
   <PlusIcon>Ajouter</PlusIcon>
   <SaveIcon>Sauvegarder</SaveIcon>
   <KeyIcon>Mot de passe</KeyIcon>
-  <GlobeIcon>Country</GlobeIcon>
+  <GlobeIcon>Pays</GlobeIcon>
   <ChatIcon>Chat</ChatIcon>
   <CameraIcon>Captures d'écran</CameraIcon>
   <RocketIcon>Vaisseaux</RocketIcon>
@@ -22,9 +22,9 @@
   <DekesslerIcon>Dekessler</DekesslerIcon>
   <NukeIcon>Atomiser CSK</NukeIcon>
   <RestartServerIcon>Redémarrer le serveur</RestartServerIcon>
-  <DownloadIcon>Download</DownloadIcon>
-  <CycleFirstIcon>First</CycleFirstIcon>
-  <CyclePreviousIcon>Previous</CyclePreviousIcon>
-  <CycleNextIcon>Next</CycleNextIcon>
-  <CycleLastIcon>Last</CycleLastIcon>
+  <DownloadIcon>Télécharger</DownloadIcon>
+  <CycleFirstIcon>Premier</CycleFirstIcon>
+  <CyclePreviousIcon>Précédent</CyclePreviousIcon>
+  <CycleNextIcon>Suivant</CycleNextIcon>
+  <CycleLastIcon>Dernier</CycleLastIcon>
 </ButtonTooltips>
