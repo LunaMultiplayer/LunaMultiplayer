@@ -6,23 +6,25 @@ namespace LmpCommon.Message.Data.Color
     public class PlayerColor
     {
         public string PlayerName;
-        public UnityEngine.Color Color;
+        public float[] Color = new float[3];
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(PlayerName);
-            lidgrenMsg.WriteRgbColor(Color);
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(Color[i]);
         }
 
         public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             PlayerName = lidgrenMsg.ReadString();
-            Color = lidgrenMsg.ReadRgbColor();
+            for (var i = 0; i < 3; i++)
+                Color[i] = lidgrenMsg.ReadFloat();
         }
 
         public int GetByteCount()
         {
-            return PlayerName.GetByteCount() + sizeof(byte) * 3;
+            return PlayerName.GetByteCount() + sizeof(float) * 3;
         }
     }
 }

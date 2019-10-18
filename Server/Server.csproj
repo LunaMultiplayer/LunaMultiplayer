@@ -50,21 +50,13 @@
     <Reference Include="LunaConfigNode, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\LunaConfigNode.1.8.1\lib\net35\LunaConfigNode.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\Open.NAT.2.1.0.0\lib\net45\Open.Nat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\External\KSPLibraries\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client\ClientConnectionHandler.cs" />
@@ -251,10 +243,6 @@
     <ProjectReference Include="..\LmpCommon\LmpCommon.csproj">
       <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
       <Name>LmpCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
-      <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
-      <Name>LmpGlobal</Name>
     </ProjectReference>
     <ProjectReference Include="..\LmpUpdater\LmpUpdater.csproj">
       <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>

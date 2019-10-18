@@ -30,7 +30,7 @@ namespace Server.Client
         public bool DisconnectClient { get; set; }
         public long LastReceiveTime { get; set; } = ServerContext.ServerClock.ElapsedMilliseconds;
         public long LastSendTime { get; set; } = 0;
-        public UnityEngine.Color PlayerColor { get; set; }
+        public float[] PlayerColor { get; set; } = new float[3];
         public string PlayerName { get; set; } = "Unknown";
         public PlayerStatus PlayerStatus { get; set; } = new PlayerStatus();
         public ConcurrentQueue<IServerMessageBase> SendMessageQueue { get; } = new ConcurrentQueue<IServerMessageBase>();

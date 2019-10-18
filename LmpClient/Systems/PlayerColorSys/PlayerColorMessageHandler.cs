@@ -1,14 +1,14 @@
-﻿using System.Collections.Concurrent;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
-using LmpClient.Extensions;
 using LmpClient.Systems.Lock;
 using LmpClient.Windows.Status;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Color;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
+using System.Collections.Concurrent;
 using UniLinq;
+using UnityEngine;
 
 namespace LmpClient.Systems.PlayerColorSys
 {
@@ -29,7 +29,7 @@ namespace LmpClient.Systems.PlayerColorSys
                         for (var i = 0; i < data.PlayerColorsCount; i++)
                         {
                             var playerName = data.PlayersColors[i].PlayerName;
-                            System.PlayerColors.Add(playerName, data.PlayersColors[i].Color);
+                            System.PlayerColors.Add(playerName, new Color(data.PlayersColors[i].Color[0], data.PlayersColors[i].Color[1], data.PlayersColors[i].Color[2]));
 
                             StatusWindow.Singleton.ColorEventHandled = false; //Refresh colors in status window
                         }
@@ -44,7 +44,7 @@ namespace LmpClient.Systems.PlayerColorSys
                         var playerColor = data.PlayerColor.Color;
 
                         LunaLog.Log($"[LMP]: Color Message, Name: {playerName} , color: {playerColor}");
-                        System.PlayerColors[playerName] = playerColor;
+                        System.PlayerColors[playerName] = new Color(playerColor[0], playerColor[1], playerColor[2]);
                         UpdateVesselColors(playerName);
 
                         StatusWindow.Singleton.ColorEventHandled = false;//Refresh colors in status window

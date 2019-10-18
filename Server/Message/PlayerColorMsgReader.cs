@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using LmpCommon.Message.Data.Color;
+﻿using LmpCommon.Message.Data.Color;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Server;
 using LmpCommon.Message.Types;
@@ -7,6 +6,8 @@ using Server.Client;
 using Server.Context;
 using Server.Message.Base;
 using Server.Server;
+using System;
+using System.Linq;
 
 namespace Server.Message
 {
@@ -27,7 +28,7 @@ namespace Server.Message
                     var data = (PlayerColorSetMsgData)messageData;
                     if (data.PlayerColor.PlayerName != client.PlayerName) return;
 
-                    client.PlayerColor = data.PlayerColor.Color;
+                    Array.Copy(data.PlayerColor.Color, client.PlayerColor, data.PlayerColor.Color.Length);
                     MessageQueuer.RelayMessage<PlayerColorSrvMsg>(client, data);
                     break;
             }

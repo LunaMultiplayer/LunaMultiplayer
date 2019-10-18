@@ -24,7 +24,10 @@ namespace LmpClient.Systems.PlayerColorSys
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<PlayerColorSetMsgData>();
             msgData.PlayerColor.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            msgData.PlayerColor.Color = SettingsSystem.CurrentSettings.PlayerColor;
+
+            msgData.PlayerColor.Color[0] = SettingsSystem.CurrentSettings.PlayerColor.r;
+            msgData.PlayerColor.Color[1] = SettingsSystem.CurrentSettings.PlayerColor.g;
+            msgData.PlayerColor.Color[2] = SettingsSystem.CurrentSettings.PlayerColor.b;
 
             SendMessage(msgData);
         }
