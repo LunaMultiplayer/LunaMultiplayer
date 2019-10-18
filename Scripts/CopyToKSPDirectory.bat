@@ -51,12 +51,6 @@ IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiplayer\Flags")
 del "%KSPPATH%\GameData\LunaMultiplayer\Flags\*.*" /Q /F
 IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\Flags\*.*" /Q /F)
 
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\LmpClient\bin\%SOLUTIONCONFIGURATION%\LmpClient.dll"
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\LmpClient\bin\%SOLUTIONCONFIGURATION%\LmpGlobal.dll"
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\LmpClient\bin\%SOLUTIONCONFIGURATION%\LmpCommon.dll"
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\LmpClient\bin\%SOLUTIONCONFIGURATION%\LmpUpdater.dll"
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\LmpClient\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.dll"
-
 xcopy /Y "%~dp0..\LmpClient\bin\%SOLUTIONCONFIGURATION%\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\LmpClient\bin\%SOLUTIONCONFIGURATION%\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
 
