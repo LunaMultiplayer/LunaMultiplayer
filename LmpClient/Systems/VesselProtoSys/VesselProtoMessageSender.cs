@@ -58,8 +58,9 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
             //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
-            //TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
-            PrepareAndSendProtoVessel(protoVessel);
+            //TODO: Check if this works fine with the new unity version as it used to crash....
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
+            //PrepareAndSendProtoVessel(protoVessel);
         }
 
         /// <summary>
