@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Harmony;
+using Harmony.ILCopying;
+using LmpClient.Base;
+using LmpClient.ModuleStore.Structures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
-using Harmony.ILCopying;
-using LmpClient.Base;
-using LmpClient.ModuleStore.Structures;
+using System.Threading.Tasks;
 
 namespace LmpClient.ModuleStore.Patching
 {
@@ -15,6 +16,9 @@ namespace LmpClient.ModuleStore.Patching
     /// </summary>
     public class PartModulePatcher
     {
+        public static bool Ready => _awakeTask.IsCompleted;
+        private static Task _awakeTask;
+
         /// <summary>
         /// Here we store the original method instructions in case we fuck things up
         /// </summary>
@@ -37,31 +41,38 @@ namespace LmpClient.ModuleStore.Patching
         /// </summary>
         public static void Awake()
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            if (_awakeTask != null) return;
+
+            _awakeTask = Task.Run(() =>
             {
-                try
+                Parallel.ForEach(AppDomain.CurrentDomain.GetAssemblies(), assembly =>
                 {
-                    var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
-                    foreach (var partModule in partModules)
+                    try
                     {
-                        try
+                        var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
+                        foreach (var partModule in partModules)
                         {
-                            if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out _customizationModule))
+                            try
                             {
-                                PatchFieldsAndMethods(partModule);
+                                if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out _customizationModule))
+                                {
+                                    PatchFieldsAndMethods(partModule);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LunaLog.LogError($"Exception patching module {partModule.Name} from assembly {assembly.GetName().Name}: {ex.Message}");
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            LunaLog.LogError($"Exception patching module {partModule.Name} from assembly {assembly.GetName().Name}: {ex.Message}");
-                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    LunaLog.LogError($"Exception loading assembly {assembly.GetName().Name}: {ex.Message}");
-                }
-            }
+                    catch (Exception ex)
+                    {
+                        LunaLog.LogError($"Exception loading assembly {assembly.GetName().Name}: {ex.Message}");
+                    }
+                });
+            });
+
+            _awakeTask.ConfigureAwait(false);
         }
 
         /// <summary>

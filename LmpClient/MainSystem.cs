@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using UnityEngine;
 
@@ -216,6 +217,9 @@ namespace LmpClient
             Singleton = this;
             DontDestroyOnLoad(this);
 
+            AppDomain.CurrentDomain.AssemblyResolve -= FixedResolveEventHandler;
+            AppDomain.CurrentDomain.AssemblyResolve += FixedResolveEventHandler;
+
             KspPath = UrlDir.ApplicationRootPath;
             UniqueIdentifier = SystemInfo.deviceUniqueIdentifier;
 
@@ -323,7 +327,19 @@ namespace LmpClient
 
         #region Private methods
 
-        private void StopGame()
+        /// <summary>
+        /// It seems that the default resolve handler in KSP is bugged as it can't find the "System.Xml" dll...
+        /// TODO: Check if this gets fixed in a future version
+        /// </summary>
+        private static Assembly FixedResolveEventHandler(object sender, ResolveEventArgs args)
+        {
+            if (args.Name.Contains("Luna") && args.Name.Contains("XmlSerializers"))
+                return Assembly.Load("System.Xml");
+
+            return Assembly.Load(new AssemblyName(args.Name));
+        }
+
+        private static void StopGame()
         {
             HighLogic.SaveFolder = "LunaMultiplayer";
 
@@ -353,6 +369,9 @@ namespace LmpClient
 
         private void StartGameNow()
         {
+            while (!PartModulePatcher.Ready)
+                Thread.Sleep(100);
+
             //Create new game object for our LMP session.
             HighLogic.CurrentGame = CreateBlankGame();
 

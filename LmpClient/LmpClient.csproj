@@ -47,8 +47,14 @@
       <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System">
+      <HintPath>..\External\KSPLibraries\System.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>..\External\KSPLibraries\System.Xml.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
       <Private>False</Private>
