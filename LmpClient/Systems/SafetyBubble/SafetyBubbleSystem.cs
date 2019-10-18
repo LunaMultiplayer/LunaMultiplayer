@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LmpClient.Systems.SafetyBubble
@@ -131,7 +131,7 @@ namespace LmpClient.Systems.SafetyBubble
         private static LineRenderer CreateLineRenderer(GameObject gameObj)
         {
             var lineRenderer = gameObj.AddComponent<LineRenderer>();
-            lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+            lineRenderer.material = new Material(Shader.Find("Legacy Shaders/Particles/Additive"));
             lineRenderer.startWidth = 0.3f;
             lineRenderer.endWidth = 0.3f;
             lineRenderer.startColor = Color.red;
