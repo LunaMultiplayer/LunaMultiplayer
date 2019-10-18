@@ -12,10 +12,10 @@ namespace LmpClient.Utilities
     {
         public static IEnumerator CheckForUpdates()
         {
-            using (var www = new UnityWebRequest(RepoConstants.ApiLatestGithubReleaseUrl))
+            using (var www = UnityWebRequest.Get(RepoConstants.ApiLatestGithubReleaseUrl))
             {
                 yield return www.SendWebRequest();
-                if (!www.isNetworkError)
+                if (!www.isNetworkError || !www.isHttpError)
                 {
                     if (!(Json.Deserialize(www.downloadHandler.text) is Dictionary<string, object> data))
                         yield break;
