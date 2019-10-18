@@ -1,4 +1,5 @@
 ﻿using CommNet;
+using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events.Base;
@@ -217,8 +218,7 @@ namespace LmpClient
             Singleton = this;
             DontDestroyOnLoad(this);
 
-            AppDomain.CurrentDomain.AssemblyResolve -= FixedResolveEventHandler;
-            AppDomain.CurrentDomain.AssemblyResolve += FixedResolveEventHandler;
+            FixBindingRedirects();
 
             KspPath = UrlDir.ApplicationRootPath;
             UniqueIdentifier = SystemInfo.deviceUniqueIdentifier;
@@ -326,18 +326,6 @@ namespace LmpClient
         #endregion
 
         #region Private methods
-
-        /// <summary>
-        /// It seems that the default resolve handler in KSP is bugged as it can't find the "System.Xml" dll...
-        /// TODO: Check if this gets fixed in a future version
-        /// </summary>
-        private static Assembly FixedResolveEventHandler(object sender, ResolveEventArgs args)
-        {
-            if (args.Name.Contains("Luna") && args.Name.Contains("XmlSerializers"))
-                return Assembly.Load("System.Xml");
-
-            return Assembly.Load(new AssemblyName(args.Name));
-        }
 
         private static void StopGame()
         {
@@ -573,6 +561,21 @@ namespace LmpClient
             HighLogic.SaveFolder = "LunaMultiplayer";
 
             return returnGame;
+        }
+
+        /// <summary>
+        /// It seems that the default resolve handler in KSP is bugged as it can't find the "System.Xml" dll...
+        /// TODO: Check if this gets fixed in a future version
+        /// </summary>
+        private static void FixBindingRedirects()
+        {
+            var bindingRedirects = (Dictionary<string, Assembly>)typeof(AssemblyLoader).GetField("bindingRedirect", AccessTools.all)?.GetValue(null);
+            if (bindingRedirects != null)
+            {
+                bindingRedirects.Add("LmpCommon, Culture = neutral, PublicKeyToken = null", Assembly.Load("LmpCommon"));
+                bindingRedirects.Add("LmpClient.XmlSerializers, Culture=neutral, PublicKeyToken=null", Assembly.Load("System.Xml"));
+                bindingRedirects.Add("LmpCommon.XmlSerializers, Culture=neutral, PublicKeyToken=null", Assembly.Load("System.Xml"));
+            }
         }
 
         #endregion
