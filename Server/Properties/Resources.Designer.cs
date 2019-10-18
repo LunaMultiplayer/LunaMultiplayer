@@ -176,7 +176,47 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to name = DeployedScience
-        ///scene = 7, 8, 5, 6.
+        ///scene = 7, 8, 5, 6
+        ///ScienceTimeDelay = 60
+        ///DataSendFailedTimeDelay = 600
+        ///SCIENCECLUSTERS
+        ///{
+        ///}
+        ///DIMINISHINGRETURNS
+        ///{
+        ///	ENTRY
+        ///	{
+        ///		ExpCount = 1
+        ///		Rate = 1
+        ///	}
+        ///	ENTRY
+        ///	{
+        ///		ExpCount = 2
+        ///		Rate = 0.200000003
+        ///	}
+        ///	ENTRY
+        ///	{
+        ///		ExpCount = 3
+        ///		Rate = 0.349999994
+        ///	}
+        ///	ENTRY
+        ///	{
+        ///		ExpCount = 4
+        ///		Rate = 0.449999988
+        ///	}
+        ///	ENTRY
+        ///	{
+        ///		ExpCount = 5
+        ///		Rate = 0.5
+        ///	}
+        ///}
+        ///SEISMICENERGY
+        ///{
+        ///	MinimumEnergyRequired = 3000
+        ///	SeismicScienceProcessingDelay = 3
+        ///	ENTRY
+        ///	{
+        ///		BodyName = Moh [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DeployedScience {
             get {
@@ -300,6 +340,7 @@ namespace Server.Properties {
         ///RESOURCE_SETTINGS
         ///{
         ///	GameSeed = 162051528
+        ///    ROCMissionSeed = 1675489568
         ///	MaxDeltaTime = 21600
         ///}.
         /// </summary>

@@ -1,41 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using LmpClient.Windows.Update;
+﻿using LmpClient.Windows.Update;
 using LmpCommon;
 using LmpGlobal;
-using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.Networking;
 
 namespace LmpClient.Utilities
 {
     public static class UpdateHandler
     {
-        private static readonly WaitForSeconds Wait = new WaitForSeconds(0.1f);
-
         public static IEnumerator CheckForUpdates()
         {
-            using (var www = new WWW(RepoConstants.ApiLatestGithubReleaseUrl))
+            using (var www = new UnityWebRequest(RepoConstants.ApiLatestGithubReleaseUrl))
             {
-                while (!www.isDone)
+                yield return www.SendWebRequest();
+                if (!www.isNetworkError)
                 {
-                    yield return Wait;
-                }
-                if (www.error == null)
-                {
-                    if (!(Json.Deserialize(www.text) is Dictionary<string, object> data))
+                    if (!(Json.Deserialize(www.downloadHandler.text) is Dictionary<string, object> data))
                         yield break;
 
                     var latestVersion = new Version(data["tag_name"].ToString());
                     LunaLog.Log($"Latest version: {latestVersion}");
                     if (latestVersion > LmpVersioning.CurrentVersion)
                     {
-                        using (var www2 = new WWW(data["url"].ToString()))
+                        using (var www2 = new UnityWebRequest(data["url"].ToString()))
                         {
-                            while (!www2.isDone)
-                            {
-                                yield return Wait;
-                            }
-                            if (www2.error == null)
+                            yield return www2.SendWebRequest();
+                            if (!www2.isNetworkError)
                             {
                                 var changelog = data["body"].ToString();
                                 UpdateWindow.LatestVersion = latestVersion;
