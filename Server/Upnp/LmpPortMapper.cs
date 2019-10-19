@@ -1,4 +1,5 @@
-﻿using Open.Nat;
+﻿using Microsoft.VisualStudio.Threading;
+using Open.Nat;
 using Server.Context;
 using Server.Events;
 using Server.Log;
@@ -13,7 +14,7 @@ namespace Server.Upnp
     public static class LmpPortMapper
     {
         private static readonly int LifetimeInSeconds = (int)TimeSpan.FromMinutes(5).TotalSeconds;
-        private static readonly Lazy<NatDevice> Device = new Lazy<NatDevice>(DiscoverDevice);
+        private static readonly AsyncLazy<NatDevice> Device = new AsyncLazy<NatDevice>(DiscoverDevice);
 
         private static Mapping LmpPortMapping => new Mapping(Protocol.Udp, ConnectionSettings.SettingsStore.Port, ConnectionSettings.SettingsStore.Port,
             LifetimeInSeconds, $"LMPServer {ConnectionSettings.SettingsStore.Port}");
@@ -21,10 +22,10 @@ namespace Server.Upnp
         private static Mapping LmpWebPortMapping => new Mapping(Protocol.Tcp, WebsiteSettings.SettingsStore.Port, WebsiteSettings.SettingsStore.Port,
             LifetimeInSeconds, $"LMPServerWeb {WebsiteSettings.SettingsStore.Port}");
 
-        private static NatDevice DiscoverDevice()
+        private static async Task<NatDevice> DiscoverDevice()
         {
             var nat = new NatDiscoverer();
-            return nat.DiscoverDeviceAsync(PortMapper.Upnp, new CancellationTokenSource(ConnectionSettings.SettingsStore.UpnpMsTimeout)).Result;
+            return await nat.DiscoverDeviceAsync(PortMapper.Upnp, new CancellationTokenSource(ConnectionSettings.SettingsStore.UpnpMsTimeout));
         }
 
         static LmpPortMapper() => ExitEvent.ServerClosing += () =>
@@ -42,7 +43,8 @@ namespace Server.Upnp
             {
                 try
                 {
-                    await Device.Value.CreatePortMapAsync(LmpPortMapping);
+                    var device = await Device.GetValueAsync();
+                    await device.CreatePortMapAsync(LmpPortMapping);
                     if (verbose) LunaLog.Debug($"UPnP active. Port: {ConnectionSettings.SettingsStore.Port} {LmpPortMapping.Protocol} opened!");
                 }
                 catch (Exception)
@@ -61,7 +63,8 @@ namespace Server.Upnp
             {
                 try
                 {
-                    await Device.Value.CreatePortMapAsync(LmpWebPortMapping);
+                    var device = await Device.GetValueAsync();
+                    await device.CreatePortMapAsync(LmpWebPortMapping);
                     if (verbose) LunaLog.Debug($"UPnP + Website active. Port: {WebsiteSettings.SettingsStore.Port} {LmpWebPortMapping.Protocol} opened!");
                 }
                 catch (Exception)
@@ -96,7 +99,8 @@ namespace Server.Upnp
             {
                 try
                 {
-                    await Device.Value.DeletePortMapAsync(LmpPortMapping);
+                    var device = await Device.GetValueAsync();
+                    await device.DeletePortMapAsync(LmpPortMapping);
                     LunaLog.Debug($"UPnP active. Port: {ConnectionSettings.SettingsStore.Port} {LmpPortMapping.Protocol} closed!");
                 }
                 catch (Exception)
@@ -115,7 +119,8 @@ namespace Server.Upnp
             {
                 try
                 {
-                    await Device.Value.DeletePortMapAsync(LmpWebPortMapping);
+                    var device = await Device.GetValueAsync();
+                    await device.DeletePortMapAsync(LmpWebPortMapping);
                     LunaLog.Debug($"UPnP + Website active. Port: {WebsiteSettings.SettingsStore.Port} {LmpWebPortMapping.Protocol} closed!");
                 }
                 catch (Exception)
@@ -130,7 +135,8 @@ namespace Server.Upnp
         /// </summary>
         public static async Task<IPAddress> GetExternalIp()
         {
-            return await Device.Value.GetExternalIPAsync();
+            var device = await Device.GetValueAsync();
+            return await device.GetExternalIPAsync();
         }
     }
 }

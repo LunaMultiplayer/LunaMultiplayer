@@ -82,7 +82,7 @@ namespace LmpMasterServer.Structure
 
         private void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 if (_refreshingCountryCode) return;
 
@@ -99,9 +99,9 @@ namespace LmpMasterServer.Structure
                     }
                     else
                     {
-                        server.Country = IpApi.GetCountry(externalEndpoint);
+                        server.Country = await IpApi.GetCountry(externalEndpoint);
                         if (string.IsNullOrEmpty(server.Country))
-                            server.Country = IpLocate.GetCountry(externalEndpoint);
+                            server.Country = await IpLocate.GetCountry(externalEndpoint);
 
                         if (!string.IsNullOrEmpty(server.Country))
                             EndpointCountries.TryAdd(externalEndpoint, server.Country);

@@ -49,7 +49,7 @@ namespace LmpMasterServer
 
             if (!ParseMasterServerPortNumber(commandLineArguments)) return;
             if (!ParseHttpServerPort(commandLineArguments)) return;
-            MasterServerPortMapper.OpenPort().Wait();
+            MasterServerPortMapper.OpenPort().GetAwaiter().GetResult();
 
             LunaLog.Normal($"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
             if (IsNightly)
