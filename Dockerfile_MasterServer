@@ -2,7 +2,7 @@
 #Delete the image with the command: docker image rm lmpms:latest
 
 #Create a container with: docker run -d -p 8700:8700 -p 8701:8701 --name lmpms lmpms:latest
-#Create a container with with specific ports: docker run -d -p 8700:8700 -p 8701:8701 -e PORT=80 -e HTTP_PORT=80 --name lmpms lmpms:latest
+#Create a container with with specific ports: docker run -d -p 8700:8700 -p 8701:8701 -e PORT=8700 -e HTTP_PORT=8701 --name lmpms lmpms:latest
 #Attach to a container with: docker exec -it lmpms /bin/ash
 #When inside a container, you can dettach with: CONTROL+P+Q
 #Check logs with: docker logs -f lmpms
@@ -18,8 +18,4 @@ ENV LMP_URL https://luna-masterserver-endpoint.glitch.me/latest
 ENV PORT 8700
 ENV HTTP_PORT 8701
 	
-RUN wget $LMP_URL && unzip latest
-
-WORKDIR LMPMasterServer
-
-CMD mono MasterServer.exe -p $PORT -g $HTTP_PORT
+CMD wget $LMP_URL && unzip latest && cd LMPMasterServer && mono MasterServer.exe -p $PORT -g $HTTP_PORT
