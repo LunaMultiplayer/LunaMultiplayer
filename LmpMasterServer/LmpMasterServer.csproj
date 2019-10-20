@@ -117,7 +117,6 @@
     <Content Include="Http\Web\jquery.tablesorter.min.js" />
     <Content Include="Http\Web\lmp.js" />
     <Content Include="Http\Web\style.css" />
-    <Content Include="Web\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
