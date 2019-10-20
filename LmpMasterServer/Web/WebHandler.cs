@@ -27,8 +27,9 @@ namespace LmpMasterServer.Web
             if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "favicon.ico")))
             {
                 using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "favicon.ico"), FileMode.Create))
+                using (var iconStream = new MemoryStream(Resources.favicon))
                 {
-                    Resources.favicon.Save(stream);
+                    iconStream.CopyTo(stream);
                 }
             }
         }

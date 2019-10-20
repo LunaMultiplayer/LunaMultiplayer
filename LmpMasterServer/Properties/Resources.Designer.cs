@@ -71,12 +71,12 @@ namespace LmpMasterServer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static System.Drawing.Icon favicon {
+        internal static byte[] favicon {
             get {
                 object obj = ResourceManager.GetObject("favicon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((byte[])(obj));
             }
         }
         
