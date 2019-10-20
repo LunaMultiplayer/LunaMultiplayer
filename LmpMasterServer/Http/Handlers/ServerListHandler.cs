@@ -14,34 +14,36 @@ namespace LmpMasterServer.Http.Handlers
 {
     public class ServerListHandler : IHttpRequestHandler
     {
-        public Task Handle(IHttpContext context, Func<Task> next)
+        public async Task Handle(IHttpContext context, Func<Task> next)
         {
-            context.Response = new HttpResponse(HttpResponseCode.Ok, GetServerList(), false);
-            return Task.Factory.GetCompleted();
+            context.Response = new HttpResponse(HttpResponseCode.Ok, await GetServerList(), false);
         }
 
-        private static string GetServerList()
+        private static Task<string> GetServerList()
         {
-            var servers = Lidgren.MasterServer.ServerDictionary.Values.Select(s => (ServerInfo)s).ToArray();
-
-            using (var stringWriter = new StringWriter())
-            using (var writer = new HtmlTextWriter(stringWriter))
+            return Task.Run(() =>
             {
-                RenderHead(writer);
+                var servers = Lidgren.MasterServer.ServerDictionary.Values.Select(s => (ServerInfo)s).ToArray();
 
-                writer.RenderBeginTag(HtmlTextWriterTag.H1); writer.Write($"Luna Multiplayer servers - Version: {LmpVersioning.CurrentVersion}"); writer.RenderEndTag();
+                using (var stringWriter = new StringWriter())
+                using (var writer = new HtmlTextWriter(stringWriter))
+                {
+                    RenderHead(writer);
 
-                writer.RenderBeginTag(HtmlTextWriterTag.H3);
-                writer.Write($"Servers: {servers.Length}");
-                writer.WriteBreak();
-                writer.Write($"Players: {servers.Sum(s => s.PlayerCount)}");
-                writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.H1); writer.Write($"Luna Multiplayer servers - Version: {LmpVersioning.CurrentVersion}"); writer.RenderEndTag();
 
-                RenderServersTable(writer, servers);
-                RenderFooter(writer);
+                    writer.RenderBeginTag(HtmlTextWriterTag.H3);
+                    writer.Write($"Servers: {servers.Length}");
+                    writer.WriteBreak();
+                    writer.Write($"Players: {servers.Sum(s => s.PlayerCount)}");
+                    writer.RenderEndTag();
 
-                return stringWriter.ToString();
-            }
+                    RenderServersTable(writer, servers);
+                    RenderFooter(writer);
+
+                    return stringWriter.ToString();
+                }
+            });
         }
 
         private static void RenderHead(HtmlTextWriter writer)
