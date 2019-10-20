@@ -1,11 +1,12 @@
-﻿using System;
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Network;
 using LmpClient.Systems.TimeSync;
+using LmpClient.Systems.VesselProtoSys;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
+using System;
 using UniLinq;
 
 namespace LmpClient.Systems.VesselSyncSys
@@ -22,7 +23,12 @@ namespace LmpClient.Systems.VesselSyncSys
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselSyncMsgData>();
             msgData.GameTime = TimeSyncSystem.UniversalTime;
 
-            var vesselIds = FlightGlobals.Vessels.Where(v => v != null).Select(v => v.id).ToArray();
+            var vesselIds = FlightGlobals.Vessels.Where(v => v != null)
+                .Select(v => v.id)
+                .Union(VesselProtoSystem.Singleton.VesselsUnableToLoad)
+                .Distinct()
+                .ToArray();
+
             msgData.VesselsCount = vesselIds.Length;
 
             //Always clear the array just for safety...
