@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Threading;
 using Open.Nat;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace LmpMasterServer.Upnp
             return await nat.DiscoverDeviceAsync(PortMapper.Upnp, new CancellationTokenSource(5000));
         }
 
+        [DebuggerHidden]
         public static async Task OpenPort()
         {
             if (UseUpnp)
@@ -40,6 +42,7 @@ namespace LmpMasterServer.Upnp
             }
         }
 
+        [DebuggerHidden]
         public static async Task RemoveOpenedPorts()
         {
             if (UseUpnp)

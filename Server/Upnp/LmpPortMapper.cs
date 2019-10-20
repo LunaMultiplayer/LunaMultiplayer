@@ -5,6 +5,7 @@ using Server.Events;
 using Server.Log;
 using Server.Settings.Structures;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace Server.Upnp
         /// <summary>
         /// Opens the port set in the settings using UPnP. With a lifetime of <see cref="LifetimeInSeconds"/> seconds
         /// </summary>
+        [DebuggerHidden]
         public static async Task OpenLmpPort(bool verbose = true)
         {
             if (ConnectionSettings.SettingsStore.Upnp)
@@ -57,6 +59,7 @@ namespace Server.Upnp
         /// <summary>
         /// Opens the website port set in the settings using UPnP. With a lifetime of <see cref="LifetimeInSeconds"/> seconds
         /// </summary>
+        [DebuggerHidden]
         public static async Task OpenWebPort(bool verbose = true)
         {
             if (ConnectionSettings.SettingsStore.Upnp && WebsiteSettings.SettingsStore.EnableWebsite)
@@ -93,6 +96,7 @@ namespace Server.Upnp
         /// <summary>
         /// Closes the opened port using UPnP
         /// </summary>
+        [DebuggerHidden]
         public static async Task CloseLmpPort()
         {
             if (ConnectionSettings.SettingsStore.Upnp && ServerContext.ServerRunning)
@@ -113,6 +117,7 @@ namespace Server.Upnp
         /// <summary>
         /// Closes the opened web port using UPnP
         /// </summary>
+        [DebuggerHidden]
         public static async Task CloseWebPort()
         {
             if (ConnectionSettings.SettingsStore.Upnp && WebsiteSettings.SettingsStore.EnableWebsite && ServerContext.ServerRunning)
