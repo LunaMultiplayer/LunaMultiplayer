@@ -1,0 +1,29 @@
+#Build this image with: docker build --file Dockerfile_MasterServer -t lmpsrv:latest .
+#Delete the image with the command: docker image rm lmpsrv:latest
+
+#Create a container with: docker run -d -p 8800:8800 -p 8900:8900 --name lmpsrv lmpsrv:latest
+#Attach to a container with: docker exec -it lmpsrv /bin/ash
+#When inside a container, you can dettach with: CONTROL+P+Q
+#Check logs with: docker logs -f lmpsrv
+
+#Stop a container with: docker stop lmpsrv
+#Start a container with: docker start lmpsrv
+#Remove a container with: docker container rm lmpsrv
+
+FROM alpine:3.9
+
+ENV LMP_URL https://luna-endpoint.glitch.me/latest
+
+RUN apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing && \
+    wget $LMP_URL && \
+    unzip latest && \
+    rm -rf latest LMPClient LMP\ Readme.txt
+
+WORKDIR LMPServer
+
+EXPOSE 8800/udp
+EXPOSE 8900/tcp
+
+VOLUME ["Universe", "Config", "Plugins"]
+
+CMD ["mono", "Server.exe"]
