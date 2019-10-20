@@ -137,7 +137,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         if (protoVessel == null || protoVessel.HasInvalidParts(!VesselsUnableToLoad.Contains(vesselProto.VesselId)))
                         {
                             VesselsUnableToLoad.Add(vesselProto.VesselId);
-                            return;
+                            continue;
                         }
 
                         VesselsUnableToLoad.Remove(vesselProto.VesselId);
