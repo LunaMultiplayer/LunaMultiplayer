@@ -1,27 +1,25 @@
-#Build this image with: docker build --file Dockerfile_MasterServer -t lmpmstsrv:latest .
-#Delete the image with the command: docker image rm lmpmstsrv:latest
+#Build this image with: docker build --file Dockerfile_MasterServer -t lmpms:latest .
+#Delete the image with the command: docker image rm lmpms:latest
 
-#Create a container with: docker run -d -p 8700:8700 -p 8701:8701 --name lmpmstsrv lmpmstsrv:latest
-#Attach to a container with: docker exec -it lmpmstsrv /bin/ash
+#Create a container with: docker run -d -p 8700:8700 -p 8701:8701 --name lmpms lmpms:latest
+#Create a container with with specific ports: docker run -d -p 8700:8700 -p 8701:8701 -e PORT=80 -e HTTP_PORT=80 --name lmpms lmpms:latest
+#Attach to a container with: docker exec -it lmpms /bin/ash
 #When inside a container, you can dettach with: CONTROL+P+Q
-#Check logs with: docker logs -f lmpmstsrv
+#Check logs with: docker logs -f lmpms
 
-#Stop a container with: docker stop lmpmstsrv
-#Start a container with: docker start lmpmstsrv
-#Remove a container with: docker container rm lmpmstsrv
+#Stop a container with: docker stop lmpms
+#Start a container with: docker start lmpms
+#Remove a container with: docker container rm lmpms
 
 FROM alpine:3.9
+RUN apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 
 ENV LMP_URL https://luna-masterserver-endpoint.glitch.me/latest
-
-RUN apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing && \
-    wget $LMP_URL && \
-    unzip latest && \
-    rm -rf latest LMPClient LMP\ Readme.txt
+ENV PORT 8700
+ENV HTTP_PORT 8701
+	
+RUN wget $LMP_URL && unzip latest
 
 WORKDIR LMPMasterServer
 
-EXPOSE 8700/udp
-EXPOSE 8701/tcp
-
-CMD ["mono", "MasterServer.exe"]
+CMD mono MasterServer.exe -p $PORT -g $HTTP_PORT
