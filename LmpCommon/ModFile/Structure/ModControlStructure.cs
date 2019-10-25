@@ -529,6 +529,12 @@ namespace LmpCommon.ModFile.Structure
                 "mGripPad",
                 "sGripPad",
                 "sGripStrip",
+                "Thoroughbred",
+                "Clydesdale",
+                "Shrimp",
+                "Mite",
+                "ServiceBay.125.v2",
+                "ServiceBay.250.v2"
             };
         }
     }
