@@ -5,8 +5,6 @@
 #Vega Career + Sandbox
 148.251.92.44:8801
 148.251.92.44:8800
-#NoNameShips
-nonameships.pw:8800
 #Pictocube
 #lmpgermany.pictocube.fr:8800
 #lmpgermany.pictocube.fr:8801
@@ -21,18 +19,18 @@ chengdu.211.network:8800
 beijing.211.network:8800
 qingdao.211.network:8800
 #SLUGSoc.co.uk
-143.167.132.10:27028
+#143.167.132.10:27028
 #Tayaut Engineering
-kerbal.tayaut.net:8800
+#kerbal.tayaut.net:8800
 #WhiteShield-Gaming
-vps8.wsg.ovh:8800
-103.214.110.138:6712
+#vps8.wsg.ovh:8800
+#103.214.110.138:6712
 #Wicloz
-ksp.wilcodeboer.me:8800
-ksp.wdboer.nl:8800
+#ksp.wilcodeboer.me:8800
+#ksp.wdboer.nl:8800
 #Road Dogs Space Agency
-13.82.219.250:8800
+#13.82.219.250:8800
 #Memium | Hosted by holzlatten-Gaming
-5trubel.de:8800
-holzlatten-gaming.de:8800
-213.109.163.13:8800
+#5trubel.de:8800
+#holzlatten-gaming.de:8800
+#213.109.163.13:8800
