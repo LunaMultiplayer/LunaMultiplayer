@@ -3,6 +3,6 @@
 <ServerListFiltersText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <HideFullServers>Cacher les serveurs pleins</HideFullServers>
   <HideEmptyServers>Cacher les serveurs vides</HideEmptyServers>
-  <HidePrivateServers>Cacher les serveurs Privés</HidePrivateServers>
+  <HidePrivateServers>Cacher les serveurs privés</HidePrivateServers>
   <DedicatedServersOnly>Afficher seulement les serveurs dédiés</DedicatedServersOnly>
 </ServerListFiltersText>
