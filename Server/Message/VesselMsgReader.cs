@@ -129,7 +129,10 @@ namespace Server.Message
             var msgData = (VesselSyncMsgData)message;
 
             var allVessels = VesselStoreSystem.CurrentVessels.Keys.ToList();
-            allVessels.RemoveRange(0, msgData.VesselsCount);
+            if (msgData.VesselsCount > 0)
+            {
+                allVessels.RemoveRange(0, msgData.VesselsCount - 1);
+            }
 
             var vesselsToSend = allVessels;
             foreach (var vesselId in vesselsToSend)
