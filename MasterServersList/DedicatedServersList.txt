@@ -33,4 +33,4 @@ qingdao.211.network:8800
 #Memium | Hosted by holzlatten-Gaming
 #5trubel.de:8800
 #holzlatten-gaming.de:8800
-#213.109.163.13:8800
+213.109.163.13:8800
