@@ -71,9 +71,10 @@ There's also a test project in case you want to add tests to your code.
 
 You can check [how many servers are up](../../wiki/Master-server-status) and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions through our [master servers](../../wiki/Master-server)
 
+<!--[Dagger](https://github.com/gavazquez) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8701.svg?label=status)](http://servers.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8751.svg?label=status)](http://servers.lunamultiplayer.com:8751) |--->
+
 | Master server | Release | Nightly |
 | ------------  | ------- |-------- |
-[Dagger](https://github.com/gavazquez) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8701.svg?label=status)](http://servers.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8751.svg?label=status)](http://servers.lunamultiplayer.com:8751) |
 [PictoCube](https://github.com/Alfred-PictoCube) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/pictocube.ddns.net:8701.svg?label=status)](http://pictocube.ddns.net:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/pictocube.ddns.net:8711.svg?label=status)](http://pictocube.ddns.net:8711) |
 Tekbot | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/tekbot.lunamultiplayer.com:8701.svg?label=status)](http://tekbot.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/tekbot.lunamultiplayer.com:8751.svg?label=status)](http://tekbot.lunamultiplayer.com:8751) |
 Angryjoshi | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8701.svg?label=status)](http://lmp.anschuetznet.de:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8751.svg?label=status)](http://lmp.anschuetznet.de:8751) |
