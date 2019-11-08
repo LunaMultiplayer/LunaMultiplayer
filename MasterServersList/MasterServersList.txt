@@ -4,10 +4,10 @@
 #servers.lunamultiplayer.com:8700
 #Dagger nightly. List: http://servers.lunamultiplayer.com:8751
 #servers.lunamultiplayer.com:8750
-#PictoCube (Alfred). List: http://pictocube.ddns.net:8701
-pictocube.ddns.net:8700
-#PictoCube (Alfred) nightly. List: http://pictocube.ddns.net:8711
-pictocube.ddns.net:8710
+#PictoCube (Alfred). List: masterserver.pictocube.fr:8701
+masterserver.pictocube.fr:8700
+#PictoCube (Alfred) nightly. List: masterserver.pictocube.fr:8711
+masterserver.pictocube.fr:8710
 #Tekbot. List: http://212.48.114.221:8701/
 212.48.114.221:8701
 #Tekbot Nightly. List: http://212.48.114.221:8751/
