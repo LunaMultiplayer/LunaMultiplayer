@@ -28,7 +28,7 @@ namespace LmpCommon.RepoRetrievers
                 }
                 else if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
                 {
-                    Task.Run(() => RefreshMasterServersList());
+                    Task.Run(RefreshMasterServersList);
                     _lastRequestTime = LunaComputerTime.UtcNow;
                 }
 

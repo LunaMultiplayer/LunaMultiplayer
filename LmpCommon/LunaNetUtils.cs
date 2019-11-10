@@ -99,7 +99,10 @@ namespace LmpCommon
                     return new IPEndPoint(ip, int.Parse(endpoint.Split(':')[1].Trim()));
                 }
 
-                return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0].Trim())[0], int.Parse(endpoint.Split(':')[1].Trim()));
+                var dnsIp = Dns.GetHostAddresses(endpoint.Split(':')[0].Trim());
+                var port = int.Parse(endpoint.Split(':')[1].Trim());
+                var ipv4Address = dnsIp.FirstOrDefault(d => d.AddressFamily == AddressFamily.InterNetwork);
+                return ipv4Address != null ? new IPEndPoint(ipv4Address, port) : null;
             }
             catch (Exception)
             {
