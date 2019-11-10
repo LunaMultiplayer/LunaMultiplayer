@@ -1,17 +1,17 @@
 #Here you specify the ips or hostnames of all the master servers followed by ":" and the port. 
 #Then each client will query them for the servers and each server will register against them
 #Dagger. List: http://servers.lunamultiplayer.com:8701
-servers.lunamultiplayer.com:8700
+#servers.lunamultiplayer.com:8700
 #Dagger nightly. List: http://servers.lunamultiplayer.com:8751
-servers.lunamultiplayer.com:8750
-#PictoCube (Alfred). List: http://pictocube.ddns.net:8701
-pictocube.ddns.net:8700
-#PictoCube (Alfred) nightly. List: http://pictocube.ddns.net:8711
-pictocube.ddns.net:8710
-#Tekbot. List: http://tekbot.lunamultiplayer.com:8701/
-tekbot.lunamultiplayer.com:8701
-#Tekbot Nightly. List: http://tekbot.lunamultiplayer.com:8751/
-tekbot.lunamultiplayer.com:8751
+#servers.lunamultiplayer.com:8750
+#PictoCube (Alfred). List: masterserver.pictocube.fr:8701
+masterserver.pictocube.fr:8700
+#PictoCube (Alfred) nightly. List: masterserver.pictocube.fr:8711
+masterserver.pictocube.fr:8710
+#Tekbot. List: http://212.48.114.221:8701/
+212.48.114.221:8701
+#Tekbot Nightly. List: http://212.48.114.221:8751/
+212.48.114.221:8751
 #Angryjoshi. List: http://lmp.anschuetznet.de:8701/
 lmp.anschuetznet.de:8700
 #Angryjoshi Nightly. List: http://lmp.anschuetznet.de:8751/
