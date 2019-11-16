@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using KSP.UI.Screens;
 using LmpClient.Base;
+using LmpClient.Systems.VesselUpdateSys;
 using LmpCommon.Locks;
 using System.Reflection;
 using UnityEngine;
@@ -50,6 +51,20 @@ namespace LmpClient.Systems.KscScene
         {
             System.RefreshTrackingStationVessels();
             RefreshMarkers();
+        }
+
+        public void OnVesselRename(GameEvents.HostedFromToAction<Vessel, string> pair)
+        {
+            /**
+             * Use this only in GameScenes.TRACKSTATION, because in FLIGHT working VesselUpdateSystem
+             */
+            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+            {
+                pair.host.name = pair.to;
+
+                var vesselUpdateMessageSender = new VesselUpdateMessageSender();
+                vesselUpdateMessageSender.SendVesselUpdate(pair.host);
+            }
         }
 
         public void VesselInitialized(Vessel vessel, bool fromShipAssembly)
