@@ -164,6 +164,7 @@
     <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
     <Compile Include="Settings\Structures\CraftSettings.cs" />
     <Compile Include="Settings\Structures\MasterServerSettings.cs" />
+    <Compile Include="System\GcSystem.cs" />
     <Compile Include="System\Scenario\ScenarioExperimentalPartDataUpdater.cs" />
     <Compile Include="System\ShareExperimentalPartSystem.cs" />
     <Compile Include="System\Vessel\Classes\Part.cs" />
