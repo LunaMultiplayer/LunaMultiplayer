@@ -39,6 +39,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Debug\Lidgren.Network.XML</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>
@@ -50,6 +51,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
