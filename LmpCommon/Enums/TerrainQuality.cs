@@ -4,6 +4,7 @@
     {
         Low = 0,
         Default = 1,
-        High = 2
+        High = 2,
+        Ignore = 3
     }
 }

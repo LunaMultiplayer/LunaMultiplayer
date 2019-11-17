@@ -69,7 +69,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "How many untracked asteroids to spawn into the universe. 0 = Disabled")]
         public int NumberOfAsteroids { get; set; } = 10;
 
-        [XmlComment(Value = "Terrain quality. All clients will need to have this setting in their KSP to avoid terrain differences. Values: Low, Default, High")]
+        [XmlComment(Value = "Terrain quality. All clients will need to have this setting in their KSP to avoid terrain differences. Values: Low, Default, High, Ignore. Using 'Ignore' might create bugs")]
         public TerrainQuality TerrainQuality { get; set; } = TerrainQuality.High;
 
         [XmlComment(Value = "Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]

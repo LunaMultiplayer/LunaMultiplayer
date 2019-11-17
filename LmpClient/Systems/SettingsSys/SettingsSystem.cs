@@ -32,7 +32,7 @@ namespace LmpClient.Systems.SettingsSys
             Builder.Length = 0;
             var validationResult = true;
 
-            if ((int)ServerSettings.TerrainQuality != PQSCache.PresetList.presetIndex)
+            if (ServerSettings.TerrainQuality != TerrainQuality.Ignore && (int)ServerSettings.TerrainQuality != PQSCache.PresetList.presetIndex)
             {
                 validationResult = false;
                 Builder.Append($"Your terrain quality: {(TerrainQuality)PQSCache.PresetList.presetIndex} does not match the server quality: {ServerSettings.TerrainQuality}.");
