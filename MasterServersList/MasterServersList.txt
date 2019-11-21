@@ -12,7 +12,7 @@ masterserver.pictocube.fr:8710
 212.48.114.221:8701
 #Tekbot Nightly. List: http://212.48.114.221:8751/
 212.48.114.221:8751
-#Angryjoshi. List: http://lmp.anschuetznet.de:8701/
+#Angryjoshi. List: https://lmp.anschuetznet.de/
 lmp.anschuetznet.de:8700
-#Angryjoshi Nightly. List: http://lmp.anschuetznet.de:8751/
+#Angryjoshi Nightly. List: https://lmp.anschuetznet.de/nightly/
 lmp.anschuetznet.de:8750
