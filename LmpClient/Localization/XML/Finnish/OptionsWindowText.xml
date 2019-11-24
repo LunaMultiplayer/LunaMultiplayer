@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Asetukset</Title>
+  <Language>Kieli:</Language>
+  <Color>Pelaajaväri:</Color>
+  <Red>R:</Red>
+  <Green>G:</Green>
+  <Blue>B:</Blue>
+  <Random>Satunnainen</Random>
+  <Set>Aseta</Set>
+  <InterpolationSettings>Interpolointiasetukset</InterpolationSettings>
+  <EnableInterpolation>Kytke interpolointi päälle</EnableInterpolation>
+  <InterpolationOffset>Interpoloinnin offset:</InterpolationOffset>
+  <GenerateLmpModControl>Luo LMPModControl.xml (Modatuille palvelimille.)</GenerateLmpModControl>
+  <GenerateUniverse>Luo universumi tallennetusta pelistä</GenerateUniverse>
+  <NetworkSettings>Nettiasetukset</NetworkSettings>
+  <CannotChangeWhileConnected>Ei pysty muuttamaan yhdistettynä palvelimelle.</CannotChangeWhileConnected>
+  <ResetNetwork>Palauta netti</ResetNetwork>
+  <Mtu>MTU (Default: 1408):</Mtu>
+  <AutoExpandMtu>MTU:n automaattinen laajentaminen</AutoExpandMtu>
+  <ConnectionTimeout>Yhteyden aikakatkaisu (Oletus: 15):</ConnectionTimeout>
+  <GeneralSettings>Yleiset asetukset</GeneralSettings>
+  <IgnoreSyncChecks>Jätä aikamatkustussynkronointi pois käytöstä</IgnoreSyncChecks>
+</OptionsWindowText>

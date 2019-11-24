@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<ServerListFiltersText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <HideFullServers>Piilota täydet palvelimet</HideFullServers>
+  <HideEmptyServers>Piilota tyhjät palvelimet</HideEmptyServers>
+  <HidePrivateServers>Piilota yksityiset palvelimet</HidePrivateServers>
+  <DedicatedServersOnly>Näytä vain omistautuneet palvelimet</DedicatedServersOnly>
+</ServerListFiltersText>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<InstallDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Väärä Asennus Havaittu</Title>
+  <IncorrectInstall>LunaMultiplayer on asennettu väärällä tavalla.</IncorrectInstall>
+  <CurrentLoc>Nykyinen sijainti:</CurrentLoc>
+  <CorrectLoc>Oikea sijainti:</CorrectLoc>
+</InstallDialogText>

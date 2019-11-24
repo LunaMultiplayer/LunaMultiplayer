@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Text>
+Luna Multi Player (LMP) jakaa seuraavat tunnistettavat tiedot pääpalvelimen ja minkä tahansa palvelimen kanssa johon yhdistät.
+a) Pelaajanimesi, jolla yhdistät.
+b) Sinun pelaajatunnuksesi (Satunnaisesti luotu teksti, jonka avulla sinut voidaan todentaa. Tämä EI ole pelaajanimesi.).
+c) IP-osoitteesi kirjataan palvelimen konsoliin.
+
+LMP EI yhdistä muuhun tietokoneeseen kuin palvelimeen johon olet yhdistämässä ja pääpalvelimeen.
+Käyttääksesi LMP-modia, sinun pitää hyväksyä nämä ehdot.
+
+Lisätietoa saatavilla - lue KSP:n lisäosasäännöt
+    </Text>
+  <Title>LunaMultiplayer - Huomautus</Title>
+  <Accept>Hyväksy</Accept>
+  <Decline>Hylkää</Decline>
+</DisclaimerDialogText>
