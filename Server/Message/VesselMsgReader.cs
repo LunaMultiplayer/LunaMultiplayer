@@ -129,10 +129,10 @@ namespace Server.Message
             var msgData = (VesselSyncMsgData)message;
 
             var allVessels = VesselStoreSystem.CurrentVessels.Keys.ToList();
-            if (msgData.VesselsCount > 0)
-            {
-                allVessels.RemoveRange(0, msgData.VesselsCount - 1);
-            }
+
+            //Here we only remove the vessels that the client ALREADY HAVE so we only send the vessels he DOESN'T have
+            for (var i = 0; i < msgData.VesselsCount; i++)
+                allVessels.Remove(msgData.VesselIds[i]);
 
             var vesselsToSend = allVessels;
             foreach (var vesselId in vesselsToSend)
