@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SettingsIcon>Asetukset</SettingsIcon>
+  <ServerIcon>Palvelinluettelo</ServerIcon>
+  <ConnectIcon>Yhdistä</ConnectIcon>
+  <DisconnectIcon>Katkaise yhteys</DisconnectIcon>
+  <SyncIcon>Matkusta/Warpaa</SyncIcon>
+  <RefreshIcon>Päivitä</RefreshIcon>
+  <UploadIcon>Lataa serverille</UploadIcon>
+  <DeleteIcon>Poista</DeleteIcon>
+  <PlusIcon>Lisää</PlusIcon>
+  <SaveIcon>Tallenna</SaveIcon>
+  <KeyIcon>Salasana</KeyIcon>
+  <GlobeIcon>Maa</GlobeIcon>
+  <ChatIcon>Chatti</ChatIcon>
+  <CameraIcon>Näyttökuvat</CameraIcon>
+  <RocketIcon>Alusluettelo</RocketIcon>
+  <AdminIcon>Ylläpitäjä</AdminIcon>
+  <KickIcon>Potkaise</KickIcon>
+  <BanIcon>Anna porttikielto</BanIcon>
+  <DekesslerIcon>Roskanpoisto</DekesslerIcon>
+  <NukeIcon>Pommita KSC</NukeIcon>
+  <RestartServerIcon>Palvelimen Uudelleenkäynnistys</RestartServerIcon>
+  <DownloadIcon>Lataa palvelimelta</DownloadIcon>
+  <CycleFirstIcon>Ensimmäinen</CycleFirstIcon>
+  <CyclePreviousIcon>Edellinen</CyclePreviousIcon>
+  <CycleNextIcon>Seuraava</CycleNextIcon>
+  <CycleLastIcon>Viimeinen</CycleLastIcon>
+</ButtonTooltips>

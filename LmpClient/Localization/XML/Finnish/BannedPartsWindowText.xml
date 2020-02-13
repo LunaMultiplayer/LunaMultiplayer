@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<BannedPartsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>LunaMultiplayer - Kielletyt osat</Title>
+  <Text>sisältää seuraavat kielletyt osat joita ei voida käyttää.</Text>
+  <TooManyParts>Aluksessasi on liikaa osia. Tämä palvelin sallii aluksissa vain tämän verran osia:</TooManyParts>
+</BannedPartsWindowText>

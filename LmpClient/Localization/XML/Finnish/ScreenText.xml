@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CraftUploaded>Rakennelma lähetetty!</CraftUploaded>
+  <CraftSaved>Rakennelma tallennettu!</CraftSaved>
+  <ModFileGenerated>LMPModControl.xml-tiedosto luotu sinun KSP-kansioosi!</ModFileGenerated>
+  <Disconected>Yhteytesi on katkaistu!</Disconected>
+  <Spectating>Tätä alusta ohjaa</Spectating>
+  <SafetyBubble>Muista!! Jos olet turvakuplan sisällä, muut pelaajat eivät näe sinua, etkä sinä heitä!!</SafetyBubble>
+  <CannotRecover>Ei pystytä palautmaan, alus ei ole sinun.</CannotRecover>
+  <CannotTerminate>Ei pystytä tuhoamaan, alus ei ole sinun.</CannotTerminate>
+  <SpectatingRemoved>Alus jota katselit on poistettu.</SpectatingRemoved>
+  <WarpDisabled>Et pysty aikamatkustamaan, aikamatkustus on kytketty pois.</WarpDisabled>
+  <WaitingSubspace>Et pysty aikamatkustamaan, odotetaan aliavaruuden id:tä palvelimelta.</WaitingSubspace>
+  <CannotWarpWhileSpectating>Et pysty aikamatkustamaan kun katselet toista pelaajaa.</CannotWarpWhileSpectating>
+  <ScreenshotInterval>Aikaväli näyttökuvien välissä on $1 sekuntia. Et pysty lähettää kuvaa tällä hetkellä.</ScreenshotInterval>
+  <CraftLibraryInterval>Aikaväli rakennelmakirjostopyyntöjen välissä on $1 sekuntia. Cannot process the request at this moment</CraftLibraryInterval>
+  <ScreenshotTaken>Näyttökuva lähetetty!</ScreenshotTaken>
+  <ImageSaved>Kuva tallennettu kansioon GameData/LunaMultiplayer/Screenshots</ImageSaved>
+  <IncreasedInterpolationOffset>Varoitus! Interpolointiasetuksista offsettia on nostettu koska se oli liian matala tälle palvelimelle.</IncreasedInterpolationOffset>
+  <SackingKerbalsNotAllowed>Tämä palvelin ei salli Kerbalin potkuja.</SackingKerbalsNotAllowed>
+  <CannotLoadGames>LMP ei salli savegamen lataamista.</CannotLoadGames>
+  <KerbalNotYours>Toinen pelaaja käyttää jo tätä Kerbalia</KerbalNotYours>
+  <UnsafeToSync>Et pysty synkronoimaan epävakaalla kiertoradalla koska voit törmätä! Voit kytkeä tämän pois asetuksista</UnsafeToSync>
+</ScreenText>

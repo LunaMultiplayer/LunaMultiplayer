@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PlayerName>Pelaajanimi:</PlayerName>
+  <Name>Nimi:</Name>
+  <Address>Osoite:</Address>
+  <Port>Portti:</Port>
+  <Password>Salasana:</Password>
+  <CustomServers>Mukautetut Palvelimet:</CustomServers>
+  <Connect>Yhdistä</Connect>
+  <Settings>Asetukset</Settings>
+  <Servers>Palvelinluettelo</Servers>
+</ConnectionWindowText>

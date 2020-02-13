@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Palvelinluettelo</Title>
+  <NoServers>Ei palvelimia!</NoServers>
+  <Ping>Viive</Ping>
+  <Players>Pelaajat</Players>
+  <MaxPlayers>Pelaajarajoitus</MaxPlayers>
+  <Mode>Tila</Mode>
+  <WarpMode>Aikamatkustus</WarpMode>
+  <Terrain>Maasto</Terrain>
+  <Cheats>Huijaukset</Cheats>
+  <Name>Nimi</Name>
+  <Description>Kuvaus</Description>
+  <Website>URL</Website>
+  <ServerDetailTitle>Yhdistä palvelimelle</ServerDetailTitle>
+  <Password>Salasana</Password>
+  <Connect>Yhdistä</Connect>
+  <Dedicated>Omistautunut</Dedicated>
+</ServerListWindowText>

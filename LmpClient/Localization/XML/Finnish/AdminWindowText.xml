@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Ylläpito</Title>
+  <Password>Palvelimen admin-salasana:</Password>
+  <ConfirmDialogTitle>Hyväksyminen</ConfirmDialogTitle>
+  <BanText>Oletko varma tämän pelaajan porttikiellosta?</BanText>
+  <KickText>Oletko varma, että haluat potkaista tämän pelaajan pelistä?</KickText>
+  <Reason>Syy:</Reason>
+</AdminWindowText>

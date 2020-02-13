@@ -3,5 +3,5 @@
 <BannedPartsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>LunaMultiplayer - Запрещенные части</Title>
   <Text>содержит эти части и не может быть запущен</Text>
-  <TooManyParts>Your vessel has too many parts. This server allows vessels with a max part count of:</TooManyParts>
+  <TooManyParts>Ваш корабль имеет слишком много частей. Этот сервер разрешает корабли с максимальным количеством частей:</TooManyParts>
 </BannedPartsWindowText>

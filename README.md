@@ -1,5 +1,6 @@
 <p align="center">
     <img src="../master/External/logo.png" alt="Luna multiplayer logo"/>
+    <a href="https://www.youtube.com/watch?v=rmJL_c-EJK8"><img src="https://img.youtube.com/vi/rmJL_c-EJK8/0.jpg" alt="Video" height="187" width="250"/></a>    
     <a href="https://www.youtube.com/watch?v=gf6xyLnpnoM"><img src="https://img.youtube.com/vi/gf6xyLnpnoM/0.jpg" alt="Video" height="187" width="250"/></a>
 </p>
 
@@ -77,7 +78,7 @@ You can check [how many servers are up](../../wiki/Master-server-status) and run
 | ------------  | ------- |-------- |
 [PictoCube](https://github.com/Alfred-PictoCube) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/masterserver.pictocube.fr:8701.svg?label=status)](http://masterserver.pictocube.fr:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/masterserver.pictocube.fr:8711.svg?label=status)](http://masterserver.pictocube.fr:8711) |
 Tekbot | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/212.48.114.221:8701.svg?label=status)](http://212.48.114.221:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/212.48.114.221:8751.svg?label=status)](http://212.48.114.221:8751) |
-Angryjoshi | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8701.svg?label=status)](http://lmp.anschuetznet.de:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8751.svg?label=status)](http://lmp.anschuetznet.de:8751) |
+[Angryjoshi](https://github.com/Angryjoshi) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8701.svg?label=status)](http://lmp.anschuetznet.de:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8751.svg?label=status)](http://lmp.anschuetznet.de:8751) |
 
 ---
 ### Status:

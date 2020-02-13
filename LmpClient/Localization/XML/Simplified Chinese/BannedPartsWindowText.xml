@@ -3,5 +3,5 @@
 <BannedPartsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>LunaMultiplayer - 禁止的组件</Title>
   <Text>包含以下禁止并不能出厂的组件</Text>
-  <TooManyParts>Your vessel has too many parts. This server allows vessels with a max part count of:</TooManyParts>
+  <TooManyParts>你的载具组件数量已超过服务器限制。 这个服务器允许的最高组件数量为:</TooManyParts>
 </BannedPartsWindowText>
