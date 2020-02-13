@@ -53,7 +53,7 @@ namespace LmpClient.Systems.KscScene
         /// </summary>
         private static void IncreaseTimeWhileInEditor()
         {
-            if (!HighLogic.LoadedSceneHasPlanetarium)
+            if (!HighLogic.LoadedSceneHasPlanetarium && HighLogic.LoadedScene >= GameScenes.SPACECENTER)
             {
                 Planetarium.fetch.time += Time.fixedDeltaTime;
                 HighLogic.CurrentGame.flightState.universalTime = Planetarium.fetch.time;
