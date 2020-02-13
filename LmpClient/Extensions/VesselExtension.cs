@@ -36,7 +36,6 @@ namespace LmpClient.Extensions
             vessel.orbit.UpdateFromStateVectors(obtPos, obtVel, vessel.mainBody, time);
             vessel.orbitDriver.updateFromParameters();
 
-            FloatingOrigin.SetOffset(vessel.transform.position);
             OrbitPhysicsManager.CheckReferenceFrame();
             OrbitPhysicsManager.HoldVesselUnpack(10);
             vessel.IgnoreGForces(20);
