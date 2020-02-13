@@ -209,7 +209,7 @@ namespace LmpClient.Systems.TimeSync
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                //As we are syncing to a new game time, we must advance all the sip positions and put them in the correct orbit "epoch"
+                //As we are syncing to a new game time, we must advance all the ship positions and put them in the correct orbit "epoch"
                 var vesselsToUpdate = LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                     .Select(l => FlightGlobals.FindVessel(l.VesselId))
                     .Where(v => v != null);
