@@ -5,7 +5,7 @@ namespace LmpCommon.Time
 {
     /// <summary>
     /// Use this class to retrieve exact times. All players and the server must have the same exact time so we adjust
-    /// this class to geit their internal clock errors against a NTP server
+    /// this class to get their internal clock errors against a NTP server
     /// </summary>
     public class LunaNetworkTime
     {
