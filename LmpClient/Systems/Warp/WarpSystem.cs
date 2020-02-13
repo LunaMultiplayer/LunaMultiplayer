@@ -157,7 +157,7 @@ namespace LmpClient.Systems.Warp
         /// </summary>
         public void SyncToSubspace(int subspaceId)
         {
-            if (!SafeToSync() && subspaceId > 0)
+            if (!SafeToSync(subspaceId) && subspaceId > 0)
             {
                 DisplayMessage(LocalizationContainer.ScreenText.UnsafeToSync, 5f);
             }
@@ -326,12 +326,12 @@ namespace LmpClient.Systems.Warp
         /// <summary>
         /// Checks if it's safe to sync to another subspace
         /// </summary>
-        private static bool SafeToSync()
+        private static bool SafeToSync(int subspaceId)
         {
             if (SettingsSystem.CurrentSettings.IgnoreSyncChecks) return true;
 
             if (HighLogic.LoadedScene != GameScenes.FLIGHT || FlightGlobals.ActiveVessel == null) return true;
-            if (VesselCommon.IsSpectating) return true;
+            if (VesselCommon.IsSpectating) return false;
             if (FlightGlobals.ActiveVessel.situation <= Vessel.Situations.FLYING) return true;
 
             if (FlightGlobals.ActiveVessel.orbit.eccentricity < 1)
