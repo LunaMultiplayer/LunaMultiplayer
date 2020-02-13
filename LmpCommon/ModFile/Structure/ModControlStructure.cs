@@ -38,6 +38,7 @@ namespace LmpCommon.ModFile.Structure
         public List<MandatoryPart> MandatoryParts { get; set; } = new List<MandatoryPart>();
         public List<ForbiddenPart> ForbiddenParts { get; set; } = new List<ForbiddenPart>();
         public List<string> AllowedParts { get; set; } = new List<string>();
+        public List<string> IgnoredResources { get; set; } = new List<string>();
 
         public void SetDefaultAllowedParts()
         {
@@ -534,7 +535,10 @@ namespace LmpCommon.ModFile.Structure
                 "Shrimp",
                 "Mite",
                 "ServiceBay.125.v2",
-                "ServiceBay.250.v2"
+                "ServiceBay.250.v2",
+                "liquidEngineMainsail.v2",
+                "engineLargeSkipper.v2",
+                "ReleaseValve",
             };
         }
     }
