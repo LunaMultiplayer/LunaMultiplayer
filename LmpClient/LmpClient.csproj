@@ -161,6 +161,7 @@
     <Compile Include="Harmony\Part_Couple.cs" />
     <Compile Include="Harmony\PartBuoyancy_FixedUpdate.cs" />
     <Compile Include="Harmony\Part_Undock.cs" />
+    <Compile Include="Harmony\PauseMenu_Display.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_RemoveExperimentalPart.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment_AddExperimentalPart.cs" />
     <Compile Include="Harmony\FlightIntegrator_FixedUpdate.cs" />

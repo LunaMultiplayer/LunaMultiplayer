@@ -126,6 +126,9 @@ namespace LmpClient.Systems.VesselLockSys
             if (HighLogic.CurrentGame?.Parameters?.Flight != null)
                 HighLogic.CurrentGame.Parameters.Flight.CanEVA = true;
 
+            if (PauseMenu.exists && PauseMenu.isOpen)
+                PauseMenu.canSaveAndExit = FlightGlobals.ClearToSave();
+
             SpectateEvent.onFinishedSpectating.Fire();
         }
 
