@@ -2,10 +2,10 @@
 
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SettingsIcon>Настройки</SettingsIcon>
-  <ServerIcon>Сервера</ServerIcon>
-  <ConnectIcon>Подключиться</ConnectIcon>
+  <ServerIcon>Список серверов</ServerIcon>
+  <ConnectIcon>Присоединиться</ConnectIcon>
   <DisconnectIcon>Отключиться</DisconnectIcon>
-  <SyncIcon>Синх.</SyncIcon>
+  <SyncIcon>Синхр.</SyncIcon>
   <RefreshIcon>Обновить</RefreshIcon>
   <UploadIcon>Загрузить</UploadIcon>
   <DeleteIcon>Удалить</DeleteIcon>
@@ -15,12 +15,12 @@
   <GlobeIcon>Страна</GlobeIcon>
   <ChatIcon>Чат</ChatIcon>
   <CameraIcon>Скриншоты</CameraIcon>
-  <RocketIcon>Корабли</RocketIcon>
-  <AdminIcon>Администрирование</AdminIcon>
+  <RocketIcon>Библиотека крафтов</RocketIcon>
+  <AdminIcon>Админ</AdminIcon>
   <KickIcon>Выгнать</KickIcon>
   <BanIcon>Заблокировать</BanIcon>
-  <DekesslerIcon>Удалить мусор</DekesslerIcon>
-  <NukeIcon>Очистить KSC</NukeIcon>
+  <DekesslerIcon>Уничтожить мусор</DekesslerIcon>
+  <NukeIcon>Взорвать KSC</NukeIcon>
   <RestartServerIcon>Перезапустить сервер</RestartServerIcon>
   <DownloadIcon>Скачать</DownloadIcon>
   <CycleFirstIcon>Первый</CycleFirstIcon>

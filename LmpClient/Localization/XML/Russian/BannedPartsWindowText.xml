@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <BannedPartsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Запрещенные части</Title>
-  <Text>содержит эти части и не может быть запущен</Text>
-  <TooManyParts>Ваш корабль имеет слишком много частей. Этот сервер разрешает корабли с максимальным количеством частей:</TooManyParts>
+  <Title>LunaMultiplayer - Заблокированые части</Title>
+  <Text>содержит данные запрещёные части и не может быть запущен.</Text>
+  <TooManyParts>Ваш корабль имеет много частей. Этот сервер разрешает корабли с максимальным количеством частей:</TooManyParts>
 </BannedPartsWindowText>

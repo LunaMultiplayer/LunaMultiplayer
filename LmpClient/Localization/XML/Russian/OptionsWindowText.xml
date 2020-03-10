@@ -3,23 +3,23 @@
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>Настройки</Title>
   <Language>Язык:</Language>
-  <Color>Цвет имени:</Color>
-  <Red>R:</Red>
-  <Green>G:</Green>
-  <Blue>B:</Blue>
-  <Random>Случайно</Random>
-  <Set>Подтвердить</Set>
-  <InterpolationSettings>Настройки интерполяции</InterpolationSettings>
-  <EnableInterpolation>Включить интерполяцию</EnableInterpolation>
-  <InterpolationOffset>Смещение интерполяции:</InterpolationOffset>
-  <GenerateLmpModControl>Сгенерировать LMPModControl.xml для сервера</GenerateLmpModControl>
-  <GenerateUniverse>Сгенерировать вселенную из сохраненной игры</GenerateUniverse>
+  <Color>Цвет игрока:</Color>
+  <Red>Красный:</Red>
+  <Green>Зелёные:</Green>
+  <Blue>Синий:</Blue>
+  <Random>Случайный</Random>
+  <Set>Установить</Set>
+  <InterpolationSettings>Настройки интерполирования</InterpolationSettings>
+  <EnableInterpolation>Включить интерполирования</EnableInterpolation>
+  <InterpolationOffset>Смещение интерполирования:</InterpolationOffset>
+  <GenerateLmpModControl>Сгенерировать серверный LMPModControl.xml</GenerateLmpModControl>
+  <GenerateUniverse>Создать вселенную с сохранёной игры</GenerateUniverse>
   <NetworkSettings>Настройки сети</NetworkSettings>
-  <CannotChangeWhileConnected>Невозможно изменить настройки во время подключения</CannotChangeWhileConnected>
-  <ResetNetwork>Сбросить сетевые настройки</ResetNetwork>
+  <CannotChangeWhileConnected>Нельзя изменить значения когда вы подключены</CannotChangeWhileConnected>
+  <ResetNetwork>Сброс настроек сети</ResetNetwork>
   <Mtu>MTU (Стандартный: 1408):</Mtu>
-  <AutoExpandMtu>Автоматически расширяемый MTU</AutoExpandMtu>
-  <ConnectionTimeout>Время ожидания подключения (Стандартно: 15):</ConnectionTimeout>
-  <GeneralSettings>Главные настройки</GeneralSettings>
-  <IgnoreSyncChecks>Игнорировать проверки безопасности синхр. варпа</IgnoreSyncChecks>
+  <AutoExpandMtu>Автоматически расширять MTU</AutoExpandMtu>
+  <ConnectionTimeout>Время соединения вышло(Стандартно: 15):</ConnectionTimeout>
+  <GeneralSettings>Основные настройки</GeneralSettings>
+  <IgnoreSyncChecks>Игнорировать проверки безопасности при ускорении времени</IgnoreSyncChecks>
 </OptionsWindowText>
