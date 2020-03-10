@@ -2,6 +2,6 @@
 
 <RevertDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CannotRevertTitle>Не можем вернуть</CannotRevertTitle>
-  <CannotRevertText>Из-за лимитов LMP вы не можете вернуть корабль если вы за ним наблюдаете или же переключились на него. Проверьте вики для больших деталей</CannotRevertText>
+  <CannotRevertText>Из-за лимитов LMP вы не можете вернуть корабль если вы наблюдаете или же переключились на другой корабль. Проверьте вики для больших деталей</CannotRevertText>
   <CloseBtn>Закрыть</CloseBtn>
 </RevertDialogText>

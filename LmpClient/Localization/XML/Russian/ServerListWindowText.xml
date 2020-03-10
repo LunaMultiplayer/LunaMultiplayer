@@ -8,7 +8,7 @@
   <MaxPlayers>Максимально игроков</MaxPlayers>
   <Mode>Режим</Mode>
   <WarpMode>Режим ускорения времени</WarpMode>
-  <Terrain>Качество текстур земли</Terrain>
+  <Terrain>Качество детализации</Terrain>
   <Cheats>Читы</Cheats>
   <Name>Имя</Name>
   <Description>Описание</Description>

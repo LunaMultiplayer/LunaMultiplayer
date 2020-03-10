@@ -7,7 +7,7 @@
   <MandatoryModsDifferentShaFound>Обязательные моды с разными SHA найдены:</MandatoryModsDifferentShaFound>
   <Link>Ссылка</Link>
   <ForbiddenFilesFound>Запрещённые моды найдены:</ForbiddenFilesFound>
-  <NonListedFilesFound>Не указаных и запрещённых модов не найдено:</NonListedFilesFound>
+  <NonListedFilesFound>Не указанных и запрещённых модов не найдено:</NonListedFilesFound>
   <MandatoryPartsNotFound>Обязательных частей не найдено:</MandatoryPartsNotFound>
   <ForbiddenPartsFound>Найдены запрещённые части:</ForbiddenPartsFound>
 </ModWindowText>
