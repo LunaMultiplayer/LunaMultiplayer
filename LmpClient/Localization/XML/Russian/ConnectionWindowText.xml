@@ -6,8 +6,8 @@
   <Address>Адрес:</Address>
   <Port>Порт:</Port>
   <Password>Пароль:</Password>
-  <CustomServers>Ваши сервера:</CustomServers>
+  <CustomServers>Пользовательские сервера:</CustomServers>
   <Connect>Присоединиться</Connect>
   <Settings>Настройки</Settings>
-  <Servers>Список серверов</Servers>
+  <Servers>Список Серверов</Servers>
 </ConnectionWindowText>

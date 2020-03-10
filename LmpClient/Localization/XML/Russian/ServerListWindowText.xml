@@ -4,15 +4,15 @@
   <Title>Список серверов</Title>
   <NoServers>Нет серверов!</NoServers>
   <Ping>Задержка</Ping>
-  <Players>Игроки</Players>
-  <MaxPlayers>Максимальное кол. игроков</MaxPlayers>
+  <Players>Игроков</Players>
+  <MaxPlayers>Максимально игроков</MaxPlayers>
   <Mode>Режим</Mode>
   <WarpMode>Режим ускорения времени</WarpMode>
   <Terrain>Качество детализации</Terrain>
   <Cheats>Читы</Cheats>
   <Name>Имя</Name>
   <Description>Описание</Description>
-  <Website>URL</Website>
+  <Website>Ссылка</Website>
   <ServerDetailTitle>Присоединиться к серверу</ServerDetailTitle>
   <Password>Пароль</Password>
   <Connect>Присоединиться</Connect>
