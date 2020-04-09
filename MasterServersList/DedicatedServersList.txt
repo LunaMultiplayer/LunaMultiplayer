@@ -34,3 +34,5 @@ qingdao.211.network:8800
 #memium.de:8800
 #holzlatten-gaming.de:8800
 213.109.163.13:8800
+#Huge Alligator
+gameserver.corvettecole.com:19712
