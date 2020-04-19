@@ -134,6 +134,7 @@ namespace Server
             GroupSystem.LoadGroups();
             LunaLog.Debug("Loading settings...");
             SettingsHandler.LoadSettings();
+            SettingsHandler.ValidateDifficultySettings();
 
             if (GeneralSettings.SettingsStore.ModControl)
             {

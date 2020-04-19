@@ -11,7 +11,7 @@ namespace Server.Settings.Base
         where T : class, new()
     {
         protected abstract string Filename { get; }
-        private string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, Filename);
+        protected string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, Filename);
         public static T SettingsStore { get; private set; } = new T();
 
         protected SettingsBase()
@@ -20,7 +20,7 @@ namespace Server.Settings.Base
                 FileHandler.FolderCreate(ServerContext.ConfigDirectory);
         }
 
-        public void Load()
+        public virtual void Load()
         {
             if (!File.Exists(SettingsPath))
                 LunaXmlSerializer.WriteToXmlFile(Activator.CreateInstance(typeof(T)), Path.Combine(ServerContext.ConfigDirectory, Filename));

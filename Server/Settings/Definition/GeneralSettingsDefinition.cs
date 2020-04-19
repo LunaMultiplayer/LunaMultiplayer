@@ -56,7 +56,7 @@ namespace Server.Settings.Definition
         public string ConsoleIdentifier { get; set; } = "Server";
 
         [XmlComment(Value = "Specify the gameplay difficulty of the server. Values: Easy, Normal, Moderate, Hard, Custom")]
-        public GameDifficulty GameDifficulty { get; set; } = GameDifficulty.Easy;
+        public GameDifficulty GameDifficulty { get; set; } = GameDifficulty.Normal;
 
         [XmlComment(Value = "Specify the game Type. Values: Sandbox, Career, Science")]
         public GameMode GameMode { get; set; } = GameMode.Sandbox;
