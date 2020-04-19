@@ -2,10 +2,10 @@
 
 <UpdateWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>Новое обновление доступно</Title>
-  <Text>Доступна новая версия LMP</Text>
-  <StillCompatible>Ваша версия LMP совместима с последней версией игры</StillCompatible>
-  <NotCompatible>Ваша версия LMP не совместима с версией игры.</NotCompatible>
+  <Text>Обнаружена новая версия LMP доступной для загрузки</Text>
+  <StillCompatible>Ваша версия LMP совместима с последней версией</StillCompatible>
+  <NotCompatible>Ваша версия LMP не совместима с последней версией</NotCompatible>
   <Changelog>Список изменений</Changelog>
-  <CurrentVersion>Ваша версия:</CurrentVersion>
+  <CurrentVersion>Ваша текущая версия:</CurrentVersion>
   <LatestVersion>Последняя версия:</LatestVersion>
 </UpdateWindowText>

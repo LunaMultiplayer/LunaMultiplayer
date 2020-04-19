@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ModWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Ошибка проверки модов</Title>
-  <MandatoryModsNotFound>Обязательные моды не найдены!:</MandatoryModsNotFound>
-  <MissingExpansions>Пропущенные дополнения:</MissingExpansions>
-  <MandatoryModsDifferentShaFound>Обязательные моды с разными SHA:</MandatoryModsDifferentShaFound>
+  <Title>LunaMultiplayer - Неудачная проверка модов</Title>
+  <MandatoryModsNotFound>Обязательных модов не найдено:</MandatoryModsNotFound>
+  <MissingExpansions>Не найдены дополнения:</MissingExpansions>
+  <MandatoryModsDifferentShaFound>Обязательные моды с разными SHA найдены:</MandatoryModsDifferentShaFound>
   <Link>Ссылка</Link>
-  <ForbiddenFilesFound>Запрещённые модификации:</ForbiddenFilesFound>
-  <NonListedFilesFound>Не указанных и запрещённых модов найдено:</NonListedFilesFound>
-  <MandatoryPartsNotFound>Обязательные части не найдены:</MandatoryPartsNotFound>
-  <ForbiddenPartsFound>Запрещённые части:</ForbiddenPartsFound>
+  <ForbiddenFilesFound>Запрещённые моды найдены:</ForbiddenFilesFound>
+  <NonListedFilesFound>Не указанных и запрещённых модов не найдено:</NonListedFilesFound>
+  <MandatoryPartsNotFound>Обязательных частей не найдено:</MandatoryPartsNotFound>
+  <ForbiddenPartsFound>Найдены запрещённые части:</ForbiddenPartsFound>
 </ModWindowText>
