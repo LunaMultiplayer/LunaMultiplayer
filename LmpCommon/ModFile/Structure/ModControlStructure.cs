@@ -539,6 +539,14 @@ namespace LmpCommon.ModFile.Structure
                 "liquidEngineMainsail.v2",
                 "engineLargeSkipper.v2",
                 "ReleaseValve",
+                "Size.1.5.Cone",
+                "Pollux",
+                "FanShroud.01",
+                "FanShroud.02",
+                "FanShroud.03",
+                "largeFanBlade",
+                "mediumFanBlade",
+                "smallFanBlade"
             };
         }
     }
