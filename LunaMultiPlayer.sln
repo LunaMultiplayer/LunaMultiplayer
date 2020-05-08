@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Scripts\CopyToKSPDirectory.bat = Scripts\CopyToKSPDirectory.bat
 		Dockerfile = Dockerfile
 		LMP Readme.txt = LMP Readme.txt
+		LunaMultiplayer.version = LunaMultiplayer.version
 		Postman_Release.txt = Postman_Release.txt
 		README.md = README.md
 		Scripts\SetDirectories.bat = Scripts\SetDirectories.bat
