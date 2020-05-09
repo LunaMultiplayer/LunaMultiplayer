@@ -7,6 +7,7 @@ using Server.Properties;
 using Server.Server;
 using System.IO;
 using System.Linq;
+using Server.Settings.Structures;
 
 namespace Server.System
 {
@@ -26,7 +27,9 @@ namespace Server.System
         {
             LunaLog.Debug($"Saving kerbal {data.Kerbal.KerbalName} from {client.PlayerName}");
 
-            var path = Path.Combine(KerbalsPath, $"{data.Kerbal.KerbalName}.txt");
+            var kerbalsPath = GetPlayerKerbalsPath(client);
+
+            var path = Path.Combine(kerbalsPath, $"{data.Kerbal.KerbalName}.txt");
             FileHandler.WriteToFile(path, data.Kerbal.KerbalData, data.Kerbal.NumBytes);
 
             MessageQueuer.RelayMessage<KerbalSrvMsg>(client, data);
@@ -34,7 +37,9 @@ namespace Server.System
 
         public static void HandleKerbalsRequest(ClientStructure client)
         {
-            var kerbalFiles = FileHandler.GetFilesInPath(KerbalsPath);
+            var kerbalsPath = GetPlayerKerbalsPath(client);
+
+            var kerbalFiles = FileHandler.GetFilesInPath(kerbalsPath);
             var kerbalsData = kerbalFiles.Select(k =>
             {
                 var kerbalData = FileHandler.ReadFile(k);
@@ -56,12 +61,32 @@ namespace Server.System
 
         public static void HandleKerbalRemove(ClientStructure client, KerbalRemoveMsgData message)
         {
+            var kerbalsPath = GetPlayerKerbalsPath(client);
+
             var kerbalToRemove = message.KerbalName;
 
             LunaLog.Debug($"Removing kerbal {kerbalToRemove} from {client.PlayerName}");
-            FileHandler.FileDelete(Path.Combine(KerbalsPath, $"{kerbalToRemove}.txt"));
+            FileHandler.FileDelete(Path.Combine(kerbalsPath, $"{kerbalToRemove}.txt"));
 
             MessageQueuer.RelayMessage<KerbalSrvMsg>(client, message);
+        }
+
+        private static string GetPlayerKerbalsPath(ClientStructure client)
+        {
+            if (!GameplaySettings.SettingsStore.AllowPerPlayerKerbals)
+                return KerbalsPath;
+
+            var playerDir = Path.Combine(ServerContext.PlayerDataPath, client.UniqueIdentifier);
+            if (!FileHandler.FolderExists(playerDir))
+            {
+                FileHandler.FolderCreate(playerDir);
+
+                FileHandler.CreateFile(Path.Combine(playerDir, "Jebediah Kerman.txt"), Resources.Jebediah_Kerman);
+                FileHandler.CreateFile(Path.Combine(playerDir, "Bill Kerman.txt"), Resources.Bill_Kerman);
+                FileHandler.CreateFile(Path.Combine(playerDir, "Bob Kerman.txt"), Resources.Bob_Kerman);
+                FileHandler.CreateFile(Path.Combine(playerDir, "Valentina Kerman.txt"), Resources.Valentina_Kerman);
+            }
+            return playerDir;
         }
     }
 }
