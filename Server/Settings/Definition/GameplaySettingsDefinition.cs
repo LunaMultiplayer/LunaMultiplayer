@@ -32,6 +32,9 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Allow Other launchsites")]
         public bool AllowOtherLaunchSites { get; set; }
 
+        [XmlComment(Value = "Allow per Player Kerbals")]
+        public bool AllowPerPlayerKerbals { get; set; }
+
         //Game systems
 
         [XmlComment(Value = "Re-Entry Heating")]
