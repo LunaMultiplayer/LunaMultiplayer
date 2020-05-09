@@ -1,6 +1,7 @@
 ﻿using LmpCommon.Locks;
 using Server.Client;
 using System.Linq;
+using Server.Settings.Structures;
 
 namespace Server.System
 {
@@ -13,8 +14,14 @@ namespace Server.System
         {
             repeatedAcquire = false;
 
+            // Change name to allow per-player kerbals Changing the kerbal name to KerbalName+PlayerName will result in
+            // per-player kerbal locks, while other players will still have control over their own kerbals.
+            var kerbalName = lockDef.KerbalName;
+            if (lockDef.Type == LockType.Kerbal && GameplaySettings.SettingsStore.AllowPerPlayerKerbals)
+                kerbalName = lockDef.KerbalName + lockDef.PlayerName;
+
             //Player tried to acquire a lock that he already owns
-            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.KerbalName, lockDef.PlayerName))
+            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, kerbalName, lockDef.PlayerName))
             {
                 repeatedAcquire = true;
                 return true;
@@ -39,7 +46,11 @@ namespace Server.System
 
         public static bool ReleaseLock(LockDefinition lockDef)
         {
-            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.KerbalName, lockDef.PlayerName))
+            var kerbalName = lockDef.KerbalName;
+            if (lockDef.Type == LockType.Kerbal && GameplaySettings.SettingsStore.AllowPerPlayerKerbals)
+                kerbalName = lockDef.KerbalName + lockDef.PlayerName;
+
+            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, kerbalName, lockDef.PlayerName))
             {
                 LockStore.RemoveLock(lockDef);
                 return true;
