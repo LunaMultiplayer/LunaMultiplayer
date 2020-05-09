@@ -28,6 +28,7 @@ namespace Server.Context
         public static string ModFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.xml");
         public static string UniverseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe");
         public static string ConfigDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");
+        public static string PlayerDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe", "PlayerData");
 
         // Configuration object
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")

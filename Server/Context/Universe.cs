@@ -35,6 +35,9 @@ namespace Server.Context
             if (!FileHandler.FolderExists(ServerContext.UniverseDirectory))
                 FileHandler.FolderCreate(ServerContext.UniverseDirectory);
 
+            if (!FileHandler.FolderExists(ServerContext.PlayerDataPath))
+                FileHandler.FolderCreate(ServerContext.PlayerDataPath);
+
             if (!FileHandler.FolderExists(CraftLibrarySystem.CraftPath))
                 FileHandler.FolderCreate(CraftLibrarySystem.CraftPath);
             if (!FileHandler.FolderExists(FlagSystem.FlagPath))
