@@ -26,7 +26,7 @@ LMP version (include the build number if you are using a nighly build):
 
 ------------------------------------------------------------------------------
 
-MODS (add link to download them): 
+MODS. Remember that **mods are not supported**: 
 
 ------------------------------------------------------------------------------
 
