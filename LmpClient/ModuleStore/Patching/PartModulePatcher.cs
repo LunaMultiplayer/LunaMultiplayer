@@ -55,9 +55,12 @@ namespace LmpClient.ModuleStore.Patching
                         {
                             try
                             {
-                                if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out _customizationModule))
+                                lock (Mutex)
                                 {
-                                    PatchFieldsAndMethods(partModule);
+                                    if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out _customizationModule))
+                                    {
+                                        PatchFieldsAndMethods(partModule);
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -90,18 +93,13 @@ namespace LmpClient.ModuleStore.Patching
                     try
                     {
                         LunaLog.Log($"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                        lock (Mutex)
-                        {
-                            HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, BackupAndCallTranspilerMethod);
-                        }
+
+                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, BackupAndCallTranspilerMethod);
                     }
                     catch
                     {
                         LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                        lock (Mutex)
-                        {
-                            HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, RestoreTranspilerMethod);
-                        }
+                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, RestoreTranspilerMethod);
                     }
                 }
             }
