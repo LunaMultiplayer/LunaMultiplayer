@@ -18,6 +18,7 @@ namespace LmpClient.ModuleStore.Patching
     {
         public static bool Ready => _awakeTask.IsCompleted;
         private static Task _awakeTask;
+        private static readonly object Mutex = new object();
 
         /// <summary>
         /// Here we store the original method instructions in case we fuck things up
@@ -89,12 +90,18 @@ namespace LmpClient.ModuleStore.Patching
                     try
                     {
                         LunaLog.Log($"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, BackupAndCallTranspilerMethod);
+                        lock (Mutex)
+                        {
+                            HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, BackupAndCallTranspilerMethod);
+                        }
                     }
                     catch
                     {
                         LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-                        HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, RestoreTranspilerMethod);
+                        lock (Mutex)
+                        {
+                            HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, RestoreTranspilerMethod);
+                        }
                     }
                 }
             }
