@@ -34,7 +34,7 @@ namespace LmpClient.Systems.ShareFunds
             RevertEvent.onReturningToEditor.Add(ShareFundsEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Add(ShareFundsEvents.LevelLoaded);
             GameEvents.onVesselSwitching.Add(ShareFundsEvents.VesselSwitching);
-            VesselAssemblyEvent.onAssembledVessel.Remove(ShareFundsEvents.VesselAssembled);
+            VesselAssemblyEvent.onAssembledVessel.Add(ShareFundsEvents.VesselAssembled);
         }
 
         protected override void OnDisabled()
