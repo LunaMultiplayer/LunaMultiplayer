@@ -111,6 +111,7 @@ namespace LmpClient.Systems.ShareContracts
             if (contract.GetType() == typeof(RecoverAsset))
             {
                 //We don't support rescue contracts. See: https://github.com/LunaMultiplayer/LunaMultiplayer/issues/226#issuecomment-431831526
+                contract.Withdraw();
                 contract.Kill();
                 return;
             }
