@@ -71,6 +71,7 @@ namespace Server.Message
                 msgData.ResourceTransferObeyCrossfeed = GameplaySettings.SettingsStore.ObeyCrossfeedRules;
                 msgData.BuildingImpactDamageMult = GameplaySettings.SettingsStore.BuildingDamageMultiplier;
                 msgData.PartUpgradesInCareerAndSandbox = GameplaySettings.SettingsStore.PartUpgrades;
+                msgData.EnableFullSASInSandbox = GameplaySettings.SettingsStore.EnableFullSASInSandbox;
                 //Commnet
                 msgData.RequireSignalForControl = GameplaySettings.SettingsStore.RequireSignalForControl;
                 msgData.DsnModifier = GameplaySettings.SettingsStore.DsnModifier;

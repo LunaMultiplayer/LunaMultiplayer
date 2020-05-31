@@ -130,6 +130,9 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Enable Extra Groundstations")]
         public bool ExtraGroundstations { get; set; }
 
+        [XmlComment(Value = "Enable full SAS in Sandbox")]
+        public bool EnableFullSASInSandbox { get; set; }
+
         public void SetEasy()
         {
             //General options
@@ -170,6 +173,7 @@ namespace Server.Settings.Definition
             ActionGroupsAlways = false;
             BuildingDamageMultiplier = 0.03f;
             PartUpgrades = true;
+            EnableFullSASInSandbox = false;
 
             // CommNet Options
             RequireSignalForControl = false;
@@ -220,6 +224,7 @@ namespace Server.Settings.Definition
             ActionGroupsAlways = false;
             BuildingDamageMultiplier = 0.05f;
             PartUpgrades = true;
+            EnableFullSASInSandbox = false;
 
             // CommNet Options
             RequireSignalForControl = false;
@@ -270,6 +275,7 @@ namespace Server.Settings.Definition
             ActionGroupsAlways = false;
             BuildingDamageMultiplier = 0.1f;
             PartUpgrades = true;
+            EnableFullSASInSandbox = false;
 
             // CommNet Options
             RequireSignalForControl = false;
@@ -320,6 +326,7 @@ namespace Server.Settings.Definition
             ActionGroupsAlways = false;
             BuildingDamageMultiplier = 0.2f;
             PartUpgrades = true;
+            EnableFullSASInSandbox = false;
 
             // CommNet Options
 

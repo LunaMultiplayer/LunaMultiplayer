@@ -49,6 +49,7 @@ namespace LmpCommon.Message.Data.Settings
         public bool ResourceTransferObeyCrossfeed;
         public float BuildingImpactDamageMult;
         public bool PartUpgradesInCareerAndSandbox;
+        public bool EnableFullSASInSandbox;
         public bool RequireSignalForControl;
         public float DsnModifier;
         public float RangeModifier;
@@ -112,6 +113,7 @@ namespace LmpCommon.Message.Data.Settings
             lidgrenMsg.Write(ResourceTransferObeyCrossfeed);
             lidgrenMsg.Write(BuildingImpactDamageMult);
             lidgrenMsg.Write(PartUpgradesInCareerAndSandbox);
+            lidgrenMsg.Write(EnableFullSASInSandbox);
             lidgrenMsg.Write(RequireSignalForControl);
             lidgrenMsg.Write(DsnModifier);
             lidgrenMsg.Write(RangeModifier);
@@ -174,6 +176,7 @@ namespace LmpCommon.Message.Data.Settings
             ResourceTransferObeyCrossfeed = lidgrenMsg.ReadBoolean();
             BuildingImpactDamageMult = lidgrenMsg.ReadFloat();
             PartUpgradesInCareerAndSandbox = lidgrenMsg.ReadBoolean();
+            EnableFullSASInSandbox = lidgrenMsg.ReadBoolean();
             RequireSignalForControl = lidgrenMsg.ReadBoolean();
             DsnModifier = lidgrenMsg.ReadFloat();
             RangeModifier = lidgrenMsg.ReadFloat();
@@ -197,7 +200,7 @@ namespace LmpCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) +
-                sizeof(bool) * 23 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount();
+                sizeof(bool) * 24 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount();
         }
     }
 }

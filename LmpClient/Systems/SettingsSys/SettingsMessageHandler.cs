@@ -90,7 +90,8 @@ namespace LmpClient.Systems.SettingsSys
                     ResourceTransferObeyCrossfeed = msgData.ResourceTransferObeyCrossfeed,
                     BuildingImpactDamageMult = msgData.BuildingImpactDamageMult,
                     PartUpgradesInCareer = msgData.PartUpgradesInCareerAndSandbox,
-                    PartUpgradesInSandbox = msgData.PartUpgradesInCareerAndSandbox
+                    PartUpgradesInSandbox = msgData.PartUpgradesInCareerAndSandbox,
+                    EnableFullSASInSandbox = msgData.EnableFullSASInSandbox,
                 };
 
                 SettingsSystem.ServerSettings.ServerCommNetParameters = new CommNetParams

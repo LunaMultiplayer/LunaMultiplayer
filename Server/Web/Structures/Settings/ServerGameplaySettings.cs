@@ -39,6 +39,7 @@ namespace Server.Web.Structures.Settings
         public float DsnModifier => GameplaySettings.SettingsStore.DsnModifier;
         public float OcclusionModifierVac => GameplaySettings.SettingsStore.OcclusionModifierVac;
         public float OcclusionModifierAtm => GameplaySettings.SettingsStore.OcclusionModifierAtm;
+        public bool EnableFullSASInSandbox => GameplaySettings.SettingsStore.EnableFullSASInSandbox;
         public bool ExtraGroundstations => GameplaySettings.SettingsStore.ExtraGroundstations;
         public bool ReentryBlackout => GameplaySettings.SettingsStore.ReentryBlackout;
     }
