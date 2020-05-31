@@ -103,7 +103,9 @@ namespace LmpClient.Systems.ShareContracts
         {
             if (!LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
             {
-                //We don't have the contract lock so remove the contract that spawned
+                //We don't have the contract lock so remove the contract that we spawned.
+                //The idea is that ONLY THE PLAYER with the contract lock spawn contracts to the other players
+                contract.Withdraw();
                 contract.Kill();
                 return;
             }
