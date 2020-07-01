@@ -3,18 +3,18 @@ using LmpClient.Extensions;
 using LmpClient.Systems.VesselProtoSys;
 using LmpCommon.Locks;
 
-namespace LmpClient.Systems.Asteroid
+namespace LmpClient.Systems.AsteroidComet
 {
-    public class AsteroidEvents : SubSystem<AsteroidSystem>
+    public class AsteroidCometEvents : SubSystem<AsteroidCometSystem>
     {
         /// <summary>
         /// Try to get asteroid lock
         /// </summary>
         public void LockReleased(LockDefinition lockDefinition)
         {
-            if (lockDefinition.Type == LockType.Asteroid)
+            if (lockDefinition.Type == LockType.AsteroidComet)
             {
-                System.TryGetAsteroidLock();
+                System.TryGetCometAsteroidLock();
             }
         }
 
@@ -23,19 +23,19 @@ namespace LmpClient.Systems.Asteroid
         /// </summary>
         public void LevelLoaded(GameScenes data)
         {
-            System.TryGetAsteroidLock();
+            System.TryGetCometAsteroidLock();
         }
 
-        public void StartTrackingAsteroid(Vessel asteroid)
+        public void StartTrackingCometOrAsteroid(Vessel potato)
         {
-            LunaLog.Log($"Started to track asteroid {asteroid.id}");
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, true);
+            LunaLog.Log($"Started to track comet/asteroid {potato.id}");
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(potato, true);
         }
 
-        public void StopTrackingAsteroid(Vessel asteroid)
+        public void StopTrackingCometOrAsteroid(Vessel potato)
         {
-            LunaLog.Log($"Stopped to track asteroid {asteroid.id}");
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, true);
+            LunaLog.Log($"Stopped to track comet/asteroid {potato.id}");
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(potato, true);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace LmpClient.Systems.Asteroid
         /// </summary>
         public void NewVesselCreated(Vessel vessel)
         {
-            if (vessel.IsAsteroid())
+            if (vessel.IsCometOrAsteroid())
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
         }
     }

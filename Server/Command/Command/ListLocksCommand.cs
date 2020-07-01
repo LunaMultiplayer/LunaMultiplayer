@@ -18,7 +18,7 @@ namespace Server.Command.Command
                 switch (lockDefinition.Type)
                 {
                     case LockType.Contract:
-                    case LockType.Asteroid:
+                    case LockType.AsteroidComet:
                     case LockType.Kerbal:
                     case LockType.Spectator:
                         allLocks.Add(lockDefinition);

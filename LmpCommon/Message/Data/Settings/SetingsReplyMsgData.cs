@@ -18,6 +18,7 @@ namespace LmpCommon.Message.Data.Settings
         public bool AllowAdmin;
         public bool AllowSackKerbals;
         public int MaxNumberOfAsteroids;
+        public int MaxNumberOfComets;
         public string ConsoleIdentifier;
         public GameDifficulty GameDifficulty;
         public float SafetyBubbleDistance;
@@ -82,6 +83,7 @@ namespace LmpCommon.Message.Data.Settings
             lidgrenMsg.Write(AllowAdmin);
             lidgrenMsg.Write(AllowSackKerbals);
             lidgrenMsg.Write(MaxNumberOfAsteroids);
+            lidgrenMsg.Write(MaxNumberOfComets);
             lidgrenMsg.Write(ConsoleIdentifier);
             lidgrenMsg.Write((int)GameDifficulty);
             lidgrenMsg.Write(SafetyBubbleDistance);
@@ -145,6 +147,7 @@ namespace LmpCommon.Message.Data.Settings
             AllowAdmin = lidgrenMsg.ReadBoolean();
             AllowSackKerbals = lidgrenMsg.ReadBoolean();
             MaxNumberOfAsteroids = lidgrenMsg.ReadInt32();
+            MaxNumberOfComets = lidgrenMsg.ReadInt32();
             ConsoleIdentifier = lidgrenMsg.ReadString();
             GameDifficulty = (GameDifficulty)lidgrenMsg.ReadInt32();
             SafetyBubbleDistance = lidgrenMsg.ReadFloat();
@@ -200,7 +203,7 @@ namespace LmpCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) +
-                sizeof(bool) * 24 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount();
+                sizeof(bool) * 24 + sizeof(int) * 9 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount();
         }
     }
 }

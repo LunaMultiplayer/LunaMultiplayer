@@ -128,7 +128,7 @@ namespace LmpClient.Systems.Lock
         /// </summary>
         public void AcquireAsteroidLock()
         {
-            AcquireLock(new LockDefinition(LockType.Asteroid, SettingsSystem.CurrentSettings.PlayerName));
+            AcquireLock(new LockDefinition(LockType.AsteroidComet, SettingsSystem.CurrentSettings.PlayerName));
         }
 
         /// <summary>
@@ -239,9 +239,9 @@ namespace LmpClient.Systems.Lock
             IEnumerable<LockDefinition> locksToRelease;
             switch (type)
             {
-                case LockType.Asteroid:
-                    locksToRelease = LockQuery.AsteroidLockOwner() == playerName ?
-                        new[] { LockQuery.AsteroidLock() } : new LockDefinition[0];
+                case LockType.AsteroidComet:
+                    locksToRelease = LockQuery.AsteroidCometLockOwner() == playerName ?
+                        new[] { LockQuery.AsteroidCometLock() } : new LockDefinition[0];
                     break;
                 case LockType.Control:
                     locksToRelease = LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName);

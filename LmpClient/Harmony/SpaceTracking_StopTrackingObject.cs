@@ -16,7 +16,7 @@ namespace LmpClient.Harmony
         [HarmonyPostfix]
         private static void PostfixStopTrackingObject(Vessel v)
         {
-            TrackingEvent.onStopTrackingAsteroid.Fire(v);
+            TrackingEvent.onStopTrackingAsteroidOrComet.Fire(v);
         }
     }
 }

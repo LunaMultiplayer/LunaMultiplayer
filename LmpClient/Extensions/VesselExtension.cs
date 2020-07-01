@@ -8,15 +8,35 @@ namespace LmpClient.Extensions
     public static class VesselExtension
     {
         /// <summary>
+        /// Returns true or false in case the vessel is an asteroid or a comet
+        /// </summary>
+        public static bool IsCometOrAsteroid(this Vessel vessel)
+        {
+            return IsComet(vessel) || IsAsteroid(vessel);
+        }
+
+        /// <summary>
+        /// Returns true or false in case the vessel is a comet
+        /// </summary>
+        public static bool IsComet(this Vessel vessel)
+        {
+            if (vessel != null && !vessel.loaded)
+                return vessel.protoVessel.IsCometOrAsteroid();
+
+            //Check the vessel has exactly one part.
+            return vessel && vessel.parts != null && vessel.parts.Count == 1 && (vessel.parts[0].partName == "PotatoComet");
+        }
+
+        /// <summary>
         /// Returns true or false in case the vessel is an asteroid
         /// </summary>
         public static bool IsAsteroid(this Vessel vessel)
         {
             if (vessel != null && !vessel.loaded)
-                return vessel.protoVessel.IsAsteroid();
+                return vessel.protoVessel.IsCometOrAsteroid();
 
             //Check the vessel has exactly one part.
-            return vessel && vessel.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
+            return vessel && vessel.parts != null && vessel.parts.Count == 1 && (vessel.parts[0].partName == "PotatoRoid");
         }
 
         /// <summary>

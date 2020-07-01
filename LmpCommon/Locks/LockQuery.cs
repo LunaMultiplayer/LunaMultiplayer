@@ -21,8 +21,8 @@ namespace LmpCommon.Locks
             {
                 case LockType.Spectator:
                     return SpectatorLockExists(playerName);
-                case LockType.Asteroid:
-                    return LockStore.AsteroidLock?.PlayerName == playerName;
+                case LockType.AsteroidComet:
+                    return LockStore.AsteroidCometLock?.PlayerName == playerName;
                 case LockType.Kerbal:
                     if (LockStore.KerbalLocks.TryGetValue(kerbalName, out var kerbalLock))
                         return kerbalLock.Type == LockType.Kerbal && kerbalLock.KerbalName == kerbalName && kerbalLock.PlayerName == playerName;
@@ -55,8 +55,8 @@ namespace LmpCommon.Locks
         {
             switch (type)
             {
-                case LockType.Asteroid:
-                    return LockStore.AsteroidLock != null;
+                case LockType.AsteroidComet:
+                    return LockStore.AsteroidCometLock != null;
                 case LockType.Kerbal:
                     return LockStore.KerbalLocks.ContainsKey(kerbalName);
                 case LockType.Control:
@@ -79,8 +79,8 @@ namespace LmpCommon.Locks
         {
             switch (type)
             {
-                case LockType.Asteroid:
-                    return LockStore.AsteroidLock?.PlayerName;
+                case LockType.AsteroidComet:
+                    return LockStore.AsteroidCometLock?.PlayerName;
                 case LockType.Kerbal:
                     if (LockStore.KerbalLocks.TryGetValue(kerbalName, out var kerbalLock))
                         return kerbalLock.PlayerName;
@@ -120,8 +120,8 @@ namespace LmpCommon.Locks
             if (LockStore.SpectatorLocks.TryGetValue(playerName, out var spectatorLock))
                 locks.Add(spectatorLock);
 
-            if (AsteroidLockBelongsToPlayer(playerName))
-                locks.Add(LockStore.AsteroidLock);
+            if (AsteroidCometLockBelongsToPlayer(playerName))
+                locks.Add(LockStore.AsteroidCometLock);
 
             if (ContractLockBelongsToPlayer(playerName))
                 locks.Add(LockStore.ContractLock);
@@ -141,8 +141,8 @@ namespace LmpCommon.Locks
             locks.AddRange(GetAllUnloadedUpdateLocks());
             locks.AddRange(LockStore.SpectatorLocks.Values);
 
-            if (LockStore.AsteroidLock != null)
-                locks.Add(LockStore.AsteroidLock);
+            if (LockStore.AsteroidCometLock != null)
+                locks.Add(LockStore.AsteroidCometLock);
 
             if (LockStore.ContractLock != null)
                 locks.Add(LockStore.ContractLock);
@@ -157,8 +157,8 @@ namespace LmpCommon.Locks
         {
             switch (lockDefinition.Type)
             {
-                case LockType.Asteroid:
-                    return LockStore.AsteroidLock != null;
+                case LockType.AsteroidComet:
+                    return LockStore.AsteroidCometLock != null;
                 case LockType.Update:
                     return LockStore.UpdateLocks.ContainsKey(lockDefinition.VesselId);
                 case LockType.UnloadedUpdate:
@@ -184,8 +184,8 @@ namespace LmpCommon.Locks
             LockDefinition existingLock;
             switch (lockType)
             {
-                case LockType.Asteroid:
-                    return LockStore.AsteroidLock;
+                case LockType.AsteroidComet:
+                    return LockStore.AsteroidCometLock;
                 case LockType.Update:
                     LockStore.UpdateLocks.TryGetValue(vesselId, out existingLock);
                     break;

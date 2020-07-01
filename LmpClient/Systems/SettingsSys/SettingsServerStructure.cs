@@ -15,6 +15,7 @@ namespace LmpClient.Systems.SettingsSys
         public bool AllowAdmin { get; set; }
         public bool AllowSackKerbals { get; set; }
         public int MaxNumberOfAsteroids { get; set; }
+        public int MaxNumberOfComets { get; set; }
         public string ConsoleIdentifier { get; set; } = "";
         public GameDifficulty GameDifficulty { get; set; }
         public float SafetyBubbleDistance { get; set; } = 100f;

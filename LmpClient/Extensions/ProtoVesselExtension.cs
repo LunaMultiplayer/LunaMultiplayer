@@ -69,6 +69,28 @@ namespace LmpClient.Extensions
         }
 
         /// <summary>
+        /// Returns true or false in case the protovessel is an asteroid or a comet
+        /// </summary>
+        public static bool IsCometOrAsteroid(this ProtoVessel protoVessel)
+        {
+            return IsComet(protoVessel) || IsAsteroid(protoVessel);
+        }
+
+        /// <summary>
+        /// Returns true or false in case the protovessel is a comet
+        /// </summary>
+        public static bool IsComet(this ProtoVessel protoVessel)
+        {
+            if (protoVessel == null) return false;
+
+            if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
+                return true;
+
+            var singlePartName = protoVessel.protoPartSnapshots?.SingleOrDefault()?.partName;
+            return singlePartName == "PotatoComet";
+        }
+
+        /// <summary>
         /// Returns true or false in case the protovessel is an asteroid
         /// </summary>
         public static bool IsAsteroid(this ProtoVessel protoVessel)
@@ -78,7 +100,8 @@ namespace LmpClient.Extensions
             if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
                 return true;
 
-            return protoVessel.protoPartSnapshots?.FirstOrDefault()?.partName == "PotatoRoid";
+            var singlePartName = protoVessel.protoPartSnapshots?.SingleOrDefault()?.partName;
+            return singlePartName == "PotatoRoid";
         }
 
         /// <summary>

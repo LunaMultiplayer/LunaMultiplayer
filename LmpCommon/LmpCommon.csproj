@@ -95,7 +95,7 @@
     <Compile Include="LmpVersioning.cs" />
     <Compile Include="Locks\LockDefinition.cs" />
     <Compile Include="Locks\LockQuery.cs" />
-    <Compile Include="Locks\LockQueryAsteroid.cs" />
+    <Compile Include="Locks\LockQueryCometAsteroid.cs" />
     <Compile Include="Locks\LockQueryControl.cs" />
     <Compile Include="Locks\LockQuerySpectator.cs" />
     <Compile Include="Locks\LockQueryUnloadedUpdate.cs" />

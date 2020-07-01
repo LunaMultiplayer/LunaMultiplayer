@@ -12,9 +12,9 @@ namespace LmpCommon.Locks
         Contract,
 
         /// <summary>
-        /// The asteroid lock is owned by only 1 player and it defines who spawns the asteroids
+        /// The asteroid/comet lock is owned by only 1 player and it defines who spawns the asteroids
         /// </summary>
-        Asteroid,
+        AsteroidComet,
 
         /// <summary>
         /// The kerbal lock specifies if a user is the owner of a kerbal.

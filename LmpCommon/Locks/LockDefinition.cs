@@ -39,7 +39,7 @@ namespace LmpCommon.Locks
         /// </summary>
         public LockDefinition(LockType type, string playerName)
         {
-            if (type != LockType.Contract && type != LockType.Asteroid && type != LockType.Spectator)
+            if (type != LockType.Contract && type != LockType.AsteroidComet && type != LockType.Spectator)
                 throw new Exception("This constructor is only for Contract/Asteroid/Spectator type!");
 
             Type = type;

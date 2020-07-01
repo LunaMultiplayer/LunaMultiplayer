@@ -23,6 +23,7 @@ namespace LmpClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.AllowAdmin = msgData.AllowAdmin;
             SettingsSystem.ServerSettings.AllowSackKerbals = msgData.AllowSackKerbals;
             SettingsSystem.ServerSettings.MaxNumberOfAsteroids = msgData.MaxNumberOfAsteroids;
+            SettingsSystem.ServerSettings.MaxNumberOfComets = msgData.MaxNumberOfComets;
             SettingsSystem.ServerSettings.ConsoleIdentifier = msgData.ConsoleIdentifier;
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
             SettingsSystem.ServerSettings.MaxVesselParts = msgData.MaxVesselParts;

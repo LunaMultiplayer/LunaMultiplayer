@@ -25,6 +25,7 @@ namespace Server.Message
             msgData.AllowAdmin = !string.IsNullOrEmpty(GeneralSettings.SettingsStore.AdminPassword);
             msgData.AllowSackKerbals = GeneralSettings.SettingsStore.AllowSackKerbals;
             msgData.MaxNumberOfAsteroids = GeneralSettings.SettingsStore.NumberOfAsteroids;
+            msgData.MaxNumberOfComets = GeneralSettings.SettingsStore.NumberOfComets;
             msgData.ConsoleIdentifier = GeneralSettings.SettingsStore.ConsoleIdentifier;
             msgData.GameDifficulty = GeneralSettings.SettingsStore.GameDifficulty;
             msgData.SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance;

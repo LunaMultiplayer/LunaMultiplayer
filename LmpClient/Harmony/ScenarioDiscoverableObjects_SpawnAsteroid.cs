@@ -1,5 +1,5 @@
 ﻿using Harmony;
-using LmpClient.Systems.Asteroid;
+using LmpClient.Systems.AsteroidComet;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
@@ -12,18 +12,18 @@ namespace LmpClient.Harmony
     /// This harmony patch is intended to skip the spawn of an asteroid if we don't have the lock or the server doesn't allow them
     /// </summary>
     [HarmonyPatch(typeof(ScenarioDiscoverableObjects))]
-    [HarmonyPatch("UpdateAsteroids")]
-    public class ScenarioDiscoverableObjects_UpdateAsteroids
+    [HarmonyPatch("SpawnAsteroid")]
+    public class ScenarioDiscoverableObjects_SpawnAsteroid
     {
         [HarmonyPrefix]
-        private static bool PrefixUpdateAsteroids(double UT)
+        private static bool PrefixSpawnAsteroid()
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
 
-            if (!LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
+            if (!LockSystem.LockQuery.AsteroidCometLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
                 return false;
 
-            var currentAsteroids = AsteroidSystem.Singleton.GetAsteroidCount();
+            var currentAsteroids = AsteroidCometSystem.Singleton.GetAsteroidCount();
             if (currentAsteroids >= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
             {
                 return false;

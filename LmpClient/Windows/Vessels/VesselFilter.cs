@@ -21,7 +21,7 @@ namespace LmpClient.Windows.Vessels
 
         public static bool MatchesFilters(Vessel vessel)
         {
-            if (HideAsteroids && vessel.IsAsteroid())
+            if (HideAsteroids && vessel.IsCometOrAsteroid())
                 return false;
 
             if (HideDebris && vessel.vesselType == VesselType.Debris)

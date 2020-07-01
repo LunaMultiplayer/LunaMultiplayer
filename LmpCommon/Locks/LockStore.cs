@@ -9,9 +9,10 @@ namespace LmpCommon.Locks
     public class LockStore
     {
         /// <summary>
-        /// Provides a lock around modifications to the AsteroidLock object to ensure both atomic changes to the AsteroidLock and a memory barrier for changes to the AsteroidLock
+        /// Provides a lock around modifications to the AsteroidCometLock object to ensure both atomic changes to the AsteroidCometLock
+        /// and a memory barrier for changes to the AsteroidCometLock
         /// </summary>
-        private readonly object _asteroidSyncLock = new object();
+        private readonly object _asteroidCometSyncLock = new object();
 
         /// <summary>
         /// Provides a lock around modifications to the ContractLock object to ensure both atomic changes to the ContractLock and a memory barrier for changes to the ContractLock
@@ -24,9 +25,9 @@ namespace LmpCommon.Locks
         internal LockDefinition ContractLock { get; set; }
 
         /// <summary>
-        /// You can't have more than one user with the asteroid lock so it's a simple object
+        /// You can't have more than one user with the asteroid/comet lock so it's a simple object
         /// </summary>
-        internal LockDefinition AsteroidLock { get; set; }
+        internal LockDefinition AsteroidCometLock { get; set; }
 
         /// <summary>
         /// Several users can have several update locks but a vessel can only have 1 update lock
@@ -63,13 +64,13 @@ namespace LmpCommon.Locks
 
             switch (safeLockDefinition.Type)
             {
-                case LockType.Asteroid:
-                    lock (_asteroidSyncLock)
+                case LockType.AsteroidComet:
+                    lock (_asteroidCometSyncLock)
                     {
-                        if (AsteroidLock == null)
-                            AsteroidLock = new LockDefinition(LockType.Asteroid, safeLockDefinition.PlayerName);
+                        if (AsteroidCometLock == null)
+                            AsteroidCometLock = new LockDefinition(LockType.AsteroidComet, safeLockDefinition.PlayerName);
                         else
-                            AsteroidLock.PlayerName = safeLockDefinition.PlayerName;
+                            AsteroidCometLock.PlayerName = safeLockDefinition.PlayerName;
                     }
                     break;
                 case LockType.Kerbal:
@@ -124,10 +125,10 @@ namespace LmpCommon.Locks
         {
             switch (lockDefinition.Type)
             {
-                case LockType.Asteroid:
-                    lock (_asteroidSyncLock)
+                case LockType.AsteroidComet:
+                    lock (_asteroidCometSyncLock)
                     {
-                        AsteroidLock = null;
+                        AsteroidCometLock = null;
                     }
                     break;
                 case LockType.Kerbal:
@@ -163,10 +164,10 @@ namespace LmpCommon.Locks
         {
             switch (lockType)
             {
-                case LockType.Asteroid:
-                    lock (_asteroidSyncLock)
+                case LockType.AsteroidComet:
+                    lock (_asteroidCometSyncLock)
                     {
-                        AsteroidLock = null;
+                        AsteroidCometLock = null;
                     }
                     break;
                 case LockType.Kerbal:
@@ -200,9 +201,9 @@ namespace LmpCommon.Locks
         /// </summary>
         public void ClearAllLocks()
         {
-            lock (_asteroidSyncLock)
+            lock (_asteroidCometSyncLock)
             {
-                AsteroidLock = null;
+                AsteroidCometLock = null;
             }
             lock (_contractSyncLock)
             {

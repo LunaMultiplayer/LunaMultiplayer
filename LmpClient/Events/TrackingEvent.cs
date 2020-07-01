@@ -7,7 +7,7 @@ namespace LmpClient.Events
 {
     public class TrackingEvent : LmpBaseEvent
     {
-        public static EventData<Vessel> onStartTrackingAsteroid;
-        public static EventData<Vessel> onStopTrackingAsteroid;
+        public static EventData<Vessel> onStartTrackingAsteroidOrComet;
+        public static EventData<Vessel> onStopTrackingAsteroidOrComet;
     }
 }

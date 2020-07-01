@@ -108,12 +108,12 @@ namespace LmpClient.VesselUtilities
 
                 CoroutineUtil.StartDelayedRoutine("ReloadOwnVessel", () =>
                 {
-                    if (KerbalPortraitGallery.Instance.ActiveCrew.Count == 0)
+                    if (KerbalPortraitGallery.Instance.ActiveCrewItems.Count == 0)
                     {
                         FlightGlobals.ActiveVessel.SpawnCrew();
-                        foreach (var kerbal in KerbalPortraitGallery.Instance.ActiveCrew)
+                        foreach (var crewItem in KerbalPortraitGallery.Instance.ActiveCrewItems)
                         {
-                            kerbal.state = Kerbal.States.ALIVE;
+                            crewItem.kerbal.state = Kerbal.States.ALIVE;
                         }
                         KerbalPortraitGallery.Instance.StartRefresh(FlightGlobals.ActiveVessel);
                     }

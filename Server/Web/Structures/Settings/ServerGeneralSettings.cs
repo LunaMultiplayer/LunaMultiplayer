@@ -23,6 +23,7 @@ namespace Server.Web.Structures.Settings
         public string GameMode => GeneralSettings.SettingsStore.GameMode.ToString();
         public bool ModControl => GeneralSettings.SettingsStore.ModControl;
         public int NumberOfAsteroids => GeneralSettings.SettingsStore.NumberOfAsteroids;
+        public int NumberOfComets => GeneralSettings.SettingsStore.NumberOfComets;
         public string TerrainQuality => GeneralSettings.SettingsStore.TerrainQuality.ToString();
         public float SafetyBubbleDistance => GeneralSettings.SettingsStore.SafetyBubbleDistance;
     }
