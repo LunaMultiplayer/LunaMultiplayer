@@ -13,6 +13,7 @@ namespace LmpClient.Harmony
     /// </summary>
     [HarmonyPatch(typeof(ScenarioDiscoverableObjects))]
     [HarmonyPatch("SpawnComet")]
+    [HarmonyPatch(new[] { typeof(string) })]
     public class ScenarioDiscoverableObjects_SpawnComet
     {
         [HarmonyPrefix]
