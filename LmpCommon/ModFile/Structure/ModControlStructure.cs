@@ -546,7 +546,17 @@ namespace LmpCommon.ModFile.Structure
                 "FanShroud.03",
                 "largeFanBlade",
                 "mediumFanBlade",
-                "smallFanBlade"
+                "smallFanBlade",
+                "Magnetometer",
+                "MpoProbe",
+                "MtmStage",
+                "PotatoComet",
+                "flagPartFlat",
+                "flagPartSize0",
+                "flagPartSize1",
+                "flagPartSize2",
+                "flagPartSize3",
+                "smallClaw",
             };
         }
     }
