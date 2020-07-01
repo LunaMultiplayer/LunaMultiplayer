@@ -15,6 +15,7 @@ namespace LmpClient.Harmony
     /// </summary>
     [HarmonyPatch(typeof(OrbitDriver))]
     [HarmonyPatch("updateFromParameters")]
+    [HarmonyPatch(new[] { typeof(bool) })]
     public class OrbitDriver_UpdateFromParameters
     {
         /// <summary>
