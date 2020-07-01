@@ -67,10 +67,10 @@ namespace Server.Settings.Definition
         public bool ModControl { get; set; } = true;
 
         [XmlComment(Value = "How many untracked asteroids to spawn into the universe. 0 = Disabled")]
-        public int NumberOfAsteroids { get; set; } = 10;
+        public int NumberOfAsteroids { get; set; } = 5;
 
         [XmlComment(Value = "How many untracked comets to spawn into the universe. 0 = Disabled")]
-        public int NumberOfComets { get; set; } = 10;
+        public int NumberOfComets { get; set; } = 5;
 
         [XmlComment(Value = "Terrain quality. All clients will need to have this setting in their KSP to avoid terrain differences. Values: Low, Default, High, Ignore. Using 'Ignore' might create bugs")]
         public TerrainQuality TerrainQuality { get; set; } = TerrainQuality.High;
