@@ -7,6 +7,7 @@
   <Disconected>You have been disconnected!</Disconected>
   <Spectating>This vessel is being controlled by</Spectating>
   <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
+  <CheckParts>If you use mod or DLC parts that other players don't have you won't be seen by them!</CheckParts>
   <CannotRecover>Cannot recover vessel, the vessel is not yours.</CannotRecover>
   <CannotTerminate>Cannot terminate vessel, the vessel is not yours.</CannotTerminate>
   <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>

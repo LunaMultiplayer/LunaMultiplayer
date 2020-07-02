@@ -1,6 +1,9 @@
-﻿using LmpClient.Base;
+﻿using System.IO;
+using System.Linq;
+using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
+using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 
 namespace LmpClient.Systems.SafetyBubble
@@ -20,6 +23,8 @@ namespace LmpClient.Systems.SafetyBubble
             if (FlightGlobals.ActiveVessel.vesselSpawning)
             {
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
+                CoroutineUtil.StartDelayedRoutine(nameof(SafetyBubbleEvents), 
+                    ()=> LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.CheckParts, 15f, ScreenMessageStyle.UPPER_CENTER), 25f);
             }
         }
     }

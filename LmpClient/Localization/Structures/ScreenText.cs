@@ -8,6 +8,7 @@
         public string Disconected { get; set; } = "You have been disconnected!";
         public string Spectating { get; set; } = "This vessel is being controlled by";
         public string SafetyBubble { get; set; } = "Remember!! While you're inside the safety bubble you won't be seen by other players!!";
+        public string CheckParts { get; set; } = "If you use mod or DLC parts that other players don't have you won't be seen by them!";
         public string CannotRecover { get; set; } = "Cannot recover vessel, the vessel is not yours.";
         public string CannotTerminate { get; set; } = "Cannot terminate vessel, the vessel is not yours.";
         public string SpectatingRemoved { get; set; } = "The vessel you were spectating was removed";
