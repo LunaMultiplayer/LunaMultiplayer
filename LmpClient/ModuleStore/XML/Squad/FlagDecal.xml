@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <FieldDefinition>
+            <FieldName>flagDisplayed</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>isMirrored</FieldName>
+        </FieldDefinition>
+    </Fields>
+    <Methods>
+        <MethodDefinition>
+            <MethodName>MirrorFlag</MethodName>
+        </MethodDefinition>
+    </Methods>
+</ModuleDefinition>

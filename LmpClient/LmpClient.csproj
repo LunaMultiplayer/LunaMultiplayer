@@ -755,6 +755,18 @@
     <Content Include="Localization\XML\Swedish\ServerListWindowText.xml" />
     <Content Include="Localization\XML\Swedish\StatusWindowText.xml" />
     <Content Include="Localization\XML\Swedish\UpdateWindowText.xml" />
+    <Content Include="ModuleStore\XML\Squad\FlagDecalBackground.xml" />
+    <Content Include="ModuleStore\XML\Squad\FlagDecal.xml" />
+    <Content Include="ModuleStore\XML\Squad\KerbalSeat.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleGroundPart.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleGroundSciencePart.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleGroundExpControl.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleRoboticServoRotor.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleRoboticServoPiston.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleRoboticServoHinge.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleRoboticRotationServo.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleRoboticController.xml" />
+    <Content Include="ModuleStore\XML\Squad\BaseServo.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleCometDrill.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleComet.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleColorChanger.xml" />
@@ -769,6 +781,7 @@
     <Content Include="ModuleStore\XML\Squad\ModuleAsteroid.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleAnimationGroup.xml" />
     <Content Include="ModuleStore\XML\Squad\FXModuleThrottleEffects.xml" />
+    <Content Include="ModuleStore\XML\Squad\ModuleSpaceObjectInfo.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleSpaceObjectResource.xml" />
     <Content Include="ModuleStore\XML\Squad\ModuleWheelDamage.xml" />
     <Content Include="ModuleStore\XML\Squad\MultiModeEngine.xml" />

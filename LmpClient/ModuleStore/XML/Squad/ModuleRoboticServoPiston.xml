@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <FieldDefinition>
+            <FieldName>softMinMaxExtension</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>targetExtension</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>traverseVelocity</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>pistonDamping</FieldName>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>
