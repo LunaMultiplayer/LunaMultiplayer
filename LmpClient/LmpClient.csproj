@@ -224,6 +224,7 @@
     <Compile Include="LunaScreenMsg.cs" />
     <Compile Include="ModuleStore\Harmony\ModuleEngines_Activate.cs" />
     <Compile Include="ModuleStore\Patching\FieldChangeTranspiler.cs" />
+    <Compile Include="ModuleStore\Patching\PartModuleRunner.cs" />
     <Compile Include="ModuleStore\Patching\PartModulePatcher.cs" />
     <Compile Include="ModuleStore\Patching\TestModule.cs" />
     <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />

@@ -3,32 +3,25 @@ using Harmony.ILCopying;
 using LmpClient.Base;
 using LmpClient.ModuleStore.Structures;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LmpClient.ModuleStore.Patching
 {
     /// <summary>
-    /// This class intention is to patch part modules methods so if they modify a field that is persistent it triggers an event
+    /// This class intention is to patch part modules methods so if they modify a field that is customized in the XML it triggers an event
     /// </summary>
     public class PartModulePatcher
     {
-        public static bool Ready => _awakeTask.IsCompleted;
-        private static Task _awakeTask;
-        private static readonly object Mutex = new object();
-
         /// <summary>
         /// Here we store the original method instructions in case we fuck things up
         /// </summary>
-        private static readonly List<CodeInstruction> InstructionsBackup = new List<CodeInstruction>();
-
-        /// <summary>
-        /// Keep a reference to know what customization applies
-        /// </summary>
-        private static ModuleDefinition _customizationModule;
+        private static readonly ConcurrentDictionary<MethodBase, List<CodeInstruction>> InstructionsBackup = new ConcurrentDictionary<MethodBase, List<CodeInstruction>>();
 
         #region Transpilers references
 
@@ -38,57 +31,19 @@ namespace LmpClient.ModuleStore.Patching
         #endregion
 
         /// <summary>
-        /// Call this method to scan all the PartModules and patch the methods
-        /// </summary>
-        public static void Awake()
-        {
-            if (_awakeTask != null) return;
-
-            _awakeTask = Task.Run(() =>
-            {
-                Parallel.ForEach(AppDomain.CurrentDomain.GetAssemblies(), assembly =>
-                {
-                    try
-                    {
-                        var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
-                        foreach (var partModule in partModules.Reverse())
-                        {
-                            try
-                            {
-                                lock (Mutex)
-                                {
-                                    if (FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out _customizationModule))
-                                    {
-                                        PatchFieldsAndMethods(partModule);
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                LunaLog.LogError($"Exception patching module {partModule.Name} from assembly {assembly.GetName().Name}: {ex.Message}");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        LunaLog.LogError($"Exception loading assembly {assembly.GetName().Name}: {ex.Message}");
-                    }
-                });
-            });
-
-            _awakeTask.ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Patches the methods defined in the XML with the transpiler
         /// </summary>
-        private static void PatchFieldsAndMethods(Type partModule)
+        public static void PatchFieldsAndMethods(Type partModule)
         {
+            //If PartModule does not have any customization skip it
+            if (!FieldModuleStore.CustomizedModuleBehaviours.TryGetValue(partModule.Name, out var customizationModule) || !customizationModule.CustomizedFields.Any())
+                return;
+
             foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
                 .Where(m => m.Name == "OnUpdate" || m.Name == "OnFixedUpdate" || m.Name == "FixedUpdate" || m.Name == "Update" || m.Name == "LateUpdate" ||
                             m.GetCustomAttributes(typeof(KSPAction), false).Any() || m.GetCustomAttributes(typeof(KSPEvent), false).Any(a => ((KSPEvent)a).guiActive)))
             {
-                if (_customizationModule.CustomizedFields.Any() && partModuleMethod.GetMethodBody() != null)
+                if (partModuleMethod.GetMethodBody() != null)
                 {
                     try
                     {
@@ -108,9 +63,10 @@ namespace LmpClient.ModuleStore.Patching
         /// <summary>
         /// This method restores a failed method patch
         /// </summary>
-        public static IEnumerable<CodeInstruction> Restore(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Restore(MethodBase originalMethod)
         {
-            return InstructionsBackup.AsEnumerable();
+            InstructionsBackup.TryGetValue(originalMethod, out var backupInstructions);
+            return backupInstructions.AsEnumerable();
         }
 
         public static IEnumerable<CodeInstruction> BackupAndCallTranspiler(ILGenerator generator, MethodBase originalMethod, IEnumerable<CodeInstruction> instructions)
@@ -118,12 +74,10 @@ namespace LmpClient.ModuleStore.Patching
             if (originalMethod.DeclaringType == null) return instructions.AsEnumerable();
 
             var codes = new List<CodeInstruction>(instructions);
-            InstructionsBackup.Clear();
-            InstructionsBackup.AddRange(codes);
+            InstructionsBackup.AddOrUpdate(originalMethod, codes, (methodBase, oldCodes) => codes);
 
-            FieldChangeTranspiler.InitTranspiler(_customizationModule, generator, originalMethod, codes);
-
-            return FieldChangeTranspiler.Transpile();
+            var transpiler = new FieldChangeTranspiler(generator, originalMethod, codes);
+            return transpiler.Transpile();
         }
 
         /// <summary>

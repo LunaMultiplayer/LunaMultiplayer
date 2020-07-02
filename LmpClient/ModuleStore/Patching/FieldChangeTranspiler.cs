@@ -13,38 +13,38 @@ namespace LmpClient.ModuleStore.Patching
 {
     public class FieldChangeTranspiler
     {
-        private static ModuleDefinition _definition;
-        private static ILGenerator _generator;
-        private static MethodBase _originalMethod;
-        private static List<CodeInstruction> _codes;
+        private readonly ModuleDefinition _definition;
+        private readonly ILGenerator _generator;
+        private readonly MethodBase _originalMethod;
+        private readonly List<CodeInstruction> _codes;
 
         /// <summary>
         /// We create local vars to store the values of the tracked fields. Those local vars will have an index to identify them.
         /// Here we store the KEY-FIELD so we can access them easily
         /// </summary>
-        private static readonly Dictionary<int, int> FieldIndexToLocalVarDictionary = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> _fieldIndexToLocalVarDictionary = new Dictionary<int, int>();
 
-        private static int LastIndex => _codes.Count - 1;
+        private int LastIndex => _codes.Count - 1;
 
         /// <summary>
         /// Creates the static references and init the transpiler
         /// </summary>
-        public static void InitTranspiler(ModuleDefinition definition, ILGenerator generator,
+        public FieldChangeTranspiler(ILGenerator generator,
             MethodBase originalMethod, List<CodeInstruction> codes)
         {
-            _definition = definition;
+            _definition = FieldModuleStore.CustomizedModuleBehaviours[originalMethod.DeclaringType.Name];
             _generator = generator;
             _originalMethod = originalMethod;
             _codes = codes;
 
-            FieldIndexToLocalVarDictionary.Clear();
+            _fieldIndexToLocalVarDictionary.Clear();
         }
 
         /// <summary>
         /// This is black magic. By using opcodes we store all the fields that we are tracking into local variables at the beginning of the method.
         /// Then, after the method has run, we compare the current values against the stored ones and we trigger the onPartModuleFieldChanged event
         /// </summary>
-        public static IEnumerable<CodeInstruction> Transpile()
+        public IEnumerable<CodeInstruction> Transpile()
         {
             TranspileBackupFields();
             TranspileEvaluations();
@@ -64,7 +64,7 @@ namespace LmpClient.ModuleStore.Patching
         ///     ----- Function Code------
         /// } 
         /// </summary>
-        private static void TranspileBackupFields()
+        private void TranspileBackupFields()
         {
             var fields = _definition.Fields.ToList();
             for (var i = 0; i < fields.Count; i++)
@@ -78,12 +78,12 @@ namespace LmpClient.ModuleStore.Patching
 
                 //Here we declare a local var to store the OLD value of the field that we are tracking
                 var localVar = _generator.DeclareLocal(field.FieldType);
-                FieldIndexToLocalVarDictionary.Add(i, localVar.LocalIndex);
+                _fieldIndexToLocalVarDictionary.Add(i, localVar.LocalIndex);
 
                 _codes.Insert(0, new CodeInstruction(OpCodes.Ldarg_0));
                 _codes.Insert(1, new CodeInstruction(OpCodes.Ldfld, field));
 
-                switch (FieldIndexToLocalVarDictionary[i])
+                switch (_fieldIndexToLocalVarDictionary[i])
                 {
                     case 0:
                         _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_0));
@@ -98,7 +98,7 @@ namespace LmpClient.ModuleStore.Patching
                         _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_3));
                         break;
                     default:
-                        _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_S, FieldIndexToLocalVarDictionary[i]));
+                        _codes.Insert(2, new CodeInstruction(OpCodes.Stloc_S, _fieldIndexToLocalVarDictionary[i]));
                         break;
                 }
             }
@@ -119,7 +119,7 @@ namespace LmpClient.ModuleStore.Patching
         ///     if (TrackedField3 != backupField3)
         ///         PartModuleEvent.onPartModuleBoolFieldChanged.Fire();
         /// } 
-        private static void TranspileEvaluations()
+        private void TranspileEvaluations()
         {
             var startComparisonInstructions = new List<CodeInstruction>();
             var jmpInstructions = new List<CodeInstruction>();
@@ -133,7 +133,7 @@ namespace LmpClient.ModuleStore.Patching
                 var evaluationVar = _generator.DeclareLocal(typeof(bool));
 
                 //We write the comparision and the triggering of the event at the bottom
-                switch (FieldIndexToLocalVarDictionary[i])
+                switch (_fieldIndexToLocalVarDictionary[i])
                 {
                     case 0:
                         _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_0));
@@ -148,7 +148,7 @@ namespace LmpClient.ModuleStore.Patching
                         _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_3));
                         break;
                     default:
-                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_S, FieldIndexToLocalVarDictionary[i]));
+                        _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldloc_S, _fieldIndexToLocalVarDictionary[i]));
                         break;
                 }
 
@@ -278,7 +278,7 @@ namespace LmpClient.ModuleStore.Patching
         ///         PartModuleEvent.onPartModuleBoolFieldChanged.Fire();
         /// } 
         /// </summary>
-        private static void FixFallbackInstructions(List<CodeInstruction> startComparisonInstructions, List<CodeInstruction> jmpInstructions)
+        private void FixFallbackInstructions(List<CodeInstruction> startComparisonInstructions, List<CodeInstruction> jmpInstructions)
         {
             for (var i = 0; i < startComparisonInstructions.Count; i++)
             {
@@ -309,7 +309,7 @@ namespace LmpClient.ModuleStore.Patching
         ///         PartModuleEvent.onPartModuleBoolFieldChanged.Fire();
         /// } 
         /// </summary>
-        private static void RedirectExistingReturns(List<CodeInstruction> codes)
+        private void RedirectExistingReturns(List<CodeInstruction> codes)
         {
             //Store the instruction we just added as we must redirect all the returns that the method already had towards this line
             var firstCheck = _generator.DefineLabel();
@@ -339,7 +339,7 @@ namespace LmpClient.ModuleStore.Patching
         /// <summary>
         /// Calls the correct onPartModuleXXXFieldChanged based on type
         /// </summary>
-        private static void LoadFunctionByFieldType(Type fieldType)
+        private void LoadFunctionByFieldType(Type fieldType)
         {
             if (fieldType == typeof(bool))
             {
@@ -406,7 +406,7 @@ namespace LmpClient.ModuleStore.Patching
         /// <summary>
         /// Calls the correct Fire() based on type
         /// </summary>
-        private static void CallFunctionByFieldType(Type fieldType)
+        private void CallFunctionByFieldType(Type fieldType)
         {
             if (fieldType == typeof(bool))
             {

@@ -8,6 +8,7 @@ using LmpCommon.Message.Base;
 using System;
 using System.Net;
 using System.Threading;
+using LmpClient.ModuleStore.Patching;
 
 namespace LmpClient.Network
 {
@@ -60,14 +61,21 @@ namespace LmpClient.Network
                 return;
 
             MainSystem.NetworkState = ClientState.Connecting;
-            MainSystem.Singleton.Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
-            LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
             if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
                 NetworkMain.ClientConnection.Start();
 
             SystemBase.TaskFactory.StartNew(() =>
             {
+                while (!PartModuleRunner.Ready)
+                {
+                    MainSystem.Singleton.Status = $"Patching part modules (runs on every restart). {PartModuleRunner.GetPercentage()}%";
+                    Thread.Sleep(50);
+                }
+
+                MainSystem.Singleton.Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
+                LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
+
                 try
                 {
                     var outMsg = NetworkMain.ClientConnection.CreateMessage(password.GetByteCount());

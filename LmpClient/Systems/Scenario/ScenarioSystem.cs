@@ -74,7 +74,9 @@ namespace LmpClient.Systems.Scenario
             //ResourceScenario.Instance.Load();
 
             var validScenarios = KSPScenarioType.GetAllScenarioTypesInAssemblies()
-                .Where(s => !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) && LoadModuleByGameMode(s));
+                .Where(s => !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) 
+                            && LoadModuleByGameMode(s)
+                            && IsDlcScenarioInstalled(s.ModuleType.Name));
 
             foreach (var validScenario in validScenarios)
             {
@@ -194,11 +196,22 @@ namespace LmpClient.Systems.Scenario
             return false;
         }
 
+        private static bool IsDlcScenarioInstalled(string scenarioName)
+        {
+            if (scenarioName == "DeployedScience" && !ExpansionsLoader.IsExpansionInstalled("Serenity"))
+                return false;
+
+            return true;
+        }
+
         private static bool IsScenarioModuleAllowed(string scenarioName)
         {
             if (string.IsNullOrEmpty(scenarioName)) return false;
 
             if (scenarioName == "DeployedScience" && !ExpansionsLoader.IsExpansionInstalled("Serenity"))
+                return false;
+
+            if (!IsDlcScenarioInstalled(scenarioName))
                 return false;
 
             if (!AllScenarioTypesInAssemblies.ContainsKey(scenarioName)) return false; //Module missing

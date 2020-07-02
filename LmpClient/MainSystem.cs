@@ -238,7 +238,7 @@ namespace LmpClient
             FieldModuleStore.ReadCustomizationXml();
             LmpBaseEvent.Awake();
             HarmonyPatcher.Awake();
-            PartModulePatcher.Awake();
+            PartModuleRunner.Awake();
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
 
@@ -357,9 +357,6 @@ namespace LmpClient
 
         private void StartGameNow()
         {
-            while (!PartModulePatcher.Ready)
-                Thread.Sleep(100);
-
             //Create new game object for our LMP session.
             HighLogic.CurrentGame = CreateBlankGame();
 
