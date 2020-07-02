@@ -6,6 +6,7 @@ using LmpCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Expansions;
 using UniLinq;
 
 namespace LmpClient.Systems.Scenario
@@ -196,6 +197,9 @@ namespace LmpClient.Systems.Scenario
         private static bool IsScenarioModuleAllowed(string scenarioName)
         {
             if (string.IsNullOrEmpty(scenarioName)) return false;
+
+            if (scenarioName == "DeployedScience" && !ExpansionsLoader.IsExpansionInstalled("Serenity"))
+                return false;
 
             if (!AllScenarioTypesInAssemblies.ContainsKey(scenarioName)) return false; //Module missing
 

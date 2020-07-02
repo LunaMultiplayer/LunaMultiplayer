@@ -20,9 +20,4 @@
             <FieldName>deployedOnGround</FieldName>
         </FieldDefinition>
     </Fields>
-    <Methods>
-        <MethodDefinition>
-            <MethodName>ToggleActive</MethodName>
-        </MethodDefinition>
-    </Methods>
 </ModuleDefinition>

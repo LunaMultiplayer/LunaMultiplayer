@@ -93,12 +93,12 @@ namespace LmpClient.ModuleStore.Patching
                     try
                     {
                         LunaLog.Log($"Patching method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
-
                         HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, BackupAndCallTranspilerMethod);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} of assembly {partModule.Assembly.GetName().Name}");
+                        LunaLog.LogError($"Could not patch method {partModuleMethod.Name} for field changes in module {partModule.Name} " +
+                                         $"of assembly {partModule.Assembly.GetName().Name}. Details: {ex}");
                         HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, RestoreTranspilerMethod);
                     }
                 }
@@ -124,7 +124,6 @@ namespace LmpClient.ModuleStore.Patching
             FieldChangeTranspiler.InitTranspiler(_customizationModule, generator, originalMethod, codes);
 
             return FieldChangeTranspiler.Transpile();
-
         }
 
         /// <summary>

@@ -51,6 +51,24 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             SendMessage(msgData);
         }
 
+        public void SendVesselPartSyncFieldShortMsg(Vessel vessel, Part part, string moduleName, string field, short value)
+        {
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
+            msgData.FieldType = PartSyncFieldType.Short;
+            msgData.ShortValue = value;
+
+            SendMessage(msgData);
+        }
+
+        public void SendVesselPartSyncFieldUshortMsg(Vessel vessel, Part part, string moduleName, string field, ushort value)
+        {
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
+            msgData.FieldType = PartSyncFieldType.UShort;
+            msgData.UShortValue = value;
+
+            SendMessage(msgData);
+        }
+
         public void SendVesselPartSyncFieldIntMsg(Vessel vessel, Part part, string moduleName, string field, int value)
         {
             var msgData = GetBaseMsg(vessel, part, moduleName, field);
@@ -60,11 +78,41 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             SendMessage(msgData);
         }
 
+        public void SendVesselPartSyncFieldUIntMsg(Vessel vessel, Part part, string moduleName, string field, uint value)
+        {
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
+            msgData.FieldType = PartSyncFieldType.UInteger;
+            msgData.UIntValue = value;
+
+            SendMessage(msgData);
+        }
+
+
         public void SendVesselPartSyncFieldFloatMsg(Vessel vessel, Part part, string moduleName, string field, float value)
         {
             var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Float;
             msgData.FloatValue = value;
+
+            SendMessage(msgData);
+        }
+
+
+
+        public void SendVesselPartSyncFieldLongMsg(Vessel vessel, Part part, string moduleName, string field, long value)
+        {
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
+            msgData.FieldType = PartSyncFieldType.Long;
+            msgData.LongValue = value;
+
+            SendMessage(msgData);
+        }
+
+        public void SendVesselPartSyncFieldULongMsg(Vessel vessel, Part part, string moduleName, string field, ulong value)
+        {
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
+            msgData.FieldType = PartSyncFieldType.ULong;
+            msgData.ULongValue = value;
 
             SendMessage(msgData);
         }

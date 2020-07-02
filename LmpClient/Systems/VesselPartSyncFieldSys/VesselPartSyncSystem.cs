@@ -33,8 +33,13 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
         {
             base.OnEnabled();
             PartModuleEvent.onPartModuleBoolFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleBoolFieldChanged);
+            PartModuleEvent.onPartModuleShortFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleShortFieldChanged);
+            PartModuleEvent.onPartModuleUShortFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleUshortFieldChanged);
             PartModuleEvent.onPartModuleIntFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleIntFieldChanged);
+            PartModuleEvent.onPartModuleUIntFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleUintFieldChanged);
             PartModuleEvent.onPartModuleFloatFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleFloatFieldChanged);
+            PartModuleEvent.onPartModuleLongFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleLongFieldChanged);
+            PartModuleEvent.onPartModuleULongFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleUlongFieldChanged);
             PartModuleEvent.onPartModuleDoubleFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleDoubleFieldChanged);
             PartModuleEvent.onPartModuleVectorFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleVectorFieldChanged);
             PartModuleEvent.onPartModuleQuaternionFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleQuaternionFieldChanged);
@@ -49,8 +54,13 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
         {
             base.OnDisabled();
             PartModuleEvent.onPartModuleBoolFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleBoolFieldChanged);
+            PartModuleEvent.onPartModuleShortFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleShortFieldChanged);
+            PartModuleEvent.onPartModuleUShortFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleUshortFieldChanged);
             PartModuleEvent.onPartModuleIntFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleIntFieldChanged);
+            PartModuleEvent.onPartModuleUIntFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleUintFieldChanged);
             PartModuleEvent.onPartModuleFloatFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleFloatFieldChanged);
+            PartModuleEvent.onPartModuleLongFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleLongFieldChanged);
+            PartModuleEvent.onPartModuleULongFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleUlongFieldChanged);
             PartModuleEvent.onPartModuleDoubleFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleDoubleFieldChanged);
             PartModuleEvent.onPartModuleVectorFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleVectorFieldChanged);
             PartModuleEvent.onPartModuleQuaternionFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleQuaternionFieldChanged);

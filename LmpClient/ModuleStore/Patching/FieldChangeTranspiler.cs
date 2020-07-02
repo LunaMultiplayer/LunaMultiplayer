@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
 using LmpClient.Events;
+using LmpClient.Extensions;
 using LmpClient.ModuleStore.Structures;
 using UnityEngine;
 
@@ -52,7 +53,7 @@ namespace LmpClient.ModuleStore.Patching
         }
 
         /// <summary>
-        /// Here we make a backup of all the tracked fields at the BEGGINING of the function.
+        /// Here we make a backup of all the tracked fields at the BEGINNING of the function.
         /// Ex: 
         /// public void MyFunction()
         /// {
@@ -103,7 +104,7 @@ namespace LmpClient.ModuleStore.Patching
             }
         }
 
-        /// Here we make a comparison and we trigger a field when the new vals are different.
+        /// Here we make a comparison and we trigger a field when the new values are different.
         /// Example: 
         /// public void MyFunction()
         /// {
@@ -123,7 +124,7 @@ namespace LmpClient.ModuleStore.Patching
             var startComparisonInstructions = new List<CodeInstruction>();
             var jmpInstructions = new List<CodeInstruction>();
 
-            var fields = _definition.Fields.ToList();
+            var fields = _definition.Fields.DistinctBy(f=> f.FieldName).ToList();
             for (var i = 0; i < fields.Count; i++)
             {
                 var field = AccessTools.Field(_originalMethod.DeclaringType, fields[i].FieldName);
@@ -358,13 +359,33 @@ namespace LmpClient.ModuleStore.Patching
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, bool>), "Fire")));
             }
+            else if (fieldType == typeof(short))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, short>), "Fire")));
+            }
+            else if (fieldType == typeof(ushort))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, ushort>), "Fire")));
+            }
             else if (fieldType == typeof(int))
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, int>), "Fire")));
             }
+            else if (fieldType == typeof(uint))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, uint>), "Fire")));
+            }
             else if (fieldType == typeof(float))
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, float>), "Fire")));
+            }
+            else if (fieldType == typeof(long))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, long>), "Fire")));
+            }
+            else if (fieldType == typeof(ulong))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, ulong>), "Fire")));
             }
             else if (fieldType == typeof(double))
             {

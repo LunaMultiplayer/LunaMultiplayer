@@ -53,6 +53,25 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             System.MessageSender.SendVesselPartSyncFieldBoolMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
+
+        public void PartModuleShortFieldChanged(PartModule module, string fieldName, short newValue)
+        {
+            if (!CallIsValid(module, fieldName))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new SHORT value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldShortMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleUshortFieldChanged(PartModule module, string fieldName, ushort newValue)
+        {
+            if (!CallIsValid(module, fieldName))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new USHORT value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldUshortMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
+        }
+
         public void PartModuleIntFieldChanged(PartModule module, string fieldName, int newValue)
         {
             if (!CallIsValid(module, fieldName))
@@ -62,6 +81,15 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             System.MessageSender.SendVesselPartSyncFieldIntMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
+        public void PartModuleUintFieldChanged(PartModule module, string fieldName, uint newValue)
+        {
+            if (!CallIsValid(module, fieldName))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new UINT value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldUIntMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
+        }
+
         public void PartModuleFloatFieldChanged(PartModule module, string fieldName, float newValue)
         {
             if (!CallIsValid(module, fieldName))
@@ -69,6 +97,25 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
 
             LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new FLOAT value of {newValue}.");
             System.MessageSender.SendVesselPartSyncFieldFloatMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
+        }
+
+
+        public void PartModuleLongFieldChanged(PartModule module, string fieldName, long newValue)
+        {
+            if (!CallIsValid(module, fieldName))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new LONG value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldLongMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleUlongFieldChanged(PartModule module, string fieldName, ulong newValue)
+        {
+            if (!CallIsValid(module, fieldName))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new ULONG value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldULongMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleDoubleFieldChanged(PartModule module, string fieldName, double newValue)

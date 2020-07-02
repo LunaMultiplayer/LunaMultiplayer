@@ -50,11 +50,26 @@ namespace Server.System.Vessel
                         case PartSyncFieldType.Boolean:
                             module.UpdateValue(msgData.FieldName, msgData.BoolValue.ToString(CultureInfo.InvariantCulture));
                             break;
+                        case PartSyncFieldType.Short:
+                            module.UpdateValue(msgData.FieldName, msgData.ShortValue.ToString(CultureInfo.InvariantCulture));
+                            break;
+                        case PartSyncFieldType.UShort:
+                            module.UpdateValue(msgData.FieldName, msgData.UShortValue.ToString(CultureInfo.InvariantCulture));
+                            break;
                         case PartSyncFieldType.Integer:
                             module.UpdateValue(msgData.FieldName, msgData.IntValue.ToString(CultureInfo.InvariantCulture));
                             break;
+                        case PartSyncFieldType.UInteger:
+                            module.UpdateValue(msgData.FieldName, msgData.UIntValue.ToString(CultureInfo.InvariantCulture));
+                            break;
                         case PartSyncFieldType.Float:
                             module.UpdateValue(msgData.FieldName, msgData.FloatValue.ToString(CultureInfo.InvariantCulture));
+                            break;
+                        case PartSyncFieldType.Long:
+                            module.UpdateValue(msgData.FieldName, msgData.LongValue.ToString(CultureInfo.InvariantCulture));
+                            break;
+                        case PartSyncFieldType.ULong:
+                            module.UpdateValue(msgData.FieldName, msgData.ULongValue.ToString(CultureInfo.InvariantCulture));
                             break;
                         case PartSyncFieldType.Double:
                             module.UpdateValue(msgData.FieldName, msgData.DoubleValue.ToString(CultureInfo.InvariantCulture));

@@ -18,7 +18,12 @@ namespace LmpCommon.Message.Data.Vessel
 
         public string StrValue;
         public bool BoolValue;
+        public short ShortValue;
+        public ushort UShortValue;
         public int IntValue;
+        public uint UIntValue;
+        public long LongValue;
+        public ulong ULongValue;
         public float FloatValue;
         public double DoubleValue;
         public float[] VectorValue = new float[3];
@@ -43,11 +48,26 @@ namespace LmpCommon.Message.Data.Vessel
                 case PartSyncFieldType.Boolean:
                     lidgrenMsg.Write(BoolValue);
                     break;
+                case PartSyncFieldType.Short:
+                    lidgrenMsg.Write(ShortValue);
+                    break;
+                case PartSyncFieldType.UShort:
+                    lidgrenMsg.Write(UShortValue);
+                    break;
                 case PartSyncFieldType.Integer:
                     lidgrenMsg.Write(IntValue);
                     break;
+                case PartSyncFieldType.UInteger:
+                    lidgrenMsg.Write(UIntValue);
+                    break;
                 case PartSyncFieldType.Float:
                     lidgrenMsg.Write(FloatValue);
+                    break;
+                case PartSyncFieldType.Long:
+                    lidgrenMsg.Write(LongValue);
+                    break;
+                case PartSyncFieldType.ULong:
+                    lidgrenMsg.Write(ULongValue);
                     break;
                 case PartSyncFieldType.Double:
                     lidgrenMsg.Write(DoubleValue);
@@ -88,11 +108,26 @@ namespace LmpCommon.Message.Data.Vessel
                 case PartSyncFieldType.Boolean:
                     BoolValue = lidgrenMsg.ReadBoolean();
                     break;
+                case PartSyncFieldType.Short:
+                    ShortValue = lidgrenMsg.ReadInt16();
+                    break;
+                case PartSyncFieldType.UShort:
+                    UShortValue = lidgrenMsg.ReadUInt16();
+                    break;
                 case PartSyncFieldType.Integer:
                     IntValue = lidgrenMsg.ReadInt32();
                     break;
+                case PartSyncFieldType.UInteger:
+                    UIntValue = lidgrenMsg.ReadUInt32();
+                    break;
                 case PartSyncFieldType.Float:
                     FloatValue = lidgrenMsg.ReadFloat();
+                    break;
+                case PartSyncFieldType.Long:
+                    LongValue = lidgrenMsg.ReadInt64();
+                    break;
+                case PartSyncFieldType.ULong:
+                    ULongValue = lidgrenMsg.ReadUInt64();
                     break;
                 case PartSyncFieldType.Double:
                     DoubleValue = lidgrenMsg.ReadDouble();
@@ -127,11 +162,26 @@ namespace LmpCommon.Message.Data.Vessel
                 case PartSyncFieldType.Boolean:
                     msgSize += sizeof(bool);
                     break;
+                case PartSyncFieldType.Short:
+                    msgSize += sizeof(short);
+                    break;
+                case PartSyncFieldType.UShort:
+                    msgSize += sizeof(ushort);
+                    break;
                 case PartSyncFieldType.Integer:
                     msgSize += sizeof(int);
                     break;
+                case PartSyncFieldType.UInteger:
+                    msgSize += sizeof(uint);
+                    break;
                 case PartSyncFieldType.Float:
                     msgSize += sizeof(float);
+                    break;
+                case PartSyncFieldType.Long:
+                    msgSize += sizeof(long);
+                    break;
+                case PartSyncFieldType.ULong:
+                    msgSize += sizeof(ulong);
                     break;
                 case PartSyncFieldType.Double:
                     msgSize += sizeof(double);
