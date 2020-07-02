@@ -1,6 +1,7 @@
 ﻿using LmpCommon;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,8 +12,8 @@ namespace LmpClient.Utilities
     {
         private static readonly Random Rnd = new Random();
 
-        private static string _debugPort;
-        public static string DebugPort => _debugPort ?? (_debugPort = GetDebugPort());
+        private static string _processId;
+        public static string ProcessId => _processId ?? (_processId = Process.GetCurrentProcess().Id.ToString());
 
         public static string OutputLogFilePath = CombinePaths(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "..", "LocalLow", "Squad", "Kerbal Space Program", "output_log.txt");
 
@@ -26,35 +27,6 @@ namespace LmpClient.Utilities
                 throw new ArgumentNullException(nameof(paths));
             }
             return paths.Aggregate(Path.Combine);
-        }
-
-        /// <summary>
-        /// This returns the port that you must attach to from Visual studio.
-        /// Only useful when you have several KSPinstances and you don't know which one to attach
-        /// </summary>
-        private static string GetDebugPort()
-        {
-            if (!Common.PlatformIsWindows()) return "0";
-
-            if (!File.Exists(OutputLogFilePath)) return "0";
-
-            var regex = new Regex(@"address=0\.0\.0\.0:(\d+)");
-
-            using (var stream = File.Open(OutputLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var reader = new StreamReader(stream))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    var match = regex.Match(line);
-                    if (match.Success && match.Groups.Count > 1)
-                    {
-                        return match.Groups[1].Value;
-                    }
-                }
-            }
-
-            return null;
         }
 
         /// <summary>

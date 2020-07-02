@@ -30,7 +30,7 @@ namespace LmpClient.Windows.Connection
         protected const float WindowWidth = 400;
 
 #if DEBUG
-        private readonly string _title = $"Luna Multiplayer {LmpVersioning.CurrentVersion} Debug port: {CommonUtil.DebugPort}";
+        private readonly string _title = $"Luna Multiplayer {LmpVersioning.CurrentVersion} PID: {CommonUtil.ProcessId}";
 #else
         private readonly string _title = $"Luna Multiplayer {LmpVersioning.CurrentVersion}";
 #endif

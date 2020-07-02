@@ -39,7 +39,7 @@ namespace LmpClient.Windows.Status
         private static readonly List<SubspaceDisplayEntry> SubspaceDisplay = new List<SubspaceDisplayEntry>();
 
 #if DEBUG
-        private static readonly string Title = $"LMP - Debug port: {CommonUtil.DebugPort}";
+        private static readonly string Title = $"LMP - PID: {CommonUtil.ProcessId}";
 #else
         private static readonly string Title = $"LMP - Luna Multiplayer";
 #endif

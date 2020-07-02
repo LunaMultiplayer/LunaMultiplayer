@@ -227,7 +227,7 @@ namespace LmpClient
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
             LunaLog.Log($"[LMP]: LMP {LmpVersioning.CurrentVersion} Starting at: {KspPath}");
-            LunaLog.Log($"[LMP]: Debug port: {CommonUtil.DebugPort}");
+            LunaLog.Log($"[LMP]: Process ID: {CommonUtil.ProcessId}");
 
             if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
             {
