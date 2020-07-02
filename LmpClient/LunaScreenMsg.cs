@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using KSP.UI.Screens;
+using UnityEngine;
 
 namespace LmpClient
 {
@@ -8,27 +10,10 @@ namespace LmpClient
     /// </summary>
     public class LunaScreenMsg
     {
-        #region Helper classes
-
-        private class ScreenMsgEntry
-        {
-            public string Text { get; }
-            public float Duration { get; }
-            public ScreenMessageStyle Location { get; }
-
-            public ScreenMsgEntry(string text, float durationInSeconds, ScreenMessageStyle location)
-            {
-                Text = text;
-                Duration = durationInSeconds;
-                Location = location;
-            }
-        }
-
-        #endregion
 
         #region Fields & properties
 
-        private static readonly ConcurrentQueue<ScreenMsgEntry> Queue = new ConcurrentQueue<ScreenMsgEntry>();
+        private static readonly ConcurrentQueue<ScreenMessage> Queue = new ConcurrentQueue<ScreenMessage>();
 
         #endregion
 
@@ -39,17 +24,33 @@ namespace LmpClient
         /// </summary>
         public static ScreenMessage PostScreenMessage(string text, float durationInSeconds, ScreenMessageStyle location)
         {
+            return PostScreenMessage(text, durationInSeconds, location, Color.green);
+        }
+
+        /// <summary>
+        /// Posts a message in the screen
+        /// </summary>
+        public static ScreenMessage PostScreenMessage(string text, float durationInSeconds, ScreenMessageStyle location, Color color)
+        {
             if (MainSystem.IsUnityThread)
             {
-                return ScreenMessages.PostScreenMessage(text, durationInSeconds, location);
+                return ScreenMessages.PostScreenMessage(text, durationInSeconds, location, color);
             }
 
-            Queue.Enqueue(new ScreenMsgEntry(text, durationInSeconds, location));
+            Queue.Enqueue(CreateMessage(text, durationInSeconds, location, color));
 
             return null;
         }
 
         #endregion
+
+        private static ScreenMessage CreateMessage(string text, float durationInSeconds, ScreenMessageStyle location, Color color)
+        {
+            return new ScreenMessage(text, durationInSeconds, location)
+            {
+                color = color
+            };
+        }
 
         #region Process
 
@@ -65,7 +66,7 @@ namespace LmpClient
 
             while (Queue.TryDequeue(out var entry))
             {
-                ScreenMessages.PostScreenMessage(entry.Text, entry.Duration, entry.Location);
+                ScreenMessages.PostScreenMessage(entry);
             }
         }
 
