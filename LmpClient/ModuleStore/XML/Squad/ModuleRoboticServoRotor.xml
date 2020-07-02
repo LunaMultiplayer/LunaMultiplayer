@@ -8,16 +8,13 @@
             <FieldName>rotateCounterClockwise</FieldName>
         </FieldDefinition>
         <FieldDefinition>
+            <FieldName>inverted</FieldName>
+        </FieldDefinition>
+        <FieldDefinition>
             <FieldName>ratcheted</FieldName>
         </FieldDefinition>
         <FieldDefinition>
             <FieldName>brakePercentage</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <FieldName>hingeDamping</FieldName>
-        </FieldDefinition>
-        <FieldDefinition>
-            <FieldName>previousTargetAngle</FieldName>
         </FieldDefinition>
     </Fields>
 </ModuleDefinition>
