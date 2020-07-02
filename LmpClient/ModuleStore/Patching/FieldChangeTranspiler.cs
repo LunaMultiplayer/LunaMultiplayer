@@ -20,7 +20,7 @@ namespace LmpClient.ModuleStore.Patching
 
         /// <summary>
         /// We create local vars to store the values of the tracked fields. Those local vars will have an index to identify them.
-        /// Here we store the KEY-FIED so we can access them easely
+        /// Here we store the KEY-FIELD so we can access them easily
         /// </summary>
         private static readonly Dictionary<int, int> FieldIndexToLocalVarDictionary = new Dictionary<int, int>();
 
@@ -162,12 +162,37 @@ namespace LmpClient.ModuleStore.Patching
                     startComparisonInstructions.Add(_codes[_codes.Count - 2]);
                 }
 
-                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
-                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
-                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ceq));
-                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldc_I4_0));
-                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ceq));
-
+                //Here we generate the comparison between the fields.
+                if (field.FieldType == typeof(Quaternion))
+                {
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Quaternion), "op_Inequality")));
+                }
+                else if(field.FieldType == typeof(Vector2))
+                {
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Vector2), "op_Inequality")));
+                }
+                else if (field.FieldType == typeof(Vector3))
+                {
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Vector3), "op_Inequality")));
+                }
+                else
+                {
+                    //Bear in mind that we use the "ceq" opcode so the comparison that IL do is
+                    // a "==" instead of a "!="
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ceq));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldc_I4_0));
+                    _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ceq));
+                }
+                
+                //Here we store the result of the comparison between the fields.
                 switch (evaluationVar.LocalIndex)
                 {
                     case 0:
@@ -192,7 +217,8 @@ namespace LmpClient.ModuleStore.Patching
                         break;
                 }
 
-                //If we are in the last field then return to the last "ret" of the function
+                //If we are in the last field then return to the last "ret" of the function so we return
+                //and exit the function in case the comparison gives us a false result (remember that we are using a == comparison)
                 if (i == fields.Count - 1)
                 {
                     if (!_codes[LastIndex].labels.Any())
@@ -203,6 +229,8 @@ namespace LmpClient.ModuleStore.Patching
                 }
                 else
                 {
+                    //In case the result is false and we're not in the last field, jump to the next instruction
+                    //We will add the label that it must jump later on in the FixFallbackInstructions method
                     var jmpInstruction = new CodeInstruction(OpCodes.Brfalse_S);
                     _codes.Insert(LastIndex, jmpInstruction);
                     jmpInstructions.Add(jmpInstruction);
@@ -210,6 +238,7 @@ namespace LmpClient.ModuleStore.Patching
 
                 LoadFunctionByFieldType(field.FieldType);
 
+                //Here we store the field.Name value for the PartModuleEvent.onPartModuleXXXFieldChanged.Fire() parameter
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldstr, field.Name));
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
@@ -316,13 +345,33 @@ namespace LmpClient.ModuleStore.Patching
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleBoolFieldChanged")));
             }
+            else if (fieldType == typeof(short))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleShortFieldChanged")));
+            }
+            else if (fieldType == typeof(ushort))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleUShortFieldChanged")));
+            }
             else if (fieldType == typeof(int))
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleIntFieldChanged")));
             }
+            else if (fieldType == typeof(uint))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleUIntFieldChanged")));
+            }
             else if (fieldType == typeof(float))
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleFloatFieldChanged")));
+            }
+            else if (fieldType == typeof(long))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleLongFieldChanged")));
+            }
+            else if (fieldType == typeof(ulong))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleULongFieldChanged")));
             }
             else if (fieldType == typeof(double))
             {
@@ -336,9 +385,13 @@ namespace LmpClient.ModuleStore.Patching
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleQuaternionFieldChanged")));
             }
+            else if (fieldType == typeof(Vector2))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleVector2FieldChanged")));
+            }
             else if (fieldType == typeof(Vector3))
             {
-                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleVectorFieldChanged")));
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(PartModuleEvent), "onPartModuleVector3FieldChanged")));
             }
             else if (fieldType.IsEnum)
             {
@@ -398,6 +451,10 @@ namespace LmpClient.ModuleStore.Patching
             else if (fieldType == typeof(Quaternion))
             {
                 _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Quaternion>), "Fire")));
+            }
+            else if (fieldType == typeof(Vector2))
+            {
+                _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(EventData<PartModule, string, Vector2>), "Fire")));
             }
             else if (fieldType == typeof(Vector3))
             {

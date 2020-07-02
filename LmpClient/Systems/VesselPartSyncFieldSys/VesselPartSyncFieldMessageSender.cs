@@ -126,7 +126,17 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             SendMessage(msgData);
         }
 
-        public void SendVesselPartSyncFieldVectorMsg(Vessel vessel, Part part, string moduleName, string field, Vector3 value)
+        public void SendVesselPartSyncFieldVector2Msg(Vessel vessel, Part part, string moduleName, string field, Vector2 value)
+        {
+            var msgData = GetBaseMsg(vessel, part, moduleName, field);
+            msgData.FieldType = PartSyncFieldType.Vector2;
+            msgData.VectorValue[0] = value.x;
+            msgData.VectorValue[1] = value.y;
+
+            SendMessage(msgData);
+        }
+
+        public void SendVesselPartSyncFieldVector3Msg(Vessel vessel, Part part, string moduleName, string field, Vector3 value)
         {
             var msgData = GetBaseMsg(vessel, part, moduleName, field);
             msgData.FieldType = PartSyncFieldType.Vector3;

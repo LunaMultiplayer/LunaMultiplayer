@@ -74,16 +74,20 @@ namespace Server.System.Vessel
                         case PartSyncFieldType.Double:
                             module.UpdateValue(msgData.FieldName, msgData.DoubleValue.ToString(CultureInfo.InvariantCulture));
                             break;
+                        case PartSyncFieldType.Vector2:
+                            module.UpdateValue(msgData.FieldName, $"{msgData.VectorValue[0].ToString(CultureInfo.InvariantCulture)}," +
+                                                    $"{msgData.VectorValue[1].ToString(CultureInfo.InvariantCulture)}");
+                            break;
                         case PartSyncFieldType.Vector3:
                             module.UpdateValue(msgData.FieldName, $"{msgData.VectorValue[0].ToString(CultureInfo.InvariantCulture)}," +
-                                                  $"{msgData.VectorValue[1].ToString(CultureInfo.InvariantCulture)}," +
-                                                  $"{msgData.VectorValue[2].ToString(CultureInfo.InvariantCulture)}");
+                                                    $"{msgData.VectorValue[1].ToString(CultureInfo.InvariantCulture)}," +
+                                                    $"{msgData.VectorValue[2].ToString(CultureInfo.InvariantCulture)}");
                             break;
                         case PartSyncFieldType.Quaternion:
                             module.UpdateValue(msgData.FieldName, $"{msgData.QuaternionValue[0].ToString(CultureInfo.InvariantCulture)}," +
-                                             $"{msgData.QuaternionValue[1].ToString(CultureInfo.InvariantCulture)}," +
-                                             $"{msgData.QuaternionValue[2].ToString(CultureInfo.InvariantCulture)}," +
-                                             $"{msgData.QuaternionValue[3].ToString(CultureInfo.InvariantCulture)}");
+                                                    $"{msgData.QuaternionValue[1].ToString(CultureInfo.InvariantCulture)}," +
+                                                    $"{msgData.QuaternionValue[2].ToString(CultureInfo.InvariantCulture)}," +
+                                                    $"{msgData.QuaternionValue[3].ToString(CultureInfo.InvariantCulture)}");
                             break;
                         case PartSyncFieldType.Object:
                         case PartSyncFieldType.String:

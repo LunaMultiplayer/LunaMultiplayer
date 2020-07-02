@@ -33,7 +33,8 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
         public long LongValue;
         public ulong ULongValue;
         public double DoubleValue;
-        public Vector3 VectorValue;
+        public Vector2 Vector2Value;
+        public Vector3 Vector3Value;
         public Quaternion QuaternionValue;
 
         #endregion
@@ -88,9 +89,13 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
                         module.moduleValues.SetValue(FieldName, DoubleValue);
                         PartModuleEvent.onPartModuleDoubleFieldProcessed.Fire(module, FieldName, DoubleValue);
                         break;
+                    case PartSyncFieldType.Vector2:
+                        module.moduleValues.SetValue(FieldName, Vector2Value);
+                        PartModuleEvent.onPartModuleVector2FieldProcessed.Fire(module, FieldName, Vector2Value);
+                        break;
                     case PartSyncFieldType.Vector3:
-                        module.moduleValues.SetValue(FieldName, VectorValue);
-                        PartModuleEvent.onPartModuleVectorFieldProcessed.Fire(module, FieldName, VectorValue);
+                        module.moduleValues.SetValue(FieldName, Vector3Value);
+                        PartModuleEvent.onPartModuleVector3FieldProcessed.Fire(module, FieldName, Vector3Value);
                         break;
                     case PartSyncFieldType.Quaternion:
                         module.moduleValues.SetValue(FieldName, QuaternionValue);

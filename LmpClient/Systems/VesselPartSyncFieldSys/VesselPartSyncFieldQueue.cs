@@ -33,8 +33,11 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
                 case PartSyncFieldType.Double:
                     value.DoubleValue = msgData.DoubleValue;
                     break;
+                case PartSyncFieldType.Vector2:
+                    value.Vector2Value = new Vector2(msgData.VectorValue[0], msgData.VectorValue[1]);
+                    break;
                 case PartSyncFieldType.Vector3:
-                    value.VectorValue = new Vector3(msgData.VectorValue[0], msgData.VectorValue[1], msgData.VectorValue[2]);
+                    value.Vector3Value = new Vector3(msgData.VectorValue[0], msgData.VectorValue[1], msgData.VectorValue[2]);
                     break;
                 case PartSyncFieldType.Quaternion:
                     value.QuaternionValue = new Quaternion(msgData.QuaternionValue[0], msgData.QuaternionValue[1], msgData.QuaternionValue[2], msgData.QuaternionValue[3]);

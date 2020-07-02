@@ -18,7 +18,8 @@ namespace LmpClient.Events
         public static EventData<PartModule, string, long> onPartModuleLongFieldChanged;
         public static EventData<PartModule, string, ulong> onPartModuleULongFieldChanged;
         public static EventData<PartModule, string, double> onPartModuleDoubleFieldChanged;
-        public static EventData<PartModule, string, Vector3> onPartModuleVectorFieldChanged;
+        public static EventData<PartModule, string, Vector2> onPartModuleVector2FieldChanged;
+        public static EventData<PartModule, string, Vector3> onPartModuleVector3FieldChanged;
         public static EventData<PartModule, string, Quaternion> onPartModuleQuaternionFieldChanged;
         public static EventData<PartModule, string, object> onPartModuleObjectFieldChanged;
         public static EventData<PartModule, string, int, string> onPartModuleEnumFieldChanged;
@@ -36,7 +37,8 @@ namespace LmpClient.Events
         public static EventData<ProtoPartModuleSnapshot, string, long> onPartModuleLongFieldProcessed;
         public static EventData<ProtoPartModuleSnapshot, string, ulong> onPartModuleULongFieldProcessed;
         public static EventData<ProtoPartModuleSnapshot, string, double> onPartModuleDoubleFieldProcessed;
-        public static EventData<ProtoPartModuleSnapshot, string, Vector3> onPartModuleVectorFieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, Vector3> onPartModuleVector2FieldProcessed;
+        public static EventData<ProtoPartModuleSnapshot, string, Vector3> onPartModuleVector3FieldProcessed;
         public static EventData<ProtoPartModuleSnapshot, string, Quaternion> onPartModuleQuaternionFieldProcessed;
         public static EventData<ProtoPartModuleSnapshot, string, object> onPartModuleObjectFieldProcessed;
         public static EventData<ProtoPartModuleSnapshot, string, int, string> onPartModuleEnumFieldProcessed;

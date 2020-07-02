@@ -72,6 +72,10 @@ namespace LmpCommon.Message.Data.Vessel
                 case PartSyncFieldType.Double:
                     lidgrenMsg.Write(DoubleValue);
                     break;
+                case PartSyncFieldType.Vector2:
+                    for (var i = 0; i < 2; i++)
+                        lidgrenMsg.Write(VectorValue[i]);
+                    break;
                 case PartSyncFieldType.Vector3:
                     for (var i = 0; i < 3; i++)
                         lidgrenMsg.Write(VectorValue[i]);
@@ -132,6 +136,10 @@ namespace LmpCommon.Message.Data.Vessel
                 case PartSyncFieldType.Double:
                     DoubleValue = lidgrenMsg.ReadDouble();
                     break;
+                case PartSyncFieldType.Vector2:
+                    for (var i = 0; i < 2; i++)
+                        VectorValue[i] = lidgrenMsg.ReadFloat();
+                    break;
                 case PartSyncFieldType.Vector3:
                     for (var i = 0; i < 3; i++)
                         VectorValue[i] = lidgrenMsg.ReadFloat();
@@ -185,6 +193,9 @@ namespace LmpCommon.Message.Data.Vessel
                     break;
                 case PartSyncFieldType.Double:
                     msgSize += sizeof(double);
+                    break;
+                case PartSyncFieldType.Vector2:
+                    msgSize += sizeof(float) * 2;
                     break;
                 case PartSyncFieldType.Vector3:
                     msgSize += sizeof(float) * 3;

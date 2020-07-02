@@ -127,13 +127,22 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             System.MessageSender.SendVesselPartSyncFieldDoubleMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
-        public void PartModuleVectorFieldChanged(PartModule module, string fieldName, Vector3 newValue)
+        public void PartModuleVector2FieldChanged(PartModule module, string fieldName, Vector2 newValue)
         {
             if (!CallIsValid(module, fieldName))
                 return;
 
-            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new VECTOR value of {newValue}.");
-            System.MessageSender.SendVesselPartSyncFieldVectorMsg(module.vessel, module.part, module.moduleName, fieldName, newValue);
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new VECTOR2 value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldVector2Msg(module.vessel, module.part, module.moduleName, fieldName, newValue);
+        }
+
+        public void PartModuleVector3FieldChanged(PartModule module, string fieldName, Vector3 newValue)
+        {
+            if (!CallIsValid(module, fieldName))
+                return;
+
+            LunaLog.Log($"Field {fieldName} in module {module.moduleName} from part {module.part.flightID} has a new VECTOR3 value of {newValue}.");
+            System.MessageSender.SendVesselPartSyncFieldVector3Msg(module.vessel, module.part, module.moduleName, fieldName, newValue);
         }
 
         public void PartModuleQuaternionFieldChanged(PartModule module, string fieldName, Quaternion newValue)
