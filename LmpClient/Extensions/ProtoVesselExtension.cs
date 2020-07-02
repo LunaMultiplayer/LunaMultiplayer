@@ -86,8 +86,7 @@ namespace LmpClient.Extensions
             if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
                 return true;
 
-            var singlePartName = protoVessel.protoPartSnapshots?.SingleOrDefault()?.partName;
-            return singlePartName == "PotatoComet";
+            return protoVessel.protoPartSnapshots != null && protoVessel.protoPartSnapshots.Count == 1 && protoVessel.protoPartSnapshots[0].partName == "PotatoComet";
         }
 
         /// <summary>
@@ -100,8 +99,7 @@ namespace LmpClient.Extensions
             if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
                 return true;
 
-            var singlePartName = protoVessel.protoPartSnapshots?.SingleOrDefault()?.partName;
-            return singlePartName == "PotatoRoid";
+            return protoVessel.protoPartSnapshots != null && protoVessel.protoPartSnapshots.Count == 1 && protoVessel.protoPartSnapshots[0].partName == "PotatoRoid";
         }
 
         /// <summary>

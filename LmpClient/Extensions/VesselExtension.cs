@@ -24,7 +24,7 @@ namespace LmpClient.Extensions
                 return vessel.protoVessel.IsCometOrAsteroid();
 
             //Check the vessel has exactly one part.
-            return vessel && vessel.parts != null && vessel.parts.Count == 1 && (vessel.parts[0].partName == "PotatoComet");
+            return vessel && vessel.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoComet";
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace LmpClient.Extensions
                 return vessel.protoVessel.IsCometOrAsteroid();
 
             //Check the vessel has exactly one part.
-            return vessel && vessel.parts != null && vessel.parts.Count == 1 && (vessel.parts[0].partName == "PotatoRoid");
+            return vessel && vessel.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
         }
 
         /// <summary>
