@@ -38,3 +38,5 @@ qingdao.211.network:8800
 gameserver.corvettecole.com:19712
 #KSPace Team
 kspace-team.ga:8800
+#Kiwi_Waydelyb
+Kiwi_Waydelyb:8800
