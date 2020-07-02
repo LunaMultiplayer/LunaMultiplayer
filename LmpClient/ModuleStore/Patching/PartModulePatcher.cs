@@ -51,7 +51,7 @@ namespace LmpClient.ModuleStore.Patching
                     try
                     {
                         var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
-                        foreach (var partModule in partModules)
+                        foreach (var partModule in partModules.Reverse())
                         {
                             try
                             {
@@ -88,7 +88,7 @@ namespace LmpClient.ModuleStore.Patching
                 .Where(m => m.Name == "OnUpdate" || m.Name == "OnFixedUpdate" || m.Name == "FixedUpdate" || m.Name == "Update" || m.Name == "LateUpdate" ||
                             m.GetCustomAttributes(typeof(KSPAction), false).Any() || m.GetCustomAttributes(typeof(KSPEvent), false).Any(a => ((KSPEvent)a).guiActive)))
             {
-                if (_customizationModule.CustomizedFields.Any())
+                if (_customizationModule.CustomizedFields.Any() && partModuleMethod.GetMethodBody() != null)
                 {
                     try
                     {
