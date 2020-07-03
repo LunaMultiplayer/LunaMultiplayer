@@ -29,7 +29,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Allow Stock Vessels")]
         public bool AllowStockVessels { get; set; }
 
-        [XmlComment(Value = "Allow Other launchsites")]
+        [XmlComment(Value = "Allow Other launch sites (for users that have the Making History DLC)")]
         public bool AllowOtherLaunchSites { get; set; }
 
         //Game systems
