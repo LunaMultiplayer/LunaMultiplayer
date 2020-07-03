@@ -84,7 +84,7 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
                     {
                         vessel.parts[i].partTransform.position = position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
                     }
-                    //We always need to set the part velocity (ant it's rigidbody velocity)! Otherwise during dockings it won't be possible to dock
+                    //We always need to set the part velocity (and it's rigidbody velocity)! Otherwise during dockings it won't be possible to dock
                     vessel.parts[i].ResumeVelocity();
                 }
             }
