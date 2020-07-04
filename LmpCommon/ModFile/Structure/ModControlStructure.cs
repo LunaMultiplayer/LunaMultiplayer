@@ -9,12 +9,6 @@ namespace LmpCommon.ModFile.Structure
         public string PartName { get; set; }
     }
 
-    public class ForbiddenPart
-    {
-        public string Text { get; set; }
-        public string PartName { get; set; }
-    }
-
     public class MandatoryDllFile
     {
         public string Text { get; set; }
@@ -36,9 +30,8 @@ namespace LmpCommon.ModFile.Structure
         public List<MandatoryDllFile> MandatoryPlugins { get; set; } = new List<MandatoryDllFile>();
         public List<ForbiddenDllFile> ForbiddenPlugins { get; set; } = new List<ForbiddenDllFile>();
         public List<MandatoryPart> MandatoryParts { get; set; } = new List<MandatoryPart>();
-        public List<ForbiddenPart> ForbiddenParts { get; set; } = new List<ForbiddenPart>();
         public List<string> AllowedParts { get; set; } = new List<string>();
-        public List<string> IgnoredResources { get; set; } = new List<string>();
+        public List<string> AllowedResources { get; set; } = new List<string>();
 
         public void SetDefaultAllowedParts()
         {
@@ -557,6 +550,23 @@ namespace LmpCommon.ModFile.Structure
                 "flagPartSize2",
                 "flagPartSize3",
                 "smallClaw",
+            };
+        }
+        
+        public void SetDefaultAllowedResources()
+        {
+            AllowedResources = new List<string>
+            {
+                "LiquidFuel",
+                "Oxidizer",
+                "SolidFuel",
+                "MonoPropellant",
+                "XenonGas",
+                "ElectricCharge",
+                "IntakeAir",
+                "EVA Propellant",
+                "Ore",
+                "Ablator"
             };
         }
     }

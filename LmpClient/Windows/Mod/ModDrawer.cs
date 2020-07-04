@@ -128,24 +128,7 @@ namespace LmpClient.Windows.Mod
                 GUILayout.EndHorizontal();
                 GUILayout.Space(10);
             }
-
-            if (ModSystem.Singleton.ForbiddenPartsFound.Any())
-            {
-                GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenPartsFound, BoldRedLabelStyle);
-                GUILayout.BeginHorizontal();
-                _forbiddenPartsScrollPos = GUILayout.BeginScrollView(_forbiddenPartsScrollPos);
-                foreach (var part in ModSystem.Singleton.ForbiddenPartsFound)
-                {
-                    GUILayout.Label(part.PartName);
-                    if (!string.IsNullOrEmpty(part.Text))
-                        GUILayout.Label(part.Text);
-                }
-
-                GUILayout.EndScrollView();
-                GUILayout.EndHorizontal();
-                GUILayout.Space(10);
-            }
-
+            
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
         }

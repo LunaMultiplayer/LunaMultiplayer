@@ -42,6 +42,19 @@ namespace LmpClient.Extensions
                     return true;
                 }
 
+                if (ModSystem.Singleton.ModControl)
+                {
+                    var invalidResources = pps.resources.Select(r => r.resourceName).Except(ModSystem.Singleton.AllowedResources).ToArray();
+                    if (invalidResources.Any() && verboseErrors)
+                    {
+                        var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the BANNED RESOURCE/S '{string.Join(", ", invalidResources)}'. Skipping load.";
+                        LunaLog.LogWarning(msg);
+                        ChatSystem.Singleton.PmMessageServer(msg);
+                    }
+
+                    return true;
+                }
+
                 if (pps.partInfo == null)
                 {
                     if (verboseErrors)

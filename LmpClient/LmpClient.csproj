@@ -216,7 +216,7 @@
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
-    <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
+    <Compile Include="Localization\Structures\BannedPartsResourcesWindowText.cs" />
     <Compile Include="Localization\Structures\ButtonTooltips.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="Localization\Structures\CompatibleDialogText.cs" />
@@ -418,8 +418,8 @@
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\Admin\AdminDrawer.cs" />
     <Compile Include="Windows\Admin\AdminWindow.cs" />
-    <Compile Include="Windows\BannedParts\BannedPartsDrawer.cs" />
-    <Compile Include="Windows\BannedParts\BannedPartsWindow.cs" />
+    <Compile Include="Windows\BannedParts\BannedPartsResourcesDrawer.cs" />
+    <Compile Include="Windows\BannedParts\BannedPartsResourcesWindow.cs" />
     <Compile Include="Windows\ServerList\ColorEffect.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotDrawer.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotWindow.cs" />
@@ -553,7 +553,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Localization\XML\Danish\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Danish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Danish\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Danish\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Danish\ChatWindowText.xml" />
     <Content Include="Localization\XML\Danish\CompatibleDialogText.xml" />
@@ -570,7 +570,7 @@
     <Content Include="Localization\XML\Danish\StatusWindowText.xml" />
     <Content Include="Localization\XML\Danish\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Dutch\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Dutch\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Dutch\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Dutch\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Dutch\ChatWindowText.xml" />
     <Content Include="Localization\XML\Dutch\CompatibleDialogText.xml" />
@@ -587,7 +587,7 @@
     <Content Include="Localization\XML\Dutch\StatusWindowText.xml" />
     <Content Include="Localization\XML\Dutch\UpdateWindowText.xml" />
     <Content Include="Localization\XML\English\AdminWindowText.xml" />
-    <Content Include="Localization\XML\English\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\English\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\English\ButtonTooltips.xml" />
     <Content Include="Localization\XML\English\ChatWindowText.xml" />
     <Content Include="Localization\XML\English\CompatibleDialogText.xml" />
@@ -604,7 +604,7 @@
     <Content Include="Localization\XML\English\StatusWindowText.xml" />
     <Content Include="Localization\XML\English\UpdateWindowText.xml" />
     <Content Include="Localization\XML\French\AdminWindowText.xml" />
-    <Content Include="Localization\XML\French\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\French\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\French\ButtonTooltips.xml" />
     <Content Include="Localization\XML\French\ChatWindowText.xml" />
     <Content Include="Localization\XML\French\CompatibleDialogText.xml" />
@@ -621,7 +621,7 @@
     <Content Include="Localization\XML\French\StatusWindowText.xml" />
     <Content Include="Localization\XML\French\UpdateWindowText.xml" />
     <Content Include="Localization\XML\German\AdminWindowText.xml" />
-    <Content Include="Localization\XML\German\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\German\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\German\ButtonTooltips.xml" />
     <Content Include="Localization\XML\German\ChatWindowText.xml" />
     <Content Include="Localization\XML\German\CompatibleDialogText.xml" />
@@ -638,7 +638,7 @@
     <Content Include="Localization\XML\German\StatusWindowText.xml" />
     <Content Include="Localization\XML\German\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Italian\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Italian\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Italian\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Italian\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Italian\ChatWindowText.xml" />
     <Content Include="Localization\XML\Italian\CompatibleDialogText.xml" />
@@ -655,7 +655,7 @@
     <Content Include="Localization\XML\Italian\StatusWindowText.xml" />
     <Content Include="Localization\XML\Italian\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Japanese\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Japanese\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Japanese\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Japanese\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Japanese\ChatWindowText.xml" />
     <Content Include="Localization\XML\Japanese\CompatibleDialogText.xml" />
@@ -672,7 +672,7 @@
     <Content Include="Localization\XML\Japanese\StatusWindowText.xml" />
     <Content Include="Localization\XML\Japanese\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Polish\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Polish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Polish\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Polish\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Polish\ChatWindowText.xml" />
     <Content Include="Localization\XML\Polish\CompatibleDialogText.xml" />
@@ -689,7 +689,7 @@
     <Content Include="Localization\XML\Polish\StatusWindowText.xml" />
     <Content Include="Localization\XML\Polish\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Russian\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Russian\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Russian\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Russian\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Russian\ChatWindowText.xml" />
     <Content Include="Localization\XML\Russian\CompatibleDialogText.xml" />
@@ -706,7 +706,7 @@
     <Content Include="Localization\XML\Russian\StatusWindowText.xml" />
     <Content Include="Localization\XML\Russian\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Simplified Chinese\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Simplified Chinese\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Simplified Chinese\ChatWindowText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\CompatibleDialogText.xml" />
@@ -723,7 +723,7 @@
     <Content Include="Localization\XML\Simplified Chinese\StatusWindowText.xml" />
     <Content Include="Localization\XML\Simplified Chinese\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Spanish\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Spanish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Spanish\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Spanish\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Spanish\ChatWindowText.xml" />
     <Content Include="Localization\XML\Spanish\CompatibleDialogText.xml" />
@@ -740,7 +740,7 @@
     <Content Include="Localization\XML\Spanish\StatusWindowText.xml" />
     <Content Include="Localization\XML\Spanish\UpdateWindowText.xml" />
     <Content Include="Localization\XML\Swedish\AdminWindowText.xml" />
-    <Content Include="Localization\XML\Swedish\BannedPartsWindowText.xml" />
+    <Content Include="Localization\XML\Swedish\BannedPartsResourcesWindowText.xml" />
     <Content Include="Localization\XML\Swedish\ButtonTooltips.xml" />
     <Content Include="Localization\XML\Swedish\ChatWindowText.xml" />
     <Content Include="Localization\XML\Swedish\CompatibleDialogText.xml" />

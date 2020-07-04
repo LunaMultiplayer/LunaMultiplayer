@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LmpClient.Windows.BannedParts
 {
-    public partial class BannedPartsWindow : Window<BannedPartsWindow>
+    public partial class BannedPartsResourcesWindow : Window<BannedPartsResourcesWindow>
     {
         #region Fields
 
@@ -13,6 +13,7 @@ namespace LmpClient.Windows.BannedParts
         private const float WindowWidth = 400;
 
         private static string[] _bannedParts = new string[0];
+        private static string[] _bannedResources = new string[0];
         private static int _partCount = 0;
         private static string _vesselName;
 
@@ -28,7 +29,7 @@ namespace LmpClient.Windows.BannedParts
         protected override void DrawGui()
         {
             WindowRect = FixWindowPos(GUILayout.Window(6718 + MainSystem.WindowOffset, WindowRect, DrawContent,
-                LocalizationContainer.BannedPartsWindowText.Title, LayoutOptions));
+                LocalizationContainer.BannedPartsResourcesWindowText.Title, LayoutOptions));
         }
 
         public override void SetStyles()
@@ -45,24 +46,14 @@ namespace LmpClient.Windows.BannedParts
             ScrollPos = new Vector2();
         }
 
-        public void DisplayBannedPartsDialog(string vesselName, string[] bannedParts)
+        public void DisplayBannedPartsResourcesDialog(string vesselName, string[] bannedParts, string[] bannedResources, int partCount = 0)
         {
             if (!Display)
             {
                 _vesselName = vesselName;
                 _bannedParts = bannedParts;
+                _bannedResources = bannedResources;
                 _partCount = 0;
-                Display = true;
-            }
-        }
-
-        public void DisplayBannedPartsDialog(string vesselName, int partCount)
-        {
-            if (!Display)
-            {
-                _vesselName = vesselName;
-                _partCount = partCount;
-                _bannedParts = new string[0];
                 Display = true;
             }
         }

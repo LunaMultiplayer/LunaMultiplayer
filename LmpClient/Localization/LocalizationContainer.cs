@@ -14,7 +14,7 @@ namespace LmpClient.Localization
         public static string CurrentLanguage { get; set; } = "English";
 
         public static AdminWindowText AdminWindowText = new AdminWindowText();
-        public static BannedPartsWindowText BannedPartsWindowText = new BannedPartsWindowText();
+        public static BannedPartsResourcesWindowText BannedPartsResourcesWindowText = new BannedPartsResourcesWindowText();
         public static ChatWindowText ChatWindowText = new ChatWindowText();
         public static ConnectionWindowText ConnectionWindowText = new ConnectionWindowText();
         public static CraftLibraryWindowText CraftLibraryWindowText = new CraftLibraryWindowText();
@@ -75,7 +75,7 @@ namespace LmpClient.Localization
             }
 
             LoadWindowTexts(language, ref AdminWindowText);
-            LoadWindowTexts(language, ref BannedPartsWindowText);
+            LoadWindowTexts(language, ref BannedPartsResourcesWindowText);
             LoadWindowTexts(language, ref ChatWindowText);
             LoadWindowTexts(language, ref ConnectionWindowText);
             LoadWindowTexts(language, ref CraftLibraryWindowText);
@@ -107,7 +107,7 @@ namespace LmpClient.Localization
                 LoadLanguage(language);
 
                 LunaXmlSerializer.WriteToXmlFile(AdminWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(AdminWindowText)}.xml"));
-                LunaXmlSerializer.WriteToXmlFile(BannedPartsWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(BannedPartsWindowText)}.xml"));
+                LunaXmlSerializer.WriteToXmlFile(BannedPartsResourcesWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(BannedPartsResourcesWindowText)}.xml"));
                 LunaXmlSerializer.WriteToXmlFile(ChatWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ChatWindowText)}.xml"));
                 LunaXmlSerializer.WriteToXmlFile(ConnectionWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(ConnectionWindowText)}.xml"));
                 LunaXmlSerializer.WriteToXmlFile(CraftLibraryWindowText, CommonUtil.CombinePaths(LocalizationFolder, language, $"{nameof(CraftLibraryWindowText)}.xml"));

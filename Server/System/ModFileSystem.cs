@@ -14,6 +14,7 @@ namespace Server.System
         {
             var defaultModFile = new ModControlStructure();
             defaultModFile.SetDefaultAllowedParts();
+            defaultModFile.SetDefaultAllowedResources();
 
             FileHandler.WriteToFile(ServerContext.ModFilePath, LunaXmlSerializer.SerializeToXml(defaultModFile));
         }

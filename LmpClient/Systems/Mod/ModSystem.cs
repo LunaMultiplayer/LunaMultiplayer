@@ -23,10 +23,10 @@ namespace LmpClient.Systems.Mod
 
         public ModControlStructure ModControlData { get; set; }
         public List<string> AllowedParts { get; set; } = new List<string>();
+        public List<string> AllowedResources { get; set; } = new List<string>();
 
         public List<string> MissingExpansions { get; } = new List<string>();
         public List<ForbiddenDllFile> ForbiddenFilesFound { get; } = new List<ForbiddenDllFile>();
-        public List<ForbiddenPart> ForbiddenPartsFound { get; } = new List<ForbiddenPart>();
         public List<string> NonListedFilesFound { get; } = new List<string>();
         public List<MandatoryDllFile> MandatoryFilesNotFound { get; } = new List<MandatoryDllFile>();
         public List<MandatoryDllFile> MandatoryFilesDifferentSha { get; } = new List<MandatoryDllFile>();
@@ -59,9 +59,9 @@ namespace LmpClient.Systems.Mod
             ModControl = true;
 
             AllowedParts.Clear();
+            AllowedResources.Clear();
             MissingExpansions.Clear();
             ForbiddenFilesFound.Clear();
-            ForbiddenPartsFound.Clear();
             NonListedFilesFound.Clear();
             MandatoryFilesNotFound.Clear();
             MandatoryFilesDifferentSha.Clear();
@@ -88,8 +88,8 @@ namespace LmpClient.Systems.Mod
                 RequiredExpansions = GetInstalledExpansions()
             };
 
-            var extraParts = PartLoader.LoadedPartsList.Where(p => !modCtrlStructure.AllowedParts.Contains(p.name)).Select(p => p.name);
-            modCtrlStructure.AllowedParts.AddRange(extraParts);
+            modCtrlStructure.AllowedParts.AddRange(PartLoader.LoadedPartsList.Select(p => p.name));
+            modCtrlStructure.AllowedResources.AddRange(PartResourceLibrary.Instance.resourceDefinitions.Cast<PartResourceDefinition>().Select(r => r.name));
 
             foreach (var modFile in GetModFiles())
             {
@@ -108,31 +108,59 @@ namespace LmpClient.Systems.Mod
         public void CheckCommonStockParts()
         {
             var missingPartsCount = 0;
-            LunaLog.Log("[LMP]: Missing parts start");
+            var missingResourcesCount = 0;
             var modFile = new ModControlStructure();
             modFile.SetDefaultAllowedParts();
+            modFile.SetDefaultAllowedResources();
 
-            var missingParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name));
-
-            foreach (var part in missingParts)
+            LunaLog.Log("[LMP]: Missing parts start");
+            foreach (var part in PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name)))
             {
                 missingPartsCount++;
-                LunaLog.Log($"[LMP]: Missing '{part.name}'");
+                LunaLog.Log($"[LMP]: Missing part: '{part.name}'");
             }
-
             LunaLog.Log("[LMP]: Missing parts end");
+            
+            LunaLog.Log("[LMP]: Missing resources start");
+            foreach (var resource in PartResourceLibrary.Instance.resourceDefinitions.Cast<PartResourceDefinition>().Select(r => r.name)
+                .Where(r => !modFile.AllowedResources.Contains(r)))
+            {
+                missingResourcesCount++;
+                LunaLog.Log($"[LMP]: Missing resource: '{resource}'");
+            }
+            LunaLog.Log("[LMP]: Missing resources end");
 
-            LunaScreenMsg.PostScreenMessage(
-                missingPartsCount > 0
-                    ? $"{missingPartsCount} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
-                    : $"No missing parts out of from Common.dll ({PartLoader.LoadedPartsList.Count} total)",
-                5f, ScreenMessageStyle.UPPER_CENTER);
+            if (missingPartsCount > 0 && missingResourcesCount <= 0)
+            {
+                LunaScreenMsg.PostScreenMessage($"{missingPartsCount} missing part(s) from Common.dll printed to log ({PartLoader.LoadedPartsList.Count} total)",
+                    5f, ScreenMessageStyle.UPPER_CENTER);
+            }
+            else if (missingPartsCount <= 0 && missingResourcesCount <= 0)
+            {
+                LunaScreenMsg.PostScreenMessage("No missing parts/resources from Common.dll", 5f, ScreenMessageStyle.UPPER_CENTER);
+            }
+            else if (missingPartsCount <= 0 && missingResourcesCount > 0)
+            {
+                LunaScreenMsg.PostScreenMessage($"{missingResourcesCount} missing resources from Common.dll printed to log ({PartResourceLibrary.Instance.resourceDefinitions.Count} total)", 5f, ScreenMessageStyle.UPPER_CENTER);
+            }
+            else
+            {
+                LunaScreenMsg.PostScreenMessage($"{missingPartsCount} missing part(s) from Common.dll printed to log ({PartLoader.LoadedPartsList.Count} total). " +
+                    $"{missingResourcesCount} missing resources from Common.dll printed to log ({PartResourceLibrary.Instance.resourceDefinitions.Count} total)", 
+                    5f, ScreenMessageStyle.UPPER_CENTER);
+            }
         }
 
         public IEnumerable<string> GetBannedPartsFromPartNames(IEnumerable<string> partNames)
         {
-            var bannedParts = partNames.Where(partName => !ModControlData.AllowedParts.Contains(partName)).ToList();
+            var bannedParts = partNames.Where(p => !ModControlData.AllowedParts.Contains(p)).ToList();
             return bannedParts.Distinct();
+        }
+
+        public IEnumerable<string> GetBannedResourcesFromResourceNames(IEnumerable<string> resourceNames)
+        {
+            var bannedResources = resourceNames.Where(r => !ModControlData.AllowedResources.Contains(r)).ToList();
+            return bannedResources.Distinct();
         }
 
         public List<string> GetInstalledExpansions()

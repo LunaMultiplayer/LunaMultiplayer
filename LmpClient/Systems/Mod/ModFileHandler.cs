@@ -33,6 +33,7 @@ namespace LmpClient.Systems.Mod
             }
 
             System.AllowedParts = modFileData.AllowedParts;
+            System.AllowedResources = modFileData.AllowedResources;
             LunaLog.Log("[LMP]: Mod check passed!");
             return true;
         }
@@ -73,11 +74,6 @@ namespace LmpClient.Systems.Mod
             foreach (var requiredEntry in modInfo.MandatoryPlugins)
             {
                 checkOk &= CheckMandatoryFile(requiredEntry);
-            }
-
-            foreach (var part in PartLoader.LoadedPartsList.Select(p => p.name))
-            {
-                checkOk &= CheckExistingPart(modInfo, part);
             }
 
             foreach (var requiredEntry in modInfo.MandatoryParts)
@@ -123,19 +119,6 @@ namespace LmpClient.Systems.Mod
                 Sb.AppendLine($"Required file {item.FilePath} does not match hash {item.Sha}!");
                 System.MandatoryFilesDifferentSha.Add(item);
 
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool CheckExistingPart(ModControlStructure modInfo, string partName)
-        {
-            var forbiddenPart = modInfo.ForbiddenParts.FirstOrDefault(f => f.PartName == partName);
-            if (forbiddenPart != null)
-            {
-                Sb.AppendLine($"Banned part {partName} exists on client!");
-                System.ForbiddenPartsFound.Add(forbiddenPart);
                 return false;
             }
 

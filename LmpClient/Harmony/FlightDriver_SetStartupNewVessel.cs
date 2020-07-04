@@ -24,15 +24,21 @@ namespace LmpClient.Harmony
             var configNode = ConfigNode.Load(FlightDriver.newShipToLoadPath);
             var shipName = configNode.GetValue("ship");
             var partNames = configNode.GetNodes("PART").Select(n => n.GetValue("part").Substring(0, n.GetValue("part").IndexOf('_'))).ToList();
+            var resourceNames = configNode.GetNodes("PART").SelectMany(p => p.GetNodes("RESOURCE").Select(r => r.GetValue("name"))).ToList();
             var partCount = configNode.GetNodes("PART").Count();
 
             if (ModSystem.Singleton.ModControl)
             {
                 var bannedParts = ModSystem.Singleton.GetBannedPartsFromPartNames(partNames.Distinct()).ToArray();
-                if (bannedParts.Any())
+                var bannedResources = ModSystem.Singleton.GetBannedResourcesFromResourceNames(resourceNames.Distinct()).ToArray();
+                if (bannedParts.Any() || bannedResources.Any())
                 {
-                    LunaLog.LogError($"Vessel {shipName} Contains the following banned parts: {string.Join(", ", bannedParts)}");
-                    BannedPartsWindow.Singleton.DisplayBannedPartsDialog(shipName, bannedParts);
+                    if (bannedParts.Any())
+                        LunaLog.LogError($"Vessel {shipName} Contains the following banned parts: {string.Join(", ", bannedParts)}");
+                    if (bannedResources.Any())
+                        LunaLog.LogError($"Vessel {shipName} Contains the following banned resources: {string.Join(", ", bannedResources)}");
+
+                    BannedPartsResourcesWindow.Singleton.DisplayBannedPartsResourcesDialog(shipName, bannedParts, bannedResources);
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
                     return false;
                 }
@@ -41,7 +47,7 @@ namespace LmpClient.Harmony
             if (partCount > SettingsSystem.ServerSettings.MaxVesselParts)
             {
                 LunaLog.LogError($"Vessel {shipName} has {partCount} parts and the max allowed in the server is: {SettingsSystem.ServerSettings.MaxVesselParts}");
-                BannedPartsWindow.Singleton.DisplayBannedPartsDialog(shipName, partCount);
+                BannedPartsResourcesWindow.Singleton.DisplayBannedPartsResourcesDialog(shipName, new string[0], new string[0], partCount);
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
                 return false;
             }

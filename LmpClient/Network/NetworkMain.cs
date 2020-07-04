@@ -82,7 +82,7 @@ namespace LmpClient.Network
         public static void ResetNetworkSystem()
         {
             NetworkConnection.ResetRequested = true;
-            BannedPartsWindow.Singleton.Display = false;
+            BannedPartsResourcesWindow.Singleton.Display = false;
 
             if (ClientConnection?.Status > NetPeerStatus.NotRunning)
             {
