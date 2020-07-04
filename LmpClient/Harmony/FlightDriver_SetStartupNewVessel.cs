@@ -4,6 +4,10 @@ using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.BannedParts;
 using LmpCommon.Enums;
 using System.Linq;
+using LmpClient.Events;
+using LmpClient.Systems.KerbalSys;
+using LmpClient.Systems.Lock;
+using LmpCommon.Locks;
 
 // ReSharper disable All
 
@@ -40,6 +44,7 @@ namespace LmpClient.Harmony
 
                     BannedPartsResourcesWindow.Singleton.DisplayBannedPartsResourcesDialog(shipName, bannedParts, bannedResources);
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
+                    VesselAssemblyEvent.onVesselValidationBeforAssembly.Fire(false);
                     return false;
                 }
             }
@@ -49,9 +54,11 @@ namespace LmpClient.Harmony
                 LunaLog.LogError($"Vessel {shipName} has {partCount} parts and the max allowed in the server is: {SettingsSystem.ServerSettings.MaxVesselParts}");
                 BannedPartsResourcesWindow.Singleton.DisplayBannedPartsResourcesDialog(shipName, new string[0], new string[0], partCount);
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
+                VesselAssemblyEvent.onVesselValidationBeforAssembly.Fire(false);
                 return false;
             }
 
+            VesselAssemblyEvent.onVesselValidationBeforAssembly.Fire(true);
             return true;
         }
     }

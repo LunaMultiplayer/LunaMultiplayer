@@ -60,7 +60,8 @@ namespace LmpClient.Systems.KerbalSys
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedKerbals));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
-            GameEvents.onGameSceneLoadRequested.Add(KerbalEvents.SwitchSceneRequested);
+
+            VesselAssemblyEvent.onVesselValidationBeforAssembly.Add(KerbalEvents.ValidationBeforeAssembly);
             GameEvents.onKerbalLevelUp.Add(KerbalEvents.KerbalLevelUp);
             GameEvents.onKerbalStatusChange.Add(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Add(KerbalEvents.TypeChange);
@@ -77,7 +78,7 @@ namespace LmpClient.Systems.KerbalSys
             base.OnDisabled();
             KerbalsToRemove = new ConcurrentQueue<string>();
             KerbalsToProcess = new ConcurrentQueue<ConfigNode>();
-            GameEvents.onGameSceneLoadRequested.Remove(KerbalEvents.SwitchSceneRequested);
+            VesselAssemblyEvent.onVesselValidationBeforAssembly.Remove(KerbalEvents.ValidationBeforeAssembly);
             GameEvents.onKerbalStatusChange.Remove(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Remove(KerbalEvents.TypeChange);
             RevertEvent.onReturningToEditor.Remove(KerbalEvents.ReturningToEditor);

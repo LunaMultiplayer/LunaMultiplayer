@@ -10,29 +10,34 @@ namespace LmpClient.Systems.KerbalSys
     public class KerbalEvents : SubSystem<KerbalSystem>
     {
         /// <summary>
-        /// Use this event to send the kerbals just when we start a flight.
-        /// We use this event instead of onFlightReady as the latter is triggered once UI and everythign is ready and this one is triggered
-        /// earlier in the chain
+        /// Use this event to send the kerbals just when we are about to start a flight.
+        /// We use this event instead of onFlightReady as the latter is triggered once UI and everything is ready and this one is triggered
+        /// SwitchSceneRequested is triggered before onFlightReady but this event is even earlier in the chain
         /// </summary>
-        public void SwitchSceneRequested(GameScenes data)
+        public void ValidationBeforeAssembly(bool validationResult)
         {
-            if (data == GameScenes.FLIGHT)
+            var crew = FlightDriver.newShipManifest;
+            if (crew == null) return;
+
+            foreach (var protoCrew in crew.GetAllCrew(false))
             {
-                var crew = FlightDriver.newShipManifest;
-                if (crew == null) return;
+                if (protoCrew == null) continue;
 
-                foreach (var protoCrew in crew.GetAllCrew(false))
+                if (validationResult)
                 {
-                    if (protoCrew == null) continue;
-
                     //Always set the kerbals in a vessel as assigned
                     System.SetKerbalStatusWithoutTriggeringEvent(protoCrew, ProtoCrewMember.RosterStatus.Assigned);
                     System.MessageSender.SendKerbal(protoCrew);
                     LockSystem.Singleton.AcquireKerbalLock(protoCrew.name, true);
                 }
+                else
+                {
+                    System.SetKerbalStatusWithoutTriggeringEvent(protoCrew, ProtoCrewMember.RosterStatus.Available);
+                    System.MessageSender.SendKerbal(protoCrew);
+                }
             }
         }
-
+        
         /// <summary>
         /// Event triggered when any kerbal status changes (kerbal dies, etc)
         /// </summary>

@@ -9,5 +9,6 @@ namespace LmpClient.Events
     {
         public static EventData<ShipConstruct> onAssemblingVessel;
         public static EventData<Vessel, ShipConstruct> onAssembledVessel;
+        public static EventData<bool> onVesselValidationBeforAssembly;
     }
 }

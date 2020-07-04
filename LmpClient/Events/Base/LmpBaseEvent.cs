@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LmpClient.Events.Base
 {
@@ -9,7 +10,7 @@ namespace LmpClient.Events.Base
         public static void Awake()
         {
             var lmpEventClasses = Assembly.GetExecutingAssembly().GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(LmpBaseEvent)));
-            foreach (var lmpEventClass in lmpEventClasses)
+            Parallel.ForEach(lmpEventClasses, lmpEventClass =>
             {
                 var eventFields = lmpEventClass.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).ToArray();
                 if (eventFields.Any())
@@ -20,7 +21,7 @@ namespace LmpClient.Events.Base
                         eventField.SetValue(null, val);
                     }
                 }
-            }
+            });
         }
     }
 }
