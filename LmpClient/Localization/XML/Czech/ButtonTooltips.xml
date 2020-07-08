@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SettingsIcon>Nastavení</SettingsIcon>
+  <ServerIcon>Server List</ServerIcon>
+  <ConnectIcon>Připojit</ConnectIcon>
+  <DisconnectIcon>Odpojit</DisconnectIcon>
+  <SyncIcon>Warp k</SyncIcon>
+  <RefreshIcon>Aktualizovat</RefreshIcon>
+  <UploadIcon>Upload</UploadIcon>
+  <DeleteIcon>Vymazat</DeleteIcon>
+  <PlusIcon>Přidat</PlusIcon>
+  <SaveIcon>Uložit</SaveIcon>
+  <KeyIcon>Heslo</KeyIcon>
+  <GlobeIcon>Stát</GlobeIcon>
+  <ChatIcon>Chat</ChatIcon>
+  <CameraIcon>Screenshoty</CameraIcon>
+  <RocketIcon>Knihovna Loďi</RocketIcon>
+  <AdminIcon>Admin</AdminIcon>
+  <KickIcon>Vyhodit</KickIcon>
+  <BanIcon>Ban</BanIcon>
+  <DekesslerIcon>Dekessler</DekesslerIcon>
+  <NukeIcon>Nuke KSC</NukeIcon>
+  <RestartServerIcon>Restartovat Server</RestartServerIcon>
+  <DownloadIcon>Nainstalovat</DownloadIcon>
+  <CycleFirstIcon>První</CycleFirstIcon>
+  <CyclePreviousIcon>Předtím</CyclePreviousIcon>
+  <CycleNextIcon>Dalši</CycleNextIcon>
+  <CycleLastIcon>Poslední</CycleLastIcon>
+</ButtonTooltips>

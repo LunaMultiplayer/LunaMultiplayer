@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Administrace</Title>
+  <Password>Server admin heslo:</Password>
+  <ConfirmDialogTitle>Potvrdit</ConfirmDialogTitle>
+  <BanText>Chcete važně zabanovat tohohle hrače?</BanText>
+  <KickText>Chcete važně vyhodit tohohle hrače?</KickText>
+  <Reason>Duvod:</Reason>
+</AdminWindowText>

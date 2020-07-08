@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Text>
+Luna Multi Player (LMP) sdílí tyhlety soukromé informace s majitelem serveru a jakymkoliv serverem ke kteremu se připojite.
+a) Vaše herní jmeno se kterym se připojujete.
+b) Vaš herní token (Nahodně generovane čisla na kontrolu vás).
+c) Vaši IP adresu ktera je zapsaná do serverove konsole.
+
+LMP nemá žadný kontakt s ostatníma počitačema než je server na který se připojite a majitelem serveru.
+K použivaní LMP, musíte povolit tohle info.
+
+Pro více informací - se koukněte na KSP addony se podivejte pravidla.
+    </Text>
+  <Title>LunaMultiplayer - Upozorněni</Title>
+  <Accept>Přijmout</Accept>
+  <Decline>Odmítnout</Decline>
+</DisclaimerDialogText>

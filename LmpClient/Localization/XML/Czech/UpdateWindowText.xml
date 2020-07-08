@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<UpdateWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Nová aktualizace k dispozici</Title>
+  <Text>Je nová verze LMP k instalaci</Text>
+  <StillCompatible>Vaše LMP je kompatibilní s aktualní verzí</StillCompatible>
+  <NotCompatible>Vaše LMP není kompatibilní s aktualní verzí</NotCompatible>
+  <Changelog>Změny</Changelog>
+  <CurrentVersion>Vaše verze LMP:</CurrentVersion>
+  <LatestVersion>Aktualní verze LMP:</LatestVersion>
+</UpdateWindowText>
