@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-16"?>
+
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Nastavení</Title>
+  <Language>Jazyk:</Language>
+  <Color>Hračova Barva:</Color>
+  <Red>R:</Red>
+  <Green>G:</Green>
+  <Blue>B:</Blue>
+  <Random>Nahodný</Random>
+  <Set>Nastavit</Set>
+  <InterpolationSettings>Interpolační nastavení</InterpolationSettings>
+  <EnableInterpolation>Zapnout Interpolaci</EnableInterpolation>
+  <InterpolationOffset>Interpolační kompenzace:</InterpolationOffset>
+  <GenerateLmpModControl>Generovat server LMPModControl.xml</GenerateLmpModControl>
+  <GenerateUniverse>Generovat vesmír s uložené hry</GenerateUniverse>
+  <NetworkSettings>Nastavení siťe</NetworkSettings>
+  <CannotChangeWhileConnected>Nemužete změnit hodnotu když ste připojení</CannotChangeWhileConnected>
+  <ResetNetwork>Resetovat Síť</ResetNetwork>
+  <Mtu>MTU (Default: 1408):</Mtu>
+  <AutoExpandMtu>Auto zvětšit MTU</AutoExpandMtu>
+  <ConnectionTimeout>Připojení timeout (Výchozí: 15):</ConnectionTimeout>
+  <GeneralSettings>Hlavní nastavení</GeneralSettings>
+  <IgnoreSyncChecks>Ignorovat warp synchronizaci bezpečnostní kontroly</IgnoreSyncChecks>
+</OptionsWindowText>
