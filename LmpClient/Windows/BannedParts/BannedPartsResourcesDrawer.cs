@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using LmpClient.Localization;
+﻿using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
+using System.Linq;
 using UnityEngine;
 
 namespace LmpClient.Windows.BannedParts
@@ -39,6 +39,11 @@ namespace LmpClient.Windows.BannedParts
                         GUILayout.Label(bannedResource);
                     }
                 }
+                if (_partCount > SettingsSystem.ServerSettings.MaxVesselParts)
+                {
+                    GUILayout.Label($"{LocalizationContainer.BannedPartsResourcesWindowText.TooManyParts} {SettingsSystem.ServerSettings.MaxVesselParts}", BoldRedLabelStyle);
+                }
+
                 GUILayout.EndScrollView();
                 GUILayout.EndVertical();
             }
