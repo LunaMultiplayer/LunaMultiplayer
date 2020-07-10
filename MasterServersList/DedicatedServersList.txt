@@ -30,10 +30,6 @@ qingdao.211.network:8800
 #ksp.wdboer.nl:8800
 #Road Dogs Space Agency
 #13.82.219.250:8800
-#Memium 
-#memium.de:8800
-#holzlatten-gaming.de:8800
-213.109.163.13:8800
 #Huge Alligator
 gameserver.corvettecole.com:19712
 #KSPace Team
