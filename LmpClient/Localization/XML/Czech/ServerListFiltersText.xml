@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ServerListFiltersText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <HideFullServers>Schovat plné servery</HideFullServers>
-  <HideEmptyServers>Schovat prazdné servery</HideEmptyServers>
-  <HidePrivateServers>Schovat soukromé servery</HidePrivateServers>
-  <DedicatedServersOnly>Ukazat jenom věnované servery</DedicatedServersOnly>
+  <HideFullServers>Skrýt plné</HideFullServers>
+  <HideEmptyServers>Skrýt prázdné</HideEmptyServers>
+  <HidePrivateServers>Skrýt soukromé</HidePrivateServers>
+  <DedicatedServersOnly>Ukázat pouze zaměřené servery</DedicatedServersOnly>
 </ServerListFiltersText>

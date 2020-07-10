@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <PlayerName>Hračovo jmeno:</PlayerName>
-  <Name>Jmeno:</Name>
+  <PlayerName>Hráčovo jméno:</PlayerName>
+  <Name>Jméno:</Name>
   <Address>Adresa:</Address>
   <Port>Port:</Port>
   <Password>Heslo:</Password>
-  <CustomServers>Custom servery:</CustomServers>
+  <CustomServers>Vlastní servery:</CustomServers>
   <Connect>Připojit</Connect>
   <Settings>Nastavení</Settings>
   <Servers>Server List</Servers>

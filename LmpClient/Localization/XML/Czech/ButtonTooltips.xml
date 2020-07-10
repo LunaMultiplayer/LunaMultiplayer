@@ -7,7 +7,7 @@
   <DisconnectIcon>Odpojit</DisconnectIcon>
   <SyncIcon>Warp k</SyncIcon>
   <RefreshIcon>Aktualizovat</RefreshIcon>
-  <UploadIcon>Upload</UploadIcon>
+  <UploadIcon>Nahrát</UploadIcon>
   <DeleteIcon>Vymazat</DeleteIcon>
   <PlusIcon>Přidat</PlusIcon>
   <SaveIcon>Uložit</SaveIcon>
@@ -22,9 +22,9 @@
   <DekesslerIcon>Dekessler</DekesslerIcon>
   <NukeIcon>Nuke KSC</NukeIcon>
   <RestartServerIcon>Restartovat Server</RestartServerIcon>
-  <DownloadIcon>Nainstalovat</DownloadIcon>
+  <DownloadIcon>Stáhnout</DownloadIcon>
   <CycleFirstIcon>První</CycleFirstIcon>
-  <CyclePreviousIcon>Předtím</CyclePreviousIcon>
-  <CycleNextIcon>Dalši</CycleNextIcon>
+  <CyclePreviousIcon>Předchozí</CyclePreviousIcon>
+  <CycleNextIcon>Další</CycleNextIcon>
   <CycleLastIcon>Poslední</CycleLastIcon>
 </ButtonTooltips>
