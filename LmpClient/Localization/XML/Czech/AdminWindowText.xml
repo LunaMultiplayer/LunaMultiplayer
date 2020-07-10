@@ -4,7 +4,7 @@
   <Title>Administrace</Title>
   <Password>Server admin heslo:</Password>
   <ConfirmDialogTitle>Potvrdit</ConfirmDialogTitle>
-  <BanText>Chcete važně zabanovat tohohle hrače?</BanText>
-  <KickText>Chcete važně vyhodit tohohle hrače?</KickText>
-  <Reason>Duvod:</Reason>
+  <BanText>Vážně chcete dát ban tomuto hráči?</BanText>
+  <KickText>Vážně chcete vyhodit tohoto hrače ze serveru?</KickText>
+  <Reason>Důvod:</Reason>
 </AdminWindowText>

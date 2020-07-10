@@ -4,17 +4,17 @@
   <Title>Server list</Title>
   <NoServers>Žadné Servery!</NoServers>
   <Ping>Ping</Ping>
-  <Players>Hrači</Players>
-  <MaxPlayers>Maximalně hraču</MaxPlayers>
-  <Mode>Mod</Mode>
-  <WarpMode>Warp mod</WarpMode>
+  <Players>Hráčů</Players>
+  <MaxPlayers>Limit hráčů</MaxPlayers>
+  <Mode>Typ</Mode>
+  <WarpMode>Typ Warpu</WarpMode>
   <Terrain>Grafika</Terrain>
   <Cheats>Cheaty</Cheats>
-  <Name>Jmeno</Name>
-  <Description>Popisek</Description>
+  <Name>Jméno</Name>
+  <Description>Popis</Description>
   <Website>URL</Website>
   <ServerDetailTitle>Připojit se k serveru</ServerDetailTitle>
   <Password>Heslo</Password>
   <Connect>Připojit</Connect>
-  <Dedicated>Věnováne</Dedicated>
+  <Dedicated>Zaměřené</Dedicated>
 </ServerListWindowText>
