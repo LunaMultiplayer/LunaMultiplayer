@@ -13,7 +13,7 @@ namespace LmpClient.Windows.Vessels
         public static void DrawFilters()
         {
             GUILayout.BeginHorizontal();
-            HideAsteroids = GUILayout.Toggle(HideAsteroids, "Hide asteroids");
+            HideAsteroids = GUILayout.Toggle(HideAsteroids, "Hide comets/asteroids");
             HideDebris = GUILayout.Toggle(HideDebris, "Hide debris");
             HideUncontrolled = GUILayout.Toggle(HideUncontrolled, "Hide uncontrolled");
             GUILayout.EndHorizontal();
