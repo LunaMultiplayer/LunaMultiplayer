@@ -3,6 +3,7 @@ using LmpClient.Systems.AsteroidComet;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Enums;
+using System;
 
 // ReSharper disable All
 
@@ -13,6 +14,7 @@ namespace LmpClient.Harmony
     /// </summary>
     [HarmonyPatch(typeof(ScenarioDiscoverableObjects))]
     [HarmonyPatch("SpawnComet")]
+    [HarmonyPatch(new Type[0])]
     public class ScenarioDiscoverableObjects_SpawnComet
     {
         [HarmonyPrefix]
