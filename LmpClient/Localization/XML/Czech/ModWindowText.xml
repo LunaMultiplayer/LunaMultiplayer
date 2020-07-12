@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ModWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Nepovedena kontrola modů</Title>
-  <MandatoryModsNotFound>Povinné mody se nenašly:</MandatoryModsNotFound>
-  <MissingExpansions>Chybějici mody:</MissingExpansions>
-  <MandatoryModsDifferentShaFound>Povinné mody s jínym SHA se našly:</MandatoryModsDifferentShaFound>
+  <Title>Kontrola módů selhala</Title>
+  <MandatoryModsNotFound>Nenašly se následující povinné modifikace:</MandatoryModsNotFound>
+  <MissingExpansions>Chybějící modifikace:</MissingExpansions>
+  <MandatoryModsDifferentShaFound>Modifikace se špatným SHA checksumem:</MandatoryModsDifferentShaFound>
   <Link>Link</Link>
-  <ForbiddenFilesFound>Zakazané mody se našly:</ForbiddenFilesFound>
-  <NonListedFilesFound>Nepovinné a zakazané mody se našly:</NonListedFilesFound>
-  <MandatoryPartsNotFound>Povinné časti se nenašly:</MandatoryPartsNotFound>
-  <ForbiddenPartsFound>Zakazané časti se našly:</ForbiddenPartsFound>
+  <ForbiddenFilesFound>Zakázané modifikace:</ForbiddenFilesFound>
+  <NonListedFilesFound>Nepovinné modifikace:</NonListedFilesFound>
+  <MandatoryPartsNotFound>Nutné položky které nebyly nalezeny:</MandatoryPartsNotFound>
+  <ForbiddenPartsFound>Zakázané položky které byly nalezeny:</ForbiddenPartsFound>
 </ModWindowText>

@@ -1,26 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CraftUploaded>Loď uploudnuta!</CraftUploaded>
-  <CraftSaved>Loď uložena!</CraftSaved>
-  <ModFileGenerated>LMPModControl.xml složka generovaná ve vaší KSP složce</ModFileGenerated>
-  <Disconected>Byli jste odpojení!</Disconected>
-  <Spectating>Tahle Loď je řízena</Spectating>
-  <SafetyBubble>Pamatuj!! Když jste uvnitř bezpečnostní bubliny nebudete viďen ostatníma hračema!!</SafetyBubble>
-  <CheckParts>Když Použivate mody nebo DLC častí tak ostatní hrači vás nebudou viďet!!</CheckParts>
-  <CannotRecover>Nemužu odebrat loď, protože tahle loď není vaše.</CannotRecover>
-  <CannotTerminate>nemužu vymazat loď, protože tahle loď není vaše.</CannotTerminate>
-  <SpectatingRemoved>Tahle loď kterou jste sledovali byla vymazána</SpectatingRemoved>
-  <WarpDisabled>Nemužu warp, warp je vypnutej na tomhle serveru!</WarpDisabled>
-  <WaitingSubspace>Nemužu warp, čekejte subspace id od serveru</WaitingSubspace>
-  <CannotWarpWhileSpectating>Nemužete warp když sledujete</CannotWarpWhileSpectating>
-  <ScreenshotInterval>Interval mezi screenshotama je $1 sekund. Nemužete uploudnout tenhle screenshot v tento moment</ScreenshotInterval>
-  <CraftLibraryInterval>Interval mezi knohovnou loďi je $1 sekund. Nemužete tento process udělat v tento moment čekejte chvílí moment</CraftLibraryInterval>
-  <ScreenshotTaken>Screenshot uploudnutej!</ScreenshotTaken>
-  <ImageSaved>Fotka uložena do GameData/LunaMultiplayer/Screenshots</ImageSaved>
-  <IncreasedInterpolationOffset>Pozor! Tento interpolačni kompenzace byla zvyšena když to bylo hodně malo pro tento server</IncreasedInterpolationOffset>
-  <SackingKerbalsNotAllowed>Tento server nepvoluje střilení kerbalu</SackingKerbalsNotAllowed>
-  <CannotLoadGames>LMP neuložuje načitaní uložení</CannotLoadGames>
-  <KerbalNotYours>Jíny hrač teď použivá tohohle kerbala</KerbalNotYours>
-  <UnsafeToSync>Nemužu synchronizovat když jste v nestabliní orbitě nebo sledujete mužete crashnout! Tohle mužete vypnout v nastavení</UnsafeToSync>
+  <CraftUploaded>Vozidlo nahráno!</CraftUploaded>
+  <CraftSaved>Vozidlo uloženo!</CraftSaved>
+  <ModFileGenerated>LMPModControl.xml bylo vygenerováno do vaší složky.</ModFileGenerated>
+  <Disconected>Byli jste odpojeni!</Disconected>
+  <Spectating>Vozidlo je řízeno jiným hráčem.</Spectating>
+  <SafetyBubble>Pakliže jste uvnitř startovní sféry, nejste viděni ostatními hráči!</SafetyBubble>
+  <CheckParts>Při použití nepovolených/nesynchronizovaných modifikací či DLC vás ostatní hráči nevidí!</CheckParts>
+  <CannotRecover>Nelze se vrátit protože nekontrolujete vozidlo.</CannotRecover>
+  <CannotTerminate>Vozidlo nelze vymazat protoře ho nevlastníte.</CannotTerminate>
+  <SpectatingRemoved>Sledované vozidlo bylo vymazáno.</SpectatingRemoved>
+  <WarpDisabled>Nelze se posunovat v čase protože to server nepodporuje.</WarpDisabled>
+  <WaitingSubspace>Nelze se posunovat v čase. Vyčkejte na odpověd serveru (subspace id).</WaitingSubspace>
+  <CannotWarpWhileSpectating>Nelze se posunout v čase protože nekontrolujete vozidlo.</CannotWarpWhileSpectating>
+  <ScreenshotInterval>Foto nelze pořídit jelikož je interval mezi pořízením screenshotu $1 sekund.</ScreenshotInterval>
+  <CraftLibraryInterval>Interakci nelze provést jelikož je interval mezi interakcemi knihovny lodí $1 sekund.</CraftLibraryInterval>
+  <ScreenshotTaken>Screenshot nahrán!</ScreenshotTaken>
+  <ImageSaved>Fotka byla uložena do GameData/LunaMultiplayer/Screenshots</ImageSaved>
+  <IncreasedInterpolationOffset>Pozor! Interpolačni kompenzace byla zvýšena!</IncreasedInterpolationOffset>
+  <SackingKerbalsNotAllowed>Tento server nepodporuje zabíjení kerbálků!</SackingKerbalsNotAllowed>
+  <CannotLoadGames>Nelze načíst uloženou hru</CannotLoadGames>
+  <KerbalNotYours>Kerbálek je ovládán jiným hráčem.</KerbalNotYours>
+  <UnsafeToSync>Nelze synchronizovat na nestabilní orbitě nebo při sledovacím módu! Toto omezení lze vypnout v nastavení módu.</UnsafeToSync>
 </ScreenText>
