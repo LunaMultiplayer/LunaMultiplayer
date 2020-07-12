@@ -79,6 +79,7 @@ namespace LmpClient.Systems.VesselProtoSys
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store too
             VesselProtos.Clear();
+            VesselsUnableToLoad.Clear();
             QueuedVesselsToSend.Clear();
         }
 
