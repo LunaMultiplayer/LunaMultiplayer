@@ -9,13 +9,13 @@
       "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
       "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png"
     },
-    "title": "New Release Available - 0.25.0",
+    "title": "New Release Available - 0.26.0",
     "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
     "description": "A new version of Luna MultiPlayer is available! You can download it at [GitHub](https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest)",
     "fields": [
       {
-        "name": "About version 0.25.0",
-        "value": "Build 0.25.0.293\n\n### ### 29th BETA version of LMP\n\n- Upgrade for KSP 1.9\n- Fixed a bug with time sync while in main menu\n- Added a GC setting for servers\n- Attempt to fix the floating origin bugs when syncing time with the server\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.24.0...0.25.0>"
+        "name": "About version 0.26.0",
+        "value": "Build 0.26.0.293\n\n### ###  30th BETA version of LMP\n\nIMPORTANT: Make sure you recreate your ModControl file in case you are running a server!\n\n- Added compatibility with KSP 1.10\n- Added compatibility with comets\n- Added comaptibility with more part modules\n- Added resources into mod control\n- Better gameplay settings control in the server\n- Added several warning messages\n- Multi threading for part module transpiler\n- Fix missing kerbals when starting a vessel with banned parts/resources\n- Fix laggy vessel movement above 70K when using US regional settings\n- Updated to latest Lidgren (should support IPv6)\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.25.0...0.26.0>"
       }
     ],
     "timestamp": "2020-02-13T12:00:00Z",
