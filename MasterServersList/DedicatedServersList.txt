@@ -25,9 +25,6 @@ qingdao.211.network:8800
 #WhiteShield-Gaming
 #vps8.wsg.ovh:8800
 #103.214.110.138:6712
-#Wicloz
-#ksp.wilcodeboer.me:8800
-#ksp.wdboer.nl:8800
 #Road Dogs Space Agency
 #13.82.219.250:8800
 #Huge Alligator
