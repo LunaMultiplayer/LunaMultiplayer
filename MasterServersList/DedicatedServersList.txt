@@ -33,3 +33,5 @@ gameserver.corvettecole.com:19712
 kspace-team.ga:8800
 #Kiwi_Waydelyb
 Kiwi_Waydelyb:8800
+#khtrx_ksp
+ksp.khtrx.tk:8800
