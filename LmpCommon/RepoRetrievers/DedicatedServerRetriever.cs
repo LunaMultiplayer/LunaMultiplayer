@@ -26,9 +26,9 @@ namespace LmpCommon.RepoRetrievers
                     RefreshDedicatedServersList();
                     _lastRequestTime = LunaComputerTime.UtcNow;
                 }
-                else if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
+                else if (LunaComputerTime.UtcNow - _lastRequestTime > RequestInterval)
                 {
-                    Task.Run(() => RefreshDedicatedServersList());
+                    Task.Run(RefreshDedicatedServersList);
                     _lastRequestTime = LunaComputerTime.UtcNow;
                 }
 
@@ -36,7 +36,7 @@ namespace LmpCommon.RepoRetrievers
             }
         }
 
-        private static readonly TimeSpan MaxRequestInterval = TimeSpan.FromMinutes(30);
+        private static readonly TimeSpan RequestInterval = TimeSpan.FromMinutes(30);
         private static DateTime _lastRequestTime = DateTime.MinValue;
 
         public static bool IsDedicatedServer(IPEndPoint endpoint)
