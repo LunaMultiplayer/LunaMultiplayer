@@ -37,3 +37,5 @@ Kiwi_Waydelyb:8800
 ksp.khtrx.tk:8800
 #Piro server
 piro.myftp.biz:8800
+piro.sytes.net:8800
+81.0.42.222:8800
