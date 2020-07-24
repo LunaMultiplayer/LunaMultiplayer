@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
+    <Compile Include="Dedicated\DedicatedServerRetriever.cs" />
     <Compile Include="Geolocalization\Base\BaseGeolocalization.cs" />
     <Compile Include="Geolocalization\IpApi.cs" />
     <Compile Include="Geolocalization\IpLocate.cs" />

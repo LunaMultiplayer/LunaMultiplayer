@@ -1,7 +1,7 @@
 ﻿using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
-using LmpCommon.RepoRetrievers;
 using LmpCommon.Time;
+using LmpMasterServer.Dedicated;
 using LmpMasterServer.Geolocalization;
 using System;
 using System.Collections.Generic;
