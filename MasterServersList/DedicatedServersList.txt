@@ -12,6 +12,6 @@ qingdao.211.network:8800
 #khtrx_ksp
 ksp.khtrx.tk:8800
 #Piro server
-81.0.42.222:8800
+piro.sytes.net:8800
 #OrionProject
 77.68.79.83:8800
