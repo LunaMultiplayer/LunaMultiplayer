@@ -10,7 +10,7 @@
 212.48.114.221:8751
 #Angryjoshi. List: https://lmp.anschuetznet.de/
 lmp.anschuetznet.de:8700
-#Angryjoshi Nightly. List: https://lmp.anschuetznet.de/nightly/
+#Angryjoshi Nightly. List: http://lmp.anschuetznet.de:8751
 lmp.anschuetznet.de:8750
 #Piro server List: http://piro.sytes.net:8701/
 piro.sytes.net:8700
