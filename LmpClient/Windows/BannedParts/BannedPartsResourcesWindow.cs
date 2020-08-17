@@ -53,7 +53,7 @@ namespace LmpClient.Windows.BannedParts
                 _vesselName = vesselName;
                 _bannedParts = bannedParts;
                 _bannedResources = bannedResources;
-                _partCount = 0;
+                _partCount = partCount;
                 Display = true;
             }
         }
