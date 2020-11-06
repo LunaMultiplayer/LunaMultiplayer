@@ -15,3 +15,5 @@ ksp.k0r4ll.link:8800
 piro.sytes.net:8800
 #OrionProject
 77.68.79.83:8800
+#Lotka
+kerbal.lotka.tk:8800
