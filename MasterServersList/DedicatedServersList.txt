@@ -18,3 +18,5 @@ piro.sytes.net:8800
 #Tayaut Servers
 kerbal.tayaut.net:8800
 kerbal.tayaut.net:8801
+#Lotka
+kerbal.lotka.tk:8800
