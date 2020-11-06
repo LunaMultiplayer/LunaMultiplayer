@@ -17,5 +17,8 @@ piro.sytes.net:8800
 77.68.79.83:8800
 #404Republic
 republic.404inc.org:8800
+#Tayaut Servers
+kerbal.tayaut.net:8800
+kerbal.tayaut.net:8801
 #Lotka
 kerbal.lotka.tk:8800
