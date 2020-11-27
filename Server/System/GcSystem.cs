@@ -14,7 +14,7 @@ namespace Server.System
     {
         public static async void PerformGarbageCollection(CancellationToken token)
         {
-            while (ServerContext.ServerRunning)
+            while (ServerContext.ServerRunning && IntervalSettings.SettingsStore.GcMinutesInterval != 0)
             {
                 LunaLog.Debug("Performing a GarbageCollection...");
                 GC.Collect();
