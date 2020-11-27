@@ -12,7 +12,7 @@
 lmp.anschuetznet.de:8700
 #Angryjoshi Nightly. List: http://lmp.anschuetznet.de:8751
 lmp.anschuetznet.de:8750
-#Piro server List: http://piro.sytes.net:8701/
-piro.sytes.net:8700
-#Piro server Nightly List: http://piro.sytes.net:8751/
-piro.sytes.net:8750
+#Piro server List: http://178.33.167.161:8701/
+178.33.167.161:8700
+#Piro server Nightly List: http://178.33.167.161:8751/
+178.33.167.161:8750

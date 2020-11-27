@@ -9,9 +9,16 @@
 chengdu.211.network:8800
 beijing.211.network:8800
 qingdao.211.network:8800
-#khtrx_ksp
-ksp.khtrx.tk:8800
+#k0r4ll_ksp
+ksp.k0r4ll.link:8800
 #Piro server
-piro.sytes.net:8800
+178.33.167.161:8800
 #OrionProject
 77.68.79.83:8800
+#404Republic
+republic.404inc.org:8800
+#Tayaut Servers
+kerbal.tayaut.net:8800
+kerbal.tayaut.net:8801
+#Lotka
+kerbal.lotka.tk:8800
