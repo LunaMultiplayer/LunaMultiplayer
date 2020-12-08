@@ -11,6 +11,7 @@ using LmpCommon.Message.Types;
 using Strategies;
 using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 
 namespace LmpClient.Systems.ShareStrategy
 {
@@ -38,7 +39,7 @@ namespace LmpClient.Systems.ShareStrategy
         {
             var incomingStrategyNode = ConvertByteArrayToConfigNode(strategyInfo.Data, strategyInfo.NumBytes);
             if (incomingStrategyNode == null) return;
-            var incomingStrategyFactor = float.Parse(incomingStrategyNode.GetValue("factor"));
+            var incomingStrategyFactor = float.Parse(incomingStrategyNode.GetValue("factor"), CultureInfo.InvariantCulture);
             var incomingStrategyIsActive = bool.Parse(incomingStrategyNode.GetValue("isActive"));
 
             //Don't listen to these events for the time this message is processing.
