@@ -3,6 +3,7 @@ using Server.Context;
 using Server.Log;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -45,7 +46,7 @@ namespace Server.System
                 return false;
 
             LunaLog.Debug($"Removing abandoned subspace '{subspaceToRemove}'");
-            WarpContext.Subspaces.TryRemove(subspaceToRemove, out var _);
+            WarpContext.Subspaces.TryRemove(subspaceToRemove, out _);
             return true;
         }
 
@@ -71,7 +72,7 @@ namespace Server.System
         {
             var subspaceLines = FileHandler.ReadFileLines(SubspaceFile)
                 .Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l) && !l.StartsWith("#"))
-                .Select(s => new KeyValuePair<int, double>(int.Parse(s.Split(':')[0]), double.Parse(s.Split(':')[1])))
+                .Select(s => new KeyValuePair<int, double>(int.Parse(s.Split(':')[0]), double.Parse(s.Split(':')[1], CultureInfo.InvariantCulture)))
                 .ToArray();
 
             if (subspaceLines.Length == 0)
@@ -80,16 +81,11 @@ namespace Server.System
                 return new KeyValuePair<int, double>(0, 0);
             }
 
-            //TODO: Retrocompatibility - Remove next 2 lines 2/3 months after 1/july/2018
-            if (subspaceLines.Length > 1)
+            if (SubspaceFile.Length > 1)
+            {
+                LunaLog.Error("Subspace.txt should not contain more than 1 subspace line!");
                 return subspaceLines.OrderByDescending(s => s.Value).First();
-
-            //TODO: Uncomment this 2/3 months after 1/july/2018
-            //if (SubspaceFile.Length > 1)
-            //{
-            //    LunaLog.Error("Incorrect Subspace.txt file!");
-            //    return subspaceLines.OrderByDescending(s => s.Value).First();
-            //}
+            }
 
             return subspaceLines.First();
         }

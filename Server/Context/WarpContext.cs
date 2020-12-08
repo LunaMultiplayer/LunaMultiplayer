@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Globalization;
 using System.Linq;
 
 namespace Server.Context
@@ -11,7 +12,7 @@ namespace Server.Context
 
         public override string ToString()
         {
-            return $"{Id}:{Time}";
+            return $"{Id}:{Time.ToString(CultureInfo.InvariantCulture)}";
         }
 
         public Subspace(int id) : this(id, 0, "Server") { }
