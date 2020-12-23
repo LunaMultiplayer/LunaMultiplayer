@@ -550,9 +550,28 @@ namespace LmpCommon.ModFile.Structure
                 "flagPartSize2",
                 "flagPartSize3",
                 "smallClaw",
+                "evaCylinder",
+                "evaJetpack",
+                "evaChute",
+                "evaRepairKit",
+                "evaScienceKit",
+                "CargoStorageUnit",
+                "ConformalStorageUnit",
+                "Size2LFB.v2",
+                "HighGainAntenna5.v2",
+                "domeLight1",
+                "groundLight1",
+                "groundLight2",
+                "navLight1",
+                "spotLight3",
+                "stripLight1",
+                "RCSblock.01.small",
+                "RCSLinearSmall",
+                "flagPartSize1p5",
+                "flagPartSize4"
             };
         }
-        
+
         public void SetDefaultAllowedResources()
         {
             AllowedResources = new List<string>

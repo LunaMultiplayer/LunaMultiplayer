@@ -122,5 +122,19 @@ namespace LmpClient.Systems.VesselProtoSys
 
             System.MessageSender.SendVesselMessage(partFrom.vessel);
         }
+
+        public void EVAConstructionModePartAttached(Vessel vessel, Part part)
+        {
+            if (VesselCommon.IsSpectating) return;
+
+            System.MessageSender.SendVesselMessage(vessel);
+        }
+
+        public void EVAConstructionModePartDetached(Vessel vessel, Part part)
+        {
+            if (VesselCommon.IsSpectating) return;
+
+            System.MessageSender.SendVesselMessage(vessel);
+        }
     }
 }
