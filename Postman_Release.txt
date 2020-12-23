@@ -15,10 +15,10 @@
     "fields": [
       {
         "name": "About version 0.27.0",
-        "value": "Build 0.27.0.347\n\n### 30th BETA version of LMP\n\nIMPORTANT: Make sure you recreate your ModControl file in case you are running a server!\n\n- Added compatibility with KSP 1.10\n- Added compatibility with comets\n- Added compatibility with more part modules\n- Added resources into mod control\n- Better gameplay settings control in the server\n- Added several warning messages\n- Multi threading for part module transpiler\n- Fix missing kerbals when starting a vessel with banned parts/resources\n- Fix laggy vessel movement above 70K when using US regional settings\n- Updated to latest Lidgren (should support IPv6)\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.25.0...0.26.0>"
+        "value": "Build 0.27.0.382\n\n### 31th BETA version of LMP\n\nIMPORTANT: Make sure you recreate your ModControl file in case you are running a server!\n\n- Added compatibility with KSP 1.11\n- Fixed parsing of floats with different cultures\n- Allow deactivation of GC\n- Fix error when vessel parts > max allowed parts\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.26.0...0.27.0>"
       }
     ],
-    "timestamp": "2020-07-15T08:30:00Z",
+    "timestamp": "2020-12-23T19:40:00Z",
     "footer": {
       "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png",
       "text": "Luna multiplayer"
