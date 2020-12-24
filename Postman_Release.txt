@@ -9,13 +9,13 @@
       "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
       "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png"
     },
-    "title": "New Release Available - 0.27.0",
+    "title": "New Release Available - 0.28.0",
     "url": "https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest",
     "description": "A new version of Luna MultiPlayer is available! You can download it at [GitHub](https://github.com/LunaMultiplayer/LunaMultiplayer/releases/latest)",
     "fields": [
       {
-        "name": "About version 0.27.0",
-        "value": "Build 0.27.0.382\n\n### 31th BETA version of LMP\n\nIMPORTANT: Make sure you recreate your ModControl file in case you are running a server!\n\n- Added compatibility with KSP 1.11\n- Fixed parsing of floats with different cultures\n- Allow deactivation of GC\n- Fix error when vessel parts > max allowed parts\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.26.0...0.27.0>"
+        "name": "About version 0.28.0",
+        "value": "Build 0.28.0.382\n\n### 31th BETA version of LMP\n\nIMPORTANT: Make sure you recreate your ModControl file in case you are running a server!\n\n- Added compatibility with KSP 1.11\n- Fixed parsing of floats with different cultures\n- Allow deactivation of GC\n- Fix error when vessel parts > max allowed parts\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.26.0...0.28.0>"
       }
     ],
     "timestamp": "2020-12-23T19:40:00Z",
