@@ -194,6 +194,7 @@ namespace LmpClient.Windows.Options
                     GUILayout.Label("Cannot change values while connected");
                 }
 
+#if DEBUG
                 GUILayout.Label($"Packet loss: {NetworkMain.Config.SimulatedLoss * 100:F1}%");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                     NetworkMain.Config.SimulatedLoss = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedLoss, 0, 0, 1), 3);
@@ -206,6 +207,7 @@ namespace LmpClient.Windows.Options
                 GUILayout.Label($"Min latency: {NetworkMain.Config.SimulatedMinimumLatency * 1000:F1} ms");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                     NetworkMain.Config.SimulatedMinimumLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3), 4);
+#endif
             }
 
             _showClockOffsetSettings = GUILayout.Toggle(_showClockOffsetSettings, "Clock offset simulation", ToggleButtonStyle);

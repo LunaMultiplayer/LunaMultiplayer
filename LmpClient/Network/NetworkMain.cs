@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpClient.Base;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.BannedParts;
 using LmpCommon.Message;
 using LmpCommon.Message.Interface;
-using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LmpClient.Network
 {
@@ -44,6 +43,7 @@ namespace LmpClient.Network
 
         public static void RandomizeBadConnectionValues()
         {
+#if DEBUG
             var rnd = new Random();
 
             LunaNetworkTime.SimulatedMsTimeOffset = rnd.Next(-500, 500); //Between -500 and 500 ms
@@ -51,15 +51,18 @@ namespace LmpClient.Network
             Config.SimulatedRandomLatency = (float)rnd.Next(10, 250) / 1000; //Between 10 and 250 ms
             Config.SimulatedDuplicatesChance = (float)rnd.Next(10, 50) / 1000; //Between 1 and 5%
             Config.SimulatedLoss = (float)rnd.Next(10, 30) / 1000; //Between 1 and 3%
+#endif
         }
 
         public static void ResetBadConnectionValues()
         {
+#if DEBUG
             LunaNetworkTime.SimulatedMsTimeOffset = 0;
             Config.SimulatedMinimumLatency = 0;
             Config.SimulatedRandomLatency = 0;
             Config.SimulatedDuplicatesChance = 0;
             Config.SimulatedLoss = 0;
+#endif
         }
 
         public static void ResetConnectionStaticsAndQueues()

@@ -45,6 +45,7 @@ namespace Server.Server
                 ServerContext.Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             }
 
+#if DEBUG
             if (DebugSettings.SettingsStore?.SimulatedLossChance < 100 && DebugSettings.SettingsStore?.SimulatedLossChance > 0)
             {
                 ServerContext.Config.SimulatedLoss = DebugSettings.SettingsStore.SimulatedLossChance / 100f;
@@ -55,6 +56,7 @@ namespace Server.Server
             }
             ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds((double)DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs).TotalSeconds;
             ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds((double)DebugSettings.SettingsStore?.MinSimulatedLatencyMs).TotalSeconds;
+#endif
 
             Server = new NetServer(ServerContext.Config);
             Server.Start();
