@@ -17,9 +17,15 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
+
+#if NETSTANDARD2_1 || NETCOREAPP
+#define HAVE_ISREFERENCE
+#endif
+
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 //
@@ -207,7 +213,12 @@ namespace Lidgren.Network
 				}
 
 				item = m_items[m_head];
-				m_items[m_head] = default(T);
+#if HAVE_ISREFERENCE
+				if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+#endif
+                {
+                    m_items[m_head] = default(T);
+                }
 
 				m_head = (m_head + 1) % m_items.Length;
 				m_size--;
@@ -246,7 +257,12 @@ namespace Lidgren.Network
 					var item = m_items[m_head];
 					addTo.Add(item);
 
-					m_items[m_head] = default(T);
+#if HAVE_ISREFERENCE
+					if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+#endif
+					{
+						m_items[m_head] = default(T);
+					}
 					m_head = (m_head + 1) % m_items.Length;
 					m_size--;
 				}
@@ -342,8 +358,13 @@ namespace Lidgren.Network
 			m_lock.EnterWriteLock();
 			try
 			{
-				for (int i = 0; i < m_items.Length; i++)
-					m_items[i] = default(T);
+#if HAVE_ISREFERENCE
+				if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+#endif
+				{
+					for (int i = 0; i < m_items.Length; i++)
+						m_items[i] = default(T);
+				}
 				m_head = 0;
 				m_size = 0;
 			}

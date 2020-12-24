@@ -29,6 +29,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 namespace Lidgren.Network
@@ -40,172 +43,12 @@ namespace Lidgren.Network
 	{
 		private static readonly bool IsMono = Type.GetType("Mono.Runtime") != null;
 
-		/// <summary>
-		/// Resolve endpoint callback
-		/// </summary>
-		public delegate void ResolveEndPointCallback(NetEndPoint endPoint);
-
-		/// <summary>
-		/// Resolve address callback
-		/// </summary>
-		public delegate void ResolveAddressCallback(NetAddress adr);
-
-		/// <summary>
-		/// Get IPv4 endpoint from notation (xxx.xxx.xxx.xxx) or hostname and port number (asynchronous version)
-		/// </summary>
-		public static void ResolveAsync(string ipOrHost, int port, ResolveEndPointCallback callback)
-		{
-			ResolveAsync(ipOrHost, delegate(NetAddress adr)
-			{
-				if (adr == null)
-				{
-					callback(null);
-				}
-				else
-				{
-					callback(new NetEndPoint(adr, port));
-				}
-			});
-		}
-
-		/// <summary>
-		/// Get IPv4 endpoint from notation (xxx.xxx.xxx.xxx) or hostname and port number
-		/// </summary>
-		public static NetEndPoint Resolve(string ipOrHost, int port)
-		{
-			var adr = Resolve(ipOrHost);
-			return adr == null ? null : new NetEndPoint(adr, port);
-		}
-
 		private static IPAddress s_broadcastAddress;
 		public static IPAddress GetCachedBroadcastAddress()
 		{
 			if (s_broadcastAddress == null)
 				s_broadcastAddress = GetBroadcastAddress();
 			return s_broadcastAddress;
-		}
-
-		/// <summary>
-		/// Get IPv4 address from notation (xxx.xxx.xxx.xxx) or hostname (asynchronous version)
-		/// </summary>
-		public static void ResolveAsync(string ipOrHost, ResolveAddressCallback callback)
-		{
-			if (string.IsNullOrEmpty(ipOrHost))
-				throw new ArgumentException("Supplied string must not be empty", "ipOrHost");
-
-			ipOrHost = ipOrHost.Trim();
-
-			NetAddress ipAddress = null;
-			if (NetAddress.TryParse(ipOrHost, out ipAddress))
-			{
-				if (ipAddress.AddressFamily == AddressFamily.InterNetwork || ipAddress.AddressFamily == AddressFamily.InterNetworkV6)
-				{
-					callback(ipAddress);
-					return;
-				}
-				throw new ArgumentException("This method will not currently resolve other than ipv4 addresses");
-			}
-
-			// ok must be a host name
-			IPHostEntry entry;
-			try
-			{
-				Dns.BeginGetHostEntry(ipOrHost, delegate(IAsyncResult result)
-				{
-					try
-					{
-						entry = Dns.EndGetHostEntry(result);
-					}
-					catch (SocketException ex)
-					{
-						if (ex.SocketErrorCode == SocketError.HostNotFound)
-						{
-							//LogWrite(string.Format(CultureInfo.InvariantCulture, "Failed to resolve host '{0}'.", ipOrHost));
-							callback(null);
-							return;
-						}
-						else
-						{
-							throw;
-						}
-					}
-
-					if (entry == null)
-					{
-						callback(null);
-						return;
-					}
-
-					// check each entry for a valid IP address
-					foreach (var ipCurrent in entry.AddressList)
-					{
-						if (ipCurrent.AddressFamily == AddressFamily.InterNetwork || ipCurrent.AddressFamily == AddressFamily.InterNetworkV6)
-						{
-							callback(ipCurrent);
-							return;
-						}
-					}
-
-					callback(null);
-				}, null);
-			}
-			catch (SocketException ex)
-			{
-				if (ex.SocketErrorCode == SocketError.HostNotFound)
-				{
-					//LogWrite(string.Format(CultureInfo.InvariantCulture, "Failed to resolve host '{0}'.", ipOrHost));
-					callback(null);
-				}
-				else
-				{
-					throw;
-				}
-			}
-		}
-
-        /// <summary>
-		/// Get IPv4 address from notation (xxx.xxx.xxx.xxx) or hostname
-		/// </summary>
-		public static NetAddress Resolve(string ipOrHost)
-		{
-			if (string.IsNullOrEmpty(ipOrHost))
-				throw new ArgumentException("Supplied string must not be empty", "ipOrHost");
-
-			ipOrHost = ipOrHost.Trim();
-
-			NetAddress ipAddress = null;
-			if (NetAddress.TryParse(ipOrHost, out ipAddress))
-			{
-				if (ipAddress.AddressFamily == AddressFamily.InterNetwork || ipAddress.AddressFamily == AddressFamily.InterNetworkV6)
-					return ipAddress;
-				throw new ArgumentException("This method will not currently resolve other than IPv4 or IPv6 addresses");
-			}
-
-			// ok must be a host name
-			try
-			{
-				var addresses = Dns.GetHostAddresses(ipOrHost);
-				if (addresses == null)
-					return null;
-				foreach (var address in addresses)
-				{
-					if (address.AddressFamily == AddressFamily.InterNetwork || address.AddressFamily == AddressFamily.InterNetworkV6)
-						return address;
-				}
-				return null;
-			}
-			catch (SocketException ex)
-			{
-				if (ex.SocketErrorCode == SocketError.HostNotFound)
-				{
-					//LogWrite(string.Format(CultureInfo.InvariantCulture, "Failed to resolve host '{0}'.", ipOrHost));
-					return null;
-				}
-				else
-				{
-					throw;
-				}
-			}
 		}
 
 		/// <summary>
@@ -221,21 +64,26 @@ namespace Lidgren.Network
 		/// </summary>
 		public static string ToHexString(byte[] data)
 		{
-			return ToHexString(data, 0, data.Length);
+			return ToHexString(data.AsSpan());
 		}
 
+		public static string ToHexString(byte[] data, int offset, int length)
+		{
+			return ToHexString(data.AsSpan(offset, length));
+		}
+		
 		/// <summary>
 		/// Create a hex string from an array of bytes
 		/// </summary>
-		public static string ToHexString(byte[] data, int offset, int length)
+		public static string ToHexString(ReadOnlySpan<byte> data)
 		{
-			char[] c = new char[length * 2];
+			char[] c = new char[data.Length * 2];
 			byte b;
-			for (int i = 0; i < length; ++i)
+			for (int i = 0; i < data.Length; ++i)
 			{
-				b = ((byte)(data[offset + i] >> 4));
+				b = ((byte)(data[i] >> 4));
 				c[i * 2] = (char)(b > 9 ? b + 0x37 : b + 0x30);
-				b = ((byte)(data[offset + i] & 0xF));
+				b = ((byte)(data[i] & 0xF));
 				c[i * 2 + 1] = (char)(b > 9 ? b + 0x37 : b + 0x30);
 			}
 			return new string(c);
@@ -276,10 +124,14 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public static int BitsToHoldUInt(uint value)
 		{
+#if NETCOREAPP
+			return Math.Max(32 - BitOperations.LeadingZeroCount(value), 1);
+#else
 			int bits = 1;
 			while ((value >>= 1) != 0)
 				bits++;
 			return bits;
+#endif
 		}
 
 		/// <summary>
@@ -288,10 +140,14 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public static int BitsToHoldUInt64(ulong value)
 		{
+#if NETCOREAPP
+			return Math.Max(64 - BitOperations.LeadingZeroCount(value), 1);
+#else
 			int bits = 1;
 			while ((value >>= 1) != 0)
 				bits++;
 			return bits;
+#endif
 		}
 
 		/// <summary>
@@ -300,28 +156,6 @@ namespace Lidgren.Network
 		public static int BytesToHoldBits(int numBits)
 		{
 			return (numBits + 7) / 8;
-		}
-
-		internal static UInt32 SwapByteOrder(UInt32 value)
-		{
-			return
-				((value & 0xff000000) >> 24) |
-				((value & 0x00ff0000) >> 8) |
-				((value & 0x0000ff00) << 8) |
-				((value & 0x000000ff) << 24);
-		}
-
-		internal static UInt64 SwapByteOrder(UInt64 value)
-		{
-			return
-				((value & 0xff00000000000000L) >> 56) |
-				((value & 0x00ff000000000000L) >> 40) |
-				((value & 0x0000ff0000000000L) >> 24) |
-				((value & 0x000000ff00000000L) >> 8) |
-				((value & 0x00000000ff000000L) << 8) |
-				((value & 0x0000000000ff0000L) << 24) |
-				((value & 0x000000000000ff00L) << 40) |
-				((value & 0x00000000000000ffL) << 56);
 		}
 
 		internal static bool CompareElements(byte[] one, byte[] two)
@@ -488,6 +322,31 @@ namespace Lidgren.Network
             if (endPoint.AddressFamily == AddressFamily.InterNetwork)
                 return new IPEndPoint(endPoint.Address.MapToIPv6(), endPoint.Port);
             return endPoint;
+        }
+
+        // MemoryMarshal.Read and MemoryMarshal.Write are not GUARANTEED to allow unaligned reads/writes.
+        // The current CoreCLR implementation does but that's an implementation detail.
+        // These are basically MemoryMarshal.Read/Write but well, guaranteed to allow unaligned access.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static T ReadUnaligned<T>(ReadOnlySpan<byte> source) where T : unmanaged
+        {
+            if (Unsafe.SizeOf<T>() > source.Length)
+            {
+	            throw new ArgumentOutOfRangeException();
+            }
+
+            return Unsafe.ReadUnaligned<T>(ref MemoryMarshal.GetReference(source));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static void WriteUnaligned<T>(Span<byte> destination, ref T value) where T : unmanaged
+        {
+            if ((uint)Unsafe.SizeOf<T>() > (uint)destination.Length)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(destination), value);
         }
     }
 }

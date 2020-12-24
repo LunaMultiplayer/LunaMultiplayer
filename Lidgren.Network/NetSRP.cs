@@ -53,13 +53,13 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Computer private key (x)
 		/// </summary>
-		public static byte[] ComputePrivateKey(string username, string password, byte[] salt)
+		public static byte[] ComputePrivateKey(string username, string password, ReadOnlySpan<byte> salt)
 		{
 			byte[] tmp = Encoding.UTF8.GetBytes(username + ":" + password);
 			byte[] innerHash = NetUtility.ComputeSHAHash(tmp);
 
 			byte[] total = new byte[innerHash.Length + salt.Length];
-			Buffer.BlockCopy(salt, 0, total, 0, salt.Length);
+			salt.CopyTo(total);
 			Buffer.BlockCopy(innerHash, 0, total, salt.Length, innerHash.Length);
 
 			// x   ie. H(salt || H(username || ":" || password))
@@ -69,7 +69,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Creates a verifier that the server can later use to authenticate users later on (v)
 		/// </summary>
-		public static byte[] ComputeServerVerifier(byte[] privateKey)
+		public static byte[] ComputeServerVerifier(ReadOnlySpan<byte> privateKey)
 		{
 			NetBigInteger x = new NetBigInteger(NetUtility.ToHexString(privateKey), 16);
 
@@ -82,7 +82,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Compute client public ephemeral value (A)
 		/// </summary>
-		public static byte[] ComputeClientEphemeral(byte[] clientPrivateEphemeral) // a
+		public static byte[] ComputeClientEphemeral(ReadOnlySpan<byte> clientPrivateEphemeral) // a
 		{
 			// A= g^a (mod N) 
 			NetBigInteger a = new NetBigInteger(NetUtility.ToHexString(clientPrivateEphemeral), 16);
@@ -94,7 +94,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Compute server ephemeral value (B)
 		/// </summary>
-		public static byte[] ComputeServerEphemeral(byte[] serverPrivateEphemeral, byte[] verifier) // b
+		public static byte[] ComputeServerEphemeral(ReadOnlySpan<byte> serverPrivateEphemeral, ReadOnlySpan<byte> verifier) // b
 		{
 			var b = new NetBigInteger(NetUtility.ToHexString(serverPrivateEphemeral), 16);
 			var v = new NetBigInteger(NetUtility.ToHexString(verifier), 16);
@@ -110,7 +110,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Compute intermediate value (u)
 		/// </summary>
-		public static byte[] ComputeU(byte[] clientPublicEphemeral, byte[] serverPublicEphemeral)
+		public static byte[] ComputeU(ReadOnlySpan<byte> clientPublicEphemeral, ReadOnlySpan<byte> serverPublicEphemeral)
 		{
 			// u = SHA-1(A || B)
 			string one = NetUtility.ToHexString(clientPublicEphemeral);
@@ -129,7 +129,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Computes the server session value
 		/// </summary>
-		public static byte[] ComputeServerSessionValue(byte[] clientPublicEphemeral, byte[] verifier, byte[] udata, byte[] serverPrivateEphemeral)
+		public static byte[] ComputeServerSessionValue(ReadOnlySpan<byte> clientPublicEphemeral, ReadOnlySpan<byte> verifier, ReadOnlySpan<byte> udata, ReadOnlySpan<byte> serverPrivateEphemeral)
 		{
 			// S = (Av^u) ^ b (mod N)
 			var A = new NetBigInteger(NetUtility.ToHexString(clientPublicEphemeral), 16);
@@ -145,7 +145,7 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Computes the client session value
 		/// </summary>
-		public static byte[] ComputeClientSessionValue(byte[] serverPublicEphemeral, byte[] xdata,  byte[] udata, byte[] clientPrivateEphemeral)
+		public static byte[] ComputeClientSessionValue(ReadOnlySpan<byte> serverPublicEphemeral, ReadOnlySpan<byte> xdata,  ReadOnlySpan<byte> udata, ReadOnlySpan<byte> clientPrivateEphemeral)
 		{
 			// (B - kg^x) ^ (a + ux)   (mod N)
 			var B = new NetBigInteger(NetUtility.ToHexString(serverPublicEphemeral), 16);

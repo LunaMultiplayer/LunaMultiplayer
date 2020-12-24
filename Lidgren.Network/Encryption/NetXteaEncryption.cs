@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2010 Michael Lidgren
+﻿﻿/* Copyright (c) 2010 Michael Lidgren
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without
@@ -45,6 +45,16 @@ namespace Lidgren.Network
 		/// 16 byte key
 		/// </summary>
 		public NetXtea(NetPeer peer, byte[] key, int rounds)
+#if HAS_FULL_SPAN
+			: this(peer, key.AsSpan(), rounds)
+		{
+		}
+
+		/// <summary>
+		/// 16 byte key
+		/// </summary>
+		public NetXtea(NetPeer peer, ReadOnlySpan<byte> key, int rounds)
+#endif
 			: base(peer)
 		{
 			if (key.Length < c_keySize)
@@ -59,7 +69,12 @@ namespace Lidgren.Network
 			int index = num2 = 0;
 			while (index < 4)
 			{
-				tmp[index] = BitConverter.ToUInt32(key, num2);
+				tmp[index] = 
+#if HAS_FULL_SPAN
+					BitConverter.ToUInt32(key.Slice(num2));
+#else
+					BitConverter.ToUInt32(key, num2);
+#endif
 				index++;
 				num2 += 4;
 			}
@@ -75,6 +90,16 @@ namespace Lidgren.Network
 		/// 16 byte key
 		/// </summary>
 		public NetXtea(NetPeer peer, byte[] key)
+#if HAS_FULL_SPAN
+			: this(peer, key.AsSpan(), 32)
+		{
+		}
+		
+		/// <summary>
+		/// 16 byte key
+		/// </summary>
+		public NetXtea(NetPeer peer, ReadOnlySpan<byte> key)
+#endif
 			: this(peer, key, 32)
 		{
 		}
@@ -87,20 +112,25 @@ namespace Lidgren.Network
 		{
 		}
 
-		public override void SetKey(byte[] data, int offset, int length)
+		public override void SetKey(ReadOnlySpan<byte> data)
 		{
+			throw new NotImplementedException();
+
+			// TODO: Implement this. Unless I'm blind the old implementation always stack overflowed?
+			/*
 			var key = NetUtility.ComputeSHAHash(data, offset, length);
 			NetException.Assert(key.Length >= 16);
 			SetKey(key, 0, 16);
+			*/
 		}
 
 		/// <summary>
 		/// Encrypts a block of bytes
 		/// </summary>
-		protected override void EncryptBlock(byte[] source, int sourceOffset, byte[] destination)
+		protected override void EncryptBlock(ReadOnlySpan<byte> source, Span<byte> destination)
 		{
-			uint v0 = BytesToUInt(source, sourceOffset);
-			uint v1 = BytesToUInt(source, sourceOffset + 4);
+			uint v0 = BytesToUInt(source, 0);
+			uint v1 = BytesToUInt(source, 4);
 
 			for (int i = 0; i != m_numRounds; i++)
 			{
@@ -117,11 +147,11 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Decrypts a block of bytes
 		/// </summary>
-		protected override void DecryptBlock(byte[] source, int sourceOffset, byte[] destination)
+		protected override void DecryptBlock(ReadOnlySpan<byte> source, Span<byte> destination)
 		{
 			// Pack bytes into integers
-			uint v0 = BytesToUInt(source, sourceOffset);
-			uint v1 = BytesToUInt(source, sourceOffset + 4);
+			uint v0 = BytesToUInt(source, 0);
+			uint v1 = BytesToUInt(source, 4);
 
 			for (int i = m_numRounds - 1; i >= 0; i--)
 			{
@@ -135,7 +165,7 @@ namespace Lidgren.Network
 			return;
 		}
 
-		private static uint BytesToUInt(byte[] bytes, int offset)
+		private static uint BytesToUInt(ReadOnlySpan<byte> bytes, int offset)
 		{
 			uint retval = (uint)(bytes[offset] << 24);
 			retval |= (uint)(bytes[++offset] << 16);
@@ -143,7 +173,7 @@ namespace Lidgren.Network
 			return (retval | bytes[++offset]);
 		}
 
-		private static void UIntToBytes(uint value, byte[] destination, int destinationOffset)
+		private static void UIntToBytes(uint value, Span<byte> destination, int destinationOffset)
 		{
 			destination[destinationOffset++] = (byte)(value >> 24);
 			destination[destinationOffset++] = (byte)(value >> 16);

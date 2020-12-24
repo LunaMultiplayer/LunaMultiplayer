@@ -20,10 +20,10 @@ namespace Lidgren.Network
 			m_key = key;
 		}
 
-		public override void SetKey(byte[] data, int offset, int count)
+		public override void SetKey(ReadOnlySpan<byte> data)
 		{
-			m_key = new byte[count];
-			Array.Copy(data, offset, m_key, 0, count);
+			m_key = new byte[data.Length];
+			data.CopyTo(m_key);
 		}
 
 		/// <summary>

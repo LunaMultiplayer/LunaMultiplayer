@@ -27,10 +27,10 @@ namespace Lidgren.Network
 		public void SetKey(string str)
 		{
 			var bytes = System.Text.Encoding.ASCII.GetBytes(str);
-			SetKey(bytes, 0, bytes.Length);
+			SetKey(bytes);
 		}
 
-		public abstract void SetKey(byte[] data, int offset, int count);
+		public abstract void SetKey(ReadOnlySpan<byte> data);
 
 		/// <summary>
 		/// Encrypt an outgoing message in place

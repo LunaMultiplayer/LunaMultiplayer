@@ -271,9 +271,10 @@ namespace Lidgren.Network
 			Recycle(msg);
 		}
 
-		static NetEndPoint GetNetEndPoint(string host, int port)
+		private NetEndPoint GetNetEndPoint(string host, int port)
 		{
-			IPAddress address = NetUtility.Resolve(host);
+			var family = m_configuration.DualStack ? null : (AddressFamily?) m_configuration.LocalAddress.AddressFamily;
+			IPAddress address = NetUtility.Resolve(host, family);
 			if (address == null)
 				throw new NetException("Could not resolve host");
 			return new NetEndPoint(address, port);
