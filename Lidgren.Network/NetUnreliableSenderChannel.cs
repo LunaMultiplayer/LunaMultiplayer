@@ -59,17 +59,6 @@ namespace Lidgren.Network
 				return NetSendResult.Dropped;
 			}
 
-			if (message.LengthBits >= ushort.MaxValue
-			    && m_connection.m_peerConfiguration.UnreliableSizeBehaviour == NetUnreliableSizeBehaviour.IgnoreMTU)
-			{
-			    // drop message
-			    this.m_connection.m_peer.LogError(
-			        string.Format("Unreliable message max size exceeded: {0} bits (max {1})",
-			                      message.LengthBits,
-			                      ushort.MaxValue));
-			    return NetSendResult.Dropped;
-			}
-
 			m_queuedSends.Enqueue(message);
 			m_connection.m_peer.m_needFlushSendQueue = true; // a race condition to this variable will simply result in a single superflous call to FlushSendQueue()
 			return NetSendResult.Sent;

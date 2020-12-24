@@ -104,7 +104,8 @@ namespace Lidgren.Network
 		private void SendExpandMTU(double now, int size)
 		{
 			NetOutgoingMessage om = m_peer.CreateMessage(size);
-			om.Zero(size);
+			byte[] tmp = new byte[size];
+			om.Write(tmp);
 			om.m_messageType = NetMessageType.ExpandMTURequest;
 			int len = om.Encode(m_peer.m_sendBuffer, 0, 0);
 

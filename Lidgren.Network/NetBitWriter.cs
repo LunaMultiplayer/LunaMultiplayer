@@ -1,4 +1,6 @@
-﻿/* Copyright (c) 2010 Michael Lidgren
+﻿//#define UNSAFE
+//#define BIGENDIAN
+/* Copyright (c) 2010 Michael Lidgren
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without
@@ -18,12 +20,9 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Lidgren.Network
 {
@@ -36,14 +35,6 @@ namespace Lidgren.Network
 		/// Read 1-8 bits from a buffer into a byte
 		/// </summary>
 		public static byte ReadByte(byte[] fromBuffer, int numberOfBits, int readBitOffset)
-		{
-			return ReadByte(fromBuffer.AsSpan(), numberOfBits, readBitOffset);
-		}
-
-		/// <summary>
-		/// Read 1-8 bits from a buffer into a byte
-		/// </summary>
-		public static byte ReadByte(ReadOnlySpan<byte> fromBuffer, int numberOfBits, int readBitOffset)
 		{
 			NetException.Assert(((numberOfBits > 0) && (numberOfBits < 9)), "Read() can only read between 1 and 8 bits");
 
@@ -76,34 +67,21 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Read several bytes from a buffer
 		/// </summary>
-		public static void ReadBytes(byte[] fromBuffer, int numberOfBytes, int readBitOffset, byte[] destination,
-			int destinationByteOffset)
-		{
-			ReadBytes(fromBuffer, readBitOffset, destination.AsSpan(destinationByteOffset, numberOfBytes));
-		}
-
-
-		/// <summary>
-		/// Read several bytes from a buffer
-		/// </summary>
-		/// <remarks>
-		/// 	The amount of bytes read is the length of the <paramref name="destination"/> parameter.
-		/// </remarks>
-		public static void ReadBytes(ReadOnlySpan<byte> fromBuffer, int readBitOffset, Span<byte> destination)
+		public static void ReadBytes(byte[] fromBuffer, int numberOfBytes, int readBitOffset, byte[] destination, int destinationByteOffset)
 		{
 			int readPtr = readBitOffset >> 3;
 			int startReadAtIndex = readBitOffset - (readPtr * 8); // (readBitOffset % 8);
 
 			if (startReadAtIndex == 0)
 			{
-				fromBuffer.Slice(readPtr, destination.Length).CopyTo(destination);
+				Buffer.BlockCopy(fromBuffer, readPtr, destination, destinationByteOffset, numberOfBytes);
 				return;
 			}
 
 			int secondPartLen = 8 - startReadAtIndex;
 			int secondMask = 255 >> secondPartLen;
 
-			for (int i = 0; i < destination.Length; i++)
+			for (int i = 0; i < numberOfBytes; i++)
 			{
 				// mask away unused bits lower than (right of) relevant bits in byte
 				int b = fromBuffer[readPtr] >> startReadAtIndex;
@@ -113,24 +91,16 @@ namespace Lidgren.Network
 				// mask away unused bits higher than (left of) relevant bits in second byte
 				int second = fromBuffer[readPtr] & secondMask;
 
-				destination[i] = (byte)(b | (second << secondPartLen));
+				destination[destinationByteOffset++] = (byte)(b | (second << secondPartLen));
 			}
 
 			return;
 		}
 
 		/// <summary>
-        /// Write 0-8 bits of data to buffer
-        /// </summary>
-		public static void WriteByte(byte source, int numberOfBits, byte[] destination, int destBitOffset)
-		{
-			WriteByte(source, numberOfBits, destination.AsSpan(), destBitOffset);
-		}
-
-		/// <summary>
 		/// Write 0-8 bits of data to buffer
 		/// </summary>
-		public static void WriteByte(byte source, int numberOfBits, Span<byte> destination, int destBitOffset)
+		public static void WriteByte(byte source, int numberOfBits, byte[] destination, int destBitOffset)
 		{
 			if (numberOfBits == 0)
 				return;
@@ -183,31 +153,22 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Write several whole bytes
 		/// </summary>
-		public static void WriteBytes(byte[] source, int sourceByteOffset, int numberOfBytes, byte[] destination,
-			int destBitOffset)
-		{
-			WriteBytes(source.AsSpan(sourceByteOffset, numberOfBytes), destination, destBitOffset);
-		}
-
-		/// <summary>
-		/// Write several whole bytes
-		/// </summary>
-		public static void WriteBytes(ReadOnlySpan<byte> source, byte[] destination, int destBitOffset)
+		public static void WriteBytes(byte[] source, int sourceByteOffset, int numberOfBytes, byte[] destination, int destBitOffset)
 		{
 			int dstBytePtr = destBitOffset >> 3;
-			int firstPartLen = destBitOffset & 7;
+			int firstPartLen = (destBitOffset % 8);
 
 			if (firstPartLen == 0)
 			{
-				source.CopyTo(destination.AsSpan(dstBytePtr));
+				Buffer.BlockCopy(source, sourceByteOffset, destination, dstBytePtr, numberOfBytes);
 				return;
 			}
 
 			int lastPartLen = 8 - firstPartLen;
 
-			for (int i = 0; i < source.Length; i++)
+			for (int i = 0; i < numberOfBytes; i++)
 			{
-				byte src = source[i];
+				byte src = source[sourceByteOffset + i];
 
 				// write last part of this byte
 				destination[dstBytePtr] &= (byte)(255 >> lastPartLen); // clear before writing
@@ -227,15 +188,23 @@ namespace Lidgren.Network
 		/// Reads an unsigned 16 bit integer
 		/// </summary>
 		[CLSCompliant(false)]
-		public static ushort ReadUInt16(ReadOnlySpan<byte> fromBuffer, int numberOfBits, int readBitOffset)
+#if UNSAFE
+		public static unsafe ushort ReadUInt16(byte[] fromBuffer, int numberOfBits, int readBitOffset)
 		{
 			Debug.Assert(((numberOfBits > 0) && (numberOfBits <= 16)), "ReadUInt16() can only read between 1 and 16 bits");
 
-			if (numberOfBits == 16 && (readBitOffset & 7) == 0)
+			if (numberOfBits == 16 && ((readBitOffset % 8) == 0))
 			{
-				return NetUtility.ReadUnaligned<ushort>(fromBuffer.Slice(readBitOffset >> 3));
+				fixed (byte* ptr = &(fromBuffer[readBitOffset / 8]))
+				{
+					return *(((ushort*)ptr));
+				}
 			}
-
+#else
+		public static ushort ReadUInt16(byte[] fromBuffer, int numberOfBits, int readBitOffset)
+		{
+			Debug.Assert(((numberOfBits > 0) && (numberOfBits <= 16)), "ReadUInt16() can only read between 1 and 16 bits");
+#endif
 			ushort returnValue;
 			if (numberOfBits <= 8)
 			{
@@ -251,27 +220,38 @@ namespace Lidgren.Network
 				returnValue |= (ushort)(ReadByte(fromBuffer, numberOfBits, readBitOffset) << 8);
 			}
 
-			if (!BitConverter.IsLittleEndian)
-			{
-				return BinaryPrimitives.ReverseEndianness(returnValue);
-			}
-
+#if BIGENDIAN
+			// reorder bytes
+			uint retVal = returnValue;
+			retVal = ((retVal & 0x0000ff00) >> 8) | ((retVal & 0x000000ff) << 8);
+			return (ushort)retVal;
+#else
 			return returnValue;
+#endif
 		}
 
 		/// <summary>
 		/// Reads the specified number of bits into an UInt32
 		/// </summary>
 		[CLSCompliant(false)]
-		public static uint ReadUInt32(ReadOnlySpan<byte> fromBuffer, int numberOfBits, int readBitOffset)
+#if UNSAFE
+		public static unsafe uint ReadUInt32(byte[] fromBuffer, int numberOfBits, int readBitOffset)
 		{
 			NetException.Assert(((numberOfBits > 0) && (numberOfBits <= 32)), "ReadUInt32() can only read between 1 and 32 bits");
 
-			if (numberOfBits == 32 && ((readBitOffset & 7) == 0))
+			if (numberOfBits == 32 && ((readBitOffset % 8) == 0))
 			{
-				return NetUtility.ReadUnaligned<uint>(fromBuffer.Slice(readBitOffset >> 3));
+				fixed (byte* ptr = &(fromBuffer[readBitOffset / 8]))
+				{
+					return *(((uint*)ptr));
+				}
 			}
-
+#else
+		
+		public static uint ReadUInt32(byte[] fromBuffer, int numberOfBits, int readBitOffset)
+		{
+			NetException.Assert(((numberOfBits > 0) && (numberOfBits <= 32)), "ReadUInt32() can only read between 1 and 32 bits");
+#endif
 			uint returnValue;
 			if (numberOfBits <= 8)
 			{
@@ -304,12 +284,16 @@ namespace Lidgren.Network
 
 			returnValue |= (uint)(ReadByte(fromBuffer, numberOfBits, readBitOffset) << 24);
 
-			if (!BitConverter.IsLittleEndian)
-			{
-				return BinaryPrimitives.ReverseEndianness(returnValue);
-			}
-
+#if BIGENDIAN
+			// reorder bytes
+			return
+				((returnValue & 0xff000000) >> 24) |
+				((returnValue & 0x00ff0000) >> 8) |
+				((returnValue & 0x0000ff00) << 8) |
+				((returnValue & 0x000000ff) << 24);
+#else
 			return returnValue;
+#endif
 		}
 
 		//[CLSCompliant(false)]
@@ -319,17 +303,18 @@ namespace Lidgren.Network
 		/// Writes an unsigned 16 bit integer
 		/// </summary>
 		[CLSCompliant(false)]
-		public static void WriteUInt16(ushort source, int numberOfBits, Span<byte> destination, int destinationBitOffset)
+		public static void WriteUInt16(ushort source, int numberOfBits, byte[] destination, int destinationBitOffset)
 		{
 			if (numberOfBits == 0)
 				return;
 
 			NetException.Assert((numberOfBits >= 0 && numberOfBits <= 16), "numberOfBits must be between 0 and 16");
-			if (!BitConverter.IsLittleEndian)
-			{
-				source = BinaryPrimitives.ReverseEndianness(source);
-			}
-
+#if BIGENDIAN
+			// reorder bytes
+			uint intSource = source;
+			intSource = ((intSource & 0x0000ff00) >> 8) | ((intSource & 0x000000ff) << 8);
+			source = (ushort)intSource;
+#endif
 			if (numberOfBits <= 8)
 			{
 				NetBitWriter.WriteByte((byte)source, numberOfBits, destination, destinationBitOffset);
@@ -347,12 +332,15 @@ namespace Lidgren.Network
 		/// Writes the specified number of bits into a byte array
 		/// </summary>
 		[CLSCompliant(false)]
-		public static int WriteUInt32(uint source, int numberOfBits, Span<byte> destination, int destinationBitOffset)
+		public static int WriteUInt32(uint source, int numberOfBits, byte[] destination, int destinationBitOffset)
 		{
-			if (!BitConverter.IsLittleEndian)
-			{
-				source = BinaryPrimitives.ReverseEndianness(source);
-			}
+#if BIGENDIAN
+			// reorder bytes
+			source = ((source & 0xff000000) >> 24) |
+				((source & 0x00ff0000) >> 8) |
+				((source & 0x0000ff00) << 8) |
+				((source & 0x000000ff) << 24);
+#endif
 
 			int returnValue = destinationBitOffset + numberOfBits;
 			if (numberOfBits <= 8)
@@ -390,12 +378,18 @@ namespace Lidgren.Network
 		/// Writes the specified number of bits into a byte array
 		/// </summary>
 		[CLSCompliant(false)]
-		public static int WriteUInt64(ulong source, int numberOfBits, Span<byte> destination, int destinationBitOffset)
+		public static int WriteUInt64(ulong source, int numberOfBits, byte[] destination, int destinationBitOffset)
 		{
-			if (!BitConverter.IsLittleEndian)
-			{
-				source = BinaryPrimitives.ReverseEndianness(source);
-			}
+#if BIGENDIAN
+			source = ((source & 0xff00000000000000L) >> 56) |
+				((source & 0x00ff000000000000L) >> 40) |
+				((source & 0x0000ff0000000000L) >> 24) |
+				((source & 0x000000ff00000000L) >> 8) |
+				((source & 0x00000000ff000000L) << 8) |
+				((source & 0x0000000000ff0000L) << 24) |
+				((source & 0x000000000000ff00L) << 40) |
+				((source & 0x00000000000000ffL) << 56);
+#endif
 
 			int returnValue = destinationBitOffset + numberOfBits;
 			if (numberOfBits <= 8)
@@ -482,7 +476,7 @@ namespace Lidgren.Network
 		/// </summary>
 		/// <returns>number of bytes written</returns>
 		[CLSCompliant(false)]
-		public static int WriteVariableUInt32(Span<byte> intoBuffer, int offset, uint value)
+		public static int WriteVariableUInt32(byte[] intoBuffer, int offset, uint value)
 		{
 			int retval = 0;
 			uint num1 = (uint)value;
@@ -500,7 +494,7 @@ namespace Lidgren.Network
 		/// Reads a UInt32 written using WriteUnsignedVarInt(); will increment offset!
 		/// </summary>
 		[CLSCompliant(false)]
-		public static uint ReadVariableUInt32(ReadOnlySpan<byte> buffer, ref int offset)
+		public static uint ReadVariableUInt32(byte[] buffer, ref int offset)
 		{
 			int num1 = 0;
 			int num2 = 0;
@@ -515,45 +509,5 @@ namespace Lidgren.Network
 					return (uint)num1;
 			}
 		}
-		
-		/// <summary>
-	    /// Zero a number of bits
-	    /// </summary>
-	    public static void Zero(Span<byte> destination, int numberOfBits, int destBitOffset)
-	    {
-	        var dstBytePtr = destBitOffset >> 3;
-	        var firstPartLen = destBitOffset & 7;
-	        var numberOfBytes = numberOfBits >> 3;
-	        var endBits = numberOfBits & 7;
-
-	        if (firstPartLen == 0)
-	        {
-        		destination.Slice(destBitOffset / 8, numberOfBytes).Fill(0);
-
-        		if (endBits <= 0)
-        		{
-        			return;
-        		}
-
-        		var endByteSpan = destination.Slice(numberOfBytes, 1);
-
-        		endByteSpan[0] = (byte) (endByteSpan[0] & ~(byte.MaxValue >> (8 - endBits)));
-
-        		return;
-	        }
-
-
-	        var lastPartLen = 8 - firstPartLen;
-
-	        destination[dstBytePtr] &= (byte)(255 >> lastPartLen);
-
-	        ++dstBytePtr;
-
-	        destination.Slice(dstBytePtr, numberOfBytes-2).Fill(0);
-
-	        dstBytePtr = numberOfBytes - 2;
-
-	        destination[dstBytePtr] &= (byte)(255 << firstPartLen);
-	    }
 	}
 }

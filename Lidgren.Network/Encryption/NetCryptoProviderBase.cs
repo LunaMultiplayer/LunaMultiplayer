@@ -16,18 +16,18 @@ namespace Lidgren.Network
 			m_algorithm.GenerateIV();
 		}
 
-		public override void SetKey(ReadOnlySpan<byte> data)
+		public override void SetKey(byte[] data, int offset, int count)
 		{
 			int len = m_algorithm.Key.Length;
 			var key = new byte[len];
 			for (int i = 0; i < len; i++)
-				key[i] = data[i % data.Length];
+				key[i] = data[offset + (i % count)];
 			m_algorithm.Key = key;
 
 			len = m_algorithm.IV.Length;
 			key = new byte[len];
 			for (int i = 0; i < len; i++)
-				key[len - 1 - i] = data[i % data.Length];
+				key[len - 1 - i] = data[offset + (i % count)];
 			m_algorithm.IV = key;
 		}
 
@@ -38,16 +38,17 @@ namespace Lidgren.Network
 			var ms = new MemoryStream();
 			var cs = new CryptoStream(ms, m_algorithm.CreateEncryptor(), CryptoStreamMode.Write);
 			cs.Write(msg.m_data, 0, msg.LengthBytes);
-			cs.FlushFinalBlock();
+			cs.Close();
 
-			var buffer = ms.GetBuffer();
+			// get results
+			var arr = ms.ToArray();
+			ms.Close();
 
-			var newLength = ((int)ms.Length + 4) * 8;
-			msg.EnsureBufferSize(newLength);
+			msg.EnsureBufferSize((arr.Length + 4) * 8);
 			msg.LengthBits = 0; // reset write pointer
 			msg.Write((uint)unEncLenBits);
-			msg.Write(buffer.AsSpan(0, (int) ms.Length));
-			msg.LengthBits = newLength;
+			msg.Write(arr);
+			msg.LengthBits = (arr.Length + 4) * 8;
 
 			return true;
 		}

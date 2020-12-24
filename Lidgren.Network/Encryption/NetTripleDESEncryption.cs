@@ -7,25 +7,20 @@ namespace Lidgren.Network
 	public class NetTripleDESEncryption : NetCryptoProviderBase
 	{
 		public NetTripleDESEncryption(NetPeer peer)
-			: base(peer, TripleDES.Create())
+			: base(peer, new TripleDESCryptoServiceProvider())
 		{
 		}
 
 		public NetTripleDESEncryption(NetPeer peer, string key)
-			: this(peer)
+			: base(peer, new TripleDESCryptoServiceProvider())
 		{
 			SetKey(key);
 		}
 
 		public NetTripleDESEncryption(NetPeer peer, byte[] data, int offset, int count)
-			: this(peer, data.AsSpan(offset, count))
+			: base(peer, new TripleDESCryptoServiceProvider())
 		{
-		}
-
-		public NetTripleDESEncryption(NetPeer peer, ReadOnlySpan<byte> data)
-			: this(peer)
-		{
-			SetKey(data);
+			SetKey(data, offset, count);
 		}
 	}
 }

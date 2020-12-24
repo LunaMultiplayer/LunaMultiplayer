@@ -40,15 +40,11 @@ namespace Lidgren.Network
 		internal int m_sentMessages;
 		internal int m_receivedMessages;
 		internal int m_receivedFragments;
-		internal long m_droppedMessages;
 
 		internal int m_sentBytes;
 		internal int m_receivedBytes;
 
 		internal long m_bytesAllocated;
-
-		internal long m_resentMessagesDueToDelay;
-		internal long m_resentMessagesDueToHole;
 
 		internal NetPeerStatistics(NetPeer peer)
 		{
@@ -118,27 +114,6 @@ namespace Lidgren.Network
 			}
 		}
 
-		/// <summary>
-		/// Gets the number of resent reliable messages since the NetPeer was initialized
-		/// </summary>
-		public long ResentMessages => m_resentMessagesDueToHole + m_resentMessagesDueToDelay;
-
-		/// <summary>
-		/// Gets the number of resent reliable messages because of holes in acks since the NetPeer was initialized.
-		/// </summary>
-		public long ResentMessagesDueToHole => m_resentMessagesDueToHole;
-
-		/// <summary>
-		/// Gets the number of resent reliable messages because of delays in acks since the NetPeer was initialized.
-		/// </summary>
-		public long ResentMessagesDueToDelay => m_resentMessagesDueToDelay;
-
-		/// <summary>
-		/// Gets the number of dropped messages since the NetPeer was initialized.
-		/// </summary>
-		public long DroppedMessages => m_droppedMessages;
-
-
 #if !USE_RELEASE_STATISTICS
 		[Conditional("DEBUG")]
 #endif
@@ -158,25 +133,6 @@ namespace Lidgren.Network
 			m_receivedBytes += numBytes;
 			m_receivedMessages += numMessages;
 			m_receivedFragments += numFragments;
-		}
-
-#if !USE_RELEASE_STATISTICS
-		[Conditional("DEBUG")]
-#endif
-		internal void MessageResent(MessageResendReason reason)
-		{
-			if (reason == MessageResendReason.Delay)
-				m_resentMessagesDueToDelay++;
-			else
-				m_resentMessagesDueToHole++;
-		}
-
-#if !USE_RELEASE_STATISTICS
-		[Conditional("DEBUG")]
-#endif
-		internal void MessageDropped()
-		{
-			m_droppedMessages++;
 		}
 
 		/// <summary>

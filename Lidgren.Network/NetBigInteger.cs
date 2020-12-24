@@ -255,7 +255,9 @@ namespace Lidgren.Network
 			m_magnitude = b.m_magnitude;
 		}
 
-		public NetBigInteger(byte[] bytes) : this(bytes.AsSpan())
+		public NetBigInteger(
+			byte[] bytes)
+			: this(bytes, 0, bytes.Length)
 		{
 		}
 
@@ -263,25 +265,18 @@ namespace Lidgren.Network
 			byte[] bytes,
 			int offset,
 			int length)
-			: this(bytes.AsSpan(offset, length))
 		{
-
-		}
-
-		public NetBigInteger(ReadOnlySpan<byte> bytes)
-		{
-			if (bytes.Length == 0)
+			if (length == 0)
 				throw new FormatException("Zero length BigInteger");
-
-			if ((sbyte)bytes[0] < 0)
+			if ((sbyte)bytes[offset] < 0)
 			{
 				m_sign = -1;
 
-				int end = bytes.Length;
+				int end = offset + length;
 
 				int iBval;
 				// strip leading sign bytes
-				for (iBval = 0; iBval < end && ((sbyte)bytes[iBval] == -1); iBval++)
+				for (iBval = offset; iBval < end && ((sbyte)bytes[iBval] == -1); iBval++)
 				{
 				}
 
@@ -309,24 +304,27 @@ namespace Lidgren.Network
 
 					inverse[index]++;
 
-					m_magnitude = MakeMagnitude(inverse);
+					m_magnitude = MakeMagnitude(inverse, 0, inverse.Length);
 				}
 			}
 			else
 			{
 				// strip leading zero bytes and return magnitude bytes
-				m_magnitude = MakeMagnitude(bytes);
+				m_magnitude = MakeMagnitude(bytes, offset, length);
 				m_sign = m_magnitude.Length > 0 ? 1 : 0;
 			}
 		}
 
-		private static int[] MakeMagnitude(ReadOnlySpan<byte> bytes)
+		private static int[] MakeMagnitude(
+			byte[] bytes,
+			int offset,
+			int length)
 		{
-			int end = bytes.Length;
+			int end = offset + length;
 
 			// strip leading zeros
 			int firstSignificant;
-			for (firstSignificant = 0; firstSignificant < end
+			for (firstSignificant = offset; firstSignificant < end
 				&& bytes[firstSignificant] == 0; firstSignificant++)
 			{
 			}
@@ -377,7 +375,7 @@ namespace Lidgren.Network
 		public NetBigInteger(
 			int sign,
 			byte[] bytes)
-			: this(sign, bytes.AsSpan())
+			: this(sign, bytes, 0, bytes.Length)
 		{
 		}
 
@@ -386,14 +384,6 @@ namespace Lidgren.Network
 			byte[] bytes,
 			int offset,
 			int length)
-			: this(sign, bytes.AsSpan(offset, length))
-		{
-
-		}
-
-		public NetBigInteger(
-			int sign,
-			ReadOnlySpan<byte> bytes)
 		{
 			if (sign < -1 || sign > 1)
 				throw new FormatException("Invalid sign value");
@@ -406,7 +396,7 @@ namespace Lidgren.Network
 			else
 			{
 				// copy bytes
-				m_magnitude = MakeMagnitude(bytes);
+				m_magnitude = MakeMagnitude(bytes, offset, length);
 				m_sign = m_magnitude.Length < 1 ? 0 : sign;
 			}
 		}

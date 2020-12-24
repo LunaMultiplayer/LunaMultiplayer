@@ -108,6 +108,7 @@
     <Compile Include="NetDeliveryMethod.cs" />
     <Compile Include="NetException.cs" />
     <Compile Include="NetFragmentationHelper.cs" />
+    <Compile Include="NetFragmentationInfo.cs" />
     <Compile Include="NetIncomingMessage.cs" />
     <Compile Include="NetIncomingMessageType.cs" />
     <Compile Include="NetMessageType.cs" />
@@ -145,7 +146,6 @@
     <Compile Include="NetUnreliableUnorderedReceiver.cs" />
     <Compile Include="NetUPnP.cs" />
     <Compile Include="NetUtility.cs" />
-    <Compile Include="NetUtility.Dns.cs" />
     <Compile Include="Platform\PlatformAndroid.cs" />
     <Compile Include="Platform\PlatformConstrained.cs" />
     <Compile Include="Platform\PlatformUnityExtras.cs" />
@@ -176,7 +176,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documentation\ChangedFromV2.txt" />
+    <Content Include="Documentation\Discovery.html" />
+    <Content Include="Documentation\Improvements.txt" />
+    <Content Include="Documentation\PacketLayout.txt" />
+    <Content Include="Documentation\SimulatingBadNetwork.html" />
+    <Content Include="Documentation\TODO.txt" />
+    <Content Include="Documentation\Tutorial.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

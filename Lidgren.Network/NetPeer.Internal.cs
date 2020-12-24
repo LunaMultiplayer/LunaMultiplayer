@@ -196,7 +196,7 @@ namespace Lidgren.Network
 				m_readHelperMessage = new NetIncomingMessage(NetIncomingMessageType.Error);
 				m_readHelperMessage.m_data = m_receiveBuffer;
 
-				byte[] macBytes = NetUtility.GetMacAddressBytes() ?? new byte[0];
+				byte[] macBytes = NetUtility.GetMacAddressBytes();
 
 				var boundEp = m_socket.LocalEndPoint as NetEndPoint;
 				byte[] epBytes = BitConverter.GetBytes(boundEp.GetHashCode());

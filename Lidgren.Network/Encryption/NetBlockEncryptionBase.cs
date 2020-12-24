@@ -8,6 +8,9 @@ namespace Lidgren.Network
 	/// </summary>
 	public abstract class NetBlockEncryptionBase : NetEncryption
 	{
+		// temporary space for one block to avoid reallocating every time
+		private byte[] m_tmp;
+
 		/// <summary>
 		/// Block size in bytes for this cipher
 		/// </summary>
@@ -19,6 +22,7 @@ namespace Lidgren.Network
 		public NetBlockEncryptionBase(NetPeer peer)
 			: base(peer)
 		{
+			m_tmp = new byte[BlockSize];
 		}
 
 		/// <summary>
@@ -35,13 +39,10 @@ namespace Lidgren.Network
 			msg.EnsureBufferSize(dstSize * 8 + (4 * 8)); // add 4 bytes for payload length at end
 			msg.LengthBits = dstSize * 8; // length will automatically adjust +4 bytes when payload length is written
 
-			Span<byte> tmp = stackalloc byte[BlockSize];
-
 			for(int i=0;i<numBlocks;i++)
 			{
-				var subSpan = msg.m_data.AsSpan(i * blockSize);
-				EncryptBlock(subSpan, tmp);
-				tmp.CopyTo(subSpan);
+				EncryptBlock(msg.m_data, (i * blockSize), m_tmp);
+				Buffer.BlockCopy(m_tmp, 0, msg.m_data, (i * blockSize), m_tmp.Length);
 			}
 
 			// add true payload length last
@@ -63,13 +64,10 @@ namespace Lidgren.Network
 			if (numBlocks * blockSize != numEncryptedBytes)
 				return false;
 
-			Span<byte> tmp = stackalloc byte[BlockSize];
-
 			for (int i = 0; i < numBlocks; i++)
 			{
-				var subSpan = msg.m_data.AsSpan(i * blockSize);
-				DecryptBlock(subSpan, tmp);
-				tmp.CopyTo(subSpan);
+				DecryptBlock(msg.m_data, (i * blockSize), m_tmp);
+				Buffer.BlockCopy(m_tmp, 0, msg.m_data, (i * blockSize), m_tmp.Length);
 			}
 
 			// read 32 bits of true payload length
@@ -81,11 +79,11 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Encrypt a block of bytes
 		/// </summary>
-		protected abstract void EncryptBlock(ReadOnlySpan<byte> source, Span<byte> destination);
+		protected abstract void EncryptBlock(byte[] source, int sourceOffset, byte[] destination);
 
 		/// <summary>
 		/// Decrypt a block of bytes
 		/// </summary>
-		protected abstract void DecryptBlock(ReadOnlySpan<byte> source, Span<byte> destination);
+		protected abstract void DecryptBlock(byte[] source, int sourceOffset, byte[] destination);
 	}
 }
