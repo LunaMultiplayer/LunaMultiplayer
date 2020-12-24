@@ -81,7 +81,7 @@ namespace Server.System
                 return new KeyValuePair<int, double>(0, 0);
             }
 
-            if (SubspaceFile.Length > 1)
+            if (subspaceLines.Length > 1)
             {
                 LunaLog.Error("Subspace.txt should not contain more than 1 subspace line!");
                 return subspaceLines.OrderByDescending(s => s.Value).First();

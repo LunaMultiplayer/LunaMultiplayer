@@ -1,139 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{13549EDE-D540-47BA-86BC-731BB7DD7BFB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LmpMasterServer</RootNamespace>
-    <AssemblyName>LmpMasterServer</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="DotNetZip, Version=1.13.4.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\DotNetZip.1.13.4\lib\net40\DotNetZip.dll</HintPath>
-    </Reference>
+    <PackageReference Include="CachedQuickLz" Version="1.3.1" />
+    <PackageReference Include="DotNetZip" Version="1.15.0" />
+    <PackageReference Include="HtmlTextWriter" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.8.55" />
+    <PackageReference Include="Open.Nat" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj" />
+    <ProjectReference Include="..\LmpCommon\LmpCommon.csproj" />
+    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj" />
+    <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="JsonFx">
       <HintPath>..\External\Dependencies\JsonFx.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.Threading, Version=16.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\Microsoft.VisualStudio.Threading.16.4.16\lib\net472\Microsoft.VisualStudio.Threading.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Validation, Version=15.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\Microsoft.VisualStudio.Validation.15.3.15\lib\net45\Microsoft.VisualStudio.Validation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
-    </Reference>
-    <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\Open.NAT.2.1.0.0\lib\net45\Open.Nat.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Arguments.cs" />
-    <Compile Include="Dedicated\DedicatedServerRetriever.cs" />
-    <Compile Include="Geolocalization\Base\BaseGeolocalization.cs" />
-    <Compile Include="Geolocalization\IpApi.cs" />
-    <Compile Include="Geolocalization\IpLocate.cs" />
-    <Compile Include="Http\Handlers\HeadHandler.cs" />
-    <Compile Include="Http\Handlers\ExceptionHandler.cs" />
-    <Compile Include="Http\HttpException.cs" />
-    <Compile Include="Http\LunaHttpServer.cs" />
-    <Compile Include="Http\Handlers\ServerInfoRestHandler.cs" />
-    <Compile Include="Http\Handlers\ServerListHandler.cs" />
-    <Compile Include="Log\LunaLog.cs" />
-    <Compile Include="Lidgren\MasterServer.cs" />
-    <Compile Include="EntryPoint.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Structure\Server.cs" />
-    <Compile Include="Structure\ServerJson.cs" />
-    <Compile Include="Structure\TimeoutDictionary.cs" />
-    <Compile Include="Upnp\MasterServerPortMapper.cs" />
-    <Compile Include="Web\WebHandler.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LmpCommon\LmpCommon.csproj">
-      <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
-      <Name>LmpCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
-      <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
-      <Name>LmpGlobal</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj">
-      <Project>{3d681959-4da3-4a71-a68b-704d6411d5ea}</Project>
-      <Name>uhttpsharp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Http\Web\jquery-latest.js" />
-    <Content Include="Http\Web\jquery.metadata.js" />
-    <Content Include="Http\Web\jquery.tablesorter.js" />
-    <Content Include="Http\Web\jquery.tablesorter.min.js" />
-    <Content Include="Http\Web\lmp.js" />
-    <Content Include="Http\Web\style.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Web\css.zip" />
-    <None Include="Web\favicon.icon" />
-    <None Include="Web\js.zip" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(OS)' != 'Unix'">
-    <PostBuildEvent>xcopy /y /s "$(TargetDir)*.*" "$(SolutionDir)MasterServer\bin\$(ConfigurationName)"</PostBuildEvent>
-  </PropertyGroup>
+
 </Project>

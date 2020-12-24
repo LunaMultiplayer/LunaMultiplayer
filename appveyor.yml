@@ -71,7 +71,7 @@ after_build:
  - ps: xcopy /y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
   #Server server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
- - ps: xcopy /y "$env:appveyor_build_folder\Server\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
+ - ps: xcopy /y "$env:appveyor_build_folder\Server\bin\$env:configuration\net5\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
   #7zip everything
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayerMasterServer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"

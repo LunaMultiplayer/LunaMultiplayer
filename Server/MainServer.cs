@@ -41,9 +41,10 @@ namespace Server
         {
             try
             {
-                Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
+                if (Common.PlatformIsWindows())
+                    Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
 
-                Console.OutputEncoding = Encoding.Unicode;
+                Console.OutputEncoding = Encoding.UTF8;
 
                 LunaLog.Info("Remember! Quit the server by using 'Control + C' so a backup is properly made before closing!");
 
@@ -142,11 +143,13 @@ namespace Server
                 ModFileSystem.LoadModFile();
             }
 
-            Console.Title += $" ({GeneralSettings.SettingsStore.ServerName})";
-
+            if (Common.PlatformIsWindows())
+            {
+                Console.Title += $" ({GeneralSettings.SettingsStore.ServerName})";
 #if DEBUG
-            Console.Title += " DEBUG";
+                Console.Title += " DEBUG";
 #endif
+            }
         }
 
         /// <summary>

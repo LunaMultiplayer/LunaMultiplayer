@@ -1,8 +1,7 @@
-﻿using JsonFx.Json;
-using JsonFx.Serialization;
-using JsonFx.Serialization.Resolvers;
-using LmpGlobal;
+﻿using LmpGlobal;
 using LmpUpdater.Github.Contracts;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Net;
@@ -11,8 +10,6 @@ namespace LmpUpdater.Github
 {
     public class GithubUpdateChecker
     {
-        private static readonly JsonReader Reader = new JsonReader(new DataReaderSettings(new DataContractResolverStrategy()));
-
         public static GitHubRelease LatestRelease
         {
             get
@@ -24,7 +21,8 @@ namespace LmpUpdater.Github
                         wc.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
 
                         var json = wc.DownloadString(RepoConstants.ApiLatestGithubReleaseUrl);
-                        return Reader.Read<GitHubRelease>(json);
+
+                        return JsonConvert.DeserializeObject<GitHubRelease>(JObject.Parse(json).ToString());
                     }
                 }
                 catch (Exception)

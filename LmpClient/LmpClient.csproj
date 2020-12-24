@@ -837,11 +837,11 @@
       <Name>Lidgren.Network</Name>
     </ProjectReference>
     <ProjectReference Include="..\LmpCommon\LmpCommon.csproj">
-      <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
+      <Project>{0fef9601-46f9-461a-9212-b2a3df052de2}</Project>
       <Name>LmpCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
-      <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
+      <Project>{fa75741a-9b73-45a7-b0fd-0b13e05dcdd9}</Project>
       <Name>LmpGlobal</Name>
     </ProjectReference>
   </ItemGroup>

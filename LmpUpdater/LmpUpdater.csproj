@@ -1,86 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{35A57B77-236E-492C-B003-1F8FC2F544F3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LmpUpdater</RootNamespace>
-    <AssemblyName>LmpUpdater</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="DotNetZip, Version=1.13.4.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\DotNetZip.1.13.4\lib\net40\DotNetZip.dll</HintPath>
-    </Reference>
-    <Reference Include="JsonFx">
-      <HintPath>..\External\Dependencies\JsonFx.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Runtime.Serialization" />
+    <PackageReference Include="DotNetZip" Version="1.15.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Appveyor\AppveyorProduct.cs" />
-    <Compile Include="Appveyor\Contracts\AccessRightDefinition.cs" />
-    <Compile Include="Appveyor\Contracts\AccessRight.cs" />
-    <Compile Include="Appveyor\Contracts\Build.cs" />
-    <Compile Include="Appveyor\Contracts\Job.cs" />
-    <Compile Include="Appveyor\Contracts\NuGetFeed.cs" />
-    <Compile Include="Appveyor\Contracts\Project.cs" />
-    <Compile Include="Appveyor\Contracts\RoleAce.cs" />
-    <Compile Include="Appveyor\Contracts\RootObject.cs" />
-    <Compile Include="Appveyor\Contracts\SecurityDescriptor.cs" />
-    <Compile Include="CommonDownloader.cs" />
-    <Compile Include="Github\Contracts\GitHubAsset.cs" />
-    <Compile Include="Github\Contracts\GitHubUploader.cs" />
-    <Compile Include="Github\Contracts\GitHubAuthor.cs" />
-    <Compile Include="Github\Contracts\GitHubRelease.cs" />
-    <Compile Include="Appveyor\AppveyorUpdateChecker.cs" />
-    <Compile Include="Github\GithubProduct.cs" />
-    <Compile Include="Github\GithubUpdateChecker.cs" />
-    <Compile Include="Appveyor\AppveyorUpdateDownloader.cs" />
-    <Compile Include="Appveyor\AppveyorUpdateExtractor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Github\GithubUpdateDownloader.cs" />
-    <Compile Include="Github\GithubUpdateExtractor.cs" />
+    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.manifest" />
-    <None Include="packages.config" />
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <None Update="foo.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
-      <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
-      <Name>LmpGlobal</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="../External/Dependencies/System.Runtime.Serialization.dll" DestinationFolder="$(OutDir)" />
+  </Target>
+
 </Project>

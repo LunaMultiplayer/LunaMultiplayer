@@ -32,14 +32,16 @@ namespace LmpMasterServer
             MasterServerPortMapper.UseUpnp = !args.Any(a => a.Contains("noupnp"));
             IsNightly = args.Any(a => a.Contains("nightly"));
             if (Common.PlatformIsWindows())
+            {
                 ConsoleUtil.DisableConsoleQuickEdit();
 
-            Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
+                Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
 
-            if (IsNightly)
-                Console.Title += " NIGHTLY";
+                if (IsNightly)
+                    Console.Title += " NIGHTLY";
+            }
 
-            Console.OutputEncoding = Encoding.Unicode;
+            Console.OutputEncoding = Encoding.UTF8;
 
             var commandLineArguments = new Arguments(args);
             if (commandLineArguments["h"] != null)

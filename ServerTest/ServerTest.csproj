@@ -56,12 +56,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Server\Server.csproj">
-      <Project>{fa6e9184-e243-49cc-94fa-ac557493b900}</Project>
-      <Name>Server</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="XmlExampleFiles\BigVessel.txt" />
     <Content Include="XmlExampleFiles\Eva.txt" />
     <Content Include="XmlExampleFiles\Others\005a4718-ccb5-4e7e-869b-f3e5f1b145cd.txt" />
@@ -763,6 +757,12 @@
     <Content Include="XmlExampleFiles\Others\ff083e4e-6587-4ad1-8bc5-ed559b934f03.txt" />
     <Content Include="XmlExampleFiles\Others\ffceaa4b-28b8-47a8-ab42-83a82b298bc8.txt" />
     <Content Include="XmlExampleFiles\Vessel.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Server\Server.csproj">
+      <Project>{b2a95b68-1fd9-4917-b661-27e0e7b44048}</Project>
+      <Name>Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
