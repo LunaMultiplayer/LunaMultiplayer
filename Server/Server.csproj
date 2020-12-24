@@ -23,9 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj" />
     <ProjectReference Include="..\LmpUpdater\LmpUpdater.csproj" />
     <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj" />
+    <ProjectReference Include="..\Lidgren.Network.Core\Lidgren.Network.csproj" />
   </ItemGroup>
 
   <Import Project="..\LmpCommon\LmpCommon.projitems" Label="Shared" />
