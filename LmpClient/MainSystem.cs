@@ -569,7 +569,6 @@ namespace LmpClient
             var bindingRedirects = (Dictionary<string, Assembly>)typeof(AssemblyLoader).GetField("bindingRedirect", AccessTools.all)?.GetValue(null);
             if (bindingRedirects != null)
             {
-                bindingRedirects.Add("LmpCommon, Culture = neutral, PublicKeyToken = null", Assembly.Load("LmpCommon"));
                 bindingRedirects.Add("LmpClient.XmlSerializers, Culture=neutral, PublicKeyToken=null", Assembly.Load("System.Xml"));
                 bindingRedirects.Add("LmpCommon.XmlSerializers, Culture=neutral, PublicKeyToken=null", Assembly.Load("System.Xml"));
             }

@@ -46,17 +46,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTest", "ServerTest\Se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{B2A95B68-1FD9-4917-B661-27E0E7B44048}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LmpCommon", "LmpCommon\LmpCommon.csproj", "{0FEF9601-46F9-461A-9212-B2A3DF052DE2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LmpGlobal", "LmpGlobal\LmpGlobal.csproj", "{FA75741A-9B73-45A7-B0FD-0B13E05DCDD9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LmpUpdater", "LmpUpdater\LmpUpdater.csproj", "{437EC4B0-C1B8-48AC-9F98-2C76F9EDE65F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LmpMasterServer", "LmpMasterServer\LmpMasterServer.csproj", "{B22894BF-C617-43C2-B823-67BD367E7E8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterServer", "MasterServer\MasterServer.csproj", "{776706B0-F5A1-43A5-B13A-1ADA5E77D0A5}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LmpCommon", "LmpCommon\LmpCommon.shproj", "{D4832184-1A94-4FFC-8D4C-3E3214F109F1}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LmpGlobal", "LmpGlobal\LmpGlobal.shproj", "{D558A5A6-3FAE-4628-8D37-6DAE155B645D}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		LmpGlobal\LmpGlobal.projitems*{437ec4b0-c1b8-48ac-9f98-2c76f9ede65f}*SharedItemsImports = 5
+		LmpCommon\LmpCommon.projitems*{7ad735f5-a076-44d2-97ec-02ecad827001}*SharedItemsImports = 4
+		LmpGlobal\LmpGlobal.projitems*{7ad735f5-a076-44d2-97ec-02ecad827001}*SharedItemsImports = 4
+		LmpCommon\LmpCommon.projitems*{b22894bf-c617-43c2-b823-67bd367e7e8a}*SharedItemsImports = 5
+		LmpGlobal\LmpGlobal.projitems*{b22894bf-c617-43c2-b823-67bd367e7e8a}*SharedItemsImports = 5
+		LmpCommon\LmpCommon.projitems*{b2a95b68-1fd9-4917-b661-27e0e7b44048}*SharedItemsImports = 5
+		LmpCommon\LmpCommon.projitems*{d4832184-1a94-4ffc-8d4c-3e3214f109f1}*SharedItemsImports = 13
+		LmpGlobal\LmpGlobal.projitems*{d558a5a6-3fae-4628-8d37-6dae155b645d}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -85,14 +95,6 @@ Global
 		{B2A95B68-1FD9-4917-B661-27E0E7B44048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2A95B68-1FD9-4917-B661-27E0E7B44048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2A95B68-1FD9-4917-B661-27E0E7B44048}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0FEF9601-46F9-461A-9212-B2A3DF052DE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0FEF9601-46F9-461A-9212-B2A3DF052DE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0FEF9601-46F9-461A-9212-B2A3DF052DE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0FEF9601-46F9-461A-9212-B2A3DF052DE2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA75741A-9B73-45A7-B0FD-0B13E05DCDD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA75741A-9B73-45A7-B0FD-0B13E05DCDD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA75741A-9B73-45A7-B0FD-0B13E05DCDD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA75741A-9B73-45A7-B0FD-0B13E05DCDD9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{437EC4B0-C1B8-48AC-9F98-2C76F9EDE65F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{437EC4B0-C1B8-48AC-9F98-2C76F9EDE65F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{437EC4B0-C1B8-48AC-9F98-2C76F9EDE65F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -116,11 +118,11 @@ Global
 		{7AD735F5-A076-44D2-97EC-02ECAD827001} = {30A93EE1-4800-4120-969C-988400F69B8D}
 		{AFC4A9DD-F636-4865-91A8-4F85FA9BF805} = {509D8FF1-AEB0-4345-958B-44D926911462}
 		{B2A95B68-1FD9-4917-B661-27E0E7B44048} = {D438F6D8-A5FB-4C11-83F9-CBB34BDF123F}
-		{0FEF9601-46F9-461A-9212-B2A3DF052DE2} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
-		{FA75741A-9B73-45A7-B0FD-0B13E05DCDD9} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
 		{437EC4B0-C1B8-48AC-9F98-2C76F9EDE65F} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
 		{B22894BF-C617-43C2-B823-67BD367E7E8A} = {36350310-DD1E-4EA0-A4AE-95A959EAC386}
 		{776706B0-F5A1-43A5-B13A-1ADA5E77D0A5} = {36350310-DD1E-4EA0-A4AE-95A959EAC386}
+		{D4832184-1A94-4FFC-8D4C-3E3214F109F1} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
+		{D558A5A6-3FAE-4628-8D37-6DAE155B645D} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46CE1FFE-A52F-4C6D-8FF1-11B6E792761B}

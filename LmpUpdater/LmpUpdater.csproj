@@ -10,10 +10,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <None Update="foo.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
@@ -22,5 +18,8 @@
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <Copy SourceFiles="../External/Dependencies/System.Runtime.Serialization.dll" DestinationFolder="$(OutDir)" />
   </Target>
+
+
+  <Import Project="..\LmpGlobal\LmpGlobal.projitems" Label="Shared" />
 
 </Project>

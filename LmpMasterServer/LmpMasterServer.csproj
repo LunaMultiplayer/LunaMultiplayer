@@ -16,8 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj" />
-    <ProjectReference Include="..\LmpCommon\LmpCommon.csproj" />
-    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj" />
     <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj" />
   </ItemGroup>
 
@@ -26,5 +24,9 @@
       <HintPath>..\External\Dependencies\JsonFx.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Import Project="..\LmpCommon\LmpCommon.projitems" Label="Shared" />
+
+  <Import Project="..\LmpGlobal\LmpGlobal.projitems" Label="Shared" />
 
 </Project>
