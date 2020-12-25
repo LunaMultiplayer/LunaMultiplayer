@@ -20,6 +20,7 @@ using LmpClient.Systems.ShareTechnology;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselActionGroupSys;
 using LmpClient.Systems.VesselCrewSys;
+using LmpClient.Systems.VesselEvaEditorSys;
 using LmpClient.Systems.VesselFairingsSys;
 using LmpClient.Systems.VesselFlightStateSys;
 using LmpClient.Systems.VesselImmortalSys;
@@ -98,6 +99,7 @@ namespace LmpClient.Windows.Systems
             VesselProtoSystem.Singleton.Enabled = GUILayout.Toggle(VesselProtoSystem.Singleton.Enabled, VesselProtoSystem.Singleton.SystemName);
             VesselRemoveSystem.Singleton.Enabled = GUILayout.Toggle(VesselRemoveSystem.Singleton.Enabled, VesselRemoveSystem.Singleton.SystemName);
             VesselSwitcherSystem.Singleton.Enabled = GUILayout.Toggle(VesselSwitcherSystem.Singleton.Enabled, VesselSwitcherSystem.Singleton.SystemName);
+            VesselEvaEditorSystem.Singleton.Enabled = GUILayout.Toggle(VesselEvaEditorSystem.Singleton.Enabled, VesselEvaEditorSystem.Singleton.SystemName);
 
             ShareFundsSystem.Singleton.Enabled = GUILayout.Toggle(ShareFundsSystem.Singleton.Enabled, ShareFundsSystem.Singleton.SystemName);
             ShareScienceSystem.Singleton.Enabled = GUILayout.Toggle(ShareScienceSystem.Singleton.Enabled, ShareScienceSystem.Singleton.SystemName);

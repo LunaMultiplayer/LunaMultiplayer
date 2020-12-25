@@ -2,8 +2,10 @@
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareScienceSubject;
+using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using System;
+using System.Linq;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -130,11 +132,27 @@ namespace LmpClient.Systems.VesselProtoSys
             System.MessageSender.SendVesselMessage(vessel);
         }
 
+        private Part _detachedPart;
+
         public void EVAConstructionModePartDetached(Vessel vessel, Part part)
         {
             if (VesselCommon.IsSpectating) return;
-
             System.MessageSender.SendVesselMessage(vessel);
+
+            _detachedPart = part;
+
+            CoroutineUtil.StartDelayedRoutine("SendDetachedPartAsVessel", () =>
+            {
+                var newVessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.Parts.Contains(_detachedPart));
+
+                if (newVessel != null)
+                {
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(newVessel.id, true, true);
+                    LockSystem.Singleton.AcquireUpdateLock(newVessel.id, true, true);
+
+                    System.MessageSender.SendVesselMessage(newVessel);
+                }
+            }, 0.50f);
         }
     }
 }

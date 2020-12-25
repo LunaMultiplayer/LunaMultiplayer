@@ -126,6 +126,7 @@
     <Compile Include="Events\ExperimentalPartEvent.cs" />
     <Compile Include="Events\ExperimentEvent.cs" />
     <Compile Include="Events\ExternalSeatEvent.cs" />
+    <Compile Include="Events\EVAConstructionEvent.cs" />
     <Compile Include="Events\FlightDriverEvent.cs" />
     <Compile Include="Events\ImmortalEvent.cs" />
     <Compile Include="Events\LabelEvent.cs" />
@@ -162,6 +163,8 @@
     <Compile Include="Extensions\VesselExtension.cs" />
     <Compile Include="Extensions\VesselPartCreator.cs" />
     <Compile Include="Harmony\ActionGroupList_ToggleGroup.cs" />
+    <Compile Include="Harmony\EVAConstructionModeEditor_AttachPart.cs" />
+    <Compile Include="Harmony\EVAConstructionModeEditor_DropAttachablePart.cs" />
     <Compile Include="Harmony\ModuleDockingNode_DockToVessel.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
     <Compile Include="Harmony\FlightDriver_SetStartupNewVessel.cs" />
@@ -358,6 +361,8 @@
     <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleMessageSender.cs" />
     <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleQueue.cs" />
     <Compile Include="Systems\VesselDecoupleSys\VesselDecoupleSystem.cs" />
+    <Compile Include="Systems\VesselEvaEditorSys\VesselEvaEditorEvents.cs" />
+    <Compile Include="Systems\VesselEvaEditorSys\VesselEvaEditorSystem.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingEvents.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
@@ -856,6 +861,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\LmpCommon\LmpCommon.projitems" Label="Shared" />
   <Import Project="..\LmpGlobal\LmpGlobal.projitems" Label="Shared" />
   <PropertyGroup>
