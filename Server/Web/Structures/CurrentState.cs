@@ -12,6 +12,7 @@ namespace Server.Web.Structures
         public List<string> CurrentPlayers { get; } = new List<string>();
         public List<VesselInfo> CurrentVessels { get; } = new List<VesselInfo>();
         public List<Subspace> Subspaces { get; } = new List<Subspace>();
+        public int MemBytesUsed { get; }
 
         public void Refresh()
         {
@@ -22,6 +23,9 @@ namespace Server.Web.Structures
             CurrentPlayers.AddRange(ServerContext.Clients.Values.Select(v => v.PlayerName));
             CurrentVessels.AddRange(VesselStoreSystem.CurrentVessels.Values.Select(v => new VesselInfo(v)));
             Subspaces.AddRange(WarpContext.Subspaces.Values);
+            BytesUsed = Environment.WorkingSet;
         }
+        
+        
     }
 }
