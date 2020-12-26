@@ -29,4 +29,4 @@ EXPOSE 8900/tcp
 
 VOLUME ["Universe", "Config", "Plugins"]
 
-CMD ["mono", "Server.exe"]
+ENTRYPOINT ["mono", "Server.exe"]
