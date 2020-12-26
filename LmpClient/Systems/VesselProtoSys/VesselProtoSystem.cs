@@ -54,9 +54,6 @@ namespace LmpClient.Systems.VesselProtoSys
             PartEvent.onPartUndocked.Add(VesselProtoEvents.PartUndocked);
             PartEvent.onPartCoupled.Add(VesselProtoEvents.PartCoupled);
 
-            GameEvents.OnEVAConstructionModePartAttached.Add(VesselProtoEvents.EVAConstructionModePartAttached);
-            GameEvents.OnEVAConstructionModePartDetached.Add(VesselProtoEvents.EVAConstructionModePartDetached);
-
             WarpEvent.onTimeWarpStopped.Add(VesselProtoEvents.WarpStopped);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckVesselsToLoad));
@@ -77,9 +74,6 @@ namespace LmpClient.Systems.VesselProtoSys
             PartEvent.onPartDecoupled.Remove(VesselProtoEvents.PartDecoupled);
             PartEvent.onPartUndocked.Remove(VesselProtoEvents.PartUndocked);
             PartEvent.onPartCoupled.Remove(VesselProtoEvents.PartCoupled);
-
-            GameEvents.OnEVAConstructionModePartAttached.Remove(VesselProtoEvents.EVAConstructionModePartAttached);
-            GameEvents.OnEVAConstructionModePartDetached.Remove(VesselProtoEvents.EVAConstructionModePartDetached);
 
             WarpEvent.onTimeWarpStopped.Remove(VesselProtoEvents.WarpStopped);
 
