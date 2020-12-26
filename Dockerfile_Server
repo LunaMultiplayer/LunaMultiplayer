@@ -27,6 +27,6 @@ WORKDIR LMPServer
 EXPOSE 8800/udp
 EXPOSE 8900/tcp
 
-VOLUME ["Universe", "Config", "Plugins"]
+VOLUME ["/LMPServer/Universe", "/LMPServer/Config", "/LMPServer/Plugins"]
 
 ENTRYPOINT ["mono", "Server.exe"]
