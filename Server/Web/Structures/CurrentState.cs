@@ -12,7 +12,7 @@ namespace Server.Web.Structures
         public List<string> CurrentPlayers { get; } = new List<string>();
         public List<VesselInfo> CurrentVessels { get; } = new List<VesselInfo>();
         public List<Subspace> Subspaces { get; } = new List<Subspace>();
-        public int MemBytesUsed { get; }
+        public long BytesUsed { get; set; }
 
         public void Refresh()
         {
@@ -25,7 +25,5 @@ namespace Server.Web.Structures
             Subspaces.AddRange(WarpContext.Subspaces.Values);
             BytesUsed = Environment.WorkingSet;
         }
-        
-        
     }
 }
