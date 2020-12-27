@@ -131,7 +131,7 @@
     <value>..\Resources\Scenario\ContractSystem.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="DeployedScience" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\scenario\deployedscience.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\Scenario\DeployedScience.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Funding" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Scenario\Funding.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -155,7 +155,7 @@
     <value>..\Resources\Scenario\ResourceScenario.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ROCScenario" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\scenario\rocscenario.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\Scenario\ROCScenario.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="ScenarioAchievements" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Scenario\ScenarioAchievements.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
