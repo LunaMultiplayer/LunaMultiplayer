@@ -139,4 +139,7 @@
   <PropertyGroup Condition="'$(OS)' != 'Unix'">
     <PostBuildEvent>xcopy /y /s "$(TargetDir)*.*" "$(SolutionDir)MasterServer\bin\$(ConfigurationName)"</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent />
+  </PropertyGroup>
 </Project>
