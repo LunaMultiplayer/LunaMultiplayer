@@ -42,7 +42,9 @@ namespace LmpClient.VesselUtilities
             {
                 if (!forceReload && existingVessel.Parts.Count == vesselProto.protoPartSnapshots.Count &&
                     existingVessel.GetCrewCount() == vesselProto.GetVesselCrew().Count)
+                {
                     return true;
+                }
 
                 LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.vesselID}");
                 if (reloadingOwnVessel)
@@ -93,10 +95,8 @@ namespace LmpClient.VesselUtilities
 
             if (reloadingOwnVessel)
             {
-                LunaLog.Log($"[LMP]: 1 Loading OWN vessel {vesselProto.vesselID}. Crew count: {vesselProto.GetVesselCrew().Count}");
                 vesselProto.vesselRef.Load();
                 vesselProto.vesselRef.RebuildCrewList();
-                LunaLog.Log($"[LMP]: 2 Loading OWN vessel {vesselProto.vesselID}. Crew count: {vesselProto.GetVesselCrew().Count}");
 
                 //Do not do the setting of the active vessel manually, too many systems are dependant of the events triggered by KSP
                 FlightGlobals.ForceSetActiveVessel(vesselProto.vesselRef);
@@ -104,11 +104,8 @@ namespace LmpClient.VesselUtilities
                 vesselProto.vesselRef.SpawnCrew();
                 foreach (var crew in vesselProto.vesselRef.GetVesselCrew())
                 {
-                    if (crew.KerbalRef)
-                        crew.KerbalRef.state = Kerbal.States.ALIVE;
+                    if (crew.KerbalRef) crew.KerbalRef.state = Kerbal.States.ALIVE;
                 }
-
-                LunaLog.Log($"[LMP]: 3 Loading OWN vessel {vesselProto.vesselID}. Crew count: {vesselProto.GetVesselCrew().Count}");
 
                 if (KerbalPortraitGallery.Instance.ActiveCrewItems.Count != vesselProto.vesselRef.GetCrewCount())
                 {
