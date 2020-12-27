@@ -1,7 +1,6 @@
 ﻿using KSP.UI.Screens.Flight;
 using LmpClient.Extensions;
 using LmpClient.Systems.VesselPositionSys;
-using LmpClient.Utilities;
 using System;
 using Object = UnityEngine.Object;
 
@@ -41,7 +40,8 @@ namespace LmpClient.VesselUtilities
             var existingVessel = FlightGlobals.FindVessel(vesselProto.vesselID);
             if (existingVessel != null)
             {
-                if (existingVessel.Parts.Count == vesselProto.protoPartSnapshots.Count && !forceReload)
+                if (!forceReload && existingVessel.Parts.Count == vesselProto.protoPartSnapshots.Count &&
+                    existingVessel.GetCrewCount() == vesselProto.GetVesselCrew().Count)
                     return true;
 
                 LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.vesselID}");
@@ -93,8 +93,10 @@ namespace LmpClient.VesselUtilities
 
             if (reloadingOwnVessel)
             {
+                LunaLog.Log($"[LMP]: 1 Loading OWN vessel {vesselProto.vesselID}. Crew count: {vesselProto.GetVesselCrew().Count}");
                 vesselProto.vesselRef.Load();
                 vesselProto.vesselRef.RebuildCrewList();
+                LunaLog.Log($"[LMP]: 2 Loading OWN vessel {vesselProto.vesselID}. Crew count: {vesselProto.GetVesselCrew().Count}");
 
                 //Do not do the setting of the active vessel manually, too many systems are dependant of the events triggered by KSP
                 FlightGlobals.ForceSetActiveVessel(vesselProto.vesselRef);
@@ -106,18 +108,12 @@ namespace LmpClient.VesselUtilities
                         crew.KerbalRef.state = Kerbal.States.ALIVE;
                 }
 
-                CoroutineUtil.StartDelayedRoutine("ReloadOwnVessel", () =>
+                LunaLog.Log($"[LMP]: 3 Loading OWN vessel {vesselProto.vesselID}. Crew count: {vesselProto.GetVesselCrew().Count}");
+
+                if (KerbalPortraitGallery.Instance.ActiveCrewItems.Count != vesselProto.vesselRef.GetCrewCount())
                 {
-                    if (KerbalPortraitGallery.Instance.ActiveCrewItems.Count == 0)
-                    {
-                        FlightGlobals.ActiveVessel.SpawnCrew();
-                        foreach (var crewItem in KerbalPortraitGallery.Instance.ActiveCrewItems)
-                        {
-                            crewItem.kerbal.state = Kerbal.States.ALIVE;
-                        }
-                        KerbalPortraitGallery.Instance.StartRefresh(FlightGlobals.ActiveVessel);
-                    }
-                }, 0.5f);
+                    KerbalPortraitGallery.Instance.StartReset(FlightGlobals.ActiveVessel);
+                }
             }
 
             return true;

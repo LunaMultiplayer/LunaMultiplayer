@@ -41,7 +41,7 @@ namespace LmpClient.Systems.VesselProtoSys
             if (vessel.orbitDriver.Ready())
             {
                 vessel.protoVessel = vessel.BackupVessel();
-                SendVesselMessage(vessel.protoVessel);
+                SendVesselMessage(vessel.protoVessel, forceReload);
             }
             else
             {
@@ -54,19 +54,19 @@ namespace LmpClient.Systems.VesselProtoSys
 
         #region Private methods
 
-        private void SendVesselMessage(ProtoVessel protoVessel)
+        private void SendVesselMessage(ProtoVessel protoVessel, bool forceReload)
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
             //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
             //TODO: Check if this works fine with the new unity version as it used to crash....
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, forceReload));
             //PrepareAndSendProtoVessel(protoVessel);
         }
 
         /// <summary>
         /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
         /// </summary>
-        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
+        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool forceReload)
         {
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
@@ -81,6 +81,7 @@ namespace LmpClient.Systems.VesselProtoSys
                     msgData.GameTime = TimeSyncSystem.UniversalTime;
                     msgData.VesselId = protoVessel.vesselID;
                     msgData.NumBytes = numBytes;
+                    msgData.ForceReload = forceReload;
                     if (msgData.Data.Length < numBytes)
                         Array.Resize(ref msgData.Data, numBytes);
                     Array.Copy(VesselSerializedBytes, 0, msgData.Data, 0, numBytes);
