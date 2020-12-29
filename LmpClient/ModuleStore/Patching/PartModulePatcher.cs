@@ -1,15 +1,11 @@
-﻿using Harmony;
-using Harmony.ILCopying;
+﻿using HarmonyLib;
 using LmpClient.Base;
-using LmpClient.ModuleStore.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace LmpClient.ModuleStore.Patching
 {
@@ -80,26 +76,26 @@ namespace LmpClient.ModuleStore.Patching
             return transpiler.Transpile();
         }
 
-        /// <summary>
-        /// Checks if the given method has a IL instruction that SETS (therefore, it changes the value) a customized field
-        /// </summary>
-        private static IEnumerable<FieldInfo> GetCustomizedFieldsChangedByMethod(MethodBase partModuleMethod, ModuleDefinition definition)
-        {
-            var listOfFields = new HashSet<FieldInfo>();
+        ///// <summary>
+        ///// Checks if the given method has a IL instruction that SETS (therefore, it changes the value) a customized field
+        ///// </summary>
+        //private static IEnumerable<FieldInfo> GetCustomizedFieldsChangedByMethod(MethodBase partModuleMethod, ModuleDefinition definition)
+        //{
+        //    var listOfFields = new HashSet<FieldInfo>();
 
-            var method = DynamicTools.CreateDynamicMethod(partModuleMethod, "read");
-            var instructions = MethodBodyReader.GetInstructions(method.GetILGenerator(), partModuleMethod);
+        //    var method = DynamicTools.CreateDynamicMethod(partModuleMethod, "read");
+        //    var instructions = MethodBodyReader.GetInstructions(method.GetILGenerator(), partModuleMethod);
 
-            //OpCodes.Stfld is the opcode for SETTING the value of a field
-            foreach (var instruction in instructions.Where(i => i.opcode == OpCodes.Stfld))
-            {
-                if (!(instruction.operand is FieldInfo operand)) continue;
+        //    //OpCodes.Stfld is the opcode for SETTING the value of a field
+        //    foreach (var instruction in instructions.Where(i => i.opcode == OpCodes.Stfld))
+        //    {
+        //        if (!(instruction.operand is FieldInfo operand)) continue;
 
-                if (definition.Fields.Any(f => f.FieldName == operand.Name))
-                    listOfFields.Add(operand);
-            }
+        //        if (definition.Fields.Any(f => f.FieldName == operand.Name))
+        //            listOfFields.Add(operand);
+        //    }
 
-            return listOfFields;
-        }
+        //    return listOfFields;
+        //}
     }
 }

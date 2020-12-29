@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using LmpClient.Systems.SafetyBubble;
 
 // ReSharper disable All

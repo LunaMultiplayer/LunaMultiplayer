@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using LmpClient.Events;
 
 namespace LmpClient.ModuleStore.Patching

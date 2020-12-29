@@ -1,12 +1,5 @@
-﻿using Harmony;
-using Harmony.ILCopying;
-using LmpClient.Base;
-using LmpClient.ModuleStore.Structures;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +13,7 @@ namespace LmpClient.ModuleStore.Patching
         public static bool Ready => _awakeTask.IsCompleted;
         private static Task _awakeTask;
         private static double _percentage;
-        
+
 
         /// <summary>
         /// Call this method to scan all the PartModules and patch the methods

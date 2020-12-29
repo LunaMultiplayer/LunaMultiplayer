@@ -104,7 +104,9 @@ namespace LmpClient.VesselUtilities
                 vesselProto.vesselRef.SpawnCrew();
                 foreach (var crew in vesselProto.vesselRef.GetVesselCrew())
                 {
-                    if (crew.KerbalRef) crew.KerbalRef.state = Kerbal.States.ALIVE;
+                    ProtoCrewMember._Spawn(crew);
+                    if (crew.KerbalRef)
+                        crew.KerbalRef.state = Kerbal.States.ALIVE;
                 }
 
                 if (KerbalPortraitGallery.Instance.ActiveCrewItems.Count != vesselProto.vesselRef.GetCrewCount())

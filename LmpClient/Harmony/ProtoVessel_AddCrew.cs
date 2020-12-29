@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 
 // ReSharper disable All
 

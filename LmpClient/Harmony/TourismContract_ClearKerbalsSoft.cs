@@ -1,5 +1,5 @@
 ﻿using FinePrint.Contracts;
-using Harmony;
+using HarmonyLib;
 using LmpClient.Systems.KerbalSys;
 using LmpClient.Systems.ShareContracts;
 using LmpCommon.Enums;

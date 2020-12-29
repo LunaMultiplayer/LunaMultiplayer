@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Harmony;
+using HarmonyLib;
 using LmpClient.Events;
 
 // ReSharper disable All

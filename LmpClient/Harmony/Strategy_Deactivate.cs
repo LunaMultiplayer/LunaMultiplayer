@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using LmpClient.Events;
 using Strategies;
 

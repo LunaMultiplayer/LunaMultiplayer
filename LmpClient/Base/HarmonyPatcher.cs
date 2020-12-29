@@ -1,11 +1,10 @@
 ﻿using System.Reflection;
-using Harmony;
 
 namespace LmpClient.Base
 {
     public static class HarmonyPatcher
     {
-        public static HarmonyInstance HarmonyInstance = HarmonyInstance.Create("LunaMultiplayer");
+        public static HarmonyLib.Harmony HarmonyInstance = new HarmonyLib.Harmony("LunaMultiplayer");
 
         public static void Awake()
         {

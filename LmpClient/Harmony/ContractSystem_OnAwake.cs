@@ -1,5 +1,5 @@
 ﻿using Contracts;
-using Harmony;
+using HarmonyLib;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareContracts;

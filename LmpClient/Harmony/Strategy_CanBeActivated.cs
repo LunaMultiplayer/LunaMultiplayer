@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using LmpClient.Systems.ShareStrategy;
 using LmpCommon.Enums;
 using Strategies;
