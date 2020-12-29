@@ -102,7 +102,7 @@ deploy:
    tag: $(smallversion)-Draft
    release: Luna Multi Player $(smallversion)-Draft
    description: 'Build $(appveyor_build_version)'
-   artifact: LunaMultiplayer-*-$(configuration).zip
+   artifact: LunaMultiplayer-Client-$(configuration).zip, LunaMultiplayer-Server-$(configuration).zip
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
    draft: true
