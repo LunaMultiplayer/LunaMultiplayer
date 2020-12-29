@@ -1,7 +1,8 @@
-#Build this image with: docker build --file Dockerfile_MasterServer -t lmpsrv:latest .
+#Build this image with: docker build --file Dockerfile_Server -t lmpsrv:latest .
 #Delete the image with the command: docker image rm lmpsrv:latest
 
-#Create a container with: docker run -d -p 8800:8800 -p 8900:8900 --name lmpsrv lmpsrv:latest
+#Create a container with: docker run -td -p 8800:8800 -p 8900:8900 --name lmpsrv lmpsrv:latest
+# the -t (tty) flag is needed so docker can send SIGINT for proper shutdown.
 #Attach to a container with: docker exec -it lmpsrv /bin/ash
 #When inside a container, you can dettach with: CONTROL+P+Q
 #Check logs with: docker logs -f lmpsrv
@@ -10,23 +11,24 @@
 #Start a container with: docker start lmpsrv
 #Remove a container with: docker container rm lmpsrv
 
-FROM alpine:3.9
+FROM alpine:edge as builder
 
-ARG LMP_VERSION=0.25.0
-ARG LMP_FILENAME=LunaMultiplayer-Debug.zip
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib wget bash git mono@testing && \
+    wget https://dot.net/v1/dotnet-install.sh && \
+    chmod +x ./dotnet-install.sh && ./dotnet-install.sh -c 5.0
 
-ARG LMP_URL=https://github.com/LunaMultiplayer/LunaMultiplayer/releases/download/$LMP_VERSION/$LMP_FILENAME
+COPY . /LunaMultiplayer
+RUN cd LunaMultiplayer/Server && \
+    export PATH=$PATH:/root/.dotnet && \
+    export FrameworkPathOverride=/usr/lib/mono/4.6-api/ && \
+    dotnet publish -r linux-musl-x64 -o Publish
 
-RUN apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing && \
-    wget $LMP_URL && \
-    unzip $LMP_FILENAME && \
-    rm -rf $LMP_FILENAME LMPClient LMP\ Readme.txt
-
-WORKDIR LMPServer
-
-EXPOSE 8800/udp
-EXPOSE 8900/tcp
-
-VOLUME ["/LMPServer/Universe", "/LMPServer/Config", "/LMPServer/Plugins"]
-
-ENTRYPOINT ["mono", "Server.exe"]
+FROM alpine:edge
+RUN apk add icu-libs libstdc++ libgcc
+COPY --from=builder /LunaMultiplayer/Server/Publish/ /LMPServer/
+EXPOSE 8800/udp 8900/tcp
+VOLUME "/LMPServer/Config" "/LMPServer/Plugins" "/LMPServer/Universe" "/LMPServer/logs"
+STOPSIGNAL sigint
+WORKDIR /LMPServer
+CMD ./Server
