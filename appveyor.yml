@@ -73,7 +73,8 @@ after_build:
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: xcopy /y "$env:appveyor_build_folder\Server\bin\$env:configuration\net5\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
   #7zip everything
- - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Client-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayerMasterServer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
 
 #Post it on discord
@@ -86,8 +87,10 @@ on_success:
 #---------------------------------#
 
 artifacts:
- - path: .\LunaMultiplayer-$(configuration).zip
-   name: LunaMultiplayer-$(configuration).zip
+ - path: .\LunaMultiplayer-Client-$(configuration).zip
+   name: LunaMultiplayer-Client-$(configuration).zip
+ - path: .\LunaMultiplayer-Server-$(configuration).zip
+   name: LunaMultiplayer-Server-$(configuration).zip
  - path: .\LunaMultiplayerMasterServer-$(configuration).zip
    name: LunaMultiplayerMasterServer-$(configuration).zip
 #---------------------------------#
@@ -99,7 +102,7 @@ deploy:
    tag: $(smallversion)-Draft
    release: Luna Multi Player $(smallversion)-Draft
    description: 'Build $(appveyor_build_version)'
-   artifact: LunaMultiplayer-$(configuration).zip
+   artifact: LunaMultiplayer-*-$(configuration).zip
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
    draft: true
