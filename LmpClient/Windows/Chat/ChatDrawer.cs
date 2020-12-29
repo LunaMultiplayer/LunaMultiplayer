@@ -27,19 +27,10 @@ namespace LmpClient.Windows.Chat
             GUILayout.BeginVertical();
             GUILayout.FlexibleSpace();
 
-            foreach (var channelMessageTuple in ChatSystem.Singleton.ChatMessages)
+            foreach (var chatMsg in ChatSystem.Singleton.ChatMessages)
             {
-                var playerName = channelMessageTuple.Item1;
-                var chatMessage = channelMessageTuple.Item2;
-
-                _playerNameStyle.normal.textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerName);
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(playerName, _playerNameStyle);
-                // Make a separate Label for the ": " because it gives weird word wrapping if it's together with the chatMessage
-                GUILayout.Label(": ", _chatMessageStyle);
-                GUILayout.Label(chatMessage, _chatMessageStyle);
-                GUILayout.EndHorizontal();
+                _playerNameStyle.normal.textColor = PlayerColorSystem.Singleton.GetPlayerColor(chatMsg.Item1);
+                GUILayout.Label(chatMsg.Item3, _playerNameStyle);
             }
 
             GUILayout.EndVertical();

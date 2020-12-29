@@ -25,6 +25,7 @@ namespace LmpClient.Systems.SettingsSys
         public int MaxGroupsPerPlayer { get; set; } = 1;
         public bool IgnoreSyncChecks { get; set; } = false;
         public int Mtu { get; set; } = NetPeerConfiguration.kDefaultMTU;
+        public int ChatBuffer { get; set; } = 30;
         public bool AutoExpandMtu { get; set; } = false;
         public float TimeoutSeconds { get; set; } = 15;
         public ServerFilters ServerFilters { get; set; } = new ServerFilters();

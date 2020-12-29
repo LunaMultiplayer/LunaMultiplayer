@@ -95,6 +95,17 @@ namespace LmpClient.Windows.Options
             _showGeneralSettings = GUILayout.Toggle(_showGeneralSettings, LocalizationContainer.OptionsWindowText.GeneralSettings, ToggleButtonStyle);
             if (_showGeneralSettings)
             {
+                GUILayout.Label($"{LocalizationContainer.OptionsWindowText.ChatBuffer} {SettingsSystem.CurrentSettings.ChatBuffer}");
+
+                GUI.enabled = MainSystem.NetworkState <= ClientState.Disconnected;
+                var chatBuffer = (int)Math.Round(GUILayout.HorizontalScrollbar(SettingsSystem.CurrentSettings.ChatBuffer, 10, 1, 500));
+                if (chatBuffer != SettingsSystem.CurrentSettings.ChatBuffer)
+                {
+                    SettingsSystem.CurrentSettings.ChatBuffer = chatBuffer;
+                    SettingsSystem.SaveSettings();
+                }
+                GUI.enabled = true;
+
                 var settingSyncCheck = GUILayout.Toggle(SettingsSystem.CurrentSettings.IgnoreSyncChecks, LocalizationContainer.OptionsWindowText.IgnoreSyncChecks);
                 if (settingSyncCheck != SettingsSystem.CurrentSettings.IgnoreSyncChecks)
                 {

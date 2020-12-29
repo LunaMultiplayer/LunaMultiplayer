@@ -3,7 +3,6 @@ using LmpClient.Systems.SettingsSys;
 using LmpClient.Windows.Chat;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace LmpClient.Systems.Chat
 {
@@ -15,13 +14,13 @@ namespace LmpClient.Systems.Chat
         public bool SendEventHandled { get; set; } = true;
 
         //State tracking
-        public List<Tuple<string, string>> ChatMessages { get; } = new List<Tuple<string, string>>();
+        public LimitedQueue<Tuple<string, string, string>> ChatMessages { get; private set; }
 
         #endregion
 
         #region Properties
 
-        public ConcurrentQueue<Tuple<string, string>> NewChatMessages { get; private set; } = new ConcurrentQueue<Tuple<string, string>>();
+        public ConcurrentQueue<Tuple<string, string, string>> NewChatMessages { get; private set; } = new ConcurrentQueue<Tuple<string, string, string>>();
 
         #endregion
 
@@ -34,6 +33,8 @@ namespace LmpClient.Systems.Chat
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
+            ChatMessages = new LimitedQueue<Tuple<string, string, string>>(SettingsSystem.CurrentSettings.ChatBuffer);
             SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, ProcessReceivedMessages));
         }
 
@@ -45,7 +46,7 @@ namespace LmpClient.Systems.Chat
             SendEventHandled = true;
 
             ChatMessages.Clear();
-            NewChatMessages = new ConcurrentQueue<Tuple<string, string>>();
+            NewChatMessages = new ConcurrentQueue<Tuple<string, string, string>>();
         }
 
         #endregion
@@ -69,7 +70,7 @@ namespace LmpClient.Systems.Chat
                         ChatWindow.Singleton.ScrollToBottom();
                     }
 
-                    ChatMessages.Add(chatMsg);
+                    ChatMessages.Enqueue(chatMsg);
                 }
             }
         }
@@ -80,7 +81,8 @@ namespace LmpClient.Systems.Chat
 
         public void PrintToChat(string text)
         {
-            NewChatMessages.Enqueue(new Tuple<string, string>(SettingsSystem.ServerSettings.ConsoleIdentifier, text));
+            NewChatMessages.Enqueue(new Tuple<string, string, string>(SettingsSystem.ServerSettings.ConsoleIdentifier, text,
+                SettingsSystem.ServerSettings.ConsoleIdentifier + ": " + text));
         }
 
         public void PmMessageServer(string message)

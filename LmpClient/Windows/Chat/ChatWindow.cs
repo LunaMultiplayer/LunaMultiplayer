@@ -23,7 +23,6 @@ namespace LmpClient.Windows.Chat
         private static Vector2 _chatScrollPos;
 
         private static GUIStyle _playerNameStyle;
-        private static GUIStyle _chatMessageStyle;
 
         #endregion
 
@@ -42,15 +41,7 @@ namespace LmpClient.Windows.Chat
             {
                 fontStyle = FontStyle.Normal,
                 stretchWidth = false,
-                wordWrap = false
-            };
-
-            _chatMessageStyle = new GUIStyle(GUI.skin.label)
-            {
-                normal = { textColor = XKCDColors.OffWhite },
-                fontStyle = FontStyle.Normal,
-                wordWrap = true,
-                stretchWidth = false
+                wordWrap = true
             };
         }
 

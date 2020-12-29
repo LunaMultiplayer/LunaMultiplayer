@@ -119,6 +119,7 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Base\LimitedQueue.cs" />
     <Compile Include="DebugDrawer.cs" />
     <Compile Include="Events\ActionGroupEvent.cs" />
     <Compile Include="Events\Base\LmpBaseEvent.cs" />
