@@ -211,10 +211,10 @@
     <Compile Include="Harmony\PauseMenu_DrawRevertOptions.cs" />
     <Compile Include="Localization\Structures\RevertDialogText.cs" />
     <Compile Include="Localization\Structures\ServerListFiltersText.cs" />
-    <Compile Include="ModuleStore\Harmony\KerbalEVA_OnDeboardSeat.cs" />
-    <Compile Include="ModuleStore\Harmony\KerbalEVA_BoardSeat.cs" />
+    <Compile Include="Harmony\KerbalEVA_OnDeboardSeat.cs" />
+    <Compile Include="Harmony\KerbalEVA_BoardSeat.cs" />
     <Compile Include="Harmony\KerbalRoster_SackAvailable.cs" />
-    <Compile Include="ModuleStore\Harmony\ModuleScienceExperiment_ResetExperiment.cs" />
+    <Compile Include="Harmony\ModuleScienceExperiment_ResetExperiment.cs" />
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
     <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
@@ -230,7 +230,7 @@
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Harmony\TrackingStationWidget_Update.cs" />
-    <Compile Include="ModuleStore\Harmony\ModuleWheelDamage_FixedUpdate.cs" />
+    <Compile Include="Harmony\ModuleWheelDamage_FixedUpdate.cs" />
     <Compile Include="Harmony\VesselLabels_ProcessLabel.cs" />
     <Compile Include="Harmony\Vessel_Initialize.cs" />
     <Compile Include="Harmony\Vessel_Load.cs" />
@@ -243,7 +243,7 @@
     <Compile Include="Localization\Structures\CompatibleDialogText.cs" />
     <Compile Include="Localization\Structures\UpdateWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
-    <Compile Include="ModuleStore\Harmony\ModuleEngines_Activate.cs" />
+    <Compile Include="Harmony\ModuleEngines_Activate.cs" />
     <Compile Include="ModuleStore\Patching\FieldChangeTranspiler.cs" />
     <Compile Include="ModuleStore\Patching\PartModuleRunner.cs" />
     <Compile Include="ModuleStore\Patching\PartModulePatcher.cs" />
