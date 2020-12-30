@@ -44,6 +44,7 @@ namespace LmpClient.Systems.Mod
         private static void SetAllPathsToLowercase(ModControlStructure modFileInfo)
         {
             modFileInfo.MandatoryPlugins.ForEach(m => m.FilePath = m.FilePath.ToLower());
+            modFileInfo.OptionalPlugins.ForEach(m => m.FilePath = m.FilePath.ToLower());
             modFileInfo.ForbiddenPlugins.ForEach(m => m.FilePath = m.FilePath.ToLower());
         }
 
@@ -94,9 +95,9 @@ namespace LmpClient.Systems.Mod
                 return false;
             }
 
-            if (!modInfo.AllowNonListedPlugins && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key))
+            if (!modInfo.AllowNonListedPlugins && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key) && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key))
             {
-                Sb.AppendLine($"Server does not allow external plugins and banned file {file.Key} exists on client!");
+                Sb.AppendLine($"Server does not allow external plugins and file {file.Key} is neither optional nor mandatory!");
                 System.NonListedFilesFound.Add(file.Key);
                 return false;
             }
@@ -104,7 +105,7 @@ namespace LmpClient.Systems.Mod
             return true;
         }
 
-        private static bool CheckMandatoryFile(MandatoryDllFile item)
+        private static bool CheckMandatoryFile(DllFile item)
         {
             var fileExists = System.DllList.ContainsKey(item.FilePath);
             if (!fileExists)

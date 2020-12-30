@@ -9,7 +9,7 @@ namespace LmpCommon.ModFile.Structure
         public string PartName { get; set; }
     }
 
-    public class MandatoryDllFile
+    public class DllFile
     {
         public string Text { get; set; }
         public string Link { get; set; }
@@ -25,9 +25,10 @@ namespace LmpCommon.ModFile.Structure
 
     public class ModControlStructure
     {
-        public bool AllowNonListedPlugins { get; set; } = true;
         public List<string> RequiredExpansions { get; set; } = new List<string>();
-        public List<MandatoryDllFile> MandatoryPlugins { get; set; } = new List<MandatoryDllFile>();
+        public bool AllowNonListedPlugins { get; set; } = true;
+        public List<DllFile> MandatoryPlugins { get; set; } = new List<DllFile>();
+        public List<DllFile> OptionalPlugins { get; set; } = new List<DllFile>();
         public List<ForbiddenDllFile> ForbiddenPlugins { get; set; } = new List<ForbiddenDllFile>();
         public List<MandatoryPart> MandatoryParts { get; set; } = new List<MandatoryPart>();
         public List<string> AllowedParts { get; set; } = new List<string>();

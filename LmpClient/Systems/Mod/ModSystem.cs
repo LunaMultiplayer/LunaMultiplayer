@@ -28,8 +28,8 @@ namespace LmpClient.Systems.Mod
         public List<string> MissingExpansions { get; } = new List<string>();
         public List<ForbiddenDllFile> ForbiddenFilesFound { get; } = new List<ForbiddenDllFile>();
         public List<string> NonListedFilesFound { get; } = new List<string>();
-        public List<MandatoryDllFile> MandatoryFilesNotFound { get; } = new List<MandatoryDllFile>();
-        public List<MandatoryDllFile> MandatoryFilesDifferentSha { get; } = new List<MandatoryDllFile>();
+        public List<DllFile> MandatoryFilesNotFound { get; } = new List<DllFile>();
+        public List<DllFile> MandatoryFilesDifferentSha { get; } = new List<DllFile>();
         public List<MandatoryPart> MandatoryPartsNotFound { get; } = new List<MandatoryPart>();
 
         public ModFileHandler ModFileHandler { get; } = new ModFileHandler();
@@ -93,7 +93,7 @@ namespace LmpClient.Systems.Mod
 
             foreach (var modFile in GetModFiles())
             {
-                modCtrlStructure.MandatoryPlugins.Add(new MandatoryDllFile
+                modCtrlStructure.OptionalPlugins.Add(new DllFile
                 {
                     FilePath = GetRelativePath(modFile),
                     Sha = appendSha ? Common.CalculateSha256FileHash(modFile) : string.Empty,
@@ -120,7 +120,7 @@ namespace LmpClient.Systems.Mod
                 LunaLog.Log($"[LMP]: Missing part: '{part.name}'");
             }
             LunaLog.Log("[LMP]: Missing parts end");
-            
+
             LunaLog.Log("[LMP]: Missing resources start");
             foreach (var resource in PartResourceLibrary.Instance.resourceDefinitions.Cast<PartResourceDefinition>().Select(r => r.name)
                 .Where(r => !modFile.AllowedResources.Contains(r)))
@@ -146,7 +146,7 @@ namespace LmpClient.Systems.Mod
             else
             {
                 LunaScreenMsg.PostScreenMessage($"{missingPartsCount} missing part(s) from Common.dll printed to log ({PartLoader.LoadedPartsList.Count} total). " +
-                    $"{missingResourcesCount} missing resources from Common.dll printed to log ({PartResourceLibrary.Instance.resourceDefinitions.Count} total)", 
+                    $"{missingResourcesCount} missing resources from Common.dll printed to log ({PartResourceLibrary.Instance.resourceDefinitions.Count} total)",
                     5f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
