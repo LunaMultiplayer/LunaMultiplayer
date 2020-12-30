@@ -37,8 +37,10 @@ Server/obj/*
 LmpGlobal/*.csproj.user
 LmpGlobal/bin/*
 LmpGlobal/obj/*
-Lidgren.Network.Core/bin/*
-Lidgren.Network.Core/obj/*
+Lidgren.Net/bin/*
+Lidgren.Net/obj/*
+Lidgren.Core/bin/*
+Lidgren.Core/obj/*
 Server/packages
 *.nupkg
 .idea
