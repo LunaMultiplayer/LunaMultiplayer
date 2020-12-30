@@ -74,12 +74,6 @@
     <Compile Include="TimeTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -87,6 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lidgren.Net\Lidgren.Net.csproj">
+      <Project>{dcd22705-5f24-4533-98f9-4907cfbbea54}</Project>
+      <Name>Lidgren.Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\LmpCommon\LmpCommon.projitems" Label="Shared" />
   <Import Project="..\LmpGlobal\LmpGlobal.projitems" Label="Shared" />

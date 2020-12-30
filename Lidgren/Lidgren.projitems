@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>de924f66-77bd-474b-922e-399b361cf20b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Lidgren</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Documentation\ChangedFromV2.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)Documentation\Discovery.html" />
+    <Content Include="$(MSBuildThisFileDirectory)Documentation\Improvements.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)Documentation\PacketLayout.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)Documentation\SimulatingBadNetwork.html" />
+    <Content Include="$(MSBuildThisFileDirectory)Documentation\TODO.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)Documentation\Tutorial.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetAESEncryption.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetBlockEncryptionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetCryptoProviderBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetDESEncryption.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetEncryption.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetRC2Encryption.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetTripleDESEncryption.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetXorEncryption.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Encryption\NetXteaEncryption.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NamespaceDoc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBigInteger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBitVector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBitWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBuffer.Peek.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBuffer.Read.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBuffer.Read.Reflection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBuffer.Write.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetBuffer.Write.Reflection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetConnection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetConnection.Handshake.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetConnection.Latency.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetConnection.MTU.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetConnectionStatistics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetConnectionStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetConstants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetDeliveryMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetFragmentationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetFragmentationInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetIncomingMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetIncomingMessageType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetMessageType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetNatIntroduction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetOutgoingMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.Discovery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.Fragmentation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.Internal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.LatencySimulation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.Logging.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.MessagePools.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeer.Send.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeerConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeerStatistics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetPeerStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetRandom.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetRandom.Implementations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetRandomSeed.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetReceiverChannelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetReliableOrderedReceiver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetReliableSenderChannel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetReliableSequencedReceiver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetReliableUnorderedReceiver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetSenderChannelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetSendResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetSRP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetStoredReliableMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetTime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetTuple.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetUnreliableSenderChannel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetUnreliableSequencedReceiver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetUnreliableUnorderedReceiver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetUPnP.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NetUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platform\PlatformAndroid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platform\PlatformConstrained.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platform\PlatformUnityExtras.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platform\PlatformWin32.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platform\PlatformWinRT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory).editorconfig" />
+  </ItemGroup>
+</Project>

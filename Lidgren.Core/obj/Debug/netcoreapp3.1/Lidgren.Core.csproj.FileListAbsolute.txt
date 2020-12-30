@@ -1,0 +1,9 @@
+C:\Github\LunaMultiplayer\Lidgren.Core\bin\Debug\netcoreapp3.1\Lidgren.Core.deps.json
+C:\Github\LunaMultiplayer\Lidgren.Core\bin\Debug\netcoreapp3.1\Lidgren.Core.dll
+C:\Github\LunaMultiplayer\Lidgren.Core\bin\Debug\netcoreapp3.1\Lidgren.Core.pdb
+C:\Github\LunaMultiplayer\Lidgren.Core\obj\Debug\netcoreapp3.1\Lidgren.Core.csprojAssemblyReference.cache
+C:\Github\LunaMultiplayer\Lidgren.Core\obj\Debug\netcoreapp3.1\Lidgren.Core.AssemblyInfoInputs.cache
+C:\Github\LunaMultiplayer\Lidgren.Core\obj\Debug\netcoreapp3.1\Lidgren.Core.AssemblyInfo.cs
+C:\Github\LunaMultiplayer\Lidgren.Core\obj\Debug\netcoreapp3.1\Lidgren.Core.csproj.CoreCompileInputs.cache
+C:\Github\LunaMultiplayer\Lidgren.Core\obj\Debug\netcoreapp3.1\Lidgren.Core.dll
+C:\Github\LunaMultiplayer\Lidgren.Core\obj\Debug\netcoreapp3.1\Lidgren.Core.pdb
