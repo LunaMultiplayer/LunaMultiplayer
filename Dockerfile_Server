@@ -13,15 +13,13 @@
 
 FROM alpine:edge as builder
 
-RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib wget bash git mono@testing && \
+RUN apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib wget bash && \
     wget https://dot.net/v1/dotnet-install.sh && \
     chmod +x ./dotnet-install.sh && ./dotnet-install.sh -c 5.0
 
 COPY . /LunaMultiplayer
 RUN cd LunaMultiplayer/Server && \
     export PATH=$PATH:/root/.dotnet && \
-    export FrameworkPathOverride=/usr/lib/mono/4.6-api/ && \
     dotnet publish -r linux-musl-x64 -o Publish
 
 FROM alpine:edge
