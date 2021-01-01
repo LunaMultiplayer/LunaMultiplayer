@@ -16,3 +16,7 @@ lmp.anschuetznet.de:8750
 178.33.167.161:8700
 #Piro server Nightly List: http://178.33.167.161:8751/
 178.33.167.161:8750
+#Bloodfallen Server List: s.imexile.moe:8701
+s.imexile.moe:8700
+#Bloodfallen Nightly List: s.imexile.moe:8703
+s.imexile.moe:8702
