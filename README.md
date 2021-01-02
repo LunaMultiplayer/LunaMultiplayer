@@ -78,6 +78,7 @@ You can check [how many servers are up](../../wiki/Master-server-status) and run
 Tekbot | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/212.48.114.221:8701.svg?label=status)](http://212.48.114.221:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/212.48.114.221:8751.svg?label=status)](http://212.48.114.221:8751) |
 [Angryjoshi](https://github.com/Angryjoshi) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8701.svg?label=status)](http://lmp.anschuetznet.de:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.anschuetznet.de:8751.svg?label=status)](http://lmp.anschuetznet.de:8751) |
 Piro | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/178.33.167.161:8701.svg?label=status)](http://178.33.167.161:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/178.33.167.161:8751.svg?label=status)](http://178.33.167.161:8751) |
+[Bloodfallen](https://github.com/Bloodfallen) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/s.imexile.moe:8701.svg?label=status)](http://s.imexile.moe:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/s.imexile.moe:8703.svg?label=status)](http://s.imexile.moe:8703)|
 
 ---
 ### Status:
