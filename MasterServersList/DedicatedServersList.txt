@@ -12,7 +12,7 @@ qingdao.211.network:8800
 #k0r4ll_ksp
 ksp.k0r4ll.link:8800
 #Piro server
-178.33.167.161:8800
+91.126.41.111:8800
 #OrionProject
 77.68.79.83:8800
 #404Republic
