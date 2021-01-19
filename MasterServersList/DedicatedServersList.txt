@@ -28,3 +28,5 @@ s75community.ddns.net:2700
 s75community.ddns.net:2701
 s75community.ddns.net:2702
 s75community.ddns.net:2703
+#Rogue's LUNACY 24/7
+na-1.styxnet.xyz:2197
