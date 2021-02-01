@@ -30,3 +30,5 @@ s75community.ddns.net:2702
 s75community.ddns.net:2703
 #Rogue's LUNACY 24/7
 na-1.styxnet.xyz:2197
+#Scott Manley community server 
+135.23.120.245:8800
