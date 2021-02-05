@@ -20,3 +20,7 @@ lmp.anschuetznet.de:8750
 s.imexile.moe:8700
 #Bloodfallen Nightly List: s.imexile.moe:8703
 s.imexile.moe:8702
+#Alfred (PictoCube). List: http://masterserver.pictocube.fr:8701/
+masterserver.pictocube.fr:8700
+#Alfred (PictoCube) Nightly. List: http://masterserver.pictocube.fr:8711/
+masterserver.pictocube.fr:8710
