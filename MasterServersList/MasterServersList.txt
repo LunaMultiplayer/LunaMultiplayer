@@ -16,7 +16,7 @@ lmp.anschuetznet.de:8750
 91.126.41.111:8700
 #Piro server Nightly List: http://91.126.41.111:8751/
 91.126.41.111:8750
-#Bloodfallen Server List: s.imexile.moe:8701
-s.imexile.moe:8700
-#Bloodfallen Nightly List: s.imexile.moe:8703
-s.imexile.moe:8702
+#Bloodfallen Server List: direct.imexile.moe:8701
+direct.imexile.moe:8700
+#Bloodfallen Nightly List: direct.imexile.moe:8703
+direct.imexile.moe:8702
