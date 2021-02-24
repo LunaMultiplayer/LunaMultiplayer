@@ -32,3 +32,5 @@ s75community.ddns.net:2703
 zeus.styxnet.xyz:2100
 #Scott Manley community server 
 135.23.120.245:8800
+#Ship For Brains Server
+176.58.102.60
