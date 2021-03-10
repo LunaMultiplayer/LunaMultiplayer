@@ -34,3 +34,5 @@ zeus.styxnet.xyz:2100
 135.23.120.245:8800
 #Ship For Brains Server
 176.58.102.60
+#ABrit'sServer
+abrit.ddns.net:8800
