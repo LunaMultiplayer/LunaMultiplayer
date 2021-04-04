@@ -4,10 +4,10 @@
 servers.lunamultiplayer.com:8700
 #Dagger nightly. List: http://servers.lunamultiplayer.com:8751
 servers.lunamultiplayer.com:8750
-#Tekbot. List: http://212.48.114.221:8701/
-212.48.114.221:8701
-#Tekbot Nightly. List: http://212.48.114.221:8751/
-212.48.114.221:8751
+#Tekbot. List: http://168.119.90.137:8701/
+168.119.90.137:8701
+#Tekbot Nightly. List: http://168.119.90.137:8751/
+168.119.90.137:8751
 #Angryjoshi. List: https://lmp.anschuetznet.de/
 lmp.anschuetznet.de:8700
 #Angryjoshi Nightly. List: http://lmp.anschuetznet.de:8751
