@@ -36,3 +36,5 @@ zeus.styxnet.xyz:2100
 176.58.102.60
 #ABrit'sServer
 abrit.ddns.net:8800
+#Tserver
+94.130.146.188:8800
