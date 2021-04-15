@@ -37,4 +37,4 @@ zeus.styxnet.xyz:2100
 #ABrit'sServer
 abrit.ddns.net:8800
 #Tserver
-94.130.146.188:8800
+ksp.trickys.gg:8800
