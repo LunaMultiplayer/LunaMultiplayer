@@ -38,3 +38,5 @@ zeus.styxnet.xyz:2100
 abrit.ddns.net:8800
 #Tserver
 ksp.trickys.gg:8800
+#Esbjerg Space Center
+henriks.casa:8800
