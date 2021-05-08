@@ -40,3 +40,5 @@ abrit.ddns.net:8800
 ksp.trickys.gg:8800
 #Esbjerg Space Center
 henriks.casa:8800
+#Orbit Insertion
+orbitinsertion.ddns.net
