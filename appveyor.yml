@@ -46,7 +46,7 @@ configuration:
 platform: Any CPU
 before_build:
   - ps: 7z e "$env:appveyor_build_folder\External\KSPLibraries\KSPLibraries.7z" -p"$env:ZIPPASSWORD" -o"$env:appveyor_build_folder\External\KSPLibraries"
-  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\
+  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\"
    #Copy harmony dependency
   - ps: xcopy /y /s /e "$env:appveyor_build_folder\External\Dependencies\Harmony\" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\"
   - nuget restore
