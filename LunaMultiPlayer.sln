@@ -9,7 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor.yml = appveyor.yml
 		appveyor_discord.ps = appveyor_discord.ps
 		Scripts\CopyToKSPDirectory.bat = Scripts\CopyToKSPDirectory.bat
-		Dockerfile = Dockerfile
+		Dockerfile_MasterServer = Dockerfile_MasterServer
+		Dockerfile_Server = Dockerfile_Server
 		LMP Readme.txt = LMP Readme.txt
 		LunaMultiplayer.version = LunaMultiplayer.version
 		Postman_Release.txt = Postman_Release.txt
@@ -52,7 +53,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LmpGlobal", "LmpGlobal\LmpG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LmpMasterServer", "LmpMasterServer\LmpMasterServer.csproj", "{13549EDE-D540-47BA-86BC-731BB7DD7BFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Core", "Lidgren.Core\Lidgren.Core.csproj", "{8629F82E-4F6E-41CF-9ED8-884BDE9A0B1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lidgren.Core", "Lidgren.Core\Lidgren.Core.csproj", "{8629F82E-4F6E-41CF-9ED8-884BDE9A0B1E}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Lidgren", "Lidgren\Lidgren.shproj", "{DE924F66-77BD-474B-922E-399B361CF20B}"
 EndProject
