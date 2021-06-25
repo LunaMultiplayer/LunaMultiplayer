@@ -569,7 +569,19 @@ namespace LmpCommon.ModFile.Structure
                 "RCSblock.01.small",
                 "RCSLinearSmall",
                 "flagPartSize1p5",
-                "flagPartSize4"
+                "flagPartSize4",
+                "kerbalEVASlimSuit",
+                "kerbalEVASlimSuitFemale",
+                "rocketNoseCone.v3",
+                "solarPanelOX10C",
+                "solarPanelSP10C",
+                "solarPanelOX10L",
+                "solarPanelSP10L",
+                "fireworksLauncherBig",
+                "fireworksLauncherSmall",
+                "spotLight1.v2",
+                "spotLight2.v2",
+                "EnginePlate5",
             };
         }
 
