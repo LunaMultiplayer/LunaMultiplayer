@@ -67,7 +67,7 @@ after_build:
  - ps: xcopy /y "$env:appveyor_build_folder\LmpClient\Resources\Icons\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
  - ps: xcopy /y "$env:appveyor_build_folder\LmpClient\Resources\Flags\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Flags"
  #Copy harmony dependency
- - ps: xcopy /y /s /e "$env:appveyor_build_folder\External\Dependencies\Harmony\" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData"
+ - ps: xcopy /y /s /e "$env:appveyor_build_folder\External\Dependencies\Harmony\" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\"
  #Master server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
  - ps: xcopy /y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
