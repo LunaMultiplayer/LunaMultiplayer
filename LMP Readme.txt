@@ -6,7 +6,7 @@ Installation:
 ---------------------
 
 Client side:
-- Copy the contents of the folder "LMPClient" to KSP folder. So in KSP/GameData folder you have a "LunaMultiPlayer" folder
+- Copy the contents of the zip file to KSP folder. So in KSP/GameData folder you have both "LunaMultiPlayer" and "000_Harmony" folders
 
 DO NOT put LMPServer in your GameData folder!!!
 
