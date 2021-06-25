@@ -46,6 +46,9 @@ configuration:
 platform: Any CPU
 before_build:
   - ps: 7z e "$env:appveyor_build_folder\External\KSPLibraries\KSPLibraries.7z" -p"$env:ZIPPASSWORD" -o"$env:appveyor_build_folder\External\KSPLibraries"
+  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\
+   #Copy harmony dependency
+  - ps: xcopy /y /s /e "$env:appveyor_build_folder\External\Dependencies\Harmony\" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\"
   - nuget restore
 build:
   parallel: true
@@ -66,8 +69,6 @@ after_build:
  - ps: xcopy /y /s "$env:appveyor_build_folder\LmpClient\ModuleStore\XML\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\PartSync"
  - ps: xcopy /y "$env:appveyor_build_folder\LmpClient\Resources\Icons\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
  - ps: xcopy /y "$env:appveyor_build_folder\LmpClient\Resources\Flags\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Flags"
- #Copy harmony dependency
- - ps: xcopy /y /s /e "$env:appveyor_build_folder\External\Dependencies\Harmony\" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\"
  #Master server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
  - ps: xcopy /y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
