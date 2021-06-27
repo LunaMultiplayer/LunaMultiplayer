@@ -6,9 +6,9 @@
 148.251.92.44:8801
 148.251.92.44:8800
 #KerbCat
-chengdu.211.network:8800
-beijing.211.network:8800
-qingdao.211.network:8800
+shanghai.211.network:8800
+shanghai.211.network:8801
+shanghai.211.network:8802
 #k0r4ll_ksp
 ksp.k0r4ll.link:8800
 #Piro server
