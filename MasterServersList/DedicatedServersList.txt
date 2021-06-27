@@ -44,3 +44,5 @@ henriks.casa:8800
 174.93.240.195:9090
 #Orbit
 orbit.ddns.net:8800
+checha.serveminecraft.net:8800
+checha.serveminecraft.net:8888
