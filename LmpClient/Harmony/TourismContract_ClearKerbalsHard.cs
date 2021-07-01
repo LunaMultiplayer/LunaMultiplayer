@@ -9,14 +9,14 @@ using LmpCommon.Enums;
 namespace LmpClient.Harmony
 {
     /// <summary>
-    /// This harmony patch is intended to remove the tourist kerbals from the server when finishing/declining/cancelling tourism contracts
+    /// This harmony patch is intended to remove the tourist kerbals from the server when declining/fail tourism contracts
     /// </summary>
     [HarmonyPatch(typeof(TourismContract))]
-    [HarmonyPatch("ClearKerbalsSoft")]
-    public class TourismContract_ClearKerbalsSoft
+    [HarmonyPatch("ClearKerbalsHard")]
+    public class TourismContract_ClearKerbalsHard
     {
         [HarmonyPostfix]
-        private static void PostfixClearKerbalsSoft(TourismContract __instance)
+        private static void PostfixClearKerbalsHard(TourismContract __instance)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
             if (ShareContractsSystem.Singleton.IgnoreEvents) return;

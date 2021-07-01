@@ -197,6 +197,7 @@
     <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />
     <Compile Include="Harmony\SpaceTracking_StartTrackingObject.cs" />
     <Compile Include="Harmony\KerbalEVA_proceedAndBoard.cs" />
+    <Compile Include="Harmony\TourismContract_ClearKerbalsHard.cs" />
     <Compile Include="Harmony\TourismContract_ClearKerbalsSoft.cs" />
     <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
