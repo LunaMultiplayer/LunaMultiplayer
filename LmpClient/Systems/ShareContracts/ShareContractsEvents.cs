@@ -2,6 +2,7 @@
 using Contracts.Templates;
 using LmpClient.Base;
 using LmpClient.Systems.Lock;
+using LmpClient.Systems.Scenario;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
 
@@ -97,6 +98,10 @@ namespace LmpClient.Systems.ShareContracts
             Doesn't need to be synchronized because there is no ContractFinished state.
             Also the contract will be finished on the contract complete / failed / cancelled / ...
             */
+
+            //Update the scenarios in the server since a part has to be removed
+            if (contract is PartTest)
+                ScenarioSystem.Singleton.SendScenarioModules();
         }
 
         public void ContractOffered(Contract contract)
