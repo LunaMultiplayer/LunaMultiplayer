@@ -6,6 +6,7 @@ using LmpCommon.Message;
 using LmpCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 #if DEBUG
@@ -33,7 +34,9 @@ namespace LmpClient.Network
             PingInterval = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.HearbeatMsInterval).TotalSeconds,
             ConnectionTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds,
             MaximumTransmissionUnit = SettingsSystem.CurrentSettings.Mtu,
-            AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu
+            AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu,
+            LocalAddress = IPAddress.IPv6Any,
+            DualStack = true
         };
 
         public static NetClient ClientConnection { get; private set; }

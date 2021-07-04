@@ -1,12 +1,16 @@
 ﻿using Lidgren.Network;
 using LmpCommon.Xml;
 using System;
+using System.Net;
 
 namespace Server.Settings.Definition
 {
     [Serializable]
     public class ConnectionSettingsDefinition
     {
+        [XmlComment(Value = "The address the server listens on. If set to the unspecified IPv6 address [::], the server listens for both IPv6 and IPv4")]
+        public string ListenAddress { get; set; } = IPAddress.Any.ToString();
+
         [XmlComment(Value = "The UDP port the server listens on. You don't need to open it on your router if RegisterWithMasterServer = true. " +
                             "If you want that players can connect against your server MANUALLY you will need to open it on your router")]
         public int Port { get; set; } = 8800;
