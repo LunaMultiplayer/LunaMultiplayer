@@ -11,15 +11,10 @@
 #Start a container with: docker start lmpsrv
 #Remove a container with: docker container rm lmpsrv
 
-FROM alpine:edge as builder
-
-RUN apk add icu-libs krb5-libs libgcc libintl libssl1.1 libstdc++ zlib wget bash && \
-    wget https://dot.net/v1/dotnet-install.sh && \
-    chmod +x ./dotnet-install.sh && ./dotnet-install.sh -c 5.0
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine as builder
 
 COPY . /LunaMultiplayer
 RUN cd LunaMultiplayer/Server && \
-    export PATH=$PATH:/root/.dotnet && \
     dotnet publish -r linux-musl-x64 -o Publish
 
 FROM alpine:edge
