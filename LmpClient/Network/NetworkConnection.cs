@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using LmpClient.Base;
+using LmpClient.ModuleStore.Patching;
 using LmpClient.Systems.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon;
@@ -8,7 +9,6 @@ using LmpCommon.Message.Base;
 using System;
 using System.Net;
 using System.Threading;
-using LmpClient.ModuleStore.Patching;
 
 namespace LmpClient.Network
 {
