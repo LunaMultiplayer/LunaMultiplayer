@@ -9,6 +9,8 @@ using Server.Log;
 using Server.Settings.Structures;
 using Server.Utilities;
 using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace Server.Server
@@ -20,6 +22,17 @@ namespace Server.Server
 
         public static void SetupLidgrenServer()
         {
+            if (!IPAddress.TryParse(ConnectionSettings.SettingsStore.ListenAddress, out var listenAddress))
+            {
+                LunaLog.Warning("Could not parse ListenAddress, falling back to 0.0.0.0");
+                listenAddress = IPAddress.Any;
+            };
+            ServerContext.Config.LocalAddress = listenAddress;
+            // Listen on dual-stack for the unspecified address in IPv6 format ([::]).
+            if (ServerContext.Config.LocalAddress.Equals(IPAddress.IPv6Any))
+            {
+                ServerContext.Config.DualStack = true;
+            }
             ServerContext.Config.Port = ConnectionSettings.SettingsStore.Port;
             ServerContext.Config.AutoExpandMTU = ConnectionSettings.SettingsStore.AutoExpandMtu;
             ServerContext.Config.MaximumTransmissionUnit = ConnectionSettings.SettingsStore.MaximumTransmissionUnit;
