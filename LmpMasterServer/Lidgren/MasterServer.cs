@@ -14,6 +14,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LmpMasterServer.Lidgren
@@ -97,14 +98,22 @@ namespace LmpMasterServer.Lidgren
 
         private static void CheckMasterServerListed()
         {
-            var ownEndpoint = new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), Port);
-            if (!MasterServerRetriever.MasterServers.Contains(ownEndpoint))
+            var ownAddress = LunaNetUtils.GetOwnExternalIpAddress();
+            if (ownAddress != null)
             {
-                LunaLog.Error($"You're not in the master-servers URL ({RepoConstants.MasterServersListShortUrl}) Clients/Servers won't see you");
+                var ownEndpoint = new IPEndPoint(ownAddress, Port);
+                if (!MasterServerRetriever.MasterServers.Contains(ownEndpoint))
+                {
+                    LunaLog.Error($"You're not listed in the master servers list ({RepoConstants.MasterServersListShortUrl}). Clients/Servers won't see you");
+                }
+                else
+                {
+                    LunaLog.Normal("You're correctly listed in the master servers list");
+                }
             }
             else
             {
-                LunaLog.Normal("Own ip correctly listed in master - servers URL");
+                LunaLog.Error("Could not retrieve own external IP address, master server likely won't function properly");
             }
         }
 
@@ -132,11 +141,31 @@ namespace LmpMasterServer.Lidgren
                         var msgData = (MsIntroductionMsgData)message.Data;
                         if (ServerDictionary.TryGetValue(msgData.Id, out var server))
                         {
-                            LunaLog.Normal($"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
-                            peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
-                                msgData.InternalEndpoint,// client internal
-                                netMsg.SenderEndPoint,// client external
-                                msgData.Token); // request token
+                            _ = Task.Run(() =>
+                            {
+                                if (!server.InternalEndpoint6.Address.Equals(IPAddress.IPv6Loopback)
+                                    && !server.InternalEndpoint6.Address.Equals(IPAddress.IPv6Loopback))
+                                {
+                                    // Both client and server are listening on IPv6, try an IPv6 firewall punchthrough
+                                    // This also triggers a first punchthrough on IPv4 with the public addresses
+                                    LunaLog.Normal(
+                                        $"INTRODUCTION request from: {msgData.InternalEndpoint6} to server: {server.InternalEndpoint6}");
+                                    peer.Introduce(server.InternalEndpoint6, server.ExternalEndpoint,
+                                        msgData.InternalEndpoint6, // client internal
+                                        netMsg.SenderEndPoint, // client external
+                                        msgData.Token); // request token
+
+                                    // Give the first introduction attempt some time
+                                    Thread.Sleep(50);
+                                }
+
+                                LunaLog.Normal(
+                                    $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
+                                peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
+                                    msgData.InternalEndpoint, // client internal
+                                    netMsg.SenderEndPoint, // client external
+                                    msgData.Token); // request token
+                            });
                         }
                         else
                         {
@@ -173,6 +202,7 @@ namespace LmpMasterServer.Lidgren
                 msgData.ExternalEndpoint = server.ExternalEndpoint;
                 msgData.GameMode = server.GameMode;
                 msgData.InternalEndpoint = server.InternalEndpoint;
+                msgData.InternalEndpoint6 = server.InternalEndpoint6;
                 msgData.MaxPlayers = server.MaxPlayers;
                 msgData.ModControl = server.ModControl;
                 msgData.DedicatedServer = server.DedicatedServer;

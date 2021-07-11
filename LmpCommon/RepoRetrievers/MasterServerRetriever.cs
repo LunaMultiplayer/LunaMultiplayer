@@ -66,7 +66,7 @@ namespace LmpCommon.RepoRetrievers
                             }
                             catch (Exception)
                             {
-                                //Ignore the bad server   
+                                //Ignore the bad server
                             }
                         }
                     }

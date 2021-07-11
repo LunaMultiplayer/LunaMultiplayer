@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace LmpCommon
 {
-    public class LunaNetUtils
+    public static class LunaNetUtils
     {
         public static bool IsTcpPortInUse(int port)
         {
@@ -56,7 +56,7 @@ namespace LmpCommon
             return IPAddress.Any;
         }
 
-        public static IPAddress GetOwnInternalIpAddress()
+        public static IPAddress GetOwnInternalIPv4Address()
         {
             var ni = GetNetworkInterface();
             if (ni == null)
@@ -76,6 +76,47 @@ namespace LmpCommon
             return IPAddress.Loopback;
         }
 
+        public static UnicastIPAddressInformation GetOwnInternalIPv6Network()
+        {
+            var ni = GetNetworkInterface();
+            if (ni == null)
+            {
+                return null;
+            }
+
+            var properties = ni.GetIPProperties();
+            foreach (var unicastAddress in properties.UnicastAddresses)
+            {
+                if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetworkV6
+                                                    && !unicastAddress.Address.IsIPv6UniqueLocal() && !unicastAddress.Address.IsIPv6LinkLocal
+                                                    && !unicastAddress.Address.IsIPv6SiteLocal && !unicastAddress.Address.IsIPv6Teredo)
+                {
+                    return unicastAddress;
+                }
+            }
+
+            return null;
+        }
+
+        public static IPAddress GetOwnInternalIPv6Address()
+        {
+            var info = GetOwnInternalIPv6Network();
+            if (info == null)
+                return IPAddress.IPv6Loopback;
+
+            return info.Address;
+        }
+
+        /// <summary>
+        /// Gets whether the address is an IPv6 Unique Local address.
+        /// Backport of https://github.com/dotnet/runtime/pull/48853 landing in .NET 6
+        /// </summary>
+        private static bool IsIPv6UniqueLocal(this IPAddress address)
+        {
+            var firstBytes = (ushort)address.GetAddressBytes()[0];
+            return address.AddressFamily == AddressFamily.InterNetworkV6 && (firstBytes & 0xFE00) == 0xFC00;
+        }
+
         public static IPAddress GetOwnExternalIpAddress()
         {
             var currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
@@ -90,19 +131,25 @@ namespace LmpCommon
             return IPAddress.TryParse(currentIpAddress, out var ipAddress) ? ipAddress : null;
         }
 
+        // TODO IPv6: This does not return AAAA records of hostnames.
+        // However it is only used to parse the dedicated and master server list, which for one is mostly hostnames,
+        // and tight now we rely on server/client<->master server connections being done IPv4-only, so the master
+        // server gets the public IPv4 address.
         public static IPEndPoint CreateEndpointFromString(string endpoint)
         {
             try
             {
-                if (IPAddress.TryParse(endpoint.Split(':')[0].Trim(), out var ip))
-                {
-                    return new IPEndPoint(ip, int.Parse(endpoint.Split(':')[1].Trim()));
-                }
+                    // [2001:db8::1]:8800
+                    // 192.0.2.1:8800
+                    var indexOfPortSeparator = endpoint.LastIndexOf(":", StringComparison.Ordinal);
+                    var ip = endpoint.Substring(0, indexOfPortSeparator);
+                    var port = int.Parse(endpoint.Substring(indexOfPortSeparator + 1));
+                    if (IPAddress.TryParse(ip, out var addr))
+                        return new IPEndPoint(addr, port);
 
-                var dnsIp = Dns.GetHostAddresses(endpoint.Split(':')[0].Trim());
-                var port = int.Parse(endpoint.Split(':')[1].Trim());
-                var ipv4Address = dnsIp.FirstOrDefault(d => d.AddressFamily == AddressFamily.InterNetwork);
-                return ipv4Address != null ? new IPEndPoint(ipv4Address, port) : null;
+                    var dnsIp = Dns.GetHostAddresses(ip.Trim());
+                    var ipv4Address = dnsIp.FirstOrDefault(d => d.AddressFamily == AddressFamily.InterNetwork);
+                    return ipv4Address != null ? new IPEndPoint(ipv4Address, port) : null;
             }
             catch (Exception)
             {
@@ -110,16 +157,15 @@ namespace LmpCommon
             }
         }
 
-        public static IPAddress CreateAddressFromString(string ipAddress)
+        public static IPAddress[] CreateAddressFromString(string address)
         {
             try
             {
-                if (IPAddress.TryParse(ipAddress, out var ip))
+                if (IPAddress.TryParse(address, out var ip))
                 {
-                    return ip;
+                    return new []{ ip };
                 }
-
-                return Dns.GetHostAddresses(ipAddress)[0];
+                return Dns.GetHostAddresses(address);
             }
             catch (Exception)
             {

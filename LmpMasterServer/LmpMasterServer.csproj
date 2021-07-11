@@ -154,11 +154,8 @@
   <Import Project="..\LmpCommon\LmpCommon.projitems" Label="Shared" />
   <Import Project="..\LmpGlobal\LmpGlobal.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(OS)' != 'Unix'">
-    <PostBuildEvent>xcopy /y /s "$(TargetDir)*.*" "$(SolutionDir)MasterServer\bin\$(ConfigurationName)"</PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent />
+    <PostBuildEvent Condition="'$(OS)' != 'Unix'">xcopy /y /s "$(TargetDir)*.*" "$(SolutionDir)MasterServer\bin\$(ConfigurationName)"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\External\Nuget\Microsoft.VisualStudio.Threading.Analyzers.16.10.56\build\Microsoft.VisualStudio.Threading.Analyzers.targets" Condition="Exists('..\External\Nuget\Microsoft.VisualStudio.Threading.Analyzers.16.10.56\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

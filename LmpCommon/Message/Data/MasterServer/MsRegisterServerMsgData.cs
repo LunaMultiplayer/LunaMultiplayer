@@ -14,6 +14,7 @@ namespace LmpCommon.Message.Data.MasterServer
         public long Id;
         public string ServerVersion;
         public IPEndPoint InternalEndpoint;
+        public IPEndPoint InternalEndpoint6;
         public bool Password;
         public bool Cheats;
         public bool ModControl;
@@ -41,6 +42,7 @@ namespace LmpCommon.Message.Data.MasterServer
             lidgrenMsg.Write(Id);
             lidgrenMsg.Write(ServerVersion);
             lidgrenMsg.Write(InternalEndpoint);
+            lidgrenMsg.Write(InternalEndpoint6);
 
             lidgrenMsg.Write(Password);
             lidgrenMsg.Write(Cheats);
@@ -72,6 +74,8 @@ namespace LmpCommon.Message.Data.MasterServer
             Id = lidgrenMsg.ReadInt64();
             ServerVersion = lidgrenMsg.ReadString();
             InternalEndpoint = lidgrenMsg.ReadIPEndPoint();
+            // ReadIPEndPoint supports IPv6 addresses despite saying otherwise in the code doc.
+            InternalEndpoint6 = lidgrenMsg.ReadIPEndPoint();
 
             Password = lidgrenMsg.ReadBoolean();
             Cheats = lidgrenMsg.ReadBoolean();
@@ -99,9 +103,10 @@ namespace LmpCommon.Message.Data.MasterServer
         internal override int InternalGetMessageSize()
         {
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
-            return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() + sizeof(byte) +
-                sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + CountryCode.GetByteCount() + Website.GetByteCount() +
-                   WebsiteText.GetByteCount() + sizeof(bool) * 3;
+            return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() +
+                   InternalEndpoint.GetByteCount() + InternalEndpoint6.GetByteCount() + sizeof(byte) +
+                   sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() +
+                   CountryCode.GetByteCount() + Website.GetByteCount() + WebsiteText.GetByteCount() + sizeof(bool) * 3;
         }
     }
 }

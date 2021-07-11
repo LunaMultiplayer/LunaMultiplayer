@@ -25,7 +25,7 @@ namespace LmpCommon.Time
         private const int TimeSyncIntervalMs = 30 * 1000;
 
         /// <summary>
-        /// Static constructor where we create the time that syncs time with the time providers every 10 seconds
+        /// Static constructor where we create the timer that syncs time with the time providers every 10 seconds
         /// </summary>
         static LunaNetworkTime() => Timer = new Timer(_ => RefreshTimeDifference(), null, 0, TimeSyncIntervalMs);
 
