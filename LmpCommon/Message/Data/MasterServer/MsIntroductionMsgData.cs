@@ -13,6 +13,7 @@ namespace LmpCommon.Message.Data.MasterServer
 
         public long Id;
         public IPEndPoint InternalEndpoint;
+        public IPEndPoint InternalEndpoint6;
         public string Token;
 
         public override string ClassName { get; } = nameof(MsIntroductionMsgData);
@@ -23,6 +24,7 @@ namespace LmpCommon.Message.Data.MasterServer
 
             lidgrenMsg.Write(Id);
             lidgrenMsg.Write(InternalEndpoint);
+            lidgrenMsg.Write(InternalEndpoint6);
             lidgrenMsg.Write(Token);
         }
 
@@ -32,12 +34,15 @@ namespace LmpCommon.Message.Data.MasterServer
 
             Id = lidgrenMsg.ReadInt64();
             InternalEndpoint = lidgrenMsg.ReadIPEndPoint();
+            // ReadIPEndPoint supports IPv6 addresses despite saying otherwise in the code doc.
+            InternalEndpoint6 = lidgrenMsg.ReadIPEndPoint();
             Token = lidgrenMsg.ReadString();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(long) + InternalEndpoint.GetByteCount() + Token.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(long) + InternalEndpoint.GetByteCount() +
+                   InternalEndpoint6.GetByteCount() + Token.GetByteCount();
         }
     }
 }

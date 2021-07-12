@@ -38,6 +38,7 @@
 - [x] [Interpolation](http://www.gabrielgambetta.com/entity-interpolation.html) so the vessels won't jump when there are bad network conditions.
 - [x] Multilanguage.
 - [x] [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
+- [x] [IPv6](https://en.wikipedia.org/wiki/IPv6) support for client<->server connections, allowing connection setup even behind symmetric IPv4 NAT
 - [x] Servers displayed within the mod.
 - [x] Settings saved as XML.
 - [x] [UPnP](https://en.wikipedia.org/wiki/Universal_Plug_and_Play) support for servers and [master servers](../../wiki/Master-server)

@@ -30,8 +30,10 @@ namespace LmpClient.Systems.SettingsSys
         public float TimeoutSeconds { get; set; } = 15;
         public ServerFilters ServerFilters { get; set; } = new ServerFilters();
 
+        public string CustomMasterServer { get; set; } = "";
+
         /*
-         * You can use this debug switches for testing purposes. 
+         * You can use this debug switches for testing purposes.
          * For example do one part or the code or another in case the debugX is on/off
          * NEVER upload the code with those switches in use as some other developer might need them!!!!!
          */

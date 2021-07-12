@@ -34,6 +34,7 @@ namespace LmpMasterServer.Structure
         public void Update(MsRegisterServerMsgData msg)
         {
             InternalEndpoint = msg.InternalEndpoint;
+            InternalEndpoint6 = msg.InternalEndpoint6;
             LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
             Cheats = msg.Cheats;
             Password = msg.Password;

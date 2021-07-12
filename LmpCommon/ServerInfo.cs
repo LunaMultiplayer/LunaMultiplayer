@@ -7,10 +7,13 @@ namespace LmpCommon
         public long Id { get; set; }
         public string Country { get; set; }
         public IPEndPoint InternalEndpoint { get; set; }
+        public IPEndPoint InternalEndpoint6 { get; set; }
         public IPEndPoint ExternalEndpoint { get; set; }
         public string ServerVersion { get; set; }
         public string DisplayedPing { get; set; } = "?";
+        public string DisplayedPing6 { get; set; } = "?";
         public int Ping { get; set; } = int.MaxValue;
+        public int Ping6 { get; set; } = int.MaxValue;
         public bool Password { get; set; }
         public bool Cheats { get; set; }
         public int GameMode { get; set; }
