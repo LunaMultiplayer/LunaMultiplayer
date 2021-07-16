@@ -46,5 +46,7 @@ henriks.casa:8800
 orbit.ddns.net:8800
 checha.ru:8800
 checha.ru:8888
+#WhiteWolf Gaming AU
+games.kuemedia.com.au:8800
 #KSPAkidofou
 eur-2.styxnet.xyz:2161
