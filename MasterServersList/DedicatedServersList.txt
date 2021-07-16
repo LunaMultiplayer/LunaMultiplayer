@@ -47,6 +47,7 @@ orbit.ddns.net:8800
 checha.ru:8800
 checha.ru:8888
 #WhiteWolf Gaming AU
-games.kuemedia.com.au:8800
+games.kuemedia.com.au:8800 (Sandbox)
+games.kuemedia.com.au:8801 (Modded Sandbox)
 #KSPAkidofou
 eur-2.styxnet.xyz:2161
