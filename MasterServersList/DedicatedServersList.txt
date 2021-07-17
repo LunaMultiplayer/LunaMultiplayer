@@ -1,4 +1,4 @@
-#Here you specify the ips or hostnames of all the dedicated servers followed by ":" and the port. 
+#Here you specify the ips or hostnames of all the dedicated servers followed by ":" and the port.
 #Then each master server will look if the server is on this list and tell the clients if it's a dedicated server or not
 #It will appear with a rainbow effect on the browser or with the custom color specified in the DedicatedServerSettings.xml
 
@@ -30,7 +30,7 @@ s75community.ddns.net:2702
 s75community.ddns.net:2703
 #Rogue's LUNACY 24/7
 zeus.styxnet.xyz:2100
-#Scott Manley community server 
+#Scott Manley community server
 135.23.120.245:8800
 #Ship For Brains Server
 176.58.102.60
@@ -46,8 +46,9 @@ henriks.casa:8800
 orbit.ddns.net:8800
 checha.ru:8800
 checha.ru:8888
-#WhiteWolf Gaming AU
-games.kuemedia.com.au:8800 (Sandbox)
-games.kuemedia.com.au:8801 (Modded Sandbox)
+#WhiteWolf Gaming AU (Sandbox)
+games.kuemedia.com.au:8800
+#WhiteWolf Gaming AU (Modded Sandbox)
+games.kuemedia.com.au:8801
 #KSPAkidofou
 eur-2.styxnet.xyz:2161
