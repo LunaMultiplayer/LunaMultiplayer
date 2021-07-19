@@ -52,3 +52,5 @@ games.kuemedia.com.au:8800
 games.kuemedia.com.au:8801
 #KSPAkidofou
 eur-2.styxnet.xyz:2161
+#Space Homies
+eur-2.styxnet.xyz:2108
