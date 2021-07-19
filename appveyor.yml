@@ -22,7 +22,7 @@ image: Visual Studio 2019
 #---------------------------------#
 
 environment:
-  smallversion: 0.28.0
+  smallversion: 0.29.0
   WEBHOOK_URL:
     secure: bhCOtyDF+wInocIkKfUQdxpM4csyVv7cxhUGz0NzLnFrlEZsaviEDJeDbctuv4NBM4xPkl4Wpv3rb6VwNcvEr8IWW5Te0P/kx1VeNMD5espcLKzMwy46shi630b3wvIipOeBnupc6nsiw7/2liuNhJkvjdyu4wxQXVDVWNSi+t0=
   ZIPPASSWORD:
