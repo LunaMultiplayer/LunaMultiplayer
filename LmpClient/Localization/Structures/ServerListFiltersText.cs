@@ -4,7 +4,8 @@
     {
         public string Title { get; set; } = "Server list";
         public string NoServers { get; set; } = "No servers!";
-        public string Ping { get; set; } = "Ping";
+        public string Ping { get; set; } = "IPv4 Ping";
+        public string Ping6 { get; set; } = "IPv6 Ping";
         public string Players { get; set; } = "Players";
         public string MaxPlayers { get; set; } = "Max players";
         public string Mode { get; set; } = "Mode";

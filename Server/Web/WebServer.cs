@@ -38,7 +38,32 @@ namespace Server.Web
                 {
                     if (!LunaNetUtils.IsTcpPortInUse(WebsiteSettings.SettingsStore.Port))
                     {
-                        Server.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Any, WebsiteSettings.SettingsStore.Port)));
+                        IPAddress listenAddress;
+                        if (!string.IsNullOrEmpty(WebsiteSettings.SettingsStore.ListenAddress))
+                        {
+                            // Custom ListenAddress for web server, parse it
+                            if (!IPAddress.TryParse(WebsiteSettings.SettingsStore.ListenAddress, out listenAddress))
+                            {
+                                // Parsing failed, fall back to IPAddress.Any
+                                LunaLog.Warning(
+                                    "Could not parse ListenAddress for web server, falling back to 0.0.0.0");
+                            }
+                        }
+                        else
+                        {
+                            // ListenAddress unset for web server, try the one of the game server
+                            IPAddress.TryParse(ConnectionSettings.SettingsStore.ListenAddress, out listenAddress);
+                        }
+
+                        listenAddress ??= IPAddress.Any;
+                        var listener = new TcpListener(listenAddress, WebsiteSettings.SettingsStore.Port);
+                        // Listen on dual-stack for the unspecified address in IPv6 format ([::]).
+                        if (listenAddress.Equals(IPAddress.IPv6Any))
+                        {
+                            listener.Server.DualMode = true;
+                        }
+
+                        Server.Use(new TcpListenerAdapter(listener));
                         Server.Use(new ExceptionHandler());
                         Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
                         Server.Use(new FileHandler());

@@ -60,10 +60,16 @@ namespace LmpClient.Network
         /// </summary>
         public static void ReceiveMain()
         {
+            LunaLog.Log("[LMP]: Receive thread started");
             try
             {
                 while (!NetworkConnection.ResetRequested)
                 {
+                    while (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
+                    {
+                        Thread.Sleep(50);
+                    }
+
                     if (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {
                         switch (msg.MessageType)
@@ -73,6 +79,9 @@ namespace LmpClient.Network
                                 break;
                             case NetIncomingMessageType.VerboseDebugMessage:
                                 LunaLog.Log($"[Lidgren VERBOSE] {msg.ReadString()}");
+                                break;
+                            case NetIncomingMessageType.WarningMessage:
+                                LunaLog.Log($"[Lidgren WARNING] {msg.ReadString()}");
                                 break;
                             case NetIncomingMessageType.NatIntroductionSuccess:
                                 NetworkServerList.HandleNatIntroduction(msg);
@@ -120,9 +129,10 @@ namespace LmpClient.Network
             }
             catch (Exception e)
             {
-                LunaLog.LogError($"[LMP]: Receive message thread error: {e}");
+                LunaLog.LogError($"[LMP]: Receive thread error: {e}");
                 NetworkMain.HandleDisconnectException(e);
             }
+            LunaLog.Log("[LMP]: Receive thread exited");
         }
 
         /// <summary>

@@ -108,7 +108,8 @@ namespace LmpMasterServer.Http.Handlers
 
             writer.RenderBeginTag("thead");
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
-            writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("Address"); writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("IPv4 Address"); writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("IPv6 Address"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("Country"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("Password"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("Name"); writer.RenderEndTag();
@@ -131,6 +132,7 @@ namespace LmpMasterServer.Http.Handlers
                 {
                     writer.RenderBeginTag(HtmlTextWriterTag.Tr);
                     writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.ExternalEndpoint)); writer.RenderEndTag();
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.InternalEndpoint6)); writer.RenderEndTag();
                     writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.Country)); writer.RenderEndTag();
                     writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.Password)); writer.RenderEndTag();
                     writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(HttpUtility.HtmlEncode(server.ServerName)); writer.RenderEndTag();

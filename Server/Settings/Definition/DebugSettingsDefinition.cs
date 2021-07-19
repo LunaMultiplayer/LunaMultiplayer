@@ -17,5 +17,8 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Minimum latency that a packet will have")]
         public int MinSimulatedLatencyMs { get; set; } = 0;
+
+        [XmlComment(Value = "Custom master server to register with for debugging purposes")]
+        public string CustomMasterServer { get; set; } = "";
     }
 }

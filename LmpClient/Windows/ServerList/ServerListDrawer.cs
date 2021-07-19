@@ -9,7 +9,7 @@ namespace LmpClient.Windows.ServerList
 {
     public partial class ServerListWindow
     {
-        private static readonly float[] HeaderGridSize = new float[14];
+        private static readonly float[] HeaderGridSize = new float[15];
 
         #region Servers grid
 
@@ -79,7 +79,7 @@ namespace LmpClient.Windows.ServerList
             if (Event.current.type == EventType.Repaint) HeaderGridSize[3] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(65));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping))
             {
                 _orderBy = "Ping";
@@ -87,12 +87,20 @@ namespace LmpClient.Windows.ServerList
             if (Event.current.type == EventType.Repaint) HeaderGridSize[4] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(65));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping6))
+            {
+                _orderBy = "Ping6";
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players))
             {
                 _orderBy = "PlayerCount";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
@@ -100,7 +108,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "MaxPlayers";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
@@ -108,7 +116,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "GameMode";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(75));
@@ -116,7 +124,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "WarpMode";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
@@ -124,7 +132,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "TerrainQuality";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
@@ -132,7 +140,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "Cheats";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[11] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(220));
@@ -140,7 +148,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "ServerName";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[11] = GUILayoutUtility.GetLastRect().width > 220 ? GUILayoutUtility.GetLastRect().width : 220;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[12] = GUILayoutUtility.GetLastRect().width > 220 ? GUILayoutUtility.GetLastRect().width : 220;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(150));
@@ -148,7 +156,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "WebsiteText";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[12] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[13] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(600));
@@ -156,7 +164,7 @@ namespace LmpClient.Windows.ServerList
             {
                 _orderBy = "Description";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[13] = GUILayoutUtility.GetLastRect().width > 600 ? GUILayoutUtility.GetLastRect().width : 600;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[14] = GUILayoutUtility.GetLastRect().width > 600 ? GUILayoutUtility.GetLastRect().width : 600;
             GUILayout.EndHorizontal();
 
             GUILayout.EndHorizontal();
@@ -234,45 +242,49 @@ namespace LmpClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[5]));
-            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[5]));
+            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing6}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[5]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[6]));
-            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[6]));
+            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[6]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[7]));
-            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[7]));
+            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[7]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[8]));
-            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[8]));
+            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[8]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[9]));
-            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[9]));
+            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[9]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[10]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[10]));
+            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[10]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[11]));
-            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[11]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[11]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[12]));
+            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[12]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[13]));
             if (!string.IsNullOrEmpty(currentEntry.Website))
             {
-                if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), GetCorrectHyperlinkLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[12])))
+                if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), GetCorrectHyperlinkLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[13])))
                 {
                     Application.OpenURL(currentEntry.Website);
                 }
             }
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[13]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[13]));
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[14]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), GetCorrectLabelStyle(currentEntry), GUILayout.MinWidth(HeaderGridSize[14]));
             GUILayout.EndHorizontal();
 
             ColorEffect.StopPaintingServer();
