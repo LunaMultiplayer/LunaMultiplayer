@@ -52,7 +52,7 @@ games.kuemedia.com.au:8800
 games.kuemedia.com.au:8801
 #KSPAkidofou
 eur-2.styxnet.xyz:2161
-#Space Homies
+#Career Unlimited
 eur-2.styxnet.xyz:2108
 #LPS
 70.187.201.106:8800
