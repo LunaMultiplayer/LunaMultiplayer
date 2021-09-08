@@ -2,7 +2,7 @@
 
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SettingsIcon>Indstillinger</SettingsIcon>
-  <ServerIcon>Servers</ServerIcon>
+  <ServerIcon>Servere</ServerIcon>
   <ConnectIcon>Tilslut</ConnectIcon>
   <DisconnectIcon>Koble fra</DisconnectIcon>
   <SyncIcon>Warp til</SyncIcon>
@@ -23,8 +23,8 @@
   <NukeIcon>Nuke KSC</NukeIcon>
   <RestartServerIcon>Genstart server</RestartServerIcon>
   <DownloadIcon>Download</DownloadIcon>
-  <CycleFirstIcon>First</CycleFirstIcon>
-  <CyclePreviousIcon>Previous</CyclePreviousIcon>
-  <CycleNextIcon>Next</CycleNextIcon>
-  <CycleLastIcon>Last</CycleLastIcon>
+  <CycleFirstIcon>Først</CycleFirstIcon>
+  <CyclePreviousIcon>Tidligere</CyclePreviousIcon>
+  <CycleNextIcon>Næste</CycleNextIcon>
+  <CycleLastIcon>Sidst</CycleLastIcon>
 </ButtonTooltips>
