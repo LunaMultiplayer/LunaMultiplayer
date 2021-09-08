@@ -54,3 +54,5 @@ games.kuemedia.com.au:8801
 eur-2.styxnet.xyz:2161
 #Space Homies
 eur-2.styxnet.xyz:2108
+#LPS
+70.187.201.106:8800
