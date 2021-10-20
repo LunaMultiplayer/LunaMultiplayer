@@ -36,7 +36,7 @@ namespace Server.Web.Structures
                 Lat = lat;
             if (double.TryParse(vessel.Fields.GetSingle("lon").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var lon))
                 Lon = lon;
-            if (double.TryParse(vessel.Fields.GetSingle("distanceTraveled").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var alt))
+            if (double.TryParse(vessel.Fields.GetSingle("alt").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var alt))
                 Alt = alt;
             if (double.TryParse(vessel.Orbit.GetSingle("SMA").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var sma))
                 SemiMajorAxis = sma;
