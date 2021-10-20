@@ -33,7 +33,7 @@ namespace Server.Web.Structures
             if (double.TryParse(vessel.Fields.GetSingle("distanceTraveled").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var dist))
                 DistanceTravelled = dist;
             if (double.TryParse(vessel.Fields.GetSingle("lat").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var lat))
-                Lat = dist;
+                Lat = lat;
             if (double.TryParse(vessel.Fields.GetSingle("lon").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var lon))
                 Lon = lon;
             if (double.TryParse(vessel.Fields.GetSingle("distanceTraveled").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var alt))
