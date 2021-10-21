@@ -30,10 +30,16 @@ namespace Server.Context
         {
             LunaLog.Debug($"Loading universe... {GetUniverseSize()}{ByteSize.KiloByteSymbol}");
 
-            if (FileHandler.FileExists(ServerContext.OldModFilePath))
-                FileHandler.MoveFile(ServerContext.OldModFilePath, ServerContext.ModFilePath);
+            if (!FileHandler.FolderExists(ServerContext.ConfigDirectory))
+                FileHandler.FolderCreate(ServerContext.ConfigDirectory);
             if (!FileHandler.FileExists(ServerContext.ModFilePath))
-                ModFileSystem.GenerateNewModFile();
+                if (FileHandler.FileExists(ServerContext.OldModFilePath))
+                    FileHandler.MoveFile(ServerContext.OldModFilePath, ServerContext.ModFilePath);
+                else
+                    ModFileSystem.GenerateNewModFile();
+            else
+                // Cleanup
+                FileHandler.FileDelete(ServerContext.OldModFilePath);
             if (!FileHandler.FolderExists(ServerContext.UniverseDirectory))
                 FileHandler.FolderCreate(ServerContext.UniverseDirectory);
 
