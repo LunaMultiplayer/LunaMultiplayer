@@ -239,7 +239,7 @@ namespace Server.System
         }
 
         /// <summary>
-        /// Thread safe file deleting method
+        /// Thread safe file deleting method, checks for existence before removing the file
         /// </summary>
         /// <param name="path">Path of the file to remove</param>
         public static void FileDelete(string path)

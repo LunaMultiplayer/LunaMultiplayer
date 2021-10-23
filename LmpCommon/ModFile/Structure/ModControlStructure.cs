@@ -582,6 +582,9 @@ namespace LmpCommon.ModFile.Structure
                 "spotLight1.v2",
                 "spotLight2.v2",
                 "EnginePlate5",
+                "groundAnchor",
+                "liquidEngine.v2",
+                "liquidEngine2.v2",
             };
         }
 

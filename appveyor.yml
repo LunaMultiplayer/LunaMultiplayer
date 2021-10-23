@@ -22,7 +22,7 @@ image: Visual Studio 2019
 #---------------------------------#
 
 environment:
-  smallversion: 0.28.0
+  smallversion: 0.29.0
   WEBHOOK_URL:
     secure: bhCOtyDF+wInocIkKfUQdxpM4csyVv7cxhUGz0NzLnFrlEZsaviEDJeDbctuv4NBM4xPkl4Wpv3rb6VwNcvEr8IWW5Te0P/kx1VeNMD5espcLKzMwy46shi630b3wvIipOeBnupc6nsiw7/2liuNhJkvjdyu4wxQXVDVWNSi+t0=
   ZIPPASSWORD:
@@ -46,6 +46,9 @@ configuration:
 platform: Any CPU
 before_build:
   - ps: 7z e "$env:appveyor_build_folder\External\KSPLibraries\KSPLibraries.7z" -p"$env:ZIPPASSWORD" -o"$env:appveyor_build_folder\External\KSPLibraries"
+  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\"
+   #Copy harmony dependency
+  - ps: xcopy /y /s "$env:appveyor_build_folder\External\Dependencies\Harmony" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData"
   - nuget restore
 build:
   parallel: true
@@ -74,7 +77,7 @@ after_build:
  #- ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  #- ps: xcopy /y "$env:appveyor_build_folder\Server\bin\$env:configuration\net5\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
   #7zip everything
- - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Client-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Client-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayerMasterServer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
 

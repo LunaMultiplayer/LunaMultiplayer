@@ -6,6 +6,7 @@
 version: '3.3'
 services:
     lunamultiplayer:
+        image: lunamultiplayer:local
         build:
           context: ./
           dockerfile: Dockerfile_Server

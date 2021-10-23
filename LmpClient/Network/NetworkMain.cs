@@ -6,6 +6,8 @@ using LmpCommon.Message;
 using LmpCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 #if DEBUG
@@ -21,10 +23,10 @@ namespace LmpClient.Network
         public static ServerMessageFactory SrvMsgFactory { get; } = new ServerMessageFactory();
         public static MasterServerMessageFactory MstSrvMsgFactory { get; } = new MasterServerMessageFactory();
 
-        public static Task ReceiveThread { get; set; }
-        public static Task SendThread { get; set; }
+        private static Task ReceiveThread { get; set; }
+        private static Task SendThread { get; set; }
 
-        public static NetPeerConfiguration Config { get; set; } = new NetPeerConfiguration("LMP")
+        public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {
             UseMessageRecycling = true,
             ReceiveBufferSize = 500000, //500Kb
@@ -32,8 +34,12 @@ namespace LmpClient.Network
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
             PingInterval = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.HearbeatMsInterval).TotalSeconds,
             ConnectionTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds,
+            MaximumHandshakeAttempts = SettingsSystem.CurrentSettings.ConnectionTries,
+            ResendHandshakeInterval = SettingsSystem.CurrentSettings.MsBetweenConnectionTries / 1000f,
             MaximumTransmissionUnit = SettingsSystem.CurrentSettings.Mtu,
-            AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu
+            AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu,
+            LocalAddress = IPAddress.IPv6Any,
+            DualStack = true
         };
 
         public static NetClient ClientConnection { get; private set; }
@@ -83,6 +89,12 @@ namespace LmpClient.Network
             Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             //Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
 #endif
+            if (!Socket.OSSupportsIPv6)
+            {
+                // Support crazy people who completely disable IPv6 on the OS despite major OS manufacturers telling them otherwise
+                Config.LocalAddress = IPAddress.Any;
+            }
+            ClientConnection = new NetClient(Config.Clone());
         }
 
         public static void ResetNetworkSystem()
@@ -90,16 +102,11 @@ namespace LmpClient.Network
             NetworkConnection.ResetRequested = true;
             BannedPartsResourcesWindow.Singleton.Display = false;
 
-            if (ClientConnection?.Status > NetPeerStatus.NotRunning)
+            if (ClientConnection.Status > NetPeerStatus.NotRunning)
             {
                 ClientConnection.Shutdown("Disconnected");
                 Thread.Sleep(1000);
             }
-
-            //This will set the NetPeerConfiguration locked as FALSE and allow to change MTU and other advanced stuff
-            Config = Config.Clone();
-
-            ClientConnection = new NetClient(Config);
 
             if (SendThread != null && !SendThread.IsCompleted)
                 SendThread.Wait(1000);

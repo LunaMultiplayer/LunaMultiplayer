@@ -6,6 +6,7 @@ namespace LmpCommon
     {
         public string Country { get; set; }
         public IPEndPoint ExternalEndpoint { get; set; }
+        public IPEndPoint InternalEndpoint6 { get; set; }
         public string Version { get; set; }
         public bool Password { get; set; }
         public bool Cheats { get; set; }
@@ -22,6 +23,7 @@ namespace LmpCommon
         {
             Country = info.Country;
             ExternalEndpoint = info.ExternalEndpoint;
+            InternalEndpoint6 = info.InternalEndpoint6;
             Version = info.ServerVersion;
             Password = info.Password;
             Cheats = info.Cheats;

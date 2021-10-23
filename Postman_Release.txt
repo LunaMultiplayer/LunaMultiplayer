@@ -15,10 +15,10 @@
     "fields": [
       {
         "name": "About version 0.28.0",
-        "value": "Build 0.28.0.382\n\n### 31th BETA version of LMP\n\nIMPORTANT: Make sure you recreate your ModControl file in case you are running a server!\n\n- Added compatibility with KSP 1.11\n- Fixed parsing of floats with different cultures\n- Allow deactivation of GC\n- Fix error when vessel parts > max allowed parts\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.26.0...0.28.0>"
+        "value": "Build 0.28.0.460\n\n### 32th BETA version of LMP\n\nIMPORTANT!!: LMP Server now runs with dotnet and not with mono! Be sure to check the "Create a server" wiki page!\n\n- Added compatibility with KSP 1.12\n- Move server to dotnet for better performance\n- Update harmony\n- Fix error in SubspaceTime file\n- Created a event to handle attached / detached parts\n- Client and server binaries are split in the release\n\n<https://github.com/LunaMultiplayer/LunaMultiplayer/compare/0.27.0...0.28.0>"
       }
     ],
-    "timestamp": "2020-12-23T19:40:00Z",
+    "timestamp": "2021-06-25T15:20:00Z",
     "footer": {
       "icon_url": "https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/External/Logos/RedFont/LMP_Icon_Medium.png",
       "text": "Luna multiplayer"

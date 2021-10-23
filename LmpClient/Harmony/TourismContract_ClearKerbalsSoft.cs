@@ -15,14 +15,17 @@ namespace LmpClient.Harmony
     [HarmonyPatch("ClearKerbalsSoft")]
     public class TourismContract_ClearKerbalsSoft
     {
-        [HarmonyPrefix]
-        private static void PrefixClearKerbalsSoft(TourismContract __instance)
+        [HarmonyPostfix]
+        private static void PostfixClearKerbalsSoft(TourismContract __instance)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
             if (ShareContractsSystem.Singleton.IgnoreEvents) return;
 
             foreach (var kerbal in __instance.Tourists)
-                KerbalSystem.Singleton.MessageSender.SendKerbalRemove(kerbal);
+            {
+                if (!HighLogic.CurrentGame.CrewRoster.Exists(kerbal))
+                    KerbalSystem.Singleton.MessageSender.SendKerbalRemove(kerbal);
+            }
         }
     }
 }

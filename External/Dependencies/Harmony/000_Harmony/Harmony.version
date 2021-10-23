@@ -1,0 +1,9 @@
+{
+  "NAME": "Harmony",
+  "URL": "https://raw.githubusercontent.com/HarmonyKSP/HarmonyKSP/main/GameData/000_Harmony/Harmony.version",
+  "DOWNLOAD": "https://github.com/HarmonyKSP/HarmonyKSP/releases",
+  "VERSION": {"MAJOR": 2, "MINOR": 0, "PATCH": 4, "BUILD": 0},
+  "KSP_VERSION": {"MAJOR": 1, "MINOR": 8, "PATCH": 0},
+  "KSP_VERSION_MIN": {"MAJOR": 1, "MINOR": 8, "PATCH": 0},
+  "KSP_VERSION_MAX": {"MAJOR": 1, "MINOR": 99, "PATCH": 99}
+}

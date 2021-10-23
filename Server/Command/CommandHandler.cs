@@ -45,20 +45,24 @@ namespace Server.Command
                 while (ServerContext.ServerRunning)
                 {
                     var input = Console.ReadLine();
-                    if (string.IsNullOrEmpty(input))
+                    if (input == null)
                     {
-                        continue;
+                        LunaLog.Normal("End of stdin, stopping command listener");
+                        break;
                     }
-                    LunaLog.Normal($"Command input: {input}");
                     if (!string.IsNullOrEmpty(input))
                     {
-                        if (input.StartsWith("/"))
+                        LunaLog.Normal($"Command input: {input}");
+                        if (!string.IsNullOrEmpty(input))
                         {
-                            HandleServerInput(input.Substring(1));
-                        }
-                        else
-                        {
-                            Commands["say"].Func(input);
+                            if (input.StartsWith("/"))
+                            {
+                                HandleServerInput(input.Substring(1));
+                            }
+                            else
+                            {
+                                Commands["say"].Func(input);
+                            }
                         }
                     }
 

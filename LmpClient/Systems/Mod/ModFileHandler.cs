@@ -95,7 +95,7 @@ namespace LmpClient.Systems.Mod
                 return false;
             }
 
-            if (!modInfo.AllowNonListedPlugins && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key) && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key))
+            if (!modInfo.AllowNonListedPlugins && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key) && modInfo.OptionalPlugins.All(f => f.FilePath != file.Key))
             {
                 Sb.AppendLine($"Server does not allow external plugins and file {file.Key} is neither optional nor mandatory!");
                 System.NonListedFilesFound.Add(file.Key);

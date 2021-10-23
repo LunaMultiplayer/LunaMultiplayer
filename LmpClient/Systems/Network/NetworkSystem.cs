@@ -89,8 +89,11 @@ namespace LmpClient.Systems.Network
                     break;
                 case ClientState.Handshaking:
                     MainSystem.Singleton.Status = "Waiting for handshake response";
-                    if (ConnectionIsStuck(10000))
+                    if (ConnectionIsStuck(60000))
+                    {
+                        LunaLog.Log("[LMP]: Failed to get a handshake response after 60 seconds. Sending the handshake again...");
                         MainSystem.NetworkState = ClientState.Connected;
+                    }
                     break;
                 case ClientState.Handshaked:
                     MainSystem.Singleton.Status = "Handshaking successful";

@@ -28,9 +28,11 @@ namespace LmpClient.Systems.VesselResourceSys
 
             for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)
             {
+                if (vessel.protoVessel.protoPartSnapshots[i]?.resources == null) continue;
+
                 for (var j = 0; j < vessel.protoVessel.protoPartSnapshots[i].resources.Count; j++)
                 {
-                    var resource = vessel.protoVessel.protoPartSnapshots[i].resources[j].resourceRef;
+                    var resource = vessel.protoVessel.protoPartSnapshots[i].resources[j]?.resourceRef;
                     if (resource == null) continue;
 
                     if (Resources.Count > resourceCount)

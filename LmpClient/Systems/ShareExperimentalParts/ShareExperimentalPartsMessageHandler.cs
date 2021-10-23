@@ -25,10 +25,7 @@ namespace LmpClient.Systems.ShareExperimentalParts
                 var partName = string.Copy(data.PartName);
                 var count = data.Count;
                 LunaLog.Log($"Queue ExperimentalPart: part {partName} count {count}");
-                ShareCareerSystem.Singleton.QueueAction(() =>
-                {
-                    ExperimentalPart(partName, count);
-                });
+                ShareCareerSystem.Singleton.QueueAction(() => ExperimentalPart(partName, count));
             }
         }
 
@@ -41,17 +38,16 @@ namespace LmpClient.Systems.ShareExperimentalParts
             {
                 var currentExperimentalParts = Traverse.Create(ResearchAndDevelopment.Instance).Field<Dictionary<AvailablePart, int>>("experimentalPartsStock").Value;
 
+                //Silently add/remove experimental parts without triggering the event
                 if (currentExperimentalParts.TryGetValue(partInfo, out var currentCount))
                 {
-                    if (currentCount > count)
-                        ResearchAndDevelopment.RemoveExperimentalPart(partInfo);
-                    else if (currentCount < count)
-                        ResearchAndDevelopment.AddExperimentalPart(partInfo);
+                    if (count == 0)
+                        currentExperimentalParts.Remove(partInfo);
+                    else if (currentCount != count)
+                        currentExperimentalParts[partInfo] = count;
                 }
-                else
-                {
-                    ResearchAndDevelopment.AddExperimentalPart(partInfo);
-                }
+                else if (count > 0)
+                    currentExperimentalParts.Add(partInfo, count);
             }
 
             //Refresh RD nodes in case we are in the RD screen

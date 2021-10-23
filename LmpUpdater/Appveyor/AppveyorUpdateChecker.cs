@@ -19,7 +19,7 @@ namespace LmpUpdater.Appveyor
                     {
                         wc.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
 
-                        var json = wc.DownloadString(RepoConstants.ApiLatestGithubReleaseUrl);
+                        var json = wc.DownloadString(RepoConstants.AppveyorUrl);
                         return JsonConvert.DeserializeObject<RootObject>(JObject.Parse(json).ToString());
                     }
                 }
