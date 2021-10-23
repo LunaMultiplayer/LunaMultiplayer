@@ -151,7 +151,7 @@ namespace Lidgren.Network
 			LogDebug("NAT punch confirmation received from " + senderEndPoint + " we're client so we go ahead and succeed the introduction");
 
 			//
-			// Release punch success to client; enabling him to Connect() to msg.Sender if token is ok
+			// Release punch success to client; enabling them to Connect() to msg.Sender if token is ok
 			//
 			NetIncomingMessage punchSuccess = CreateIncomingMessage(NetIncomingMessageType.NatIntroductionSuccess, 10);
 			punchSuccess.m_senderEndPoint = senderEndPoint;

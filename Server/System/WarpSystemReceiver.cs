@@ -57,7 +57,7 @@ namespace Server.System
                 {
                     client.Subspace = newSubspace;
 
-                    //Try to remove his old subspace
+                    //Try to remove their old subspace
                     WarpSystem.RemoveSubspace(oldSubspace);
                 }
             }

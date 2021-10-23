@@ -130,7 +130,7 @@ namespace Server.Message
 
             var allVessels = VesselStoreSystem.CurrentVessels.Keys.ToList();
 
-            //Here we only remove the vessels that the client ALREADY HAVE so we only send the vessels he DOESN'T have
+            //Here we only remove the vessels that the client ALREADY HAS so we only send the vessels they DON'T have
             for (var i = 0; i < msgData.VesselsCount; i++)
                 allVessels.Remove(msgData.VesselIds[i]);
 

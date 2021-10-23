@@ -295,11 +295,11 @@ namespace LmpClient.Systems.VesselPositionSys
                  * If the packet is in the future then we must interpolate towards it
                  *
                  * Player was warping:
-                 * The message was received when HE was warping. We don't know his final subspace time BUT if the message was sent
+                 * The message was received when THEY were warping. We don't know their final subspace time BUT if the message was sent
                  * in a time BEFORE ours, we can skip it as fast as possible.
                  * If the packet is in the future then we must interpolate towards it
                  *
-                 * Bear in mind that even if the interpolation against the future packet is long because he is in the future,
+                 * Bear in mind that even if the interpolation against the future packet is long because it is in the future,
                  * when we stop warping this method will be called
                  *
                  * Also, we don't remove messages if we are close to the min recommended value

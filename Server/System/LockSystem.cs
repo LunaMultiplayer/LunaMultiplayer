@@ -13,7 +13,7 @@ namespace Server.System
         {
             repeatedAcquire = false;
 
-            //Player tried to acquire a lock that he already owns
+            //Player tried to acquire a lock that they already own
             if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.KerbalName, lockDef.PlayerName))
             {
                 repeatedAcquire = true;
@@ -24,7 +24,7 @@ namespace Server.System
             {
                 if (lockDef.Type == LockType.Control)
                 {
-                    //If he acquired a control lock he probably switched vessels or smth like that and he can only have 1 control lock.
+                    //If they acquired a control lock they probably switched vessels or something like that and they can only have one control lock.
                     //So remove the other control locks just for safety...
                     var controlLocks = LockQuery.GetAllPlayerLocks(lockDef.PlayerName).Where(l => l.Type == LockType.Control);
                     foreach (var control in controlLocks)

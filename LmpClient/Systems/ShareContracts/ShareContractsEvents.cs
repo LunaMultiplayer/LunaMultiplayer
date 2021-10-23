@@ -120,7 +120,7 @@ namespace LmpClient.Systems.ShareContracts
 
             LunaLog.Log($"Contract offered: {contract.ContractGuid} - {contract.Title}");
 
-            //This should be only called on the client with the contract lock, because he has the generationCount != 0.
+            //This should be only called on the client with the contract lock, because it has the generationCount != 0.
             System.MessageSender.SendContractMessage(contract);
         }
 

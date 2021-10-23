@@ -105,7 +105,7 @@ namespace LmpClient.Systems.Warp
         #region Update methods
 
         /// <summary>
-        /// If we are spectating this routine checks if the controller has a different subspace and he is more advanced then we warp to it
+        /// If we are spectating this routine checks if the controller has a different subspace and they are more advanced then we warp to it
         /// </summary>
         private void WarpIfSpectatingToController()
         {
