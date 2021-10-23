@@ -42,6 +42,7 @@ namespace Server.Web
                         Server.Use(new ExceptionHandler());
                         Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
                         Server.Use(new FileHandler());
+                        Server.Use(new HttpRouter().With("metrics", new MetricsHandler()));
                         Server.Use(new HttpRouter().With(string.Empty, new RestHandler<ServerInformation>(new ServerInformationRestController(), JsonResponseProvider.Default)));
                         Server.Start();
                     }
