@@ -48,7 +48,7 @@ namespace Server.System
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ClientRetriever.GetClients().Length}");
 
                 // Update the player metrics.
-                Metrics.Player.Count.WithLabels(client.PlayerName).Set(1);
+                Metrics.Player.Count.WithLabels(client.PlayerName).IncTo(1);
             }
         }
     }
