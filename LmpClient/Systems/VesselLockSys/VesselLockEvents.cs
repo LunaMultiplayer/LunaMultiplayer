@@ -151,7 +151,7 @@ namespace LmpClient.Systems.VesselLockSys
 
         /// <summary>
         /// If a player releases an update or unloadedupdate lock try to get it.
-        /// If he releases a control lock and we are spectating try to get the current vessel control lock
+        /// If they release a control lock and we are spectating try to get the current vessel control lock
         /// </summary>
         public void LockReleased(LockDefinition lockDefinition)
         {

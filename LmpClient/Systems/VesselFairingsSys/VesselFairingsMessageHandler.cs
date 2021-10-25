@@ -28,7 +28,7 @@ namespace LmpClient.Systems.VesselFairingsSys
             {
                 if (queue.TryPeek(out var value) && value.GameTime > msgData.GameTime)
                 {
-                    //A user reverted, so clear his message queue and start from scratch
+                    //A user reverted, so clear their message queue and start from scratch
                     queue.Clear();
                 }
 

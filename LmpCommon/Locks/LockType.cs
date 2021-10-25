@@ -31,7 +31,7 @@ namespace LmpCommon.Locks
         /// The update lock specifies who updates the position and definition of a given vessel. 
         /// A user can have several update/UnloadedUpdate locks.
         /// You get the UnloadedUpdate lock when there are vessels far away from other players and nobody is close enought
-        /// to get the "Update" lock. If a player get close to the vessel and gets the "Update" lock, he will steal the 
+        /// to get the "Update" lock. If a player gets close to the vessel and gets the "Update" lock, they will steal the 
         /// "UnloadedUpdate" lock from you
         /// </summary>
         UnloadedUpdate,

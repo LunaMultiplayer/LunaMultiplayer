@@ -37,7 +37,7 @@ namespace LmpClient.Network
                     }
                     else
                     {
-                        //User is in flight so just display a message but don't force him to main menu...
+                        //User is in flight so just display a message but don't force them to main menu...
                         NetworkSystem.DisplayDisconnectMessage = true;
                     }
 

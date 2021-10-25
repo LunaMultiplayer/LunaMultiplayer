@@ -61,7 +61,7 @@ namespace LmpClient.Systems.VesselCoupleSys
 
 
         /// <summary>
-        /// Jumps to the subspace of the controller vessel in case he is more advanced in time
+        /// Jumps to the subspace of the controller vessel in case they're more advanced in time
         /// </summary>
         private static void JumpIfVesselOwnerIsInFuture(Guid vesselId)
         {

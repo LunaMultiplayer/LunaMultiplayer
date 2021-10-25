@@ -38,7 +38,7 @@ namespace LmpClient.Systems.PlayerColorSys
                     break;
                 case PlayerColorMessageType.Set:
                     {
-                        //Player joined or changed it's color so update his controlled vessel orbit colors
+                        //Player joined or changed it's color so update their controlled vessel orbit colors
                         var data = (PlayerColorSetMsgData)msgData;
                         var playerName = data.PlayerColor.PlayerName;
                         var playerColor = data.PlayerColor.Color;
