@@ -47,9 +47,6 @@ namespace Server.Client
                     MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
                     LockSystem.ReleasePlayerLocks(client);
                     WarpSystem.RemoveSubspace(client.Subspace);
-
-                    // Remove the player from the metrics.
-                    Metrics.Player.RemovePlayer(client.PlayerName);
                 }
 
                 try
