@@ -56,3 +56,5 @@ eur-2.styxnet.xyz:2161
 eur-2.styxnet.xyz:2108
 #LPS
 70.187.201.106:8800
+#Potez Bande
+73.113.142.128:8800
