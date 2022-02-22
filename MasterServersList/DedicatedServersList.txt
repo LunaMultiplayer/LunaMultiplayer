@@ -35,7 +35,7 @@ zeus.styxnet.xyz:2100
 #Ship For Brains Server
 176.58.102.60
 #ABrit'sServer
-abrit.ddns.net:8800
+abritin.space:8800
 #Tserver
 ksp.trickys.gg:8800
 #Esbjerg Space Center
