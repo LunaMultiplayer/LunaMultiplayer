@@ -13,8 +13,6 @@ shanghai.211.network:8802
 ksp.k0r4ll.link:8800
 #Piro server
 91.126.41.111:8800
-#OrionProject
-77.68.79.83:8800
 #404Republic
 republic.404inc.org:8800
 #Tayaut Servers
@@ -35,7 +33,7 @@ zeus.styxnet.xyz:2100
 #Ship For Brains Server
 176.58.102.60
 #ABrit'sServer
-abrit.ddns.net:8800
+abritin.space:8800
 #Tserver
 ksp.trickys.gg:8800
 #Esbjerg Space Center
