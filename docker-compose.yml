@@ -1,5 +1,5 @@
 # You also need the Dockerfile_Server file, put it in the same directory as this file.
-# Build and create a container with: docker-compose up -d --build 
+# Build and create a container with: docker-compose up -d --build
 # You may set the version of the server when an update is released, see "args"
 #
 # Attach to the container with: docker-compose exec lunamultiplayer /bin/ash
@@ -10,15 +10,12 @@ services:
         build:
           context: ./
           dockerfile: Dockerfile_Server
-          args:
-             # set to desired version, available versions: https://github.com/LunaMultiplayer/LunaMultiplayer/releases    
-             - LMP_VERSION=0.25.0
         container_name: lunamultiplayer
         environment:
             - TZ=CET
         ports:
             - '8800:8800/udp'
-            # uncomment to enabler website
+            # uncomment to enable website
             # - '8900:8900'
         volumes:
             - '/opt/LMPServer/Config:/LMPServer/Config'

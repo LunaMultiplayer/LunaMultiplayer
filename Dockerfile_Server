@@ -11,13 +11,45 @@
 #Start a container with: docker start lmpsrv
 #Remove a container with: docker container rm lmpsrv
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine as builder
+ARG OS_BASE=alpine
+ARG OS_VERSION=3.14
+ARG OS_ARCH=x64
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0-${OS_BASE}${OS_VERSION} as base
+ARG OS_BASE
+ARG OS_VERSION
+ARG OS_ARCH
+
+COPY LmpCommon/LmpCommon.shproj             /LunaMultiplayer/LmpCommon/LmpCommon.shproj
+COPY Lidgren/Lidgren.shproj                 /LunaMultiplayer/Lidgren/Lidgren.shproj
+COPY LmpGlobal/LmpGlobal.shproj             /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj
+COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
+COPY Lidgren.Net/Lidgren.Net.csproj         /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
+COPY Lidgren.Network/Lidgren.Network.csproj /LunaMultiplayer/Lidgren.Network/Lidgren.Network.csproj
+COPY uhttpsharp/uhttpsharp2.csproj          /LunaMultiplayer/uhttpsharp/uhttpsharp2.csproj
+COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
+COPY LmpUpdater/LmpUpdater.csproj           /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
+COPY Server/Server.csproj                   /LunaMultiplayer/Server/Server.csproj
+
+RUN cd /LunaMultiplayer/Server && \
+    dotnet restore -r ${OS_BASE}.${OS_VERSION}-${OS_ARCH}
 
 COPY . /LunaMultiplayer
-RUN cd LunaMultiplayer/Server && \
-    dotnet publish -r linux-musl-x64 -o Publish
 
-FROM alpine:edge
+FROM base as debug
+WORKDIR /LunaMultiplayer/Server
+ENV DOTNET_PerfMapEnabled=1
+ENV COMPlus_PerfMapEnabled=1
+CMD [ "/bin/ash" ]
+
+FROM base as builder
+ARG OS_BASE
+ARG OS_VERSION
+ARG OS_ARCH
+WORKDIR /LunaMultiplayer/Server
+RUN dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${OS_ARCH} -o Publish
+
+FROM ${OS_BASE}:${OS_VERSION}
 RUN apk add icu-libs libstdc++ libgcc
 COPY --from=builder /LunaMultiplayer/Server/Publish/ /LMPServer/
 EXPOSE 8800/udp 8900/tcp

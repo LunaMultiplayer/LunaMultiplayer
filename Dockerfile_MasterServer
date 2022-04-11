@@ -11,13 +11,37 @@
 #Start a container with: docker start lmpms
 #Remove a container with: docker container rm lmpms
 
-FROM alpine:3.9
-RUN apk add --no-cache mono --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN apk add libgdiplus-dev --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
-#RUN cd /usr/lib && sudo ln -s libgdiplus.so gdiplus.dll
+FROM mono:latest as builder
 
-ENV LMP_URL https://luna-masterserver-endpoint.glitch.me/latest
-ENV PORT 8700
-ENV HTTP_PORT 8701
-	
-CMD rm -f latest 2> /dev/null && wget $LMP_URL && unzip -o latest && cd LMPMasterServer && mono MasterServer.exe -p $PORT -g $HTTP_PORT
+RUN  curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh | bash /dev/stdin --channel 5.0
+ENV PATH="/root/.dotnet/:${PATH}"
+
+COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
+COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
+COPY Lidgren.Net/Lidgren.Net.csproj         /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
+COPY Lidgren.Network/Lidgren.Network.csproj /LunaMultiplayer/Lidgren.Network/Lidgren.Network.csproj
+COPY uhttpsharp/uhttpsharp2.csproj          /LunaMultiplayer/uhttpsharp/uhttpsharp2.csproj
+COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
+COPY LmpCommonTest/LmpCommonTest.csproj     /LunaMultiplayer/LmpCommonTest/LmpCommonTest.csproj
+COPY LmpUpdater/LmpUpdater.csproj           /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
+COPY LmpMasterServer/LmpMasterServer.csproj /LunaMultiplayer/LmpMasterServer/LmpMasterServer.csproj
+COPY MasterServer/MasterServer.csproj       /LunaMultiplayer/MasterServer/MasterServer.csproj
+COPY LmpUpdater/packages.config             /LunaMultiplayer/LmpUpdater/packages.config
+COPY uhttpsharp/packages.config             /LunaMultiplayer/uhttpsharp/packages.config
+COPY LmpMasterServer/packages.config        /LunaMultiplayer/LmpMasterServer/packages.config
+
+RUN cd LunaMultiplayer && \
+    nuget restore && \
+    cd MasterServer && \
+    dotnet restore
+
+COPY . /LunaMultiplayer
+WORKDIR /LunaMultiplayer/MasterServer
+RUN msbuild -p:Configuration=Release
+
+FROM mono:latest
+COPY --from=builder /LunaMultiplayer/MasterServer/bin/Release/ /LmpMasterServer/
+EXPOSE 8700/udp 8701/tcp
+STOPSIGNAL sigint
+WORKDIR /LmpMasterServer
+CMD [ "mono", "./MasterServer.exe" ]
