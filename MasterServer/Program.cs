@@ -11,11 +11,10 @@ using System.Threading.Tasks;
 namespace MasterServer
 {
     /// <summary>
-    /// This program is the one who does the punchtrough between a nat client and a nat server. 
+    /// This program is the one who does the punchtrough between a nat client and a nat server.
     /// You should only run if you agree in the forum to do so and your server ip is listed in:
     /// https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/MasterServersList
     /// </summary>
-    /// 
     internal class Program
     {
         #region Fields & properties
@@ -38,7 +37,11 @@ namespace MasterServer
                 var dllVersion = FileVersionInfo.GetVersionInfo(DllPath).FileVersion;
                 var versionComponents = dllVersion.Split('.');
 
-                return new Version(int.Parse(versionComponents[0]), int.Parse(versionComponents[1]), int.Parse(versionComponents[2]));
+                return new Version(
+                    int.Parse(versionComponents[0]),
+                    int.Parse(versionComponents[1]),
+                    int.Parse(versionComponents[2])
+                    );
             }
         }
 
@@ -49,9 +52,9 @@ namespace MasterServer
 
         private static void Main(string[] args)
         {
-            //Uncomment this to properly debug the code
-            //LmpMasterServer.EntryPoint.MainEntryPoint(new string[0]);
-            //while (true) { Thread.Sleep(100); }
+            // Uncomment this to properly debug the code
+            // LmpMasterServer.EntryPoint.MainEntryPoint(args);
+            // while (true) { Thread.Sleep(100); }
 
             if (!File.Exists(DllPath))
             {
@@ -68,7 +71,10 @@ namespace MasterServer
                 eArgs.Cancel = true;
             };
 
-            CheckNewVersion(args.Any(a => a.Contains("nightly")));
+            if (!args.Any(a => a.Contains("noupdatecheck")))
+                CheckNewVersion(args.Any(a => a.Contains("nightly")));
+            else
+                Console.WriteLine("Automatic update checking disabled, please monitor for updates on your own.");
             StartMasterServerDll();
             QuitEvent.WaitOne();
         }
