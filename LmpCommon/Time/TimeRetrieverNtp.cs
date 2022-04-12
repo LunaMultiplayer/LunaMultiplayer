@@ -23,7 +23,7 @@ namespace LmpCommon.Time
             // ReSharper disable once RedundantAssignment
             var pingDuration = Stopwatch.GetTimestamp(); // temp access (JIT-Compiler need some time at first call)
 
-            using (var socket = new UdpClient())
+            using (var socket = new UdpClient(_serverAddress.AddressFamily))
             {
                 socket.Connect(_serverAddress);
                 socket.Send(_ntpData, _ntpData.Length);
