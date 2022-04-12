@@ -17,7 +17,9 @@ namespace LmpMasterServer.Http
 
         public static void Start()
         {
-            Server.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Any, Port)));
+            // Due to Socket.DualMode (default true) listening on IPv6 also listens on IPv4
+            var listener = new TcpListener(Socket.OSSupportsIPv6 ? IPAddress.IPv6Any : IPAddress.Any, Port);
+            Server.Use(new TcpListenerAdapter(listener));
 
             Server.Use(new ExceptionHandler());
             Server.Use(new HeadHandler());
