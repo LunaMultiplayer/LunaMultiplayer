@@ -133,6 +133,12 @@ namespace LmpMasterServer.Structure
                  * 10.0.0.0 - 10.255.255.255 (10/8 prefix)
                  * 172.16.0.0 - 172.31.255.255 (172.16/12 prefix)
                  * 192.168.0.0 - 192.168.255.255 (192.168/16 prefix)
+                 * Documentation prefixes (RFC5737):
+                 * 192.0.2.0 - 192.0.2.255 (192.0.2.0/24)
+                 * 198.51.100.0 - 198.51.100.255 (198.51.100.0/24)
+                 * 203.0.113.0 - 203.0.113.255 (203.0.113.0/24)
+                 * CGNAT prefixes (RFC6598):
+                 * 100.64.0.0 - 100.127.255.255 (100.64.0.0/10)
                  */
 
                 var bytes = host.GetAddressBytes();
@@ -140,10 +146,17 @@ namespace LmpMasterServer.Structure
                 {
                     case 10:
                         return true;
+                    case 100:
+                        return bytes[1] < 128 && bytes[1] >= 64;
                     case 172:
                         return bytes[1] < 32 && bytes[1] >= 16;
                     case 192:
-                        return bytes[1] == 168;
+                        return bytes[1] == 168
+                               || bytes[1] == 0 && bytes[2] == 2;
+                    case 198:
+                        return bytes[1] == 51 && bytes[2] == 100;
+                    case 203:
+                        return bytes[1] == 0 && bytes[2] == 113;
                     default:
                         return false;
                 }
