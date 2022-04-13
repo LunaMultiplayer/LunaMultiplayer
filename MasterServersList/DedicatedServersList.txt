@@ -58,3 +58,4 @@ eur-2.styxnet.xyz:2108
 73.113.142.128:8800
 #!a Cookie's Luna Server
 92.221.152.39:8800
+ksp.lekekelparadox.xyz:8800
