@@ -1,0 +1,7 @@
+**/bin/
+**/obj/
+.git/
+/Documentation/
+
+/Dockerfile*
+/External/KSPLibraries/KSPLibraries.7z
