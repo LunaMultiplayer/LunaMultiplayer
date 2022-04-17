@@ -52,10 +52,16 @@ namespace LmpClient.Network
 
         public static void ConnectToServer(string hostname, int port, string password)
         {
-            ConnectToServer(
-                LunaNetUtils.CreateAddressFromString(hostname).Select(ep => new IPEndPoint(ep, port)).ToArray(),
-                password
-            );
+            var endpoints = LunaNetUtils.CreateAddressFromString(hostname)
+                .Select(addr => new IPEndPoint(addr, port))
+                .ToArray();
+            if (endpoints.Length == 0)
+            {
+                MainSystem.Singleton.Status = "Hostname resolution failed, check for typos";
+                LunaLog.LogError($"[LMP]: Hostname resolution failed, check for typos");
+                Disconnect("Hostname resolution failed");
+            }
+            ConnectToServer(endpoints, password);
         }
 
         public static void ConnectToServer(IPEndPoint[] endpoints, string password)

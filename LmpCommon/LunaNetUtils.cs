@@ -169,7 +169,7 @@ namespace LmpCommon
             }
             catch (Exception)
             {
-                return null;
+                return new IPAddress[]{};
             }
         }
 
