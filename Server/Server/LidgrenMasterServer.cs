@@ -24,19 +24,19 @@ namespace Server.Server
 
             LunaLog.Normal("Registering with master servers");
 
-            var adr4 = LunaNetUtils.GetOwnInternalIPv4Address();
+            var addr4 = LunaNetUtils.GetOwnInternalIPv4Address();
             // As of right now the internal endpoint for IPv4 is mandatory, because if there is none, there is no
             // IPv4 connectivity at all, which is required to connect to the master servers (so they can determine
             // the public IPv4 address).
-            if (adr4 == null) return;
-            var endpoint4 = new IPEndPoint(adr4, ServerContext.Config.Port);
+            if (addr4 == null) return;
+            var endpoint4 = new IPEndPoint(addr4, ServerContext.Config.Port);
             // Only send IPv6 address if actually listening on IPv6, otherwise send loopback with means "none".
-            IPAddress adr6;
+            IPAddress addr6;
             IPEndPoint endpoint6;
             if (LidgrenServer.Server.Socket.AddressFamily == AddressFamily.InterNetworkV6)
             {
-                adr6 = LunaNetUtils.GetOwnInternalIPv6Address();
-                endpoint6 = new IPEndPoint(adr6, ServerContext.Config.Port);
+                addr6 = LunaNetUtils.GetOwnInternalIPv6Address();
+                endpoint6 = new IPEndPoint(addr6, ServerContext.Config.Port);
             }
             else
             {

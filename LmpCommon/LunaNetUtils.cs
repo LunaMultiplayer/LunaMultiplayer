@@ -87,9 +87,10 @@ namespace LmpCommon
             var properties = ni.GetIPProperties();
             foreach (var unicastAddress in properties.UnicastAddresses)
             {
-                if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetworkV6
-                                                    && !unicastAddress.Address.IsIPv6UniqueLocal() && !unicastAddress.Address.IsIPv6LinkLocal
-                                                    && !unicastAddress.Address.IsIPv6SiteLocal && !unicastAddress.Address.IsIPv6Teredo)
+                if (unicastAddress?.Address != null
+                    && unicastAddress.Address.AddressFamily == AddressFamily.InterNetworkV6
+                    && !unicastAddress.Address.IsIPv6UniqueLocal() && !unicastAddress.Address.IsIPv6LinkLocal
+                    && !unicastAddress.Address.IsIPv6SiteLocal && !unicastAddress.Address.IsIPv6Teredo)
                 {
                     return unicastAddress;
                 }
