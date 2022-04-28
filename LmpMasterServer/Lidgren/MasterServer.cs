@@ -45,7 +45,7 @@ namespace LmpMasterServer.Lidgren
             var peer = new NetServer(config);
             peer.Start();
 
-            CheckMasterServerListed();
+            _ = Task.Run(() => CheckMasterServerListed());
 
             LunaLog.Info($"Master server {LmpVersioning.CurrentVersion} started! Поехали!");
             RemoveExpiredServers();

@@ -13,11 +13,11 @@ namespace LmpMasterServer.Dedicated
     /// <summary>
     /// This class retrieves the dedicated servers stored in
     /// <see cref="RepoConstants.DedicatedServersListUrl"/>
-    /// </summary> 
+    /// </summary>
     public static class DedicatedServerRetriever
     {
         private static readonly ConcurrentHashSet<IPEndPoint> DedicatedServers = new ConcurrentHashSet<IPEndPoint>();
-        private static readonly TimeSpan RequestInterval = TimeSpan.FromMinutes(0.25);
+        private static readonly TimeSpan RequestInterval = TimeSpan.FromMinutes(5);
 
         public static bool IsDedicatedServer(IPEndPoint endpoint)
         {
@@ -56,7 +56,7 @@ namespace LmpMasterServer.Dedicated
                                 }
                                 catch (Exception)
                                 {
-                                    //Ignore the bad server   
+                                    //Ignore the bad server
                                 }
                             }
                         }
