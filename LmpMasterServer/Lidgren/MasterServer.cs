@@ -45,7 +45,7 @@ namespace LmpMasterServer.Lidgren
             var peer = new NetServer(config);
             peer.Start();
 
-            CheckMasterServerListed();
+            _ = Task.Run(() => CheckMasterServerListed());
 
             LunaLog.Info($"Master server {LmpVersioning.CurrentVersion} started! Поехали!");
             RemoveExpiredServers();
@@ -122,7 +122,7 @@ namespace LmpMasterServer.Lidgren
         {
             if (BannedIpsRetriever.IsBanned(netMsg.SenderEndPoint))
             {
-                LunaLog.Debug($"Ignoring BANNED ip: {netMsg.SenderEndPoint}");
+                LunaLog.Debug($"Ignoring BANNED IP: {netMsg.SenderEndPoint}");
                 return;
             }
 
@@ -144,7 +144,7 @@ namespace LmpMasterServer.Lidgren
                             _ = Task.Run(() =>
                             {
                                 if (!server.InternalEndpoint6.Address.Equals(IPAddress.IPv6Loopback)
-                                    && !server.InternalEndpoint6.Address.Equals(IPAddress.IPv6Loopback))
+                                    && !msgData.InternalEndpoint6.Address.Equals(IPAddress.IPv6Loopback))
                                 {
                                     // Both client and server are listening on IPv6, try an IPv6 firewall punchthrough
                                     // This also triggers a first punchthrough on IPv4 with the public addresses

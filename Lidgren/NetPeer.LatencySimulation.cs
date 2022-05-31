@@ -199,7 +199,8 @@ namespace Lidgren.Network
 		{
 			try
 			{
-				m_socket.DontFragment = true;
+				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
+					m_socket.DontFragment = true;
 				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
@@ -226,7 +227,8 @@ namespace Lidgren.Network
 			}
 			finally
 			{
-				m_socket.DontFragment = false;
+				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
+					m_socket.DontFragment = false;
 			}
 			return true;
 		}
@@ -235,7 +237,8 @@ namespace Lidgren.Network
 		{
 			try
 			{
-				m_socket.DontFragment = true;
+				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
+					m_socket.DontFragment = true;
 				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
@@ -260,7 +263,8 @@ namespace Lidgren.Network
 			}
 			finally
 			{
-				m_socket.DontFragment = false;
+				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
+					m_socket.DontFragment = false;
 			}
 			return true;
 		}

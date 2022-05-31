@@ -87,9 +87,10 @@ namespace LmpCommon
             var properties = ni.GetIPProperties();
             foreach (var unicastAddress in properties.UnicastAddresses)
             {
-                if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetworkV6
-                                                    && !unicastAddress.Address.IsIPv6UniqueLocal() && !unicastAddress.Address.IsIPv6LinkLocal
-                                                    && !unicastAddress.Address.IsIPv6SiteLocal && !unicastAddress.Address.IsIPv6Teredo)
+                if (unicastAddress?.Address != null
+                    && unicastAddress.Address.AddressFamily == AddressFamily.InterNetworkV6
+                    && !unicastAddress.Address.IsIPv6UniqueLocal() && !unicastAddress.Address.IsIPv6LinkLocal
+                    && !unicastAddress.Address.IsIPv6SiteLocal && !unicastAddress.Address.IsIPv6Teredo)
                 {
                     return unicastAddress;
                 }
@@ -119,12 +120,12 @@ namespace LmpCommon
 
         public static IPAddress GetOwnExternalIpAddress()
         {
-            var currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
+            var currentIpAddress = TryGetIpAddress("https://ip.42.pl/raw");
 
             if (string.IsNullOrEmpty(currentIpAddress))
                 currentIpAddress = TryGetIpAddress("https://api.ipify.org/");
             if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("http://httpbin.org/ip");
+                currentIpAddress = TryGetIpAddress("https://httpbin.org/ip");
             if (string.IsNullOrEmpty(currentIpAddress))
                 currentIpAddress = TryGetIpAddress("http://checkip.dyndns.org");
 
@@ -169,7 +170,7 @@ namespace LmpCommon
             }
             catch (Exception)
             {
-                return null;
+                return new IPAddress[]{};
             }
         }
 

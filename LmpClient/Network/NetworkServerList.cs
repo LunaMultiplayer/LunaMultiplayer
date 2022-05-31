@@ -72,7 +72,7 @@ namespace LmpClient.Network
 
                     Array.Copy(data.Color, server.Color, 3);
 
-                    Servers.AddOrUpdate(data.Id, server, (l, info) =>  server);
+                    Servers.AddOrUpdate(data.Id, server, (l, info) => MergeServerInfos(info, server));
                     PingSystem.QueuePing(data.Id);
                 }
             }
@@ -80,6 +80,20 @@ namespace LmpClient.Network
             {
                 LunaLog.LogError($"[LMP]: Invalid server list reply msg: {e}");
             }
+        }
+
+        /// <summary>
+        /// This merges two ServerInfo objects.
+        /// It copies over data from the old object if it is empty/null/invalid in the new object.
+        /// </summary>
+        /// <returns>A merged ServerInfo object</returns>
+        private static ServerInfo MergeServerInfos(ServerInfo existing, ServerInfo fresh)
+        {
+            // Some masterservers have broken country detection, so keep the existing value if any.
+            if (string.IsNullOrEmpty(fresh.Country) && !string.IsNullOrEmpty(existing.Country))
+                fresh.Country = existing.Country;
+
+            return fresh;
         }
 
         /// <summary>

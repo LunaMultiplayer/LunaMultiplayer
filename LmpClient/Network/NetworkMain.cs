@@ -93,6 +93,7 @@ namespace LmpClient.Network
             {
                 // Support crazy people who completely disable IPv6 on the OS despite major OS manufacturers telling them otherwise
                 Config.LocalAddress = IPAddress.Any;
+                Config.DualStack = false;
             }
             ClientConnection = new NetClient(Config.Clone());
         }

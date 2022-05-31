@@ -24,3 +24,7 @@ masterserver.pictocube.fr:8710
 direct.imexile.moe:8700
 #Bloodfallen Nightly List: direct.imexile.moe:8703
 direct.imexile.moe:8702
+#DasSkelett. List: https://ms.lmp.dasskelett.dev or http://116.203.125.175:8701/
+ms.lmp.dasskelett.dev:8700
+#DasSkelett Nightly. List: https://ms-nightly.lmp.dasskelett.dev or http://116.203.125.175:8751/
+ms-nightly.lmp.dasskelett.dev:8750

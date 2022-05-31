@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace LmpMasterServer
 {
     /// <summary>
-    /// This program is the one who does the punchtrough between a nat client and a nat server. 
+    /// This program is the one who does the punchtrough between a nat client and a nat server.
     /// You should only run if you agree in the forum to do so and your server ip is listed in:
-    /// https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/MasterServersList
+    /// https://github.com/LunaMultiplayer/LunaMultiplayer/raw/master/MasterServersList/MasterServersList.txt
     /// </summary>
     public static class EntryPoint
     {
@@ -94,6 +94,7 @@ namespace LmpMasterServer
             Console.WriteLine("/p:<port>                ... Start with the specified port (default port is 8700)");
             Console.WriteLine("/g:<port>                ... Reply to get petitions on the specified port (default is 8701)");
             Console.WriteLine("/nightly                 ... Keep this master server updated with last nightly version");
+            Console.WriteLine("/noupdatecheck           ... Disable automatic updates");
             Console.WriteLine("/noupnp                  ... Disable upnp port forwarding");
             Console.WriteLine("");
         }

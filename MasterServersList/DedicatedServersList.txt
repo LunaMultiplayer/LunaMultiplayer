@@ -1,60 +1,26 @@
-#Here you specify the ips or hostnames of all the dedicated servers followed by ":" and the port.
-#Then each master server will look if the server is on this list and tell the clients if it's a dedicated server or not
+#Here you specify the IP addresses or hostnames of all the dedicated servers followed by ":" and the port.
+#Each master server will look if the server is on this list and tell the clients if it's a dedicated server or not
 #It will appear with a rainbow effect on the browser or with the custom color specified in the DedicatedServerSettings.xml
+#For more information see https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Dedicated-server
 
-#Vega Career + Sandbox
-148.251.92.44:8801
-148.251.92.44:8800
-#KerbCat
-shanghai.211.network:8800
-shanghai.211.network:8801
-shanghai.211.network:8802
-#k0r4ll_ksp
-ksp.k0r4ll.link:8800
+#KerbCat 211Server
+121.36.204.155:8800
+121.36.204.155:8801
+121.36.204.155:8802
 #Piro server
 91.126.41.111:8800
-#OrionProject
-77.68.79.83:8800
-#404Republic
-republic.404inc.org:8800
-#Tayaut Servers
-kerbal.tayaut.net:8800
-kerbal.tayaut.net:8801
-#Lotka
-kerbal.lotka.tk:8800
-#Stratzenblitz75 Community Servers
-s75community.ddns.net:2401
-s75community.ddns.net:2700
-s75community.ddns.net:2701
-s75community.ddns.net:2702
-s75community.ddns.net:2703
 #Rogue's LUNACY 24/7
-zeus.styxnet.xyz:2100
+203.10.96.54:2101
 #Scott Manley community server
 135.23.120.245:8800
-#Ship For Brains Server
-176.58.102.60
-#ABrit'sServer
-abrit.ddns.net:8800
+#ABrit's Server
+abritin.space:8800
 #Tserver
 ksp.trickys.gg:8800
-#Esbjerg Space Center
-henriks.casa:8800
-#KSP Colonization Server
-174.93.240.195:9090
-#Orbit
-orbit.ddns.net:8800
+#Checha
 checha.ru:8800
 checha.ru:8888
-#WhiteWolf Gaming AU (Sandbox)
-games.kuemedia.com.au:8800
-#WhiteWolf Gaming AU (Modded Sandbox)
-games.kuemedia.com.au:8801
-#KSPAkidofou
-eur-2.styxnet.xyz:2161
-#Career Unlimited
-eur-2.styxnet.xyz:2108
-#LPS
-70.187.201.106:8800
-#Potez Bande
-73.113.142.128:8800
+#!a Cookie's Luna Server
+92.221.152.39:8800
+#FireStryker
+ksp.lekekelparadox.xyz:8800
