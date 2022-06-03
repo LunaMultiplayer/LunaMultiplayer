@@ -33,8 +33,6 @@ namespace Lidgren.Network
 {
 	public partial class NetPeer
 	{
-
-#if DEBUG
 		private readonly List<DelayedPacket> m_delayedPackets = new List<DelayedPacket>();
 
 		private class DelayedPacket
@@ -232,95 +230,5 @@ namespace Lidgren.Network
 			}
 			return true;
 		}
-#else
-		internal bool SendMTUPacket(int numBytes, NetEndPoint target)
-		{
-			try
-			{
-				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
-					m_socket.DontFragment = true;
-				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
-				if (numBytes != bytesSent)
-					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
-			}
-			catch (SocketException sx)
-			{
-				if (sx.SocketErrorCode == SocketError.MessageSize)
-					return false;
-				if (sx.SocketErrorCode == SocketError.WouldBlock)
-				{
-					// send buffer full?
-					LogWarning("Socket threw exception; would block - send buffer full? Increase in NetPeerConfiguration");
-					return true;
-				}
-				if (sx.SocketErrorCode == SocketError.ConnectionReset)
-					return true;
-				LogError("Failed to send packet: (" + sx.SocketErrorCode + ") " + sx);
-			}
-			catch (Exception ex)
-			{
-				LogError("Failed to send packet: " + ex);
-			}
-			finally
-			{
-				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
-					m_socket.DontFragment = false;
-			}
-			return true;
-		}
-
-		//
-		// Release - just send the packet straight away
-		//
-		internal void SendPacket(int numBytes, NetEndPoint target, int numMessages, out bool connectionReset)
-		{
-#if USE_RELEASE_STATISTICS
-			m_statistics.PacketSent(numBytes, numMessages);
-#endif
-			connectionReset = false;
-			IPAddress ba = default(IPAddress);
-			try
-			{
-				// TODO: refactor this check outta here
-				ba = NetUtility.GetCachedBroadcastAddress();
-				if (target.Address == ba)
-					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-
-				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
-				if (numBytes != bytesSent)
-					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
-			}
-			catch (SocketException sx)
-			{
-				if (sx.SocketErrorCode == SocketError.WouldBlock)
-				{
-					// send buffer full?
-					LogWarning("Socket threw exception; would block - send buffer full? Increase in NetPeerConfiguration");
-					return;
-				}
-				if (sx.SocketErrorCode == SocketError.ConnectionReset)
-				{
-					// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable" 
-					connectionReset = true;
-					return;
-				}
-				LogError("Failed to send packet: " + sx);
-			}
-			catch (Exception ex)
-			{
-				LogError("Failed to send packet: " + ex);
-			}
-			finally
-			{
-				if (target.Address == ba)
-					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, false);
-			}
-			return;
-		}
-
-		private void FlushDelayedPackets()
-		{
-		}
-#endif
-	}
+    }
 }
