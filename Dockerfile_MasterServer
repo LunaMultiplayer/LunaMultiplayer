@@ -19,7 +19,6 @@ ENV PATH="/root/.dotnet/:${PATH}"
 COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
 COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
 COPY Lidgren.Net/Lidgren.Net.csproj         /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
-COPY Lidgren.Network/Lidgren.Network.csproj /LunaMultiplayer/Lidgren.Network/Lidgren.Network.csproj
 COPY uhttpsharp/uhttpsharp2.csproj          /LunaMultiplayer/uhttpsharp/uhttpsharp2.csproj
 COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
 COPY LmpCommonTest/LmpCommonTest.csproj     /LunaMultiplayer/LmpCommonTest/LmpCommonTest.csproj

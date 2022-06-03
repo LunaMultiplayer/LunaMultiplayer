@@ -20,16 +20,15 @@ ARG OS_BASE
 ARG OS_VERSION
 ARG OS_ARCH
 
-COPY LmpCommon/LmpCommon.shproj             /LunaMultiplayer/LmpCommon/LmpCommon.shproj
-COPY Lidgren/Lidgren.shproj                 /LunaMultiplayer/Lidgren/Lidgren.shproj
-COPY LmpGlobal/LmpGlobal.shproj             /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj
-COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
-COPY Lidgren.Net/Lidgren.Net.csproj         /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
-COPY Lidgren.Network/Lidgren.Network.csproj /LunaMultiplayer/Lidgren.Network/Lidgren.Network.csproj
-COPY uhttpsharp/uhttpsharp2.csproj          /LunaMultiplayer/uhttpsharp/uhttpsharp2.csproj
-COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
-COPY LmpUpdater/LmpUpdater.csproj           /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
-COPY Server/Server.csproj                   /LunaMultiplayer/Server/Server.csproj
+COPY LmpCommon/LmpCommon.shproj       /LunaMultiplayer/LmpCommon/LmpCommon.shproj
+COPY Lidgren/Lidgren.shproj           /LunaMultiplayer/Lidgren/Lidgren.shproj
+COPY LmpGlobal/LmpGlobal.shproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj
+COPY Lidgren.Core/Lidgren.Core.csproj /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
+COPY Lidgren.Net/Lidgren.Net.csproj   /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
+COPY uhttpsharp/uhttpsharp2.csproj    /LunaMultiplayer/uhttpsharp/uhttpsharp2.csproj
+COPY uhttpsharp/uhttpsharp.csproj     /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
+COPY LmpUpdater/LmpUpdater.csproj     /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
+COPY Server/Server.csproj             /LunaMultiplayer/Server/Server.csproj
 
 RUN cd /LunaMultiplayer/Server && \
     dotnet restore -r ${OS_BASE}.${OS_VERSION}-${OS_ARCH}
