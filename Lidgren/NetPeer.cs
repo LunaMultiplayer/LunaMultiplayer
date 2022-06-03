@@ -121,14 +121,14 @@ namespace Lidgren.Network
 			m_connections = new List<NetConnection>();
 			m_connectionLookup = new Dictionary<NetEndPoint, NetConnection>();
 			m_handshakes = new Dictionary<NetEndPoint, NetConnection>();
-            if (m_configuration.LocalAddress.AddressFamily == AddressFamily.InterNetworkV6)
-            {
-                m_senderRemote = (EndPoint)new IPEndPoint(IPAddress.IPv6Any, 0);
-            }
-            else
-            {
-                m_senderRemote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
-            }
+			if (m_configuration.LocalAddress.AddressFamily == AddressFamily.InterNetworkV6)
+			{
+				m_senderRemote = (EndPoint)new IPEndPoint(IPAddress.IPv6Any, 0);
+			}
+			else
+			{
+				m_senderRemote = (EndPoint)new IPEndPoint(IPAddress.Any, 0);
+			}
 			m_status = NetPeerStatus.NotRunning;
 			m_receivedFragmentGroups = new Dictionary<NetConnection, Dictionary<int, ReceivedFragmentGroup>>();
 		}
@@ -187,24 +187,24 @@ namespace Lidgren.Network
 		/// <summary>
 		/// Read a pending message from any connection, blocking up to maxMillis if needed
 		/// </summary>
-	        public NetIncomingMessage WaitMessage(int maxMillis)
-	        {
-	            NetIncomingMessage msg = ReadMessage();
+			public NetIncomingMessage WaitMessage(int maxMillis)
+			{
+				NetIncomingMessage msg = ReadMessage();
 
-	            while (msg == null)
-	            {
-	                // This could return true...
-	                if (!MessageReceivedEvent.WaitOne(maxMillis))
-	                {
-	                    return null;
-	                }
+				while (msg == null)
+				{
+					// This could return true...
+					if (!MessageReceivedEvent.WaitOne(maxMillis))
+					{
+						return null;
+					}
 
-	                // ... while this will still returns null. That's why we need to cycle.
-	                msg = ReadMessage();
-	            }
+					// ... while this will still returns null. That's why we need to cycle.
+					msg = ReadMessage();
+				}
 
-	            return msg;
-        	}
+				return msg;
+			}
 
 		/// <summary>
 		/// Read a pending message from any connection, if any
@@ -223,16 +223,16 @@ namespace Lidgren.Network
 			return retval;
 		}
 
-        	/// <summary>
-	        /// Reads a pending message from any connection, if any.
-	        /// Returns true if message was read, otherwise false.
-	        /// </summary>
-	        /// <returns>True, if message was read.</returns>
-	        public bool ReadMessage(out NetIncomingMessage message)
-	        {
-	            message = ReadMessage();
-	            return message != null;
-	        }
+			/// <summary>
+			/// Reads a pending message from any connection, if any.
+			/// Returns true if message was read, otherwise false.
+			/// </summary>
+			/// <returns>True, if message was read.</returns>
+			public bool ReadMessage(out NetIncomingMessage message)
+			{
+				message = ReadMessage();
+				return message != null;
+			}
 
 		/// <summary>
 		/// Read a pending message from any connection, if any
@@ -310,8 +310,8 @@ namespace Lidgren.Network
 		{
 			if (remoteEndPoint == null)
 				throw new ArgumentNullException("remoteEndPoint");
-            if(m_configuration.DualStack)
-                remoteEndPoint = NetUtility.MapToIPv6(remoteEndPoint);
+			if(m_configuration.DualStack)
+				remoteEndPoint = NetUtility.MapToIPv6(remoteEndPoint);
 
 			lock (m_connections)
 			{
@@ -344,7 +344,7 @@ namespace Lidgren.Network
 				}
 
 				NetConnection conn = new NetConnection(this, remoteEndPoint);
-                conn.SetStatus(NetConnectionStatus.InitiatedConnect, "user called connect");
+				conn.SetStatus(NetConnectionStatus.InitiatedConnect, "user called connect");
 				conn.m_localHailMessage = hailMessage;
 
 				// handle on network thread
