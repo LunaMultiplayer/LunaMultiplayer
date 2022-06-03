@@ -12,14 +12,6 @@ servers.lunamultiplayer.com:8750
 lmp.anschuetznet.de:8700
 #Angryjoshi Nightly. List: http://lmp.anschuetznet.de:8751
 lmp.anschuetznet.de:8750
-#Piro server List: http://91.126.41.111:8701/
-91.126.41.111:8700
-#Piro server Nightly List: http://91.126.41.111:8751/
-91.126.41.111:8750
-#Alfred (PictoCube). List: http://masterserver.pictocube.fr:8701/
-masterserver.pictocube.fr:8700
-#Alfred (PictoCube) Nightly. List: http://masterserver.pictocube.fr:8711/
-masterserver.pictocube.fr:8710
 #Bloodfallen Server List: direct.imexile.moe:8701
 direct.imexile.moe:8700
 #Bloodfallen Nightly List: direct.imexile.moe:8703
