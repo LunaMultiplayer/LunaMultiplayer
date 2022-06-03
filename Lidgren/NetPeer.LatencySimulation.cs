@@ -20,10 +20,12 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#define USE_RELEASE_STATISTICS
 
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Diagnostics;
+
+#if DEBUG
+using System.Collections.Generic;
+#endif
 
 #if !__NOIPENDPOINT__
 using NetEndPoint = System.Net.IPEndPoint;
@@ -33,6 +35,10 @@ namespace Lidgren.Network
 {
 	public partial class NetPeer
 	{
+		// Avoids allocation on mapping to IPv6
+		private IPEndPoint targetCopy = new IPEndPoint(IPAddress.Any, 0);
+
+#if DEBUG
 		private readonly List<DelayedPacket> m_delayedPackets = new List<DelayedPacket>();
 
 		private class DelayedPacket
@@ -130,9 +136,6 @@ namespace Lidgren.Network
 			catch { }
 		}
 
-        //Avoids allocation on mapping to IPv6
-        private IPEndPoint targetCopy = new IPEndPoint(IPAddress.Any, 0);
-
 		internal bool ActuallySendPacket(byte[] data, int numBytes, NetEndPoint target, out bool connectionReset)
 		{
 			connectionReset = false;
@@ -141,25 +144,25 @@ namespace Lidgren.Network
 			{
 				ba = NetUtility.GetCachedBroadcastAddress();
 
-                // TODO: refactor this check outta here
-                if (target.Address.Equals(ba))
-                {
-                    // Some networks do not allow 
-                    // a global broadcast so we use the BroadcastAddress from the configuration
-                    // this can be resolved to a local broadcast addresss e.g 192.168.x.255                    
-                    targetCopy.Address = m_configuration.BroadcastAddress;
-                    targetCopy.Port = target.Port;
-                    m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
-                }
-                else if(m_configuration.DualStack && m_configuration.LocalAddress.AddressFamily == AddressFamily.InterNetworkV6)
-                    NetUtility.CopyEndpoint(target, targetCopy); //Maps to IPv6 for Dual Mode
-                else
-                {
-	                targetCopy.Port = target.Port;
-	                targetCopy.Address = target.Address;
-                }
+				// TODO: refactor this check outta here
+				if (target.Address.Equals(ba))
+				{
+					// Some networks do not allow
+					// a global broadcast so we use the BroadcastAddress from the configuration
+					// this can be resolved to a local broadcast addresss e.g 192.168.x.255
+					targetCopy.Address = m_configuration.BroadcastAddress;
+					targetCopy.Port = target.Port;
+					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+				}
+				else if(m_configuration.DualStack && m_configuration.LocalAddress.AddressFamily == AddressFamily.InterNetworkV6)
+					NetUtility.CopyEndpoint(target, targetCopy); //Maps to IPv6 for Dual Mode
+				else
+				{
+					targetCopy.Port = target.Port;
+					targetCopy.Address = target.Address;
+				}
 
-                int bytesSent = m_socket.SendTo(data, 0, numBytes, SocketFlags.None, targetCopy);
+				int bytesSent = m_socket.SendTo(data, 0, numBytes, SocketFlags.None, targetCopy);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 
@@ -175,7 +178,7 @@ namespace Lidgren.Network
 				}
 				if (sx.SocketErrorCode == SocketError.ConnectionReset)
 				{
-					// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable" 
+					// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable"
 					connectionReset = true;
 					return false;
 				}
@@ -230,5 +233,110 @@ namespace Lidgren.Network
 			}
 			return true;
 		}
-    }
+#else
+		internal bool SendMTUPacket(int numBytes, NetEndPoint target)
+		{
+			try
+			{
+				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
+					m_socket.DontFragment = true;
+				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
+				if (numBytes != bytesSent)
+					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
+			}
+			catch (SocketException sx)
+			{
+				if (sx.SocketErrorCode == SocketError.MessageSize)
+					return false;
+				if (sx.SocketErrorCode == SocketError.WouldBlock)
+				{
+					// send buffer full?
+					LogWarning("Socket threw exception; would block - send buffer full? Increase in NetPeerConfiguration");
+					return true;
+				}
+				if (sx.SocketErrorCode == SocketError.ConnectionReset)
+					return true;
+				LogError("Failed to send packet: (" + sx.SocketErrorCode + ") " + sx);
+			}
+			catch (Exception ex)
+			{
+				LogError("Failed to send packet: " + ex);
+			}
+			finally
+			{
+				if (m_socket.AddressFamily == AddressFamily.InterNetwork)
+					m_socket.DontFragment = false;
+			}
+			return true;
+		}
+
+		//
+		// Release - just send the packet straight away
+		//
+		internal void SendPacket(int numBytes, NetEndPoint target, int numMessages, out bool connectionReset)
+		{
+#if USE_RELEASE_STATISTICS
+			m_statistics.PacketSent(numBytes, numMessages);
+#endif
+			connectionReset = false;
+			IPAddress ba = default(IPAddress);
+			try
+			{
+				ba = NetUtility.GetCachedBroadcastAddress();
+
+				// TODO: refactor this check outta here
+				if (target.Address.Equals(ba))
+				{
+					// Some networks do not allow
+					// a global broadcast so we use the BroadcastAddress from the configuration
+					// this can be resolved to a local broadcast addresss e.g 192.168.x.255
+					targetCopy.Address = m_configuration.BroadcastAddress;
+					targetCopy.Port = target.Port;
+					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+				}
+				else if(m_configuration.DualStack && m_configuration.LocalAddress.AddressFamily == AddressFamily.InterNetworkV6)
+					NetUtility.CopyEndpoint(target, targetCopy); //Maps to IPv6 for Dual Mode
+				else
+				{
+					targetCopy.Port = target.Port;
+					targetCopy.Address = target.Address;
+				}
+
+				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, targetCopy);
+				if (numBytes != bytesSent)
+					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
+			}
+			catch (SocketException sx)
+			{
+				if (sx.SocketErrorCode == SocketError.WouldBlock)
+				{
+					// send buffer full?
+					LogWarning("Socket threw exception; would block - send buffer full? Increase in NetPeerConfiguration");
+					return;
+				}
+				if (sx.SocketErrorCode == SocketError.ConnectionReset)
+				{
+					// connection reset by peer, aka connection forcibly closed aka "ICMP port unreachable"
+					connectionReset = true;
+					return;
+				}
+				LogError("Failed to send packet: " + sx);
+			}
+			catch (Exception ex)
+			{
+				LogError("Failed to send packet: " + ex);
+			}
+			finally
+			{
+				if (target.Address == ba)
+					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, false);
+			}
+			return;
+		}
+
+		private void FlushDelayedPackets()
+		{
+		}
+#endif
+	}
 }
