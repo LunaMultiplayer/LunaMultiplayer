@@ -18,6 +18,7 @@ namespace LmpMasterServer.Structure
                 _key = key;
                 Value = value;
                 _timer = new Timer(timeout);
+                _timer.AutoReset = false;
                 _timer.Elapsed += Elapsed_Event;
                 _timer.Start();
             }
@@ -25,6 +26,7 @@ namespace LmpMasterServer.Structure
             private void Elapsed_Event(object sender, ElapsedEventArgs e)
             {
                 _timer.Elapsed -= Elapsed_Event;
+                _timer.Dispose();
                 Dictionary.TryRemove(_key, out _);
             }
         }

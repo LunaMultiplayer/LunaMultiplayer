@@ -28,6 +28,8 @@ namespace LmpMasterServer.Lidgren
         public static int ServerRemoveMsCheckInterval { get; set; } = 5000;
         public static ushort Port { get; set; } = 8700;
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
+        private static TimeoutConcurrentDictionary<IPAddress, object> _lastServerListRequests =
+            new TimeoutConcurrentDictionary<IPAddress, object>(1000);
         private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 
         public static async void Start()
@@ -71,10 +73,11 @@ namespace LmpMasterServer.Lidgren
                             break;
                         case NetIncomingMessageType.UnconnectedData:
                             var message = GetMessage(msg);
-                            if (message != null && !message.VersionMismatch)
-                            {
-                                HandleMessage(message, msg, peer);
-                            }
+                            if (message == null)
+                                break;
+                            if (message.VersionMismatch)
+                                break;
+                            HandleMessage(message, msg, peer);
                             break;
                     }
                 }
@@ -117,7 +120,6 @@ namespace LmpMasterServer.Lidgren
             }
         }
 
-
         private static void HandleMessage(IMasterServerMessageBase message, NetIncomingMessage netMsg, NetPeer peer)
         {
             if (BannedIpsRetriever.IsBanned(netMsg.SenderEndPoint))
@@ -134,8 +136,7 @@ namespace LmpMasterServer.Lidgren
                         RegisterServer(message, netMsg);
                         break;
                     case MasterServerMessageSubType.RequestServers:
-                        LunaLog.Normal($"LIST REQUEST from: {netMsg.SenderEndPoint}");
-                        SendServerLists(netMsg, peer);
+                        HandleListRequest(netMsg, peer);
                         break;
                     case MasterServerMessageSubType.Introduction:
                         var msgData = (MsIntroductionMsgData)message.Data;
@@ -180,6 +181,25 @@ namespace LmpMasterServer.Lidgren
             {
                 LunaLog.Error($"Error handling message. Details: {e}");
             }
+        }
+
+        private static void HandleListRequest(NetIncomingMessage netMsg, NetPeer peer)
+        {
+            // Limit server list requests to one per second per source IP address
+            // because this is basically a (n * 200)-times UDP amplification service (n: number of registered servers).
+            // If masterservers ever listen on IPv6, this needs to be updated to mask IPv6 addresses to 64 bits.
+            var address = netMsg.SenderEndPoint.Address;
+
+            if (_lastServerListRequests.TryGet(address, out _))
+            {
+                LunaLog.Debug($"LIST REQUEST RATE LIMIT EXCEEDED from: {netMsg.SenderEndPoint}");
+                return;
+            }
+
+            _lastServerListRequests.TryAdd(address, null);
+
+            LunaLog.Normal($"LIST REQUEST from: {netMsg.SenderEndPoint}");
+            SendServerLists(netMsg, peer);
         }
 
         /// <summary>
