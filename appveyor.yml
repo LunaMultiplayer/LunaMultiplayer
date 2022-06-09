@@ -26,7 +26,7 @@ environment:
   WEBHOOK_URL:
     secure: bhCOtyDF+wInocIkKfUQdxpM4csyVv7cxhUGz0NzLnFrlEZsaviEDJeDbctuv4NBM4xPkl4Wpv3rb6VwNcvEr8IWW5Te0P/kx1VeNMD5espcLKzMwy46shi630b3wvIipOeBnupc6nsiw7/2liuNhJkvjdyu4wxQXVDVWNSi+t0=
   ZIPPASSWORD:
-    secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=    
+    secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
 cache:
   - packages -> **\packages.config
 assembly_info:
@@ -54,7 +54,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-#Client post build commands
+ #Client post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Button"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"
@@ -72,11 +72,11 @@ after_build:
  #Master server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
  - ps: xcopy /y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
-  #Server server post build commands  
+ #Server post build commands
  - ps: dotnet publish "$env:appveyor_build_folder\Server\Server.csproj" --output $env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer
  #- ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  #- ps: xcopy /y "$env:appveyor_build_folder\Server\bin\$env:configuration\net5\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
-  #7zip everything
+ #7zip everything
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Client-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayerMasterServer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
@@ -97,6 +97,7 @@ artifacts:
    name: LunaMultiplayer-Server-$(configuration).zip
  - path: .\LunaMultiplayerMasterServer-$(configuration).zip
    name: LunaMultiplayerMasterServer-$(configuration).zip
+
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
@@ -125,21 +126,15 @@ notifications:
 #   on_build_success: true
 #   on_build_failure: true
 #   on_build_status_changed: true
-   
+
  - provider: Webhook
    url: http://godarklight.privatedns.org/dmp/lmp.php
    on_build_success: true
    on_build_failure: true
    on_build_status_changed: true
-   
- - provider: Webhook
-   url:  https://registry.hub.docker.com/u/thesystem/lunamultiplayer/trigger/d9d50936-8115-40b9-a087-24330d5cc59c/
-   on_build_success: true
-   on_build_failure: true
-   on_build_status_changed: true
 
 #Old webhook for discord...
-# - provider: Webhook 
+# - provider: Webhook
 #   url: https://skyhook.glitch.me/api/webhooks/428098094928756737/u2FRiQ-zKyEozSTCUX2DVbqZfCaXR6r3BhX6UCvLYBqbxzvcQDeo9mRdw1HXYR_9Ckua/appveyor
 #   content_type: application/json
 #   on_build_success: true

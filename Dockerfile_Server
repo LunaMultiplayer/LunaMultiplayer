@@ -20,6 +20,7 @@ ARG OS_BASE
 ARG OS_VERSION
 ARG OS_ARCH
 
+COPY .nuget                           /LunaMultiplayer/.nuget
 COPY LmpCommon/LmpCommon.shproj       /LunaMultiplayer/LmpCommon/LmpCommon.shproj
 COPY Lidgren/Lidgren.shproj           /LunaMultiplayer/Lidgren/Lidgren.shproj
 COPY LmpGlobal/LmpGlobal.shproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj

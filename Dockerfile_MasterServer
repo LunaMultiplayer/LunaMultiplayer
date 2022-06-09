@@ -16,6 +16,7 @@ FROM mono:latest as builder
 RUN  curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh | bash /dev/stdin --channel 5.0
 ENV PATH="/root/.dotnet/:${PATH}"
 
+COPY .nuget                                 /LunaMultiplayer/.nuget
 COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
 COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
 COPY Lidgren.Net/Lidgren.Net.csproj         /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj

@@ -2,6 +2,9 @@
 **/obj/
 .git/
 /Documentation/
+/External/DebugLMP/
+/External/Dependencies_OLD/
+/External/KSPLibraries/
+/External/Nuget/
 
 /Dockerfile*
-/External/KSPLibraries/KSPLibraries.7z
