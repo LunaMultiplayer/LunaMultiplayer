@@ -148,8 +148,9 @@ namespace LmpMasterServer.Lidgren
                                 {
                                     // Both client and server are listening on IPv6, try an IPv6 firewall punchthrough
                                     // This also triggers a first punchthrough on IPv4 with the public addresses
-                                    LunaLog.Normal(
-                                        $"INTRODUCTION request from: {msgData.InternalEndpoint6} to server: {server.InternalEndpoint6}");
+                                    LunaLog.Normal($"INTRODUCTION request from: " +
+                                                   $"{netMsg.SenderEndPoint} ({msgData.InternalEndpoint6}) " +
+                                                   $"to server: {server.ExternalEndpoint} ({server.InternalEndpoint6})");
                                     peer.Introduce(server.InternalEndpoint6, server.ExternalEndpoint,
                                         msgData.InternalEndpoint6, // client internal
                                         netMsg.SenderEndPoint, // client external
@@ -157,10 +158,11 @@ namespace LmpMasterServer.Lidgren
 
                                     // Give the first introduction attempt some time
                                     Thread.Sleep(50);
+                                } else {
+                                    LunaLog.Normal(
+                                        $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
                                 }
-
-                                LunaLog.Normal(
-                                    $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
+                                // The IPv4 punchthrough is triggered all the time
                                 peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
                                     msgData.InternalEndpoint, // client internal
                                     netMsg.SenderEndPoint, // client external

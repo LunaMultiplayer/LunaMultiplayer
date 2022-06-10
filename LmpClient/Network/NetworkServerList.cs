@@ -97,17 +97,20 @@ namespace LmpClient.Network
         }
 
         /// <summary>
-        /// Send a request to the master server to introduce us and do the nat punchtrough to the selected server
+        /// Send a request to the master server to introduce us and do the NAT punchtrough to the selected server
         /// </summary>
         public static void IntroduceToServer(long serverId)
         {
             if (Servers.TryGetValue(serverId, out var serverInfo))
             {
-                if (ServerIsInLocalLan(serverInfo.ExternalEndpoint) || ServerIsInLocalLan(serverInfo.InternalEndpoint6))
+                var amListeningOnIPv6 =
+                    NetworkMain.ClientConnection.Socket.AddressFamily == AddressFamily.InterNetworkV6;
+
+                if (ServerIsInLocalLan(serverInfo.ExternalEndpoint) || (amListeningOnIPv6 && ServerIsInLocalLan(serverInfo.InternalEndpoint6)))
                 {
                     LunaLog.Log("Server is in LAN. Skipping NAT punch");
                     var endpoints = new List<IPEndPoint>();
-                    if (!serverInfo.InternalEndpoint6.Address.Equals(IPAddress.IPv6Loopback))
+                    if (amListeningOnIPv6 && !serverInfo.InternalEndpoint6.Address.Equals(IPAddress.IPv6Loopback))
                         endpoints.Add(serverInfo.InternalEndpoint6);
                     if (!serverInfo.InternalEndpoint.Address.Equals(IPAddress.Loopback))
                         endpoints.Add(serverInfo.InternalEndpoint);
@@ -120,13 +123,21 @@ namespace LmpClient.Network
                         var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
                         msgData.Id = serverId;
                         msgData.Token = MainSystem.UniqueIdentifier;
-                        msgData.InternalEndpoint = new IPEndPoint(LunaNetUtils.GetOwnInternalIPv4Address(), NetworkMain.ClientConnection.Port);
-                        msgData.InternalEndpoint6 = new IPEndPoint(LunaNetUtils.GetOwnInternalIPv6Address(), NetworkMain.ClientConnection.Port);
+
+                        var localPort = NetworkMain.ClientConnection.Port;
+                        msgData.InternalEndpoint = new IPEndPoint(LunaNetUtils.GetOwnInternalIPv4Address(), localPort);
+                        // Only send IPv6 address if actually listening on IPv6, otherwise send loopback with means "none".
+                        msgData.InternalEndpoint6 = amListeningOnIPv6
+                            ? new IPEndPoint(LunaNetUtils.GetOwnInternalIPv6Address(), localPort)
+                            : new IPEndPoint(IPAddress.IPv6Loopback, localPort);
 
                         var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
                         MainSystem.Singleton.Status = string.Empty;
-                        LunaLog.Log($"[LMP]: Sending NAT introduction to master servers. Token: {MainSystem.UniqueIdentifier}");
+                        LunaLog.Log($"[LMP]: Sending NAT introduction request to master servers. " +
+                                    $"Token: {MainSystem.UniqueIdentifier}, " +
+                                    $"Internal Endpoint: {msgData.InternalEndpoint}, " +
+                                    $"Internal Endpoint v6: {msgData.InternalEndpoint6}");
                         NetworkSender.QueueOutgoingMessage(introduceMsg);
                     }
                     catch (Exception e)
@@ -142,9 +153,12 @@ namespace LmpClient.Network
         /// </summary>
         private static bool ServerIsInLocalLan(IPEndPoint serverEndPoint)
         {
-            var ownNetwork = LunaNetUtils.GetOwnInternalIPv6Network();
-            if (ownNetwork != null && serverEndPoint.AddressFamily == AddressFamily.InterNetworkV6)
+            if (serverEndPoint.AddressFamily == AddressFamily.InterNetworkV6)
             {
+                var ownNetwork = LunaNetUtils.GetOwnInternalIPv6Network();
+                if (ownNetwork == null)
+                    return false;
+
                 // For IPv6, we strip both addresses down to the subnet portion (likely the first 64 bits) and compare them.
                 // Because we only receive Global Unique Addresses from GetOwnInternalIPv6Network() (which are globally
                 // unique, as the name suggests and the RFCs define), those being equal should mean both are on the same network.
@@ -159,8 +173,11 @@ namespace LmpClient.Network
                 if (ownBytes == serverBytes)
                     return true;
             }
-
-            return Equals(LunaNetUtils.GetOwnExternalIpAddress(), serverEndPoint.Address);
+            else
+            {
+                return Equals(LunaNetUtils.GetOwnExternalIpAddress(), serverEndPoint.Address);
+            }
+            return false;
         }
 
         /// <summary>

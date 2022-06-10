@@ -36,29 +36,9 @@ namespace LmpCommon
             }
         }
 
-        public static IPAddress GetOwnSubnetMask()
-        {
-            var ni = GetNetworkInterface();
-            if (ni == null)
-            {
-                return IPAddress.Any;
-            }
-
-            var properties = ni.GetIPProperties();
-            foreach (var unicastAddress in properties.UnicastAddresses)
-            {
-                if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return unicastAddress.IPv4Mask;
-                }
-            }
-
-            return IPAddress.Any;
-        }
-
         public static IPAddress GetOwnInternalIPv4Address()
         {
-            var ni = GetNetworkInterface();
+            var ni = GetNetworkInterface(AddressFamily.InterNetwork);
             if (ni == null)
             {
                 return IPAddress.Loopback;
@@ -78,7 +58,7 @@ namespace LmpCommon
 
         public static UnicastIPAddressInformation GetOwnInternalIPv6Network()
         {
-            var ni = GetNetworkInterface();
+            var ni = GetNetworkInterface(AddressFamily.InterNetworkV6);
             if (ni == null)
             {
                 return null;
@@ -112,10 +92,14 @@ namespace LmpCommon
         /// Gets whether the address is an IPv6 Unique Local address.
         /// Backport of https://github.com/dotnet/runtime/pull/48853 landing in .NET 6
         /// </summary>
-        private static bool IsIPv6UniqueLocal(this IPAddress address)
+        internal static bool IsIPv6UniqueLocal(this IPAddress address)
         {
-            var firstBytes = (ushort)address.GetAddressBytes()[0];
-            return address.AddressFamily == AddressFamily.InterNetworkV6 && (firstBytes & 0xFE00) == 0xFC00;
+            if (address.AddressFamily != AddressFamily.InterNetworkV6)
+                return false;
+            var bytes = address.GetAddressBytes();
+            if (bytes.Length != 16)
+                return false;
+            return (bytes[0] & 0xFE) == 0xFC;
         }
 
         public static IPAddress GetOwnExternalIpAddress()
@@ -133,8 +117,8 @@ namespace LmpCommon
         }
 
         // TODO IPv6: This does not return AAAA records of hostnames.
-        // However it is only used to parse the dedicated and master server list, which for one is mostly hostnames,
-        // and tight now we rely on server/client<->master server connections being done IPv4-only, so the master
+        // However it is only used to parse the dedicated and master server list,
+        // and server<->master and client<->master connections are IPv4-only, so the master
         // server gets the public IPv4 address.
         public static IPEndPoint CreateEndpointFromString(string endpoint)
         {
@@ -202,7 +186,7 @@ namespace LmpCommon
             return null;
         }
 
-        private static NetworkInterface GetNetworkInterface()
+        private static NetworkInterface GetNetworkInterface(AddressFamily addressFamily)
         {
             var nics = NetworkInterface.GetAllNetworkInterfaces();
             if (nics.Length < 1)
@@ -213,18 +197,21 @@ namespace LmpCommon
             {
                 if (adapter.NetworkInterfaceType == NetworkInterfaceType.Loopback || adapter.NetworkInterfaceType == NetworkInterfaceType.Unknown)
                     continue;
-                if (!adapter.Supports(NetworkInterfaceComponent.IPv4))
+                var ipVersion = addressFamily == AddressFamily.InterNetwork
+                    ? NetworkInterfaceComponent.IPv4
+                    : NetworkInterfaceComponent.IPv6;
+                if (!adapter.Supports(ipVersion))
                     continue;
                 if (best == null)
                     best = adapter;
                 if (adapter.OperationalStatus != OperationalStatus.Up)
                     continue;
 
-                // make sure this adapter has any ipv4 addresses
+                // Make sure this adapter has an address of the specified family
                 var properties = adapter.GetIPProperties();
                 foreach (var unicastAddress in properties.UnicastAddresses)
                 {
-                    if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                    if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == addressFamily)
                     {
                         // Yes it does, return this network interface.
                         return adapter;
