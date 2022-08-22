@@ -18,7 +18,9 @@ $REPO_URL="https://github.com/$env:APPVEYOR_REPO_NAME/"
 $URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME"
 
 $ARTIFACTS_URL="https://ci.appveyor.com/project/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_NAME/build/job/$env:APPVEYOR_JOB_ID/artifacts"
-$CLIENT_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Debug.zip"
+$CLIENT_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Client-Debug.zip"
+$SERVER_WINDOWS_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Server-win-x64-Debug.zip"
+$SERVER_LINUX_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayer-Server-linux-x64-Debug.zip"
 $MASTER_SERVER_URL="https://ci.appveyor.com/api/buildjobs/$env:APPVEYOR_JOB_ID/artifacts/LunaMultiplayerMasterServer-Debug.zip"
 $BUILD_VERSION = [uri]::EscapeDataString($env:APPVEYOR_BUILD_VERSION)
 $TIMESTAMP="$(Get-Date -format s)Z"
@@ -47,17 +49,25 @@ $WEBHOOK_DATA="{
   ""embeds"": [ {
     ""color"": $EMBED_COLOR,
     ""author"": {
-      ""name"": ""Appveyor nightly build"",
+      ""name"": ""AppVeyor nightly build"",
       ""url"": ""$URL"",
       ""icon_url"": ""$AVATAR""
     },
-    ""title"": ""New nightly build available for download - $BUILD_VERSION"",
+    ""title"": ""New nightly build available for download - $env:APPVEYOR_REPO_BRANCH - $BUILD_VERSION"",
     ""url"": ""$ARTIFACTS_URL"",
     ""description"": ""Keep in mind that nightly builds might contain bugs!"",
     ""fields"": [
       {
         ""name"": ""Client"",
         ""value"": ""[Download Link]($CLIENT_URL)""
+      },
+      {
+        ""name"": ""Server (Windows)"",
+        ""value"": ""[Download Link]($SERVER_WINDOWS_URL)""
+      },
+      {
+        ""name"": ""Server (Linux)"",
+        ""value"": ""[Download Link]($SERVER_LINUX_URL)""
       }
     ],
     ""timestamp"": ""$TIMESTAMP"",

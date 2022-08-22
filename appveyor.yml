@@ -73,18 +73,26 @@ after_build:
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
  - ps: xcopy /y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
  #Server post build commands
- - ps: dotnet publish "$env:appveyor_build_folder\Server\Server.csproj" --output $env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer
- #- ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
- #- ps: xcopy /y "$env:appveyor_build_folder\Server\bin\$env:configuration\net5\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
+ - ps: dotnet publish "$env:appveyor_build_folder\Server\Server.csproj" --configuration $env:CONFIGURATION --output "$env:appveyor_build_folder\FinalFiles\win-x64-$env:configuration\LMPServer" --os win --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
+ - ps: dotnet publish "$env:appveyor_build_folder\Server\Server.csproj" --configuration $env:CONFIGURATION --output "$env:appveyor_build_folder\FinalFiles\linux-x64-$env:configuration\LMPServer" --os linux --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
+ - ps: dotnet publish "$env:appveyor_build_folder\Server\Server.csproj" --configuration $env:CONFIGURATION --output "$env:appveyor_build_folder\FinalFiles\linux-arm64-$env:configuration\LMPServer" --os linux --arch arm64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true
+ - ps: dotnet publish "$env:appveyor_build_folder\Server\Server.csproj" --configuration $env:CONFIGURATION --output "$env:appveyor_build_folder\FinalFiles\any-$env:configuration\LMPServer" --self-contained false -p:PublishSingleFile=false
  #7zip everything
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Client-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData"
- - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-win-x64-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\win-x64-$env:configuration\LMPServer"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-linux-x64-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\linux-x64-$env:configuration\LMPServer"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-linux-arm64-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\linux-arm64-$env:configuration\LMPServer"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-Server-any-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\any-$env:configuration\LMPServer"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayerMasterServer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
 
 #Post it on discord
 on_success:
- - ps: Invoke-RestMethod https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/appveyor_discord.ps -o appveyor_discord.ps1
- - ps: if ($env:configuration -like "Debug") {./appveyor_discord.ps1 success $env:WEBHOOK_URL}
+  - ps: |
+      if ($env:configuration -like "Debug") {
+        Invoke-RestMethod https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/appveyor_discord.ps -o appveyor_discord.ps1
+        ./appveyor_discord.ps1 success $env:WEBHOOK_URL
+      }
+
 
 #---------------------------------#
 #      artifacts configuration    #
@@ -93,8 +101,14 @@ on_success:
 artifacts:
  - path: .\LunaMultiplayer-Client-$(configuration).zip
    name: LunaMultiplayer-Client-$(configuration).zip
- - path: .\LunaMultiplayer-Server-$(configuration).zip
-   name: LunaMultiplayer-Server-$(configuration).zip
+ - path: .\LunaMultiplayer-Server-win-x64-$(configuration).zip
+   name: LunaMultiplayer-Server-win-x64-$(configuration).zip
+ - path: .\LunaMultiplayer-Server-linux-x64-$(configuration).zip
+   name: LunaMultiplayer-Server-linux-x64-$(configuration).zip
+ - path: .\LunaMultiplayer-Server-linux-arm64-$(configuration).zip
+   name: LunaMultiplayer-Server-linux-arm64-$(configuration).zip
+ - path: .\LunaMultiplayer-Server-any-$(configuration).zip
+   name: LunaMultiplayer-Server-any-$(configuration).zip
  - path: .\LunaMultiplayerMasterServer-$(configuration).zip
    name: LunaMultiplayerMasterServer-$(configuration).zip
 
@@ -107,7 +121,7 @@ deploy:
    tag: $(smallversion)-Draft
    release: Luna Multi Player $(smallversion)-Draft
    description: 'Build $(appveyor_build_version)'
-   artifact: LunaMultiplayer-Client-$(configuration).zip, LunaMultiplayer-Server-$(configuration).zip
+   artifact: LunaMultiplayer-Client-$(configuration).zip, LunaMultiplayer-Server-win-x64-$(configuration).zip, LunaMultiplayer-Server-linux-x64-$(configuration).zip, LunaMultiplayer-Server-linux-arm64-$(configuration).zip, LunaMultiplayer-Server-any-$(configuration).zip
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
    draft: true
