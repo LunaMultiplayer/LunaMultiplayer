@@ -12,10 +12,10 @@
 #Remove a container with: docker container rm lmpsrv
 
 ARG OS_BASE=alpine
-ARG OS_VERSION=3.14
+ARG OS_VERSION=3.16
 ARG OS_ARCH=x64
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-${OS_BASE}${OS_VERSION} as base
+FROM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} as base
 ARG OS_BASE
 ARG OS_VERSION
 ARG OS_ARCH
