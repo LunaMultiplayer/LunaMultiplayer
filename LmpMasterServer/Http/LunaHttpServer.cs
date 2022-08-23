@@ -1,5 +1,6 @@
 ﻿using LmpMasterServer.Http.Handlers;
 using LmpCommon;
+using LmpMasterServer.Log;
 using System;
 using System.IO;
 using System.Net;
@@ -21,8 +22,8 @@ namespace LmpMasterServer.Http
 
         public static void Start()
         {
-            // Due to Socket.DualMode (default true) listening on IPv6 also listens on IPv4
-            var listener = new TcpListener(Socket.OSSupportsIPv6 ? IPAddress.IPv6Any : IPAddress.Any, Port);
+            // With Socket.DualMode listening on IPv6 also listens on IPv4
+            var listener = TcpListener.Create(Port);
             Server.Use(new TcpListenerAdapter(listener));
 
             FileHandler.HttpRootDirectory = Web.WebHandler.BasePath;
@@ -43,10 +44,7 @@ namespace LmpMasterServer.Http
     public class PathGuard : IHttpRequestHandler
     {
         private readonly string basePath;
-        public PathGuard(string basepath)
-        {
-            this.basePath = basepath;
-        }
+        public PathGuard(string basepath) => basePath = basepath;
 
         public async Task Handle(IHttpContext context, Func<Task> next)
         {

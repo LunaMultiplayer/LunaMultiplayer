@@ -28,7 +28,10 @@ namespace LmpMasterServer.Http.Handlers
                 using (var stringWriter = new StringWriter())
                 using (var writer = new HtmlTextWriter(stringWriter))
                 {
+                    writer.Write("<!DOCTYPE html>");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Html);
                     RenderHead(writer);
+                    writer.RenderBeginTag(HtmlTextWriterTag.Body);
 
                     writer.RenderBeginTag(HtmlTextWriterTag.H1); writer.Write($"Luna Multiplayer servers - Version: {LmpVersioning.CurrentVersion}"); writer.RenderEndTag();
 
@@ -40,6 +43,8 @@ namespace LmpMasterServer.Http.Handlers
 
                     RenderServersTable(writer, servers);
                     RenderFooter(writer);
+                    writer.RenderEndTag();
+                    writer.RenderEndTag();
 
                     return stringWriter.ToString();
                 }
@@ -48,35 +53,18 @@ namespace LmpMasterServer.Http.Handlers
 
         private static void RenderHead(HtmlTextWriter writer)
         {
-            writer.RenderBeginTag(HtmlTextWriterTag.Head);
-
-            writer.RenderBeginTag(HtmlTextWriterTag.Title);
-            writer.Write("Luna Multiplayer servers");
-            writer.RenderEndTag();
-
-            writer.AddAttribute(HtmlTextWriterAttribute.Rel, "stylesheet");
-            writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/css");
-            writer.AddAttribute(HtmlTextWriterAttribute.Href, "css/style.css");
-            writer.RenderBeginTag(HtmlTextWriterTag.Link);
-            writer.RenderEndTag();
-
-            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/jquery-latest.js");
-            writer.RenderBeginTag(HtmlTextWriterTag.Script);
-            writer.RenderEndTag();
-
-            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/jquery.metadata.min.js");
-            writer.RenderBeginTag(HtmlTextWriterTag.Script);
-            writer.RenderEndTag();
-
-            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/jquery.tablesorter.min.js");
-            writer.RenderBeginTag(HtmlTextWriterTag.Script);
-            writer.RenderEndTag();
-
-            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/lmp.js");
-            writer.RenderBeginTag(HtmlTextWriterTag.Script);
-            writer.RenderEndTag();
-
-            writer.RenderEndTag();
+            // HtmlTextWriter makes <script> tags self-closing, which violates the HTML standard and is rejected by browsers.
+            // So let's just do the <head> manually.
+            writer.Write(@"
+<head>
+	<title>Luna Multiplayer servers</title>
+	<link rel=""stylesheet"" type=""text/css"" href=""css/style.css"" />
+	<script src=""js/jquery-latest.js""></script>
+	<script src=""js/jquery.metadata.min.js""></script>
+	<script src=""js/jquery.tablesorter.min.js""></script>
+	<script src=""js/lmp.js""></script>
+</head>
+");
         }
 
         private static void RenderFooter(HtmlTextWriter writer)

@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,9 +27,10 @@ namespace MasterServer
 #endif
         private const string DllFileName = "LmpMasterServer.dll";
 
-        private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
         private static readonly string DllPath = Path.Combine(Directory.GetCurrentDirectory(), DllFileName);
-        private static readonly AppDomainSetup DomainSetup = new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory };
+
+        private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
+        private static Action _stopDLLCallback;
 
         private static Version CurrentVersion
         {
@@ -52,10 +54,6 @@ namespace MasterServer
 
         private static void Main(string[] args)
         {
-            // Uncomment this to properly debug the code
-            // LmpMasterServer.EntryPoint.MainEntryPoint(args);
-            // while (true) { Thread.Sleep(100); }
-
             if (!File.Exists(DllPath))
             {
                 LogError($"Cannot find needed file {DllFileName}");
@@ -84,28 +82,22 @@ namespace MasterServer
         /// </summary>
         private static void StartMasterServerDll()
         {
-            LmpDomain = AppDomain.CreateDomain("LmpMasterServer", null, DomainSetup);
-            LmpDomain.SetData("Arguments", Arguments);
-            LmpDomain.SetData("Stop", false);
+            // https://docs.microsoft.com/en-us/dotnet/core/porting/net-framework-tech-unavailable#application-domains
+            // https://docs.microsoft.com/en-us/dotnet/api/system.runtime.loader.assemblyloadcontext?view=net-6.0
+            var assmeblyLoadContext = new AssemblyLoadContext("LmpMasterServer", true);
+            var assembly = assmeblyLoadContext.LoadFromAssemblyPath(DllPath);
+            var entryPoint = assembly.GetType("LmpMasterServer.EntryPoint");
 
-            LmpDomain.DoCallBack(async () =>
+            if (entryPoint == null)
+                throw new Exception("Could not find entrypoint in LmpMasterServer DLL.");
+
+            entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new object[] { Arguments });
+
+            _stopDLLCallback = () =>
             {
-                //Reload the uhttpSharp dll as otherwise on linux it fails
-                var uhttpSharpPath = Path.Combine(Directory.GetCurrentDirectory(), "uhttpsharp.dll");
-                AppDomain.CurrentDomain.Load(File.ReadAllBytes(uhttpSharpPath));
-
-                var assembly = AppDomain.CurrentDomain.Load(File.ReadAllBytes(DllPath));
-                var entryPoint = assembly.GetType("LmpMasterServer.EntryPoint");
-
-                entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new[] { AppDomain.CurrentDomain.GetData("Arguments") });
-
-                while (!(bool)AppDomain.CurrentDomain.GetData("Stop"))
-                {
-                    await Task.Delay(100);
-                }
-
                 entryPoint.GetMethod("Stop")?.Invoke(null, new object[0]);
-            });
+                assmeblyLoadContext.Unload();
+            };
         }
 
         /// <summary>
@@ -113,9 +105,8 @@ namespace MasterServer
         /// </summary>
         private static void StopMasterServerDll()
         {
-            LmpDomain.SetData("Stop", true);
-            Thread.Sleep(5000);
-            AppDomain.Unload(LmpDomain);
+            if (_stopDLLCallback != null)
+                _stopDLLCallback();
             Console.Clear();
         }
 

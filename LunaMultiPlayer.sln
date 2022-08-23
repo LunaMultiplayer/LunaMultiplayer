@@ -59,6 +59,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Lidgren", "Lidgren\Lidgren.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Net", "Lidgren.Net\Lidgren.Net.csproj", "{DCD22705-5F24-4533-98F9-4907CFBBEA54}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LmpMasterServerTest", "LmpMasterServerTest\LmpMasterServerTest.csproj", "{12D5EB00-0B9B-46E6-B1D3-89D416D43092}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +102,10 @@ Global
 		{DCD22705-5F24-4533-98F9-4907CFBBEA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCD22705-5F24-4533-98F9-4907CFBBEA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCD22705-5F24-4533-98F9-4907CFBBEA54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12D5EB00-0B9B-46E6-B1D3-89D416D43092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D5EB00-0B9B-46E6-B1D3-89D416D43092}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D5EB00-0B9B-46E6-B1D3-89D416D43092}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D5EB00-0B9B-46E6-B1D3-89D416D43092}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +123,7 @@ Global
 		{8629F82E-4F6E-41CF-9ED8-884BDE9A0B1E} = {622BED4E-ABB5-4F18-802A-E76D36EF47BF}
 		{DE924F66-77BD-474B-922E-399B361CF20B} = {622BED4E-ABB5-4F18-802A-E76D36EF47BF}
 		{DCD22705-5F24-4533-98F9-4907CFBBEA54} = {622BED4E-ABB5-4F18-802A-E76D36EF47BF}
+		{12D5EB00-0B9B-46E6-B1D3-89D416D43092} = {36350310-DD1E-4EA0-A4AE-95A959EAC386}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46CE1FFE-A52F-4C6D-8FF1-11B6E792761B}

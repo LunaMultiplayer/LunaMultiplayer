@@ -3,6 +3,8 @@ using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Time;
 using LmpMasterServer.Dedicated;
 using LmpMasterServer.Geolocalization;
+using LmpMasterServer.Log;
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,20 +17,22 @@ namespace LmpMasterServer.Structure
 {
     public class Server : ServerInfo
     {
-        private static IEnumerable<string> _countryCodes;
-        private static IEnumerable<string> CountryCodes => _countryCodes ?? (_countryCodes = CultureInfo
+        private static HashSet<string> _countryCodes;
+        // For most cultures the LCID is 4096, which can't be mapped to a RegionInfo.
+        // Instead use CultureInfo.Name, which is unique.
+        private static HashSet<string> CountryCodes => _countryCodes ?? (_countryCodes = CultureInfo
                            .GetCultures(CultureTypes.SpecificCultures)
-                           .Select(culture => new RegionInfo(culture.LCID))
-                           .Select(ri => ri.TwoLetterISORegionName).Distinct());
+                           .Select(culture => new RegionInfo(culture.Name))
+                           .Select(ri => ri.TwoLetterISORegionName).Distinct().ToHashSet());
 
-        private static readonly TimeSpan MaxCountryRequestTimeMs = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan MinCountryCodeRefreshInterval = TimeSpan.FromSeconds(5);
         private static DateTime _lastCountryRequestTime = DateTime.MinValue;
+        private static object _countryCodeRefreshLock = new();
 
-        private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries =
-            new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
+        private static readonly TimeoutConcurrentDictionary<IPAddress, string> AddressCountries =
+            new(TimeSpan.FromHours(24).TotalMilliseconds);
 
 
-        private volatile bool _refreshingCountryCode;
         public long LastRegisterTime { get; private set; }
 
         public void Update(MsRegisterServerMsgData msg)
@@ -58,7 +62,7 @@ namespace LmpMasterServer.Structure
             TerrainQuality = msg.TerrainQuality;
 
             if (string.IsNullOrEmpty(Country))
-                SetCountryFromEndpoint(this, ExternalEndpoint);
+                SetCountryFromEndpointAsync(ExternalEndpoint).Forget();
 
             if (!Website.Contains("://"))
             {
@@ -81,37 +85,45 @@ namespace LmpMasterServer.Structure
             Update(msg);
         }
 
-        private void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
+        public Task SetCountryFromEndpointAsync(IPEndPoint externalEndpoint)
         {
-            Task.Run(async () =>
+            return Task.Run(() =>
             {
-                if (_refreshingCountryCode) return;
-
-                _refreshingCountryCode = true;
-                try
-                {
-                    if (DateTime.UtcNow - _lastCountryRequestTime < MaxCountryRequestTimeMs)
-                        Thread.Sleep(MaxCountryRequestTimeMs);
-
-                    _lastCountryRequestTime = DateTime.UtcNow;
-                    if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
+                lock(_countryCodeRefreshLock)
+                    try
                     {
-                        server.Country = countryCode;
-                    }
-                    else
-                    {
-                        server.Country = await IpApi.GetCountry(externalEndpoint);
-                        if (string.IsNullOrEmpty(server.Country))
-                            server.Country = await IpLocate.GetCountry(externalEndpoint);
+                        if (!string.IsNullOrEmpty(Country))
+                            // Already resolved why we were waiting for the lock
+                            return;
 
-                        if (!string.IsNullOrEmpty(server.Country))
-                            EndpointCountries.TryAdd(externalEndpoint, server.Country);
+                        if (DateTime.UtcNow - _lastCountryRequestTime < MinCountryCodeRefreshInterval)
+                            // Since we have the lock, no other thread can bump _lastCountryRequestTime in the meantime
+                            Thread.Sleep(MinCountryCodeRefreshInterval);
+
+                        _lastCountryRequestTime = DateTime.UtcNow;
+
+                        if (AddressCountries.TryGet(externalEndpoint.Address, out var countryCode))
+                        {
+                            Country = countryCode;
+                        }
+                        else
+                        {
+                            Country = IpApi.GetCountryAsync(externalEndpoint).Result;
+                            if (string.IsNullOrEmpty(Country))
+                                Country = IpLocate.GetCountryAsync(externalEndpoint).Result;
+
+                            if (string.IsNullOrEmpty(Country))
+                                LunaLog.Debug(
+                                    $"SetCountryFromEndpoint failed for {externalEndpoint}: No lookup successful");
+                            else
+                                AddressCountries.TryAdd(externalEndpoint.Address, Country);
+                        }
                     }
-                }
-                finally
-                {
-                    _refreshingCountryCode = false;
-                }
+                    catch (Exception e)
+                    {
+                        LunaLog.Warning($"SetCountryFromEndpoint failed for {externalEndpoint}: " + e.Message);
+                        throw;
+                    }
             });
         }
 

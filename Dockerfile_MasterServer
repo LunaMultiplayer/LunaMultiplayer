@@ -11,15 +11,18 @@
 #Start a container with: docker start lmpms
 #Remove a container with: docker container rm lmpms
 
-FROM mono:latest as builder
+ARG OS_BASE=alpine
+ARG OS_VERSION=3.16
+ARG OS_ARCH=x64
 
-RUN  curl -sSL https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh | bash /dev/stdin --channel 5.0
-ENV PATH="/root/.dotnet/:${PATH}"
+FROM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} as base
+ARG OS_BASE
+ARG OS_VERSION
+ARG OS_ARCH
 
 COPY .nuget                                 /LunaMultiplayer/.nuget
 COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
 COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
-COPY Lidgren.Net/Lidgren.Net.csproj         /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
 COPY uhttpsharp/uhttpsharp2.csproj          /LunaMultiplayer/uhttpsharp/uhttpsharp2.csproj
 COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
 COPY LmpCommonTest/LmpCommonTest.csproj     /LunaMultiplayer/LmpCommonTest/LmpCommonTest.csproj
@@ -28,20 +31,20 @@ COPY LmpMasterServer/LmpMasterServer.csproj /LunaMultiplayer/LmpMasterServer/Lmp
 COPY MasterServer/MasterServer.csproj       /LunaMultiplayer/MasterServer/MasterServer.csproj
 COPY LmpUpdater/packages.config             /LunaMultiplayer/LmpUpdater/packages.config
 COPY uhttpsharp/packages.config             /LunaMultiplayer/uhttpsharp/packages.config
-COPY LmpMasterServer/packages.config        /LunaMultiplayer/LmpMasterServer/packages.config
 
-RUN cd LunaMultiplayer && \
-    nuget restore && \
-    cd MasterServer && \
-    dotnet restore
+RUN cd /LunaMultiplayer && \
+    dotnet restore MasterServer -r ${OS_BASE}.${OS_VERSION}-${OS_ARCH}
 
 COPY . /LunaMultiplayer
 WORKDIR /LunaMultiplayer/MasterServer
-RUN msbuild -p:Configuration=Release
 
-FROM mono:latest
-COPY --from=builder /LunaMultiplayer/MasterServer/bin/Release/ /LmpMasterServer/
+RUN dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${OS_ARCH} --self-contained true -p:PublishTrimmed=true -o Publish
+
+FROM ${OS_BASE}:${OS_VERSION}
+# icu-data-full is needed to cross-reference server country codes with a list of allowed CCs
+RUN apk update && apk add icu-libs icu-data-full libstdc++ libgcc
+COPY --from=base /LunaMultiplayer/MasterServer/Publish/ /LmpMasterServer/
 EXPOSE 8700/udp 8701/tcp
 STOPSIGNAL sigint
 WORKDIR /LmpMasterServer
-CMD [ "mono", "./MasterServer.exe" ]
+CMD [ "./MasterServer" ]
