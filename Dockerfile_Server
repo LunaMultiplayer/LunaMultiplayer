@@ -13,12 +13,8 @@
 
 ARG OS_BASE=alpine
 ARG OS_VERSION=3.16
-ARG OS_ARCH=x64
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} as base
-ARG OS_BASE
-ARG OS_VERSION
-ARG OS_ARCH
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} as base
 
 COPY .nuget                           /LunaMultiplayer/.nuget
 COPY LmpCommon/LmpCommon.shproj       /LunaMultiplayer/LmpCommon/LmpCommon.shproj
@@ -31,8 +27,12 @@ COPY uhttpsharp/uhttpsharp.csproj     /LunaMultiplayer/uhttpsharp/uhttpsharp.csp
 COPY LmpUpdater/LmpUpdater.csproj     /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
 COPY Server/Server.csproj             /LunaMultiplayer/Server/Server.csproj
 
-RUN cd /LunaMultiplayer/Server && \
-    dotnet restore -r ${OS_BASE}.${OS_VERSION}-${OS_ARCH}
+ARG OS_BASE
+ARG OS_VERSION
+ARG TARGETARCH
+RUN export TARGET=$(echo ${TARGETARCH} | sed -e 's/amd64/x64/'); \
+    cd /LunaMultiplayer/Server && \
+    dotnet restore -r ${OS_BASE}.${OS_VERSION}-${TARGET}
 
 COPY . /LunaMultiplayer
 
@@ -42,12 +42,13 @@ ENV DOTNET_PerfMapEnabled=1
 ENV COMPlus_PerfMapEnabled=1
 CMD [ "/bin/ash" ]
 
-FROM base as builder
+FROM --platform=$BUILDPLATFORM base as builder
+WORKDIR /LunaMultiplayer/Server
 ARG OS_BASE
 ARG OS_VERSION
-ARG OS_ARCH
-WORKDIR /LunaMultiplayer/Server
-RUN dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${OS_ARCH} -o Publish
+ARG TARGETARCH
+RUN export TARGET=$(echo ${TARGETARCH} | sed -e 's/amd64/x64/'); \
+    dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${TARGET} -o Publish
 
 FROM ${OS_BASE}:${OS_VERSION}
 RUN apk add icu-libs libstdc++ libgcc
