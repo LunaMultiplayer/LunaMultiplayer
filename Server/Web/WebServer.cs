@@ -51,11 +51,9 @@ namespace Server.Web
                         }
                         else
                         {
-                            // ListenAddress unset for web server, try the one of the game server
-                            IPAddress.TryParse(ConnectionSettings.SettingsStore.ListenAddress, out listenAddress);
+                            listenAddress = ServerContext.Config.LocalAddress;
                         }
 
-                        listenAddress ??= IPAddress.Any;
                         var listener = new TcpListener(listenAddress, WebsiteSettings.SettingsStore.Port);
                         // Listen on dual-stack for the unspecified address in IPv6 format ([::]).
                         if (listenAddress.Equals(IPAddress.IPv6Any))

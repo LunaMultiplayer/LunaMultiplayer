@@ -22,17 +22,30 @@ namespace Server.Server
 
         public static void SetupLidgrenServer()
         {
+            // ListenAddress and socket dual-stacking logic
+            // Default to [::], fall back to 0.0.0.0 if IPv6 is not supported by OS
             if (!IPAddress.TryParse(ConnectionSettings.SettingsStore.ListenAddress, out var listenAddress))
             {
                 LunaLog.Warning("Could not parse ListenAddress, falling back to 0.0.0.0");
                 listenAddress = IPAddress.Any;
             };
+            if (!listenAddress.Equals(IPAddress.IPv6Any) && !listenAddress.Equals(IPAddress.Any))
+            {
+                LunaLog.Warning("ListenAddress is not the unspecified address ([::] or 0.0.0.0). This is very unlikely to be correct, this server will not work.");
+            }
+            if (listenAddress.Equals(IPAddress.IPv6Any) && !Socket.OSSupportsIPv6)
+            {
+                LunaLog.Warning("OS does not support IPv6 or it has been disabled, changing ListenAddress to 0.0.0.0. " +
+                "Consider enabling it for better reachability and connection success rate");
+                listenAddress = IPAddress.Any;
+            }
             ServerContext.Config.LocalAddress = listenAddress;
             // Listen on dual-stack for the unspecified address in IPv6 format ([::]).
             if (ServerContext.Config.LocalAddress.Equals(IPAddress.IPv6Any))
             {
                 ServerContext.Config.DualStack = true;
             }
+
             ServerContext.Config.Port = ConnectionSettings.SettingsStore.Port;
             ServerContext.Config.AutoExpandMTU = ConnectionSettings.SettingsStore.AutoExpandMtu;
             ServerContext.Config.MaximumTransmissionUnit = ConnectionSettings.SettingsStore.MaximumTransmissionUnit;

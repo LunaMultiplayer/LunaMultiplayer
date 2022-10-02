@@ -68,7 +68,7 @@ namespace Server.Upnp
                 {
                     var device = await Device.GetValueAsync();
                     await device.CreatePortMapAsync(LmpWebPortMapping);
-                    if (verbose) LunaLog.Debug($"UPnP + Website active. Port: {WebsiteSettings.SettingsStore.Port} {LmpWebPortMapping.Protocol} opened!");
+                    if (verbose) LunaLog.Debug($"UPnP for website active. Port: {WebsiteSettings.SettingsStore.Port} {LmpWebPortMapping.Protocol} opened!");
                 }
                 catch (Exception)
                 {
