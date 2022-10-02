@@ -22,7 +22,7 @@ namespace Server.Server
         {
             if (!MasterServerSettings.SettingsStore.RegisterWithMasterServer) return;
 
-            LunaLog.Normal("Registering with master servers");
+            LunaLog.Normal("Master server registration is active");
 
             var addr4 = LunaNetUtils.GetOwnInternalIPv4Address();
             // As of right now the internal endpoint for IPv4 is mandatory, because if there is none, there is no

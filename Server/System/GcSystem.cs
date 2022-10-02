@@ -16,7 +16,6 @@ namespace Server.System
         {
             while (ServerContext.ServerRunning && IntervalSettings.SettingsStore.GcMinutesInterval != 0)
             {
-                LunaLog.Debug("Performing a GarbageCollection");
                 GC.Collect();
                 try
                 {

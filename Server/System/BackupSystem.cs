@@ -43,6 +43,7 @@ namespace Server.System
                 WarpSystem.BackupSubspaces();
                 TimeSystem.BackupStartTime();
                 ScenarioStoreSystem.BackupScenarios();
+                LunaLog.Debug("Backups done");
             }
         }
     }
