@@ -175,6 +175,9 @@ namespace LmpMasterServer.Lidgren
                             LunaLog.Warning($"Client {netMsg.SenderEndPoint} requested introduction to non listed host!");
                         }
                         break;
+                    case MasterServerMessageSubType.STUNBindingRequest:
+                        HandleBindingRequest(netMsg, peer);
+                        break;
                 }
             }
             catch (Exception e)
@@ -282,6 +285,24 @@ namespace LmpMasterServer.Lidgren
                     await Task.Delay(ServerRemoveMsCheckInterval);
                 }
             });
+        }
+
+        private static void HandleBindingRequest(NetIncomingMessage netMsg, NetPeer peer)
+        {
+            LunaLog.Normal($"STUN REQUEST from: {netMsg.SenderEndPoint}");
+
+            var msgData = MasterServerMessageFactory.CreateNewMessageData<MsSTUNSuccessResponseMsgData>();
+
+            msgData.TransportAddress = netMsg.SenderEndPoint;
+
+            var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
+            var outMsg = peer.CreateMessage(msg.GetMessageSize());
+
+            msg.Serialize(outMsg);
+            peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
+
+            //Force send of packets
+            peer.FlushSendQueue();
         }
     }
 }

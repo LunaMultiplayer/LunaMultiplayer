@@ -47,6 +47,7 @@ namespace Server
                 Console.OutputEncoding = Encoding.UTF8;
 
                 LunaLog.Info("Remember! Quit the server by using 'Control + C' so a backup is properly made before closing!");
+                LunaLog.Info("Documentation available at https://github.com/LunaMultiplayer/LunaMultiplayer/wiki");
 
                 if (Common.PlatformIsWindows())
                     ExitSignal.Exit += (sender, args) => Exit();
@@ -104,6 +105,7 @@ namespace Server
                 TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformBackups(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceivingMessages, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.CheckNATType, CancellationTokenSrc.Token));
 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg, CancellationTokenSrc.Token));

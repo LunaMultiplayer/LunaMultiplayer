@@ -134,6 +134,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Message\Data\MasterServer\MsRegisterServerMsgData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Message\Data\MasterServer\MsReplyServersMsgData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Message\Data\MasterServer\MsRequestServersMsgData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Message\Data\MasterServer\MsSTUNBindingRequestMsgData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Message\Data\MasterServer\MsSTUNSuccessResponseMsgData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Message\Data\ModMsgData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Message\Data\Motd\MotdBaseMsgData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Message\Data\Motd\MotdReplyMsgData.cs" />

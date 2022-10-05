@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using LmpCommon;
 using LmpCommon.Enums;
+using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.Interface;
 using LmpCommon.Time;
 using Server.Client;
@@ -60,6 +61,7 @@ namespace Server.Server
 
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            ServerContext.Config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
 
             if (LogSettings.SettingsStore.LogLevel >= LogLevels.NetworkDebug)
             {
@@ -143,6 +145,18 @@ namespace Server.Server
                                         if (client != null)
                                             ClientConnectionHandler.DisconnectClient(client, reason);
                                         break;
+                                }
+                                break;
+                            case NetIncomingMessageType.UnconnectedData:
+                                // Only process message if we are still waiting for STUN responses
+                                if (LidgrenMasterServer.ReceiveSTUNResponses.Wait(0))
+                                {
+                                    var message = ServerContext.MasterServerMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
+                                    if (message.Data is MsSTUNSuccessResponseMsgData data)
+                                    {
+                                        LidgrenMasterServer.DetectedSTUNTransportAddresses.Add(data.TransportAddress);
+                                    }
+                                    LidgrenMasterServer.ReceiveSTUNResponses.Release();
                                 }
                                 break;
                             default:

@@ -22,7 +22,9 @@ namespace LmpCommon.Message.MasterServer
             [(ushort)MasterServerMessageSubType.RegisterServer] = typeof(MsRegisterServerMsgData),
             [(ushort)MasterServerMessageSubType.RequestServers] = typeof(MsRequestServersMsgData),
             [(ushort)MasterServerMessageSubType.ReplyServers] = typeof(MsReplyServersMsgData),
-            [(ushort)MasterServerMessageSubType.Introduction] = typeof(MsIntroductionMsgData)
+            [(ushort)MasterServerMessageSubType.Introduction] = typeof(MsIntroductionMsgData),
+            [(ushort)MasterServerMessageSubType.STUNBindingRequest] = typeof(MsSTUNBindingRequestMsgData),
+            [(ushort)MasterServerMessageSubType.STUNSuccessResponse] = typeof(MsSTUNSuccessResponseMsgData)
         };
 
         public override MasterServerMessageType MessageType => MasterServerMessageType.Main;
