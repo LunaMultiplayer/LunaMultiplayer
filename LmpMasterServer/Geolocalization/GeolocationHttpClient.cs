@@ -13,7 +13,7 @@ namespace LmpMasterServer.Geolocalization
             {
                 var client = new HttpClient();
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; LunaMultiplayer Master Server)");
-                client.Timeout = TimeSpan.FromSeconds(30);
+                client.Timeout = TimeSpan.FromSeconds(10);
                 _client = client;
             }
             return _client;

@@ -29,9 +29,8 @@ public class Tests
         var server = GetTestServer(endpoint);
         server.Country = "";
 
-        var task = server.SetCountryFromEndpointAsync(endpoint);
+        server.SetCountryFromEndpointAsync(endpoint).Wait();
 
-        Assert.DoesNotThrow(task.Wait);
         Assert.That(server.Country, Is.EqualTo("US"), "endpoint country is fetched correctly");
     }
 }

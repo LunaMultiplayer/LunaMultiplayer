@@ -6,28 +6,28 @@ using LmpMasterServer.Geolocalization;
 using LmpMasterServer.Log;
 using Microsoft.VisualStudio.Threading;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace LmpMasterServer.Structure
 {
     public class Server : ServerInfo
     {
+        public static readonly TimeSpan MinCountryCodeRefreshInterval = TimeSpan.FromSeconds(5);
+        public static readonly ConcurrentQueue<(long,IPEndPoint)> CountryCodeRefreshQueue = new();
+
         private static HashSet<string> _countryCodes;
+
         // For most cultures the LCID is 4096, which can't be mapped to a RegionInfo.
         // Instead use CultureInfo.Name, which is unique.
-        private static HashSet<string> CountryCodes => _countryCodes ?? (_countryCodes = CultureInfo
+        private static HashSet<string> CountryCodes => _countryCodes ??= CultureInfo
                            .GetCultures(CultureTypes.SpecificCultures)
                            .Select(culture => new RegionInfo(culture.Name))
-                           .Select(ri => ri.TwoLetterISORegionName).Distinct().ToHashSet());
-
-        private static readonly TimeSpan MinCountryCodeRefreshInterval = TimeSpan.FromSeconds(5);
-        private static DateTime _lastCountryRequestTime = DateTime.MinValue;
-        private static object _countryCodeRefreshLock = new();
+                           .Select(ri => ri.TwoLetterISORegionName).Distinct().ToHashSet();
 
         private static readonly TimeoutConcurrentDictionary<IPAddress, string> AddressCountries =
             new(TimeSpan.FromHours(24).TotalMilliseconds);
@@ -61,8 +61,8 @@ namespace LmpMasterServer.Structure
             WarpMode = msg.WarpMode;
             TerrainQuality = msg.TerrainQuality;
 
-            if (string.IsNullOrEmpty(Country))
-                SetCountryFromEndpointAsync(ExternalEndpoint).Forget();
+            if (string.IsNullOrEmpty(Country) && !CountryCodeRefreshQueue.Contains((Id, ExternalEndpoint)))
+                CountryCodeRefreshQueue.Enqueue((Id, ExternalEndpoint));
 
             if (!Website.Contains("://"))
             {
@@ -85,46 +85,47 @@ namespace LmpMasterServer.Structure
             Update(msg);
         }
 
-        public Task SetCountryFromEndpointAsync(IPEndPoint externalEndpoint)
+        /// <summary> Looks up the country for this IP address at a GeoIP service
+        /// and writes it to the Country field.
+        /// </summary>
+        /// <returns>
+        /// A bool indicating whether a request to an external service has been made (true)
+        /// or the value could be fetched from cache (false).
+        /// </returns>
+        public async Task<bool> SetCountryFromEndpointAsync(IPEndPoint externalEndpoint)
         {
-            return Task.Run(() =>
+            try
             {
-                lock(_countryCodeRefreshLock)
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(Country))
-                            // Already resolved why we were waiting for the lock
-                            return;
+                if (!string.IsNullOrEmpty(Country))
+                    // Already resolved
+                    return false;
 
-                        if (DateTime.UtcNow - _lastCountryRequestTime < MinCountryCodeRefreshInterval)
-                            // Since we have the lock, no other thread can bump _lastCountryRequestTime in the meantime
-                            Thread.Sleep(MinCountryCodeRefreshInterval);
+                if (AddressCountries.TryGet(externalEndpoint.Address, out var countryCode))
+                {
+                    Country = countryCode;
+                    return false;
+                }
+                else
+                {
+                    LunaLog.Normal($"COUNTRY CODE LOOKUP for {externalEndpoint}");
+                    Country = await IpApi.GetCountryAsync(externalEndpoint);
+                    if (string.IsNullOrEmpty(Country))
+                        Country = await IpLocate.GetCountryAsync(externalEndpoint);
 
-                        _lastCountryRequestTime = DateTime.UtcNow;
+                    if (string.IsNullOrEmpty(Country))
+                        LunaLog.Debug(
+                            $"SetCountryFromEndpoint failed for {externalEndpoint}: No lookup successful");
+                    else
+                        AddressCountries.TryAdd(externalEndpoint.Address, Country);
 
-                        if (AddressCountries.TryGet(externalEndpoint.Address, out var countryCode))
-                        {
-                            Country = countryCode;
-                        }
-                        else
-                        {
-                            Country = IpApi.GetCountryAsync(externalEndpoint).Result;
-                            if (string.IsNullOrEmpty(Country))
-                                Country = IpLocate.GetCountryAsync(externalEndpoint).Result;
-
-                            if (string.IsNullOrEmpty(Country))
-                                LunaLog.Debug(
-                                    $"SetCountryFromEndpoint failed for {externalEndpoint}: No lookup successful");
-                            else
-                                AddressCountries.TryAdd(externalEndpoint.Address, Country);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        LunaLog.Warning($"SetCountryFromEndpoint failed for {externalEndpoint}: " + e.Message);
-                        throw;
-                    }
-            });
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                LunaLog.Warning($"SetCountryFromEndpoint failed for {externalEndpoint}: " + e.Message);
+                throw;
+            }
         }
 
         public static bool IsLocalIpAddress(IPAddress host)

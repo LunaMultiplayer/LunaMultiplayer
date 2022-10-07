@@ -61,8 +61,7 @@ namespace LmpCommon
 
         public void Info(string message)
         {
-            Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
             WriteLog(LogLevels.Normal, "Info", message);
             Console.ResetColor();
         }
@@ -83,7 +82,7 @@ namespace LmpCommon
 
         public void Fatal(string message)
         {
-            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.Red;
             WriteLog(LogLevels.Normal, "Fatal", message);
             Console.ResetColor();

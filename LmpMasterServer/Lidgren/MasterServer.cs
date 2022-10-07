@@ -10,6 +10,7 @@ using LmpCommon.Time;
 using LmpGlobal;
 using LmpMasterServer.Log;
 using LmpMasterServer.Structure;
+using Microsoft.VisualStudio.Threading;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -51,6 +52,7 @@ namespace LmpMasterServer.Lidgren
 
             LunaLog.Info($"Master server {LmpVersioning.CurrentVersion} started! Поехали!");
             RemoveExpiredServers();
+            StartCountryCodeRefreshTask();
 
             while (RunServer)
             {
@@ -252,39 +254,13 @@ namespace LmpMasterServer.Lidgren
         {
             var msgData = (MsRegisterServerMsgData)message.Data;
 
-            if (!ServerDictionary.ContainsKey(msgData.Id))
+            if (ServerDictionary.TryGetValue(msgData.Id, out var existing))
             {
+                existing.Update(msgData);
+            } else {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
                 LunaLog.Normal($"NEW SERVER: {netMsg.SenderEndPoint}");
             }
-            else
-            {
-                //Just update
-                ServerDictionary[msgData.Id].Update(msgData);
-            }
-        }
-
-        private static void RemoveExpiredServers()
-        {
-            Task.Run(async () =>
-            {
-                while (RunServer)
-                {
-                    var serversIdsToRemove = ServerDictionary
-                        .Where(s => LunaNetworkTime.UtcNow.Ticks - s.Value.LastRegisterTime >
-                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks ||
-                                    BannedIpsRetriever.IsBanned(s.Value.ExternalEndpoint))
-                        .ToArray();
-
-                    foreach (var serverId in serversIdsToRemove)
-                    {
-                        LunaLog.Normal($"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
-                        ServerDictionary.TryRemove(serverId.Key, out _);
-                    }
-
-                    await Task.Delay(ServerRemoveMsCheckInterval);
-                }
-            });
         }
 
         private static void HandleBindingRequest(NetIncomingMessage netMsg, NetPeer peer)
@@ -303,6 +279,67 @@ namespace LmpMasterServer.Lidgren
 
             //Force send of packets
             peer.FlushSendQueue();
+        }
+
+        private static void RemoveExpiredServers()
+        {
+            var t = Task.Run(async () =>
+            {
+                while (RunServer)
+                {
+                    var serversIdsToRemove = ServerDictionary
+                        .Where(s => LunaNetworkTime.UtcNow.Ticks - s.Value.LastRegisterTime >
+                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks ||
+                                    BannedIpsRetriever.IsBanned(s.Value.ExternalEndpoint))
+                        .ToArray();
+
+                    foreach (var serverId in serversIdsToRemove)
+                    {
+                        LunaLog.Normal($"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
+                        ServerDictionary.TryRemove(serverId.Key, out _);
+                    }
+
+                    await Task.Delay(ServerRemoveMsCheckInterval);
+                }
+            });
+            _ = t.ContinueWith(
+                (t2) => {
+                    LunaLog.Fatal(t2.Exception.ToString());
+                    Environment.Exit(1);
+                },
+                CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default
+            );
+        }
+
+        private static void StartCountryCodeRefreshTask()
+        {
+            var t = Task.Run(async () =>
+            {
+                while(RunServer)
+                {
+                    if (Server.CountryCodeRefreshQueue.TryDequeue(out var item))
+                    {
+                        (var id, var endpoint) = item;
+                        if (ServerDictionary.TryGetValue(id, out var server))
+                        {
+                            try {
+                                var didWork = await server.SetCountryFromEndpointAsync(endpoint);
+                                if (didWork)
+                                    await Task.Delay(Server.MinCountryCodeRefreshInterval);
+                            } catch {}
+                        }
+                    } else {
+                        await Task.Delay(TimeSpan.FromSeconds(30));
+                    }
+                }
+            });
+            _ = t.ContinueWith(
+                (t2) => {
+                    LunaLog.Fatal(t2.Exception.ToString());
+                    Environment.Exit(1);
+                },
+                CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default
+            );
         }
     }
 }
