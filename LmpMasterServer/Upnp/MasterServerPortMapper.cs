@@ -70,7 +70,7 @@ namespace LmpMasterServer.Upnp
                 while (Lidgren.MasterServer.RunServer)
                 {
                     await OpenPort();
-                    await Task.Delay((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
+                    await Task.Delay(TimeSpan.FromSeconds(30));
                 }
             }
         }
