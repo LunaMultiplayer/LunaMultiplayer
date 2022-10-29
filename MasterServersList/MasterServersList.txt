@@ -20,3 +20,5 @@ direct.imexile.moe:8702
 ms.lmp.dasskelett.dev:8700
 #DasSkelett Nightly. List: https://ms-nightly.lmp.dasskelett.dev or http://116.203.125.175:8751/
 ms-nightly.lmp.dasskelett.dev:8750
+#Nightshade. List: https://lmp.nightshade.fun or http://lmp.nightshade.fun:8701/
+lmp.nightshade.fun:8700
