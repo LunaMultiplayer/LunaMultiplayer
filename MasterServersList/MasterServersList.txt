@@ -22,3 +22,5 @@ ms.lmp.dasskelett.dev:8700
 ms-nightly.lmp.dasskelett.dev:8750
 #Nightshade. List: https://lmp.nightshade.fun or http://lmp.nightshade.fun:8701/
 lmp.nightshade.fun:8700
+#Nightshade Nightly. List: https://lmp.nightshade.fun/nightly or http://lmp.nightshade.fun:8751/
+lmp.nightshade.fun:8750
