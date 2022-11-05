@@ -30,7 +30,8 @@ COPY Server/Server.csproj             /LunaMultiplayer/Server/Server.csproj
 ARG OS_BASE
 ARG OS_VERSION
 ARG TARGETARCH
-RUN export TARGET=$(echo ${TARGETARCH} | sed -e 's/amd64/x64/'); \
+ARG TARGETVARIANT
+RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
     cd /LunaMultiplayer/Server && \
     dotnet restore -r ${OS_BASE}.${OS_VERSION}-${TARGET}
 
@@ -47,7 +48,8 @@ WORKDIR /LunaMultiplayer/Server
 ARG OS_BASE
 ARG OS_VERSION
 ARG TARGETARCH
-RUN export TARGET=$(echo ${TARGETARCH} | sed -e 's/amd64/x64/'); \
+ARG TARGETVARIANT
+RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
     dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${TARGET} -o Publish
 
 FROM ${OS_BASE}:${OS_VERSION}
