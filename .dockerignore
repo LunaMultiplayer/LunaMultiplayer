@@ -12,7 +12,7 @@ External/Nuget/
 
 *.md
 *.txt
-appveyor_discord.ps
+appveyor_discord.ps1
 appveyor.yml
 azure-pipelines.yml
 .gitattributes

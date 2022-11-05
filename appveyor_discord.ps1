@@ -55,18 +55,18 @@ $WEBHOOK_DATA="{
     },
     ""title"": ""New nightly build available for download - $env:APPVEYOR_REPO_BRANCH - $BUILD_VERSION"",
     ""url"": ""$ARTIFACTS_URL"",
-    ""description"": ""Keep in mind that nightly builds might contain bugs!"",
+    ""description"": ""Keep in mind that nightly builds might contain bugs! For all available builds click the link."",
     ""fields"": [
       {
         ""name"": ""Client"",
         ""value"": ""[Download Link]($CLIENT_URL)""
       },
       {
-        ""name"": ""Server (Windows)"",
+        ""name"": ""Server (Windows x64)"",
         ""value"": ""[Download Link]($SERVER_WINDOWS_URL)""
       },
       {
-        ""name"": ""Server (Linux)"",
+        ""name"": ""Server (Linux x64)"",
         ""value"": ""[Download Link]($SERVER_LINUX_URL)""
       }
     ],
