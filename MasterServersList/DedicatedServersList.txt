@@ -3,6 +3,8 @@
 #It will appear with a rainbow effect on the browser or with the custom color specified in the DedicatedServerSettings.xml
 #For more information see https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Dedicated-server
 
+#Kief Zone
+47.233.29.32:8800
 #KerbCat 211Server
 121.36.204.155:8800
 121.36.204.155:8801
