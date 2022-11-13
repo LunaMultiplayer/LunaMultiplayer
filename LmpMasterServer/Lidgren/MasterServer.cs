@@ -24,9 +24,10 @@ namespace LmpMasterServer.Lidgren
     {
         public static volatile bool RunServer;
 
-        public static int ServerMsTick { get; set; } = 100;
-        public static int ServerMsTimeout { get; set; } = 15000;
-        public static int ServerRemoveMsCheckInterval { get; set; } = 5000;
+        private static readonly TimeSpan ServerTickInterval = TimeSpan.FromMilliseconds(100);
+        private static readonly TimeSpan ServerTimeout = TimeSpan.FromSeconds(60);
+        private static readonly TimeSpan OfflineServerCleanupInterval = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan CountryCodeRefreshInterval = TimeSpan.FromSeconds(30);
         public static ushort Port { get; set; } = 8700;
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
         private static TimeoutConcurrentDictionary<IPAddress, object> _lastServerListRequests =
@@ -39,8 +40,8 @@ namespace LmpMasterServer.Lidgren
             {
                 Port = Port,
                 SuppressUnreliableUnorderedAcks = true,
-                PingInterval = 500,
-                ConnectionTimeout = ServerMsTimeout
+                PingInterval = 0.5f,
+                ConnectionTimeout = (float)ServerTimeout.TotalSeconds
             };
 
             config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
@@ -83,7 +84,7 @@ namespace LmpMasterServer.Lidgren
                             break;
                     }
                 }
-                await Task.Delay(ServerMsTick);
+                await Task.Delay(ServerTickInterval);
             }
             peer.Shutdown("So long and thanks for all the fish!");
         }
@@ -256,7 +257,7 @@ namespace LmpMasterServer.Lidgren
 
             if (ServerDictionary.TryGetValue(msgData.Id, out var existing))
             {
-                existing.Update(msgData);
+                existing.Update(msgData, netMsg.SenderEndPoint);
             } else {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
                 LunaLog.Normal($"NEW SERVER: {netMsg.SenderEndPoint}");
@@ -287,10 +288,10 @@ namespace LmpMasterServer.Lidgren
             {
                 while (RunServer)
                 {
+                    var currentTimeInTicks = LunaNetworkTime.UtcNow.Ticks;
                     var serversIdsToRemove = ServerDictionary
-                        .Where(s => LunaNetworkTime.UtcNow.Ticks - s.Value.LastRegisterTime >
-                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks ||
-                                    BannedIpsRetriever.IsBanned(s.Value.ExternalEndpoint))
+                        .Where(s => currentTimeInTicks - s.Value.LastRegisterTime > ServerTimeout.Ticks
+                                    || BannedIpsRetriever.IsBanned(s.Value.ExternalEndpoint))
                         .ToArray();
 
                     foreach (var serverId in serversIdsToRemove)
@@ -299,7 +300,7 @@ namespace LmpMasterServer.Lidgren
                         ServerDictionary.TryRemove(serverId.Key, out _);
                     }
 
-                    await Task.Delay(ServerRemoveMsCheckInterval);
+                    await Task.Delay(OfflineServerCleanupInterval);
                 }
             });
             _ = t.ContinueWith(
@@ -329,7 +330,7 @@ namespace LmpMasterServer.Lidgren
                             } catch {}
                         }
                     } else {
-                        await Task.Delay(TimeSpan.FromSeconds(30));
+                        await Task.Delay(CountryCodeRefreshInterval);
                     }
                 }
             });

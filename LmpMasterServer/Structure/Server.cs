@@ -35,10 +35,17 @@ namespace LmpMasterServer.Structure
 
         public long LastRegisterTime { get; private set; }
 
-        public void Update(MsRegisterServerMsgData msg)
+        public void Update(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
             InternalEndpoint = msg.InternalEndpoint;
             InternalEndpoint6 = msg.InternalEndpoint6;
+
+            // The external endpoint can change over time due to NAT and non-static IP addresses
+            if (externalEndpoint != ExternalEndpoint)
+                ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ?
+                    new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port) :
+                    externalEndpoint;
+
             LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
             Cheats = msg.Cheats;
             Password = msg.Password;
@@ -78,11 +85,8 @@ namespace LmpMasterServer.Structure
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
             Id = msg.Id;
-            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ?
-                new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port) :
-                externalEndpoint;
 
-            Update(msg);
+            Update(msg, externalEndpoint);
         }
 
         /// <summary> Looks up the country for this IP address at a GeoIP service
@@ -132,15 +136,11 @@ namespace LmpMasterServer.Structure
         {
             try
             {
-                var hostIPs = Dns.GetHostAddresses(host.ToString());
                 var localIPs = Dns.GetHostAddresses(Dns.GetHostName());
 
                 // test if any host IP equals to any local IP or to localhost
-                foreach (var hostIp in hostIPs)
-                {
-                    if (IPAddress.IsLoopback(hostIp)) return true;
-                    if (localIPs.Any(l => l.Equals(hostIp))) return true;
-                }
+                if (IPAddress.IsLoopback(host)) return true;
+                if (localIPs.Any(l => l.Equals(host))) return true;
 
                 /* The private address ranges are defined in RFC1918. They are:
                  * 10.0.0.0 - 10.255.255.255 (10/8 prefix)
