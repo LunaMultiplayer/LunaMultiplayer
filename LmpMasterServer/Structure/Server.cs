@@ -41,10 +41,16 @@ namespace LmpMasterServer.Structure
             InternalEndpoint6 = msg.InternalEndpoint6;
 
             // The external endpoint can change over time due to NAT and non-static IP addresses
-            if (externalEndpoint != ExternalEndpoint)
-                ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ?
-                    new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port) :
-                    externalEndpoint;
+            if (!externalEndpoint.Equals(ExternalEndpoint))
+                if (IsLocalIpAddress(externalEndpoint.Address))
+                    // The server is in the same LAN as the master server, we need to guess the public address and port
+                    if (ExternalEndpoint == null)
+                        // As the public IP address discovery process is expensive, only do it the first time
+                        // and hope that it never changes.
+                        ExternalEndpoint = new IPEndPoint(LunaNetUtils.GetOwnExternalIpAddress(), externalEndpoint.Port);
+                else
+                    LunaLog.Normal($"ENDPOINT CHANGED: {externalEndpoint} (from {ExternalEndpoint})");
+                    ExternalEndpoint = externalEndpoint;
 
             LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
             Cheats = msg.Cheats;
