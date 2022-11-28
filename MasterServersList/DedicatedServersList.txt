@@ -17,6 +17,8 @@
 135.23.120.245:8800
 #ABrit's Server
 abritin.space:8800
+abritin.space:8900
+abritin.space:9100
 #Tserver
 ksp.trickys.gg:8800
 #Checha
