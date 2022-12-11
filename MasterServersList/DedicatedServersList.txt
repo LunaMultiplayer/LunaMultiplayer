@@ -30,3 +30,6 @@ checha.ru:8888
 ksp.lekekelparadox.xyz:8800
 #Space Twitter Xmas Server
 server.emlynlj.co.uk:2185
+#KSPDogFightServer
+140.238.203.31:8001
+140.238.203.31:19132
