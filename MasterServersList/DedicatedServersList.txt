@@ -28,3 +28,5 @@ checha.ru:8888
 92.221.152.39:8800
 #FireStryker
 ksp.lekekelparadox.xyz:8800
+#Kerbolar Odyssey
+98.110.31.44:8800
