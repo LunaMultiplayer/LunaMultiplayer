@@ -28,3 +28,5 @@ checha.ru:8888
 92.221.152.39:8800
 #FireStryker
 ksp.lekekelparadox.xyz:8800
+#Space Twitter Xmas Server
+server.emlynlj.co.uk:2185
