@@ -12,7 +12,7 @@
 #Remove a container with: docker container rm lmpms
 
 ARG OS_BASE=alpine
-ARG OS_VERSION=3.16
+ARG OS_VERSION=3.17
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} as base
 
@@ -51,6 +51,6 @@ FROM ${OS_BASE}:${OS_VERSION}
 RUN apk update && apk add icu-libs icu-data-full libstdc++ libgcc
 COPY --from=builder /LunaMultiplayer/MasterServer/Publish/ /LmpMasterServer/
 EXPOSE 8700/udp 8701/tcp
-STOPSIGNAL sigint
+STOPSIGNAL SIGINT
 WORKDIR /LmpMasterServer
 CMD [ "./MasterServer" ]
