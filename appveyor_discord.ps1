@@ -43,9 +43,7 @@ Switch ($STATUS) {
 }
 
 $WEBHOOK_DATA="{
-  ""username"": """",
   ""avatar_url"": ""$AVATAR"",
-  ""content"":"""",
   ""embeds"": [ {
     ""color"": $EMBED_COLOR,
     ""author"": {
