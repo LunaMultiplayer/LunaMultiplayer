@@ -19,7 +19,6 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_V
 COPY .nuget                                 /LunaMultiplayer/.nuget
 COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
 COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
-COPY uhttpsharp/uhttpsharp2.csproj          /LunaMultiplayer/uhttpsharp/uhttpsharp2.csproj
 COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
 COPY LmpCommonTest/LmpCommonTest.csproj     /LunaMultiplayer/LmpCommonTest/LmpCommonTest.csproj
 COPY LmpUpdater/LmpUpdater.csproj           /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
