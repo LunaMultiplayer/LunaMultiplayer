@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace LmpClient.Network
 {
@@ -16,6 +17,8 @@ namespace LmpClient.Network
     {
         public static string Password { get; set; } = string.Empty;
         public static ConcurrentDictionary<long, ServerInfo> Servers { get; } = new ConcurrentDictionary<long, ServerInfo>();
+
+        private static bool receivedNATIntroductionSuccessResponse = false;
 
         /// <summary>
         /// Sends a request for the server list to the master servers
@@ -120,6 +123,8 @@ namespace LmpClient.Network
                 {
                     try
                     {
+                        receivedNATIntroductionSuccessResponse = false;
+
                         var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
                         msgData.Id = serverId;
                         msgData.Token = MainSystem.UniqueIdentifier;
@@ -133,12 +138,22 @@ namespace LmpClient.Network
 
                         var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
-                        MainSystem.Singleton.Status = string.Empty;
+                        MainSystem.Singleton.Status = "Requesting NAT introduction";
                         LunaLog.Log($"[LMP]: Sending NAT introduction request to master servers. " +
                                     $"Token: {MainSystem.UniqueIdentifier}, " +
                                     $"Internal Endpoint: {msgData.InternalEndpoint}, " +
                                     $"Internal Endpoint v6: {msgData.InternalEndpoint6}");
                         NetworkSender.QueueOutgoingMessage(introduceMsg);
+
+                        // If the NAT introduction didn't succeed after 10s, show a
+                        Base.SystemBase.TaskFactory.StartNew(() => {
+                            Thread.Sleep(10000);
+                            if (!receivedNATIntroductionSuccessResponse)
+                            {
+                                LunaLog.Log("[LMP]: NAT introduction did not succeed after 10 seconds");
+                                MainSystem.Singleton.Status = "Error: NAT introduction timeout";
+                            }
+                        });
                     }
                     catch (Exception e)
                     {
@@ -181,18 +196,19 @@ namespace LmpClient.Network
         }
 
         /// <summary>
-        /// We received a nat punchtrough response so connect to the server
+        /// We received a NAT punchtrough response from the server, so connect to it
         /// </summary>
-        public static void HandleNatIntroduction(NetIncomingMessage msg)
+        public static void HandleNatIntroductionSuccess(NetIncomingMessage msg)
         {
             if (MainSystem.UniqueIdentifier == msg.ReadString())
             {
                 LunaLog.Log($"[LMP]: Nat introduction success against {msg.SenderEndPoint}. Token: {MainSystem.UniqueIdentifier}");
+                receivedNATIntroductionSuccessResponse = true;
                 NetworkConnection.ConnectToServer(new []{ msg.SenderEndPoint }, Password);
             }
             else
             {
-                LunaLog.LogError($"[LMP]: Nat introduction failed against {msg.SenderEndPoint}. Token: {MainSystem.UniqueIdentifier}");
+                LunaLog.LogError($"[LMP]: Incorrect client identifier in NAT introduction success response from {msg.SenderEndPoint}. Token: {MainSystem.UniqueIdentifier}");
             }
         }
     }

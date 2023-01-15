@@ -37,7 +37,7 @@ namespace Server.System
 
                 LmpPluginHandler.FireOnClientAuthenticated(client);
 
-                LunaLog.Normal($"Client {data.PlayerName} ({data.UniqueIdentifier}) handshake successfully, Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}");
+                LunaLog.Normal($"Client {data.PlayerName} ({data.UniqueIdentifier}) handshake successful, Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}");
 
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.HandshookSuccessfully, "success");
 

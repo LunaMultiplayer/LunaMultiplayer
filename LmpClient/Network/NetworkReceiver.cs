@@ -84,7 +84,7 @@ namespace LmpClient.Network
                                 LunaLog.Log($"[Lidgren WARNING] {msg.ReadString()}");
                                 break;
                             case NetIncomingMessageType.NatIntroductionSuccess:
-                                NetworkServerList.HandleNatIntroduction(msg);
+                                NetworkServerList.HandleNatIntroductionSuccess(msg);
                                 break;
                             case NetIncomingMessageType.UnconnectedData:
                                 NetworkServerList.HandleServersList(msg);
