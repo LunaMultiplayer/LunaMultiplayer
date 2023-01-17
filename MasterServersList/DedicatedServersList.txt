@@ -39,3 +39,4 @@ zandstra.duckdns.org:8800
 ksp.delabonifier.com:8800
 ksp.delabonifier.com:8820
 ksp.delabonifier.com:8830
+194.182.126.91:8800
