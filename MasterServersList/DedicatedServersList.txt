@@ -33,6 +33,7 @@ server.emlynlj.co.uk:2185
 #KSPDogFightServer
 140.238.203.31:8001
 140.238.203.31:19132
+194.182.126.91:19789
 #Zandstraal Server
 zandstra.duckdns.org:8800
 #Delta Servers
