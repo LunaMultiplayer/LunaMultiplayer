@@ -3,7 +3,6 @@ using LmpMasterServer.Dedicated;
 using LmpMasterServer.Http;
 using LmpMasterServer.Log;
 using LmpMasterServer.Upnp;
-using LmpMasterServer.Web;
 using System;
 using System.Linq;
 using System.Text;
@@ -62,7 +61,7 @@ namespace LmpMasterServer
             if (CheckPort())
             {
                 Lidgren.MasterServer.RunServer = true;
-                WebHandler.InitWebFiles();
+                Http.Handlers.WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
                 Task.Run(DedicatedServerRetriever.RefreshDedicatedServersList);
                 Task.Run(MasterServerPortMapper.RefreshUpnpPort);

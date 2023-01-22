@@ -1,9 +1,7 @@
 ﻿using LmpMasterServer.Http.Handlers;
 using LmpCommon;
-using LmpMasterServer.Log;
 using System;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using uhttpsharp;
@@ -26,16 +24,20 @@ namespace LmpMasterServer.Http
             var listener = TcpListener.Create(Port);
             Server.Use(new TcpListenerAdapter(listener));
 
-            FileHandler.HttpRootDirectory = Web.WebHandler.BasePath;
+            FileHandler.HttpRootDirectory = WebHandler.BasePath;
 
             Server.Use(new ExceptionHandler());
             Server.Use(new HeadHandler());
             Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
-            Server.Use(new PathGuard(Web.WebHandler.BasePath));
+            Server.Use(new PathGuard(WebHandler.BasePath));
             Server.Use(new FileHandler());
             Server.Use(new HttpRouter()
                 .With(string.Empty, new ServerListHandler())
                 .With("json", new RestHandler<ServerJson>(new ServerInfoRestHandler(), JsonResponseProvider.Default)));
+            // Server.Use((IHttpContext context, Func<Task> next) => { return Task.Run( () =>
+            //     {
+            //         context.Response.Headers.Append();
+            //     } ); });
 
             Server.Start();
         }

@@ -10,17 +10,14 @@
     <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Http\Web\jquery-latest.js" />
-    <Content Include="Http\Web\jquery.metadata.js" />
-    <Content Include="Http\Web\jquery.tablesorter.js" />
-    <Content Include="Http\Web\jquery.tablesorter.min.js" />
-    <Content Include="Http\Web\lmp.js" />
-    <Content Include="Http\Web\style.css" />
+    <Content Include="Http\Web\js\jquery-3.6.3.min.js" />
+    <Content Include="Http\Web\js\jquery.metadata.js" />
+    <Content Include="Http\Web\js\jquery.tablesorter-theme-2.31.3.default.min.js" />
+    <Content Include="Http\Web\js\lmp.js" />
+    <Content Include="Http\Web\css\style.css" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Web\css.zip" />
-    <None Include="Web\favicon.icon" />
-    <None Include="Web\js.zip" />
+    <None Include="Http\Web\favicon.icon" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CachedQuickLz" Version="1.3.1" />

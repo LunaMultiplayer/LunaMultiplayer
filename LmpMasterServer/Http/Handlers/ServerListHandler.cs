@@ -2,6 +2,7 @@
 using LmpCommon.Enums;
 using LmpGlobal;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +15,12 @@ namespace LmpMasterServer.Http.Handlers
 {
     public class ServerListHandler : IHttpRequestHandler
     {
+        private static readonly KeyValuePair<string, string> cspHeader = new("Content-Security-Policy", "default-src 'self' 'unsafe-eval'; img-src 'self' data:");
+        private static readonly List<KeyValuePair<string, string>> headerList =  new() {cspHeader};
+
         public async Task Handle(IHttpContext context, Func<Task> next)
         {
-            context.Response = new HttpResponse(HttpResponseCode.Ok, await GetServerList(), false);
+            context.Response = new HttpResponse(HttpResponseCode.Ok, await GetServerList(), headerList, false);
         }
 
         private static Task<string> GetServerList()
@@ -59,9 +63,10 @@ namespace LmpMasterServer.Http.Handlers
 <head>
 	<title>Luna Multiplayer servers</title>
 	<link rel=""stylesheet"" type=""text/css"" href=""css/style.css"" />
-	<script src=""js/jquery-latest.js""></script>
-	<script src=""js/jquery.metadata.min.js""></script>
-	<script src=""js/jquery.tablesorter.min.js""></script>
+	<link rel=""stylesheet"" type=""text/css"" href=""css/jquery.tablesorter-theme-2.31.3.default.min.css"" />
+	<script src=""js/jquery-3.6.3.min.js""></script>
+	<script src=""js/jquery.metadata.js""></script>
+	<script src=""js/jquery.tablesorter-2.31.3.min.js""></script>
 	<script src=""js/lmp.js""></script>
 </head>
 ");
@@ -81,7 +86,7 @@ namespace LmpMasterServer.Http.Handlers
 
             writer.AddAttribute(HtmlTextWriterAttribute.Href, RepoConstants.RepoUrl);
             writer.RenderBeginTag(HtmlTextWriterTag.A);
-            writer.Write("Github repo");
+            writer.Write("GitHub Repository");
             writer.RenderEndTag();
 
             writer.RenderEndTag();
