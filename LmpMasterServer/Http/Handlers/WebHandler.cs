@@ -34,15 +34,6 @@ namespace LmpMasterServer.Http.Handlers
                     stream.WriteTo(file);
                 }
             }
-
-            // if (!File.Exists(Path.Combine(BasePath, "favicon.ico")))
-            // {
-            //     using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "favicon.ico"), FileMode.Create))
-            //     using (var iconStream = new MemoryStream(Resources.favicon))
-            //     {
-            //         iconStream.CopyTo(stream);
-            //     }
-            // }
         }
     }
 }
