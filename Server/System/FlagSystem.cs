@@ -48,11 +48,15 @@ namespace Server.System
 
                 var flagOwner = Path.GetDirectoryName(serverFlag);
                 if (flagOwner == null) continue;
+
+                var flagData = File.ReadAllBytes(serverFlag);
+
                 flagList.Add(flagName, new FlagInfo
                 {
                     Owner = flagOwner,
-                    FlagData = File.ReadAllBytes(serverFlag),
-                    FlagName = flagName
+                    FlagData = flagData,
+                    FlagName = flagName,
+                    NumBytes = flagData.Length
                 });
             }
 

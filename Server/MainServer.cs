@@ -38,6 +38,8 @@ namespace Server
 
         public static readonly CancellationTokenSource CancellationTokenSrc = new CancellationTokenSource();
 
+        private static bool IsRestart = false;
+
         public static void Main()
         {
             try
@@ -129,6 +131,14 @@ namespace Server
                 LmpPluginHandler.FireOnServerStop();
 
                 LunaLog.Normal("So long and thanks for all the fish!");
+
+                if (IsRestart)
+                {
+                    //Start new server
+                    var serverExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Server.exe";
+                    var newProcLmpServer = new ProcessStartInfo { FileName = serverExePath };
+                    Process.Start(newProcLmpServer);
+                }
             }
             catch (Exception e)
             {
@@ -194,12 +204,10 @@ namespace Server
             CancellationTokenSrc.Cancel();
 
             Task.WaitAll(TaskContainer.ToArray());
-            QuitEvent.Set();
 
-            //Start new server
-            var serverExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Server.exe";
-            var newProcLmpServer = new ProcessStartInfo { FileName = serverExePath };
-            Process.Start(newProcLmpServer);
+            IsRestart = true;
+
+            QuitEvent.Set();
         }
     }
 }
