@@ -39,3 +39,6 @@ zandstra.duckdns.org:8800
 ksp.delabonifier.com:8800
 ksp.delabonifier.com:8820
 ksp.delabonifier.com:8830
+#Ghost Server
+ksp.descaltr.com:8800
+78.58.229.204:8800
