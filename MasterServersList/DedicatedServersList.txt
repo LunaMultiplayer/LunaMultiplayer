@@ -39,3 +39,4 @@ zandstra.duckdns.org:8800
 ksp.delabonifier.com:8800
 ksp.delabonifier.com:8820
 ksp.delabonifier.com:8830
+hosting.needrp.net:5555
