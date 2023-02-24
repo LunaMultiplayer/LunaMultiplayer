@@ -1,7 +1,7 @@
 ﻿#if !__ANDROID__ && !__CONSTRAINED__ && !WINDOWS_RUNTIME && !UNITY_STANDALONE_LINUX
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -33,30 +33,37 @@ namespace Lidgren.Network
 			if (nics == null || nics.Length < 1)
 				return null;
 
-			NetworkInterface best = null;
-			foreach (NetworkInterface adapter in nics)
-			{
-				if (adapter.NetworkInterfaceType == NetworkInterfaceType.Loopback || adapter.NetworkInterfaceType == NetworkInterfaceType.Unknown)
-					continue;
-				if (!adapter.Supports(NetworkInterfaceComponent.IPv4))
-					continue;
-				if (best == null)
-					best = adapter;
-				if (adapter.OperationalStatus != OperationalStatus.Up)
-					continue;
+			var candidates = nics
+				.Where(nic => nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+				.Select((NetworkInterface nic) => {
+					// Calculate a score with powers of two, so that more important properties always outweigh less important ones.
+					int score = 0;
 
-				// make sure this adapter has any ipv4 addresses
-				IPInterfaceProperties properties = adapter.GetIPProperties();
-				foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses)
-				{
-					if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+					// The availability of an IPv4 address has the highest importance
+					IPInterfaceProperties properties = nic.GetIPProperties();
+					foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses)
 					{
-						// Yes it does, return this network interface.
-						return adapter;
+						if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+						{
+							score += 1 << 7;
+							break;
+						}
 					}
-				}
-			}
-			return best;
+
+					if (nic.Supports(NetworkInterfaceComponent.IPv4))
+						score += 1 << 6;
+
+					if (nic.NetworkInterfaceType != NetworkInterfaceType.Unknown)
+						score += 1 << 5;
+
+					if (nic.OperationalStatus == OperationalStatus.Up)
+						score += 1 << 4;
+
+					return new Tuple<int, NetworkInterface>(score, nic);
+				});
+
+			// Sort by score and return the best interface
+			return candidates.OrderByDescending(can => can.Item1).First().Item2;
 		}
 
 		/// <summary>
