@@ -39,4 +39,5 @@ zandstra.duckdns.org:8800
 ksp.delabonifier.com:8800
 ksp.delabonifier.com:8820
 ksp.delabonifier.com:8830
+#Bartixxx Space Servers
 hosting.needrp.net:5555
