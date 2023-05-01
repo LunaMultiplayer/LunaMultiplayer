@@ -122,12 +122,20 @@ artifacts:
 deploy:
  - provider: GitHub
    tag: $(smallversion)-Draft
-   release: Luna Multi Player $(smallversion)-Draft
-   description: 'Build $(appveyor_build_version)'
-   artifact: LunaMultiplayer-Client-$(configuration).zip, LunaMultiplayer-Server-win-x64-$(configuration).zip, LunaMultiplayer-Server-linux-x64-$(configuration).zip, LunaMultiplayer-Server-linux-arm64-$(configuration).zip, LunaMultiplayer-Server-linux-arm32-$(configuration).zip, LunaMultiplayer-Server-any-$(configuration).zip
+   release: Luna Multi Player Nightly
+   description: |
+    Build $(appveyor_build_version)
+
+    **Nightly build! May contain (more) bugs and undocumented features or changes**
+
+    Make sure to read [Create a server](https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Create-a-server) before creating a server.
+   artifact:
+    - /LunaMultiplayer-Client-.*/\.zip/
+    - /LunaMultiplayer-Server-.*/\.zip/
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
-   draft: true
+   draft: false
+   prerelease: true
    force_update: true
    on:
     branch: master
