@@ -4,18 +4,6 @@
 servers.lunamultiplayer.com:8700
 #Dagger nightly. List: http://servers.lunamultiplayer.com:8751
 servers.lunamultiplayer.com:8750
-#Tekbot. List: http://168.119.90.137:8701/
-168.119.90.137:8701
-#Tekbot Nightly. List: http://168.119.90.137:8751/
-168.119.90.137:8751
-#Angryjoshi. List: https://lmp.anschuetznet.de/
-lmp.anschuetznet.de:8700
-#Angryjoshi Nightly. List: http://lmp.anschuetznet.de:8751
-lmp.anschuetznet.de:8750
-#Bloodfallen Server List: direct.imexile.moe:8701
-direct.imexile.moe:8700
-#Bloodfallen Nightly List: direct.imexile.moe:8703
-direct.imexile.moe:8702
 #DasSkelett. List: https://ms.lmp.dasskelett.dev or http://116.203.125.175:8701/
 ms.lmp.dasskelett.dev:8700
 #DasSkelett Nightly. List: https://ms-nightly.lmp.dasskelett.dev or http://116.203.125.175:8751/
