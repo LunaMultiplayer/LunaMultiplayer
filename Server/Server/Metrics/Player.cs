@@ -1,13 +1,33 @@
+using Server.Settings.Structures;
+
 namespace Server.Metrics {
     public class Player {
-        public static readonly Prometheus.Counter Count = Prometheus.Metrics.CreateCounter(
+        public static readonly Prometheus.Counter Total = Prometheus.Metrics.CreateCounter(
+            "lmp_player_online_total",
+            "The total count of unique players online.",
+            new Prometheus.CounterConfiguration{}
+        );
+
+        public static readonly Prometheus.Counter Online = Prometheus.Metrics.CreateCounter(
             "lmp_player_online",
             "Whether or not the player is currently online.",
             new Prometheus.CounterConfiguration{LabelNames = new[] {"name"}}
         );
 
+        public static void AddPlayer(string name) {
+            Total.Inc(1);
+
+            if (MetricsSettings.SettingsStore.DetailedPlayerMetrics) {
+                Online.WithLabels(name).IncTo(1);
+            }
+        }
+
         public static void RemovePlayer(string name) {
-            Count.RemoveLabelled(name);
+            Total.Inc(-1);
+
+            if (MetricsSettings.SettingsStore.DetailedPlayerMetrics) {
+                Online.RemoveLabelled(name);
+            }
         }
     }
 }

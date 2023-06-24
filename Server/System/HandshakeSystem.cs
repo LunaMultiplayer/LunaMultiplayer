@@ -46,7 +46,7 @@ namespace Server.System
                 MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
 
                 // Update the player metrics.
-                Metrics.Player.Count.WithLabels(client.PlayerName).IncTo(1);
+                Metrics.Player.AddPlayer(client.PlayerName);
 
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ClientRetriever.GetClients().Length}");
             }
