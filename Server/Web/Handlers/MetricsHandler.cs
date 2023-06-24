@@ -3,6 +3,8 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using uhttpsharp;
+using Server.Settings.Structures;
+using Server.Log;
 
 namespace Server.Web.Handlers {
   public class MetricsHandler : IHttpRequestHandler {
@@ -14,9 +16,12 @@ namespace Server.Web.Handlers {
     );
 
     public MetricsHandler() {
+      if (!MetricsSettings.SettingsStore.EnableDefaultMetrics) {
+        LunaLog.Info("Disabling default Prometheus metrics.");
+
       // Suppress the default metrics that come from the Prometheus client library.
-      // TODO: make this configurable?
       Prometheus.Metrics.SuppressDefaultMetrics();
+      }
 
       // Populate the build info metric.
       BuildInfo.WithLabels(LmpVersioning.CurrentVersion.ToString()).Set(1);
