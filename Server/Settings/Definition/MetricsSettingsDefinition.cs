@@ -14,7 +14,7 @@ namespace Server.Settings.Definition
         public bool EnableDefaultMetrics { get; set; } = false;
 
         [XmlComment(Value = "Whether or not to include detailed per-player metrics.")]
-        public bool EnablePlayerDetailedMetrics { get; set; } = true;
+        public bool EnablePlayerDetailedMetrics { get; set; } = false;
 
         [XmlComment(Value = "The endpoint to serve the Prometheus metrics on.")]
         public string Endpoint { get; set; } = "metrics";
