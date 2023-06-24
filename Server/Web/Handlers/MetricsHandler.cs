@@ -27,12 +27,12 @@ namespace Server.Web.Handlers {
       BuildInfo.WithLabels(LmpVersioning.CurrentVersion.ToString()).Set(1);
     }
 
-    public Task Handle(IHttpContext context, Func<Task> next) {
+    public async Task Handle(IHttpContext context, Func<Task> next) {
       // Write out the Prometheus metrics to the response.
       var stream = new MemoryStream();
-      Prometheus.Metrics.DefaultRegistry.CollectAndExportAsTextAsync(stream);
+      await Prometheus.Metrics.DefaultRegistry.CollectAndExportAsTextAsync(stream);
       context.Response = new HttpResponse("text/plain; version=0.0.4", stream, false);
-      return Task.Factory.GetCompleted();
+      await Task.Factory.GetCompleted();
     }
   }
 }
