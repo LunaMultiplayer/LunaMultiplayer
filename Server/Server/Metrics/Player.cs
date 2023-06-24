@@ -2,10 +2,10 @@ using Server.Settings.Structures;
 
 namespace Server.Metrics {
     public class Player {
-        public static readonly Prometheus.Counter Total = Prometheus.Metrics.CreateCounter(
+        public static readonly Prometheus.Gauge Total = Prometheus.Metrics.CreateGauge(
             "lmp_player_online_total",
             "The total count of unique players online.",
-            new Prometheus.CounterConfiguration{}
+            new Prometheus.GaugeConfiguration{}
         );
 
         public static readonly Prometheus.Counter Online = Prometheus.Metrics.CreateCounter(
@@ -15,7 +15,7 @@ namespace Server.Metrics {
         );
 
         public static void AddPlayer(string name) {
-            Total.Inc(1);
+            Total.Inc();
 
             if (MetricsSettings.SettingsStore.EnablePlayerDetailedMetrics) {
                 Online.WithLabels(name).IncTo(1);
@@ -23,7 +23,7 @@ namespace Server.Metrics {
         }
 
         public static void RemovePlayer(string name) {
-            Total.Inc(-1);
+            Total.Dec();
 
             if (MetricsSettings.SettingsStore.EnablePlayerDetailedMetrics) {
                 Online.RemoveLabelled(name);
