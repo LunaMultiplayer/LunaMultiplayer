@@ -8,7 +8,10 @@ namespace Server.Settings.Definition
     public class MetricsSettingsDefinition
     {
         [XmlComment(Value = "Whether or not to enable the Prometheus metrics endpoint.")]
-        public bool Enabled { get; set; } = false;
+        public bool Enabled { get; set; } = true;
+
+        [XmlComment(Value = "Whether or not to include the default Prometheus metrics.")]
+        public bool EnableDefaultMetrics { get; set; } = false;
 
         [XmlComment(Value = "The endpoint to serve the Prometheus metrics on.")]
         public string Endpoint { get; set; } = "metrics";
