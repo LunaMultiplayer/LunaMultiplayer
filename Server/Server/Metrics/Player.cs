@@ -17,7 +17,7 @@ namespace Server.Metrics {
         public static void AddPlayer(string name) {
             Total.Inc(1);
 
-            if (MetricsSettings.SettingsStore.DetailedPlayerMetrics) {
+            if (MetricsSettings.SettingsStore.EnablePlayerDetailedMetrics) {
                 Online.WithLabels(name).IncTo(1);
             }
         }
@@ -25,7 +25,7 @@ namespace Server.Metrics {
         public static void RemovePlayer(string name) {
             Total.Inc(-1);
 
-            if (MetricsSettings.SettingsStore.DetailedPlayerMetrics) {
+            if (MetricsSettings.SettingsStore.EnablePlayerDetailedMetrics) {
                 Online.RemoveLabelled(name);
             }
         }
