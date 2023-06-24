@@ -1,4 +1,4 @@
-﻿using LmpCommon;
+using LmpCommon;
 using Server.Context;
 using Server.Events;
 using Server.Log;
@@ -68,7 +68,7 @@ namespace Server.Web
 
                         // If the Prometheus endpoint is enabled, build and add the HttpRouter to handle it to the server.
                         if (MetricsSettings.SettingsStore.Enabled) {
-                            LunaLog.Info("enabling Prometheus endpoint");
+                            LunaLog.Info("Enabling Prometheus endpoint");
                             Server.Use(
                                 new HttpRouter().With(
                                     MetricsSettings.SettingsStore.Endpoint,
