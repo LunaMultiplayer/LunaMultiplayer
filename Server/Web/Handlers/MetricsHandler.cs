@@ -19,8 +19,8 @@ namespace Server.Web.Handlers {
       if (!MetricsSettings.SettingsStore.EnableDefaultMetrics) {
         LunaLog.Info("Disabling default Prometheus metrics.");
 
-      // Suppress the default metrics that come from the Prometheus client library.
-      Prometheus.Metrics.SuppressDefaultMetrics();
+        // Suppress the default metrics that come from the Prometheus client library.
+        Prometheus.Metrics.SuppressDefaultMetrics();
       }
 
       // Populate the build info metric.
