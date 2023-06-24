@@ -5,6 +5,8 @@ using System.IO;
 using uhttpsharp;
 using Server.Settings.Structures;
 using Server.Log;
+using Server.Metrics;
+
 
 namespace Server.Web.Handlers {
   public class MetricsHandler : IHttpRequestHandler {
@@ -25,6 +27,9 @@ namespace Server.Web.Handlers {
 
       // Populate the build info metric.
       BuildInfo.WithLabels(LmpVersioning.CurrentVersion.ToString()).Set(1);
+
+      // Populate default metrics.
+      Player.Total.Set(0);
     }
 
     public Task Handle(IHttpContext context, Func<Task> next) {
