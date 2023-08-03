@@ -3,7 +3,7 @@
 #It will appear with a rainbow effect on the browser or with the custom color specified in the DedicatedServerSettings.xml
 #For more information see https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Dedicated-server
 
-#Jason的公用沙盒服务器
+#Jason's Sandbox Server
 116.237.193.231:8801
 #Kief Zone
 47.233.29.32:8800
