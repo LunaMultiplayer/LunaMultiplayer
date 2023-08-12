@@ -64,18 +64,19 @@ namespace Server.Web
                         Server.Use(new TcpListenerAdapter(listener));
                         Server.Use(new ExceptionHandler());
                         Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
-                        Server.Use(new HttpRouter().With(string.Empty, new RestHandler<ServerInformation>(new ServerInformationRestController(), JsonResponseProvider.Default)));
 
-                        // If the Prometheus endpoint is enabled, build and add the HttpRouter to handle it to the server.
+                        var httpRouter = new HttpRouter();
+                        httpRouter.With(string.Empty, new RestHandler<ServerInformation>(new ServerInformationRestController(), JsonResponseProvider.Default));
+
+                        // If the Prometheus endpoint is enabled, add it to the HttpRouter.
                         if (MetricsSettings.SettingsStore.Enabled) {
                             LunaLog.Info("Enabling Prometheus endpoint");
-                            Server.Use(
-                                new HttpRouter().With(
-                                    MetricsSettings.SettingsStore.Endpoint,
-                                    new MetricsHandler()
-                                )
+                            httpRouter.With(
+                                MetricsSettings.SettingsStore.Endpoint,
+                                new MetricsHandler()
                             );
                         }
+                        Server.Use(httpRouter);
 
                         Server.Start();
                     }
