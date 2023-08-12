@@ -8,10 +8,10 @@ namespace Server.Metrics {
             new Prometheus.GaugeConfiguration{}
         );
 
-        public static readonly Prometheus.Counter Online = Prometheus.Metrics.CreateCounter(
+        public static readonly Prometheus.Gauge Online = Prometheus.Metrics.CreateGauge(
             "lmp_player_online",
             "Whether or not the player is currently online.",
-            new Prometheus.CounterConfiguration{LabelNames = new[] {"name"}}
+            new Prometheus.GaugeConfiguration{LabelNames = new[] {"name"}}
         );
 
         public static void AddPlayer(string name) {
