@@ -41,3 +41,5 @@ zandstra.duckdns.org:8800
 ksp.delabonifier.com:33790
 ksp.delabonifier.com:33792
 ksp.delabonifier.com:33793
+#Jason's Server
+zzw511.bdp.cc:8800
