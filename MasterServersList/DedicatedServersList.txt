@@ -3,6 +3,8 @@
 #It will appear with a rainbow effect on the browser or with the custom color specified in the DedicatedServerSettings.xml
 #For more information see https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Dedicated-server
 
+#Jason's Sandbox Server
+116.237.193.231:8801
 #Kief Zone
 47.233.29.32:8800
 #KerbCat 211Server
@@ -39,3 +41,5 @@ zandstra.duckdns.org:8800
 ksp.delabonifier.com:33790
 ksp.delabonifier.com:33792
 ksp.delabonifier.com:33793
+#Jason's Server
+zzw511.bdp.cc:8800
