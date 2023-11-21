@@ -37,7 +37,7 @@
 - [x] [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
 - [x] [Interpolation](http://www.gabrielgambetta.com/entity-interpolation.html) so the vessels won't jump when there are bad network conditions.
 - [x] Multilanguage.
-- [x] [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
+- [x] [Nat-punchthrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
 - [x] [IPv6](https://en.wikipedia.org/wiki/IPv6) support for client<->server connections, allowing connection setup even behind symmetric IPv4 NAT
 - [x] Servers displayed within the mod.
 - [x] Settings saved as XML.
@@ -60,7 +60,7 @@ Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the mo
 ---
 ### Contributing:
 
-Consider [donating trough paypal](https://paypal.me/gavazquez) if you like this project. 
+Consider [donating through paypal](https://paypal.me/gavazquez) if you like this project. 
 It will encourage us to do future releases, fix bugs and add new features :star:
 
 Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
