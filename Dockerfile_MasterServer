@@ -12,9 +12,9 @@
 #Remove a container with: docker container rm lmpms
 
 ARG OS_BASE=alpine
-ARG OS_VERSION=3.17
+ARG OS_VERSION=3.20
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} as base
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} AS base
 
 COPY .nuget                                 /LunaMultiplayer/.nuget
 COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
@@ -35,7 +35,7 @@ RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -
     cd /LunaMultiplayer && \
     dotnet restore MasterServer -r ${OS_BASE}.${OS_VERSION}-${TARGET}
 
-FROM --platform=$BUILDPLATFORM base as builder
+FROM --platform=$BUILDPLATFORM base AS builder
 COPY . /LunaMultiplayer
 WORKDIR /LunaMultiplayer/MasterServer
 ARG OS_BASE

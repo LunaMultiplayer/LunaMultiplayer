@@ -45,6 +45,8 @@ configuration:
  - Release
 platform: Any CPU
 before_build:
+  # Skip PRs from foreign repos, they have no read access to ZIPPASSWORD
+  - ps: if ("$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME" -ne "LunaMultiplayer/LunaMultiplayer") { Exit-AppVeyorBuild }
   - ps: 7z e "$env:appveyor_build_folder\External\KSPLibraries\KSPLibraries.7z" -p"$env:ZIPPASSWORD" -o"$env:appveyor_build_folder\External\KSPLibraries"
   - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\"
    #Copy harmony dependency
@@ -144,22 +146,8 @@ deploy:
 
 notifications:
 
-# - provider: Webhook
-#   url: http://system.robo-web.nl/webhook/luna-debug.php
-#   on_build_success: true
-#   on_build_failure: true
-#   on_build_status_changed: true
-
  - provider: Webhook
    url: http://godarklight.privatedns.org/dmp/lmp.php
    on_build_success: true
    on_build_failure: true
    on_build_status_changed: true
-
-#Old webhook for discord...
-# - provider: Webhook
-#   url: https://skyhook.glitch.me/api/webhooks/428098094928756737/u2FRiQ-zKyEozSTCUX2DVbqZfCaXR6r3BhX6UCvLYBqbxzvcQDeo9mRdw1HXYR_9Ckua/appveyor
-#   content_type: application/json
-#   on_build_success: true
-#   on_build_failure: false
-#   on_build_status_changed: false
