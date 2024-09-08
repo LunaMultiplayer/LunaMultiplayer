@@ -46,7 +46,7 @@ configuration:
 platform: Any CPU
 before_build:
   # Skip PRs from foreign repos, they have no read access to ZIPPASSWORD
-  - ps: if ("$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME" -ne "LunaMultiplayer/LunaMultiplayer") { Exit-AppVeyorBuild }
+  - ps: if ("$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME" -ne "" -And "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME" -ne "LunaMultiplayer/LunaMultiplayer") { Exit-AppVeyorBuild }
   - ps: 7z e "$env:appveyor_build_folder\External\KSPLibraries\KSPLibraries.7z" -p"$env:ZIPPASSWORD" -o"$env:appveyor_build_folder\External\KSPLibraries"
   - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\"
    #Copy harmony dependency
