@@ -53,7 +53,7 @@ jobs:
           labels: |
             org.opencontainers.image.authors=${{ env.AUTHOR }}
       - name: Build container image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ${{ matrix.dockerfile }}

@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>9</LangVersion>
+    <IsTrimmable>false</IsTrimmable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lidgren.Core\Lidgren.Core.csproj" />
@@ -30,7 +31,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Validation" Version="16.9.32" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Open.NAT" Version="2.1.0.0" />
+    <PackageReference Include="open.nat.core" Version="2.1.0.5" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />

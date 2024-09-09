@@ -3,6 +3,7 @@ using LmpUpdater.Appveyor;
 using LmpUpdater.Github;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.Loader;
@@ -80,17 +81,17 @@ namespace MasterServer
         /// <summary>
         /// Starts the master server dll
         /// </summary>
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, "LmpMasterServer.EntryPoint", "LmpMasterServer")]
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Required types specified above")]
+#pragma warning disable IL2075 // 'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
         private static void StartMasterServerDll()
         {
             // https://docs.microsoft.com/en-us/dotnet/core/porting/net-framework-tech-unavailable#application-domains
             // https://docs.microsoft.com/en-us/dotnet/api/system.runtime.loader.assemblyloadcontext?view=net-6.0
             var assmeblyLoadContext = new AssemblyLoadContext("LmpMasterServer", true);
             var assembly = assmeblyLoadContext.LoadFromAssemblyPath(DllPath);
-            var entryPoint = assembly.GetType("LmpMasterServer.EntryPoint");
 
-            if (entryPoint == null)
-                throw new Exception("Could not find entrypoint in LmpMasterServer DLL.");
-
+            var entryPoint = assembly.GetType("LmpMasterServer.EntryPoint") ?? throw new Exception("Could not find entrypoint in LmpMasterServer DLL.");
             entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new object[] { Arguments });
 
             _stopDLLCallback = () =>
@@ -99,14 +100,14 @@ namespace MasterServer
                 assmeblyLoadContext.Unload();
             };
         }
+//#pragma warning restore IL2075 // 'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
 
         /// <summary>
         /// Stops the master server dll concurrent task
         /// </summary>
         private static void StopMasterServerDll()
         {
-            if (_stopDLLCallback != null)
-                _stopDLLCallback();
+            _stopDLLCallback?.Invoke();
             Console.Clear();
         }
 
