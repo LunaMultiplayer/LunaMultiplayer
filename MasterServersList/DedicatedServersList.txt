@@ -28,8 +28,6 @@ checha.ru:8888
 92.221.152.39:8800
 #FireStryker
 ksp.lekekelparadox.xyz:8800
-#Space Twitter Xmas Server
-server.emlynlj.co.uk:2185
 #KSPDogFightServer
 140.238.203.31:8001
 140.238.203.31:19132
@@ -39,3 +37,5 @@ zandstra.duckdns.org:8800
 ksp.delabonifier.com:33790
 ksp.delabonifier.com:33792
 ksp.delabonifier.com:33793
+#kerbal.io x kerbal community christmas server
+server.kerbal.io:8800
