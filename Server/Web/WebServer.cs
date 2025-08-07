@@ -1,4 +1,4 @@
-﻿using LmpCommon;
+using LmpCommon;
 using Server.Context;
 using Server.Events;
 using Server.Log;
@@ -64,7 +64,20 @@ namespace Server.Web
                         Server.Use(new TcpListenerAdapter(listener));
                         Server.Use(new ExceptionHandler());
                         Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
-                        Server.Use(new HttpRouter().With(string.Empty, new RestHandler<ServerInformation>(new ServerInformationRestController(), JsonResponseProvider.Default)));
+
+                        var httpRouter = new HttpRouter();
+                        httpRouter.With(string.Empty, new RestHandler<ServerInformation>(new ServerInformationRestController(), JsonResponseProvider.Default));
+
+                        // If the Prometheus endpoint is enabled, add it to the HttpRouter.
+                        if (MetricsSettings.SettingsStore.Enabled) {
+                            LunaLog.Info("Enabling Prometheus endpoint");
+                            httpRouter.With(
+                                MetricsSettings.SettingsStore.Endpoint,
+                                new MetricsHandler()
+                            );
+                        }
+                        Server.Use(httpRouter);
+
                         Server.Start();
                     }
                     else
