@@ -14,17 +14,20 @@
 ARG OS_BASE=alpine
 ARG OS_VERSION=3.20
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} AS base
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-${OS_BASE}${OS_VERSION} AS base
 
-COPY .nuget                           /LunaMultiplayer/.nuget
-COPY LmpCommon/LmpCommon.shproj       /LunaMultiplayer/LmpCommon/LmpCommon.shproj
-COPY Lidgren/Lidgren.shproj           /LunaMultiplayer/Lidgren/Lidgren.shproj
-COPY LmpGlobal/LmpGlobal.shproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj
+COPY LunaMultiPlayer.sln              /LunaMultiplayer/LunaMultiPlayer.sln
 COPY Lidgren.Core/Lidgren.Core.csproj /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
-COPY Lidgren.Net/Lidgren.Net.csproj   /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
+COPY Lidgren/Lidgren.shproj           /LunaMultiplayer/Lidgren/Lidgren.shproj
 COPY uhttpsharp/uhttpsharp.csproj     /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
+COPY uhttpsharp/packages.config       /LunaMultiplayer/uhttpsharp/packages.config
+COPY LmpCommon/LmpCommon.shproj       /LunaMultiplayer/LmpCommon/LmpCommon.shproj
+COPY LmpGlobal/LmpGlobal.shproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj
 COPY LmpUpdater/LmpUpdater.csproj     /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
+COPY LmpUpdater/packages.config       /LunaMultiplayer/LmpUpdater/packages.config
 COPY Server/Server.csproj             /LunaMultiplayer/Server/Server.csproj
+COPY global.json                      /LunaMultiplayer/global.json
+COPY .nuget                           /LunaMultiplayer/.nuget
 
 ARG OS_BASE
 ARG OS_VERSION
@@ -32,8 +35,8 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
     cd /LunaMultiplayer/Server && \
-    dotnet restore -r ${OS_BASE}.${OS_VERSION}-${TARGET}
-
+    echo linux-musl-${TARGET} && \
+    dotnet restore -r linux-musl-${TARGET}
 COPY . /LunaMultiplayer
 
 FROM base AS debug
@@ -49,13 +52,13 @@ ARG OS_VERSION
 ARG TARGETARCH
 ARG TARGETVARIANT
 RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
-    dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${TARGET} -o Publish
+    dotnet publish -c Release -r linux-musl-${TARGET} --self-contained true -o Publish
 
 FROM ${OS_BASE}:${OS_VERSION}
-RUN apk add icu-libs libstdc++ libgcc
+RUN apk add ca-certificates-bundle icu-libs libgcc libssl3 libstdc++ zlib
 COPY --from=builder /LunaMultiplayer/Server/Publish/ /LMPServer/
 EXPOSE 8800/udp 8900/tcp
 VOLUME "/LMPServer/Config" "/LMPServer/Plugins" "/LMPServer/Universe" "/LMPServer/logs"
 STOPSIGNAL SIGINT
 WORKDIR /LMPServer
-CMD ./Server
+CMD [ "./Server" ]

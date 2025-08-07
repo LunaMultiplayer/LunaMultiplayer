@@ -20,7 +20,8 @@
 		"vscode": {
 			"extensions": [
 				"github.vscode-github-actions",
-				"GitHub.codespaces"
+				"GitHub.codespaces",
+				"ms-dotnettools.csharp"
 			]
 		}
 	}
