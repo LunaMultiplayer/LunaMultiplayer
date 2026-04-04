@@ -19,6 +19,7 @@
     <PackageReference Include="LunaConfigNode" Version="1.8.1" />
     <PackageReference Include="Microsoft.VisualStudio.Threading" Version="16.10.56" />
     <PackageReference Include="open.nat.core" Version="2.1.0.5" />
+    <PackageReference Include="prometheus-net" Version="8.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
