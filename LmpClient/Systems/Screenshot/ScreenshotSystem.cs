@@ -1,4 +1,4 @@
-﻿using LmpClient.Base;
+using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace LmpClient.Systems.Screenshot
@@ -19,10 +21,12 @@ namespace LmpClient.Systems.Screenshot
 
         private static readonly string ScreenshotsFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Screenshots");
         private static DateTime _lastTakenScreenshot = DateTime.MinValue;
+        private static readonly SemaphoreSlim _screenshotIoSemaphore = new SemaphoreSlim(1, 1);
+
         public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> MiniatureImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
         public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> DownloadedImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
-        public List<string> FoldersWithNewContent { get; } = new List<string>();
-        public bool NewContent => FoldersWithNewContent.Any();
+        public ConcurrentBag<string> FoldersWithNewContent { get; } = new ConcurrentBag<string>();
+        public bool NewContent => !FoldersWithNewContent.IsEmpty;
 
         #endregion
 
@@ -44,7 +48,7 @@ namespace LmpClient.Systems.Screenshot
             base.OnDisabled();
             MiniatureImages.Clear();
             DownloadedImages.Clear();
-            FoldersWithNewContent.Clear();
+            while (FoldersWithNewContent.TryTake(out _)) { }
         }
 
         #endregion
@@ -84,19 +88,34 @@ namespace LmpClient.Systems.Screenshot
         }
 
         /// <summary>
-        /// Saves the requested image to disk
+        /// Saves the requested image to disk asynchronously
         /// </summary>
         public void SaveImage(string folder, long dateTaken)
         {
             if (DownloadedImages.TryGetValue(folder, out var downloadedImages) && downloadedImages.TryGetValue(dateTaken, out var image))
             {
-                var folderPath = CommonUtil.CombinePaths(ScreenshotsFolder, folder);
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
+                Task.Run(async () =>
+                {
+                    await _screenshotIoSemaphore.WaitAsync();
+                    try
+                    {
+                        var folderPath = CommonUtil.CombinePaths(ScreenshotsFolder, folder);
+                        if (!Directory.Exists(folderPath))
+                            Directory.CreateDirectory(folderPath);
 
-                var filePath = CommonUtil.CombinePaths(folderPath, $"{dateTaken}.png");
-                File.WriteAllBytes(filePath, image.Data);
-                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.ImageSaved, 20f, ScreenMessageStyle.UPPER_CENTER);
+                        var filePath = CommonUtil.CombinePaths(folderPath, $"{dateTaken}.png");
+                        File.WriteAllBytes(filePath, image.Data);
+                    }
+                    catch (Exception ex)
+                    {
+                        LunaLog.LogError($"[LMP]: Error saving screenshot: {ex.Message}");
+                    }
+                    finally
+                    {
+                        _screenshotIoSemaphore.Release();
+                        LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.ImageSaved, 20f, ScreenMessageStyle.UPPER_CENTER);
+                    }
+                });
             }
         }
 
@@ -107,7 +126,13 @@ namespace LmpClient.Systems.Screenshot
         {
             if (FoldersWithNewContent.Contains(selectedFolder))
             {
-                FoldersWithNewContent.Remove(selectedFolder);
+                var currentItems = FoldersWithNewContent.ToList();
+                while (FoldersWithNewContent.TryTake(out _)) { }
+                foreach (var item in currentItems.Where(i => i != selectedFolder))
+                {
+                    FoldersWithNewContent.Add(item);
+                }
+                
                 MessageSender.RequestMiniatures(selectedFolder);
                 return;
             }

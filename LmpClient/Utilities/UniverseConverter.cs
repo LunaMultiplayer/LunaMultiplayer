@@ -1,120 +1,147 @@
-﻿using LmpClient.Extensions;
+﻿using System;
+using LmpClient.Extensions;
 using LmpCommon;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LmpClient.Utilities
 {
     public class UniverseConverter
     {
+        private static readonly SemaphoreSlim GenerationSemaphore = new SemaphoreSlim(1, 1);
+        public static bool IsGenerating => GenerationSemaphore.CurrentCount == 0;
+
         private static string SavesFolder { get; } = CommonUtil.CombinePaths(MainSystem.KspPath, "saves");
 
-        public static void GenerateUniverse(string saveName)
+        public static async Task GenerateUniverse(string saveName)
         {
-            var universeFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "Universe");
-            if (Directory.Exists(universeFolder))
-                Directory.Delete(universeFolder, true);
-
-            var saveFolder = CommonUtil.CombinePaths(SavesFolder, saveName);
-            if (!Directory.Exists(saveFolder))
+            if (IsGenerating)
             {
-                LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist");
-                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist", 5f,
-                    ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage("Already generating universe. Please wait...", 5f, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
 
-            var persistentFile = CommonUtil.CombinePaths(saveFolder, "persistent.sfs");
-            if (!File.Exists(persistentFile))
+            await GenerationSemaphore.WaitAsync();
+
+            try
             {
-                LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist");
-                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist", 5f,
-                    ScreenMessageStyle.UPPER_CENTER);
-                return;
-            }
+                var universeFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "Universe");
+                var saveFolder = CommonUtil.CombinePaths(SavesFolder, saveName);
 
-            Directory.CreateDirectory(universeFolder);
-            var vesselFolder = CommonUtil.CombinePaths(universeFolder, "Vessels");
-            Directory.CreateDirectory(vesselFolder);
-            var scenarioFolder = CommonUtil.CombinePaths(universeFolder, "Scenarios");
-            Directory.CreateDirectory(scenarioFolder);
-            var kerbalFolder = CommonUtil.CombinePaths(universeFolder, "Kerbals");
-            Directory.CreateDirectory(kerbalFolder);
-
-            //Load game data
-            var persistentData = ConfigNode.Load(persistentFile);
-            if (persistentData == null)
-            {
-                LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load persistent data");
-                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load persistent data", 5f, ScreenMessageStyle.UPPER_CENTER);
-                return;
-            }
-
-            var gameData = persistentData.GetNode("GAME");
-            if (gameData == null)
-            {
-                LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load game data");
-                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load game data", 5f,
-                    ScreenMessageStyle.UPPER_CENTER);
-                return;
-            }
-
-            //Save vessels
-            var flightState = gameData.GetNode("FLIGHTSTATE");
-            if (flightState == null)
-            {
-                LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load flight state data");
-                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load flight state data", 5f,
-                    ScreenMessageStyle.UPPER_CENTER);
-                return;
-            }
-
-            //Save subspace time
-            File.WriteAllText(CommonUtil.CombinePaths(universeFolder, "Subspace.txt"), $"0:{flightState.GetValue("UT")}");
-
-            var vesselNodes = flightState.GetNodes("VESSEL");
-            if (vesselNodes != null)
-            {
-                foreach (var cn in vesselNodes)
+                if (!Directory.Exists(saveFolder))
                 {
-                    var vesselId = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
-                    LunaLog.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("name")}");
-
-                    File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.txt"), Encoding.UTF8.GetString(cn.Serialize()));
+                    LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist");
+                    LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist", 5f,
+                        ScreenMessageStyle.UPPER_CENTER);
+                    return;
                 }
-            }
 
-            //Save scenario data
-            var scenarioNodes = gameData.GetNodes("SCENARIO");
-            if (scenarioNodes != null)
-            {
-                foreach (var cn in scenarioNodes)
+                var persistentFile = CommonUtil.CombinePaths(saveFolder, "persistent.sfs");
+                if (!File.Exists(persistentFile))
                 {
-                    var scenarioName = cn.GetValue("name");
-                    if (string.IsNullOrEmpty(scenarioName)) continue;
-
-                    LunaLog.Log($"[LMP]: Saving scenario: {scenarioName}");
-
-                    File.WriteAllText(CommonUtil.CombinePaths(scenarioFolder, $"{scenarioName}.txt"), Encoding.UTF8.GetString(cn.Serialize()));
+                    LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist");
+                    LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist", 5f,
+                        ScreenMessageStyle.UPPER_CENTER);
+                    return;
                 }
-            }
 
-            //Save kerbal data
-            var kerbalNodes = gameData.GetNode("ROSTER").GetNodes("KERBAL");
-            if (kerbalNodes != null)
-            {
-                foreach (var cn in kerbalNodes)
+                LunaScreenMsg.PostScreenMessage($"Generating universe from {saveName}...", 5f, ScreenMessageStyle.UPPER_CENTER);
+
+                await Task.Run(() =>
                 {
-                    var kerbalName = cn.GetValue("name");
-                    LunaLog.Log($"[LMP]: Saving kerbal: {kerbalName}");
+                    if (Directory.Exists(universeFolder))
+                        Directory.Delete(universeFolder, true);
 
-                    cn.Save(CommonUtil.CombinePaths(kerbalFolder, $"{kerbalName}.txt"));
-                }
+                    Directory.CreateDirectory(universeFolder);
+                    var vesselFolder = CommonUtil.CombinePaths(universeFolder, "Vessels");
+                    Directory.CreateDirectory(vesselFolder);
+                    var scenarioFolder = CommonUtil.CombinePaths(universeFolder, "Scenarios");
+                    Directory.CreateDirectory(scenarioFolder);
+                    var kerbalFolder = CommonUtil.CombinePaths(universeFolder, "Kerbals");
+                    Directory.CreateDirectory(kerbalFolder);
+
+                    //Load game data
+                    var persistentData = ConfigNode.Load(persistentFile);
+                    if (persistentData == null)
+                    {
+                        LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load persistent data");
+                        return;
+                    }
+
+                    var gameData = persistentData.GetNode("GAME");
+                    if (gameData == null)
+                    {
+                        LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load game data");
+                        return;
+                    }
+
+                    //Save vessels
+                    var flightState = gameData.GetNode("FLIGHTSTATE");
+                    if (flightState == null)
+                    {
+                        LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load flight state data");
+                        return;
+                    }
+
+                    //Save subspace time
+                    File.WriteAllText(CommonUtil.CombinePaths(universeFolder, "Subspace.txt"), $"0:{flightState.GetValue("UT")}");
+
+                    var vesselNodes = flightState.GetNodes("VESSEL");
+                    if (vesselNodes != null)
+                    {
+                        foreach (var cn in vesselNodes)
+                        {
+                            var vesselId = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
+                            LunaLog.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("name")}");
+
+                            File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.txt"), Encoding.UTF8.GetString(cn.Serialize()));
+                        }
+                    }
+
+                    //Save scenario data
+                    var scenarioNodes = gameData.GetNodes("SCENARIO");
+                    if (scenarioNodes != null)
+                    {
+                        foreach (var cn in scenarioNodes)
+                        {
+                            var scenarioName = cn.GetValue("name");
+                            if (string.IsNullOrEmpty(scenarioName)) continue;
+
+                            LunaLog.Log($"[LMP]: Saving scenario: {scenarioName}");
+
+                            File.WriteAllText(CommonUtil.CombinePaths(scenarioFolder, $"{scenarioName}.txt"), Encoding.UTF8.GetString(cn.Serialize()));
+                        }
+                    }
+
+                    //Save kerbal data
+                    var kerbalNodes = gameData.GetNode("ROSTER").GetNodes("KERBAL");
+                    if (kerbalNodes != null)
+                    {
+                        foreach (var cn in kerbalNodes)
+                        {
+                            var kerbalName = cn.GetValue("name");
+                            LunaLog.Log($"[LMP]: Saving kerbal: {kerbalName}");
+
+                            cn.Save(CommonUtil.CombinePaths(kerbalFolder, $"{kerbalName}.txt"));
+                        }
+                    }
+                });
+
+                LunaLog.Log($"[LMP]: Generated KSP_folder/Universe from {saveName}");
+                LunaScreenMsg.PostScreenMessage($"Generated KSP_folder/Universe from {saveName}", 5f, ScreenMessageStyle.UPPER_CENTER);
             }
-
-            LunaLog.Log($"[LMP]: Generated KSP_folder/Universe from {saveName}");
-            LunaScreenMsg.PostScreenMessage($"Generated KSP_folder/Universe from {saveName}", 5f, ScreenMessageStyle.UPPER_CENTER);
+            catch (Exception ex)
+            {
+                LunaLog.LogError($"[LMP]: Error generating universe: {ex.Message}");
+                LunaScreenMsg.PostScreenMessage("Error generating universe. Check logs.", 5f, ScreenMessageStyle.UPPER_CENTER);
+            }
+            finally
+            {
+                GenerationSemaphore.Release();
+            }
         }
 
         public static IEnumerable<string> GetSavedNames()
