@@ -50,13 +50,14 @@ ARG OS_BASE
 ARG OS_VERSION
 ARG TARGETARCH
 ARG TARGETVARIANT
+# No PublishTrimmed: shared libs still build netstandard2.0; trimming fails with NETSDK1124.
 RUN case "${TARGETARCH}" in \
     amd64) DOTNET_RID=linux-musl-x64 ;; \
     arm64) DOTNET_RID=linux-musl-arm64 ;; \
     arm) DOTNET_RID=linux-musl-arm ;; \
     *) echo "Unsupported TARGETARCH=${TARGETARCH}"; exit 1 ;; \
   esac && \
-  dotnet publish -c Release -r ${DOTNET_RID} --self-contained true -p:PublishTrimmed=true -o Publish
+  dotnet publish -c Release -r ${DOTNET_RID} --self-contained true -o Publish
 
 FROM ${OS_BASE}:${OS_VERSION}
 # icu-data-full is needed to cross-reference server country codes with a list of allowed CCs
