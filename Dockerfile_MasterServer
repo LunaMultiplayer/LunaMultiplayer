@@ -14,7 +14,8 @@
 ARG OS_BASE=alpine
 ARG OS_VERSION=3.20
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-${OS_BASE}${OS_VERSION} AS base
+# SDK image: 10.0-alpine (10.0-alpine3.20 is not published on MCR for .NET 10).
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS base
 
 COPY .nuget                                 /LunaMultiplayer/.nuget
 COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
