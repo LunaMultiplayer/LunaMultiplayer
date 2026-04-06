@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>LmpCommonTest</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -19,8 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lidgren.Net\Lidgren.Net.csproj" />
-    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj" />
     <ProjectReference Include="..\LmpCommon\LmpCommon.csproj" />
   </ItemGroup>
 

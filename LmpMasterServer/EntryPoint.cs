@@ -26,7 +26,7 @@ namespace LmpMasterServer
             _ = Task.Run(MasterServerPortMapper.RemoveOpenedPortsAsync);
         }
 
-        public static async Task MainEntryPoint(string[] args)
+        public static async Task MainEntryPointAsync(string[] args)
         {
             MasterServerPortMapper.UseUpnp = !args.Any(a => a.Contains("noupnp"));
             IsNightly = args.Any(a => a.Contains("nightly"));
