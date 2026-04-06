@@ -14,12 +14,12 @@
 ARG OS_BASE=alpine
 ARG OS_VERSION=3.20
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} AS base
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-${OS_BASE}${OS_VERSION} AS base
 
 COPY .nuget                           /LunaMultiplayer/.nuget
-COPY LmpCommon/LmpCommon.shproj       /LunaMultiplayer/LmpCommon/LmpCommon.shproj
-COPY Lidgren/Lidgren.shproj           /LunaMultiplayer/Lidgren/Lidgren.shproj
-COPY LmpGlobal/LmpGlobal.shproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj
+COPY LmpCommon/LmpCommon.csproj       /LunaMultiplayer/LmpCommon/LmpCommon.csproj
+COPY LmpGlobal/LmpGlobal.csproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.csproj
+COPY Lidgren/Lidgren.projitems        /LunaMultiplayer/Lidgren/Lidgren.projitems
 COPY Lidgren.Core/Lidgren.Core.csproj /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
 COPY Lidgren.Net/Lidgren.Net.csproj   /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
 COPY uhttpsharp/uhttpsharp.csproj     /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
