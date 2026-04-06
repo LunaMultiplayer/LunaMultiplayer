@@ -44,6 +44,13 @@ configuration:
  - Debug
  - Release
 platform: Any CPU
+install:
+  # Visual Studio 2022 image may not yet include .NET 10 SDK; required for Server/MasterServer publish.
+  - ps: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+      ./dotnet-install.ps1 -Channel 10.0 -Quality ga -InstallDir "$env:ProgramFiles\dotnet"
+      dotnet --list-sdks
 before_build:
   # Skip PRs from foreign repos, they have no read access to ZIPPASSWORD
   - ps: if ("$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME" -ne "" -And "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_NAME" -ne "LunaMultiplayer/LunaMultiplayer") { Exit-AppVeyorBuild }
