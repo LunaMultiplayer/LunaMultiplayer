@@ -6,6 +6,7 @@ namespace LmpCommon
     {
         public static List<string> IgnoreReceive { get; } = new List<string>
         {
+            "ScenarioNewGameIntro", //Don't receive this - it resets the "new game" flag and triggers first-run popups (e.g. ClickThroughBlocker)
             "ScenarioDiscoverableObjects", //Asteroids have their own system
             "ScenarioCustomWaypoints", //Don't sync this
         };

@@ -194,6 +194,7 @@
     <Compile Include="Harmony\ScenarioDiscoverableObjects_SpawnAsteroid.cs" />
     <Compile Include="Harmony\ScenarioDiscoverableObjects_SpawnComet.cs" />
     <Compile Include="Harmony\ScenarioDiscoverableObjects_UpdateSpaceObjects.cs" />
+    <Compile Include="Harmony\ScenarioNewGameIntro_OnLoad.cs" />
     <Compile Include="Harmony\ShipConstruction_AssembleForLaunch.cs" />
     <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />
     <Compile Include="Harmony\SpaceTracking_StartTrackingObject.cs" />
