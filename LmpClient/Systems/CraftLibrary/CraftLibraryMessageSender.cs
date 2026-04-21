@@ -22,12 +22,21 @@ namespace LmpClient.Systems.CraftLibrary
             msgData.Craft.CraftName = craft.CraftName;
             msgData.Craft.CraftType = craft.CraftType;
 
-            msgData.Craft.NumBytes = craft.CraftNumBytes;
+            // Write craft data
+            msgData.Craft.CraftNumBytes = craft.CraftNumBytes;
 
-            if (msgData.Craft.Data.Length < craft.CraftNumBytes)
-                msgData.Craft.Data = new byte[craft.CraftNumBytes];
+            if (msgData.Craft.CraftData.Length < craft.CraftNumBytes)
+                msgData.Craft.CraftData = new byte[craft.CraftNumBytes];
 
-            Array.Copy(craft.CraftData, msgData.Craft.Data, craft.CraftNumBytes);
+            Array.Copy(craft.CraftData, msgData.Craft.CraftData, craft.CraftNumBytes);
+
+            // Write craft info data
+            msgData.Craft.CraftInfoNumBytes = craft.CraftInfoNumBytes;
+
+            if (msgData.Craft.CraftInfoData.Length < craft.CraftInfoNumBytes)
+                msgData.Craft.CraftInfoData = new byte[craft.CraftInfoNumBytes];
+
+            Array.Copy(craft.CraftInfoData, msgData.Craft.CraftInfoData, craft.CraftInfoNumBytes);
 
             SendMessage(msgData);
         }

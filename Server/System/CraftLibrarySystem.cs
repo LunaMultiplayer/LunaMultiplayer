@@ -33,12 +33,21 @@ namespace Server.System
 
             _ = Task.Run(() =>
             {
-                var file = Path.Combine(CraftPath, data.CraftToDelete.FolderName, data.CraftToDelete.CraftType.ToString(),
+                var CraftFile = Path.Combine(CraftPath, data.CraftToDelete.FolderName, data.CraftToDelete.CraftType.ToString(),
                     $"{data.CraftToDelete.CraftName}.craft");
 
-                if (FileHandler.FileExists(file))
+                var CraftInfoFile = Path.Combine(CraftPath, data.CraftToDelete.FolderName, data.CraftToDelete.CraftType.ToString(),
+                    $"{data.CraftToDelete.CraftName}.loadmeta");
+
+                if (FileHandler.FileExists(CraftFile))
                 {
-                    FileHandler.FileDelete(file);
+                    FileHandler.FileDelete(CraftFile);
+
+                    // Delete the .loadmeta file if it exists
+                    if (FileHandler.FileExists(CraftInfoFile))
+                    {
+                        FileHandler.FileDelete(CraftInfoFile);
+                    }
 
                     LunaLog.Debug($"Deleting craft {data.CraftToDelete.CraftName} as requested by {client.PlayerName}.");
                     MessageQueuer.SendToAllClients<CraftLibrarySrvMsg>(data);
@@ -63,14 +72,18 @@ namespace Server.System
                 if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
                 {
                     LastRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
-                    var fileName = $"{data.Craft.CraftName}.craft";
-                    var fullPath = Path.Combine(playerFolderType, fileName);
+                    var CraftFileName = $"{data.Craft.CraftName}.craft";
+                    var CraftFullPath = Path.Combine(playerFolderType, CraftFileName);
 
-                    if (FileHandler.FileExists(fullPath))
+                    var CraftInfoFileName = $"{data.Craft.CraftName}.loadmeta";
+                    var CraftInfoFullPath = Path.Combine(playerFolderType, CraftInfoFileName);
+
+                    if (FileHandler.FileExists(CraftFullPath))
                     {
-                        LunaLog.Normal($"Overwriting craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}) from: {client.PlayerName}.");
+                        LunaLog.Normal($"Overwriting craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.CraftNumBytes + data.Craft.CraftInfoNumBytes).KiloBytes}{ByteSize.KiloByteSymbol}) from {client.PlayerName}.");
 
-                        //Send a msg to all the players so they remove the old copy
+                        // Send a msg to all the players so they remove the old copy
+                        // They can resync the new version later
                         var deleteMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryDeleteRequestMsgData>();
                         deleteMsg.CraftToDelete.CraftType = data.Craft.CraftType;
                         deleteMsg.CraftToDelete.CraftName = data.Craft.CraftName;
@@ -80,9 +93,18 @@ namespace Server.System
                     }
                     else
                     {
-                        LunaLog.Normal($"Saving craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes} KB) from: {client.PlayerName}.");
-                        FileHandler.WriteToFile(fullPath, data.Craft.Data, data.Craft.NumBytes);
+                        LunaLog.Normal($"Saving craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.CraftNumBytes + data.Craft.CraftInfoNumBytes).KiloBytes} KB) from {client.PlayerName}.");
                     }
+
+                    // Actually write the craft file
+                    FileHandler.WriteToFile(CraftFullPath, data.Craft.CraftData, data.Craft.CraftNumBytes);
+
+                    // Write the .loadmeta file if we have it
+                    if (data.Craft.CraftInfoNumBytes != 0)
+                    {
+                        FileHandler.WriteToFile(CraftInfoFullPath, data.Craft.CraftInfoData, data.Craft.CraftInfoNumBytes);
+                    }
+
                     SendNotification(client.PlayerName);
                 }
                 else
@@ -136,6 +158,12 @@ namespace Server.System
                     {
                         foreach (var file in Directory.GetFiles(craftTypeFolder))
                         {
+
+                            if (Path.GetExtension(file) == ".loadmeta")
+                            {
+                                continue
+                            }
+
                             var craftName = Path.GetFileNameWithoutExtension(file);
                             crafts.Add(new CraftBasicInfo
                             {
@@ -170,19 +198,27 @@ namespace Server.System
                 if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
                 {
                     LastRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
-                    var file = Path.Combine(CraftPath, data.CraftRequested.FolderName, data.CraftRequested.CraftType.ToString(),
+                    var CraftFile = Path.Combine(CraftPath, data.CraftRequested.FolderName, data.CraftRequested.CraftType.ToString(),
                         $"{data.CraftRequested.CraftName}.craft");
+                    var CraftInfoFile = Path.Combine(CraftPath, data.CraftRequested.FolderName, data.CraftRequested.CraftType.ToString(),
+                        $"{data.CraftRequested.CraftName}.loadmeta");
 
-                    if (FileHandler.FileExists(file))
+                    if (FileHandler.FileExists(CraftFile))
                     {
                         var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryDataMsgData>();
                         msgData.Craft.CraftType = data.CraftRequested.CraftType;
-                        msgData.Craft.Data = FileHandler.ReadFile(file);
-                        msgData.Craft.NumBytes = msgData.Craft.Data.Length;
+                        msgData.Craft.CraftData = FileHandler.ReadFile(CraftFile);
+                        msgData.Craft.CraftNumBytes = msgData.Craft.CraftData.Length;
                         msgData.Craft.FolderName = data.CraftRequested.FolderName;
                         msgData.Craft.CraftName = data.CraftRequested.CraftName;
 
-                        LunaLog.Debug($"Sending craft ({ByteSize.FromBytes(msgData.Craft.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}): {data.CraftRequested.CraftName} to: {client.PlayerName}.");
+                        var CraftInfoData = byte[0];
+                        if (FileHandler.FileExists(CraftInfoFile))
+                        {
+                            CraftInfoDate = FileHandler.ReadFile(CraftInfoFile)
+                        }
+
+                        LunaLog.Debug($"Sending craft ({ByteSize.FromBytes(msgData.Craft.CraftNumBytes + msgData.Craft.CraftInfoNumBytes).KiloBytes}{ByteSize.KiloByteSymbol}): {data.CraftRequested.CraftName} to: {client.PlayerName}.");
                         MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
                     }
                 }

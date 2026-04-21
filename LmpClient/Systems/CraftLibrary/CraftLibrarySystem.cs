@@ -1,4 +1,4 @@
-using LmpClient.Base;
+﻿using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
@@ -86,14 +86,28 @@ namespace LmpClient.Systems.CraftLibrary
                 {
                     foreach (var file in Directory.GetFiles(vabFolder))
                     {
-                        var data = File.ReadAllBytes(file);
+                        if (Path.GetExtension(file) == ".loadmeta")
+                        {
+                            continue
+                        }
+
+                        var CraftData = File.ReadAllBytes(file);
+
+                        var CraftInfoData = new byte[0];
+
+                        if (Directory.Exists(Path.GetFileNameWithoutExtension(file) + ".loadmeta") {
+                            CraftInfoData = File.ReadAllBytes(Path.GetFileNameWithoutExtension(file) + ".loadmeta");
+                        }
+
                         newOwnCrafts.Add(new CraftEntry
                         {
                             CraftName = Path.GetFileNameWithoutExtension(file),
                             CraftType = CraftType.Vab,
                             FolderName = SettingsSystem.CurrentSettings.PlayerName,
-                            CraftData = data,
-                            CraftNumBytes = data.Length
+                            CraftData = CraftData,
+                            CraftNumBytes = CraftData.Length
+                            CraftInfoData = CraftInfoData,
+                            CraftInfoNumBytes = CraftInfoData.Length
                         });
                     }
                 }
@@ -103,14 +117,28 @@ namespace LmpClient.Systems.CraftLibrary
                 {
                     foreach (var file in Directory.GetFiles(sphFolder))
                     {
-                        var data = File.ReadAllBytes(file);
+                        if (Path.GetExtension(file) == ".loadmeta")
+                        {
+                            continue
+                        }
+
+                        var CraftData = File.ReadAllBytes(file);
+
+                        var CraftInfoData = new byte[0];
+
+                        if (Directory.Exists(Path.GetFileNameWithoutExtension(file) + ".loadmeta") {
+                            CraftInfoData = File.ReadAllBytes(Path.GetFileNameWithoutExtension(file) + ".loadmeta");
+                        }
+
                         newOwnCrafts.Add(new CraftEntry
                         {
                             CraftName = Path.GetFileNameWithoutExtension(file),
                             CraftType = CraftType.Sph,
                             FolderName = SettingsSystem.CurrentSettings.PlayerName,
-                            CraftData = data,
-                            CraftNumBytes = data.Length
+                            CraftData = CraftData,
+                            CraftNumBytes = CraftData.Length
+                            CraftInfoData = CraftInfoData,
+                            CraftInfoNumBytes = CraftInfoData.Length
                         });
                     }
                 }
@@ -120,14 +148,28 @@ namespace LmpClient.Systems.CraftLibrary
                 {
                     foreach (var file in Directory.GetFiles(subassemblyFolder))
                     {
-                        var data = File.ReadAllBytes(file);
+                        if (Path.GetExtension(file) == ".loadmeta")
+                        {
+                            continue
+                        }
+
+                        var CraftData = File.ReadAllBytes(file);
+
+                        var CraftInfoData = new byte[0];
+
+                        if (Directory.Exists(Path.GetFileNameWithoutExtension(file) + ".loadmeta") {
+                            CraftInfoData = File.ReadAllBytes(Path.GetFileNameWithoutExtension(file) + ".loadmeta");
+                        }
+
                         newOwnCrafts.Add(new CraftEntry
                         {
                             CraftName = Path.GetFileNameWithoutExtension(file),
                             CraftType = CraftType.Subassembly,
                             FolderName = SettingsSystem.CurrentSettings.PlayerName,
-                            CraftData = data,
-                            CraftNumBytes = data.Length
+                            CraftData = CraftData,
+                            CraftNumBytes = CraftData.Length
+                            CraftInfoData = CraftInfoData,
+                            CraftInfoNumBytes = CraftInfoData.Length
                         });
                     }
                 }
@@ -145,7 +187,7 @@ namespace LmpClient.Systems.CraftLibrary
         }
 
         /// <summary>
-        /// Saves a craft to the hard drive asynchronously
+        /// Saves a craft and it's associated loadmeta file to the hard drive asynchronously
         /// </summary>
         public void SaveCraftToDisk(CraftEntry craft)
         {
@@ -170,8 +212,15 @@ namespace LmpClient.Systems.CraftLibrary
                             throw new ArgumentOutOfRangeException();
                     }
 
-                    var path = CommonUtil.CombinePaths(folder, $"{craft.CraftName}.craft");
-                    File.WriteAllBytes(path, craft.CraftData);
+                    var CraftPath = CommonUtil.CombinePaths(folder, $"{craft.CraftName}.craft");
+                    File.WriteAllBytes(CraftPath, craft.CraftData);
+
+                    // Ensure that we have a .loadmeta file before trying to write to one
+                    // This should prevent us from creating a bunch of empty .loadmeta files for no reason
+                    if (craft.CraftInfoNumBytes != 0) {
+                        var CraftInfoPath = CommonUtil.CombinePaths(folder, $"{craft.CraftName}.loadmeta");
+                        File.WriteAllBytes(CraftInfoPath, craft.CraftInfoData);
+                    }
 
                     //Add it to the queue notification as we are in another thread
                     DownloadedCraftsNotification.Enqueue(craft.CraftName);
@@ -207,7 +256,7 @@ namespace LmpClient.Systems.CraftLibrary
         }
 
         /// <summary>
-        /// Request a craft to the server if possible
+        /// Request a craft from the server if possible
         /// </summary>
         public void RequestCraft(CraftBasicEntry craft)
         {

@@ -95,11 +95,17 @@ namespace LmpClient.Systems.CraftLibrary
                 CraftName = craftMsg.Craft.CraftName,
                 CraftType = craftMsg.Craft.CraftType,
                 FolderName = craftMsg.Craft.FolderName,
-                CraftNumBytes = craftMsg.Craft.NumBytes,
-                CraftData = new byte[craftMsg.Craft.NumBytes]
+
+                CraftNumBytes = craftMsg.Craft.CraftNumBytes,
+                CraftData = new byte[craftMsg.Craft.CraftNumBytes],
+
+                CraftInfoNumBytes = craftMsg.Craft.CraftInfoNumBytes,
+                CraftInfoData = new byte[craftMsg.Craft.CraftInfoNumBytes],
             };
 
-            Array.Copy(craftMsg.Craft.Data, craft.CraftData, craftMsg.Craft.NumBytes);
+            Array.Copy(craftMsg.Craft.CraftData, craft.Craft.CraftData, craftMsg.Craft.CraftNumBytes);
+
+            Array.Copy(craftMsg.Craft.CraftInfoData, craft.Craft.CraftInfoData, craftMsg.Craft.CraftInfoNumBytes);
 
             if (System.CraftDownloaded.TryGetValue(craftMsg.Craft.FolderName, out var downloadedCrafts))
                 downloadedCrafts.AddOrUpdate(craftMsg.Craft.CraftName, craft, (key, existingVal) => craft);
