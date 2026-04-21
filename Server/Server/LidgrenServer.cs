@@ -86,6 +86,8 @@ namespace Server.Server
             ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds((double)DebugSettings.SettingsStore?.MinSimulatedLatencyMs).TotalSeconds;
 #endif
 
+            ServerContext.Config.AutoFlushSendQueue = false;
+
             Server = new NetServer(ServerContext.Config);
             Server.Start();
 
@@ -198,8 +200,10 @@ namespace Server.Server
             client.BytesSent += outmsg.LengthBytes;
 
             var sendResult = Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
+        }
 
-            //Force send of packets
+        public static void FlushSendQueue()
+        {
             Server.FlushSendQueue();
         }
 

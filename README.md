@@ -76,7 +76,7 @@ You can check [how many servers are up](../../wiki/Master-server-status) and run
 | Master server | Release | Nightly |
 | ------------  | ------- |-------- |
 [Dagger](https://github.com/gavazquez) | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8701.svg?label=status)](http://servers.lunamultiplayer.com:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/servers.lunamultiplayer.com:8751.svg?label=status)](http://servers.lunamultiplayer.com:8751) |
-DasSkelett | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/ms.lmp.dasskelett.dev:8701.svg?label=status)](http://ms.lmp.dasskelett.dev:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/ms.lmp.dasskelett.dev:8751.svg?label=status)](http://ms.lmp.dasskelett.dev:8751) |
+DasSkelett | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/ms.lmp.dasskelett.dev.svg?label=status)](http://ms.lmp.dasskelett.dev) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/ms.lmp.dasskelett.dev.svg?label=status)](http://ms.lmp.dasskelett.dev) |
 Nightshade | [![Release servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.nightshade.fun:8701.svg?label=status)](http://lmp.nightshade.fun:8701) | [![Nightly servers](https://img.shields.io/website-up-down-brightgreen-red/http/lmp.nightshade.fun:8751.svg?label=status)](http://lmp.nightshade.fun:8751) |
 
 ---

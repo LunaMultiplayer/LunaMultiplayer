@@ -25,7 +25,12 @@ namespace LmpClient.Harmony
             if (MainSystem.NetworkState < ClientState.Connected) return true;
             if (__instance.vessel == null) return true;
             if (FlightGlobals.ActiveVessel && __instance.vessel == FlightGlobals.ActiveVessel && __instance.vessel.packed) return true;
-            if (!__instance.vessel.IsImmortal() && __instance.vessel.packed) return true;
+            // For packed vessels that LMP is actively managing, use our custom update to suppress spurious
+            // on-rails SOI transitions. Stock UpdateOrbit detects SOI crossings from orbit parameters that
+            // LMP resets every frame via UpdateFromStateVectors, causing repeated transition log spam.
+            // The reference body for these vessels is controlled by Orbit[7] in position messages.
+            if (!__instance.vessel.IsImmortal() && __instance.vessel.packed &&
+                !VesselPositionSystem.Singleton.VesselHavePositionUpdatesQueued(__instance.vessel.id)) return true;
 
             UpdateOrbit(__instance, offset, ref ___ready, ref ___fdtLast, ref ___isHyperbolic);
 
@@ -37,12 +42,17 @@ namespace LmpClient.Harmony
             if (!ready) return;
             driver.lastMode = driver.updateMode;
 
+            var hasQueuedUpdates = VesselPositionSystem.Singleton.VesselHavePositionUpdatesQueued(driver.vessel.id);
+
             //Always call updateFromParameters so the vessel is positioned based on the orbital data
-            if ((VesselPositionSystem.Singleton.VesselHavePositionUpdatesQueued(driver.vessel.id) && driver.updateMode == OrbitDriver.UpdateMode.TRACK_Phys)
+            if ((hasQueuedUpdates && driver.updateMode == OrbitDriver.UpdateMode.TRACK_Phys)
                 || driver.updateMode == OrbitDriver.UpdateMode.UPDATE)
             {
                 driver.updateFromParameters();
-                if (driver.vessel)
+                // When LMP is actively syncing a vessel, the reference body is driven by the incoming
+                // position message (Orbit[7]). Calling CheckDominantBody here would race against that,
+                // spuriously switching the body and producing on-rails SOI transition spam in map view.
+                if (driver.vessel && !hasQueuedUpdates)
                 {
                     driver.CheckDominantBody(driver.referenceBody.position + driver.pos);
                 }

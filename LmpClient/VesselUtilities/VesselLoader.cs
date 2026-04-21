@@ -66,6 +66,13 @@ namespace LmpClient.VesselUtilities
                 LunaLog.Log($"[LMP]: Loading vessel {vesselProto.vesselID}");
             }
 
+            // Vessel.Start() calls Vessel.RebuildCrewList() which iterates protoModuleCrew on every
+            // ProtoPartSnapshot.  A null slot in that list causes a NullReferenceException that Unity
+            // catches internally (logged as [EXC]) — it never reaches our catch block below.  Strip
+            // nulls here so RebuildCrewList() always receives a clean list.
+            foreach (var snapshot in vesselProto.protoPartSnapshots)
+                snapshot.protoModuleCrew?.RemoveAll(c => c == null);
+
             try
             {
                 vesselProto.Load(HighLogic.CurrentGame.flightState);
@@ -93,6 +100,40 @@ namespace LmpClient.VesselUtilities
             {
                 LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} failed to create a vessel!");
                 return false;
+            }
+
+            // Verify that every part module loaded successfully.  When the server has a mod that the
+            // client lacks, KSP may instantiate a part but leave null slots in Part.Modules — these
+            // cause Vessel.UpdateCaches() to throw a NullReferenceException on every physics tick.
+            if (vesselProto.vesselRef.parts != null)
+            {
+                string badDetail = null;
+                for (var pi = 0; pi < vesselProto.vesselRef.parts.Count && badDetail == null; pi++)
+                {
+                    var p = vesselProto.vesselRef.parts[pi];
+                    if (p == null) { badDetail = $"null part at index {pi}"; break; }
+                    if (p.Modules == null) continue;
+                    for (var mi = 0; mi < p.Modules.Count; mi++)
+                    {
+                        if (p.Modules[mi] == null)
+                        {
+                            badDetail = $"null module at index {mi} on part '{p.partName}'";
+                            break;
+                        }
+                    }
+                }
+
+                if (badDetail != null)
+                {
+                    LunaLog.LogError($"[LMP]: Vessel {vesselProto.vesselID} ({vesselProto.vesselName}) loaded with {badDetail} — removing to prevent Vessel.UpdateCaches NullReferenceException spam.");
+                    FlightGlobals.RemoveVessel(vesselProto.vesselRef);
+                    vesselProto.vesselRef.gameObject.SetActive(false);
+                    foreach (var p in vesselProto.vesselRef.parts)
+                        if (p?.gameObject != null) Object.Destroy(p.gameObject);
+                    Object.Destroy(vesselProto.vesselRef.gameObject);
+                    HighLogic.CurrentGame.flightState.protoVessels.Remove(vesselProto);
+                    return false;
+                }
             }
 
             // Safety-net: verify the ProtoVessel can be saved before keeping it in the flight state.

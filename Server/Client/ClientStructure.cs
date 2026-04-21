@@ -60,15 +60,19 @@ namespace Server.Client
             return Endpoint?.GetHashCode() ?? 0;
         }
 
+        private const int MaxMessagesPerBatch = 128;
+
         private async Task SendMessagesThreadAsync(CancellationToken token)
         {
             while (ConnectionStatus == ConnectionStatus.Connected)
             {
-                while (SendMessageQueue.TryDequeue(out var message) && message != null)
+                var sentCount = 0;
+                while (sentCount < MaxMessagesPerBatch && SendMessageQueue.TryDequeue(out var message) && message != null)
                 {
                     try
                     {
                         LidgrenServer.SendMessageToClient(this, message);
+                        sentCount++;
                     }
                     catch (Exception e)
                     {
@@ -78,6 +82,13 @@ namespace Server.Client
 
                     LmpPluginHandler.FireOnMessageSent(this, message);
                 }
+
+                if (sentCount > 0)
+                {
+                    LidgrenServer.FlushSendQueue();
+                    continue;
+                }
+
                 try
                 {
                     await Task.Delay(IntervalSettings.SettingsStore.SendReceiveThreadTickMs, token);

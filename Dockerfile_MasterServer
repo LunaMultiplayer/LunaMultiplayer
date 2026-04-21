@@ -28,7 +28,6 @@ COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsha
 COPY LmpUpdater/LmpUpdater.csproj           /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
 COPY LmpMasterServer/LmpMasterServer.csproj /LunaMultiplayer/LmpMasterServer/LmpMasterServer.csproj
 COPY MasterServer/MasterServer.csproj       /LunaMultiplayer/MasterServer/MasterServer.csproj
-COPY LmpUpdater/packages.config             /LunaMultiplayer/LmpUpdater/packages.config
 COPY uhttpsharp/packages.config             /LunaMultiplayer/uhttpsharp/packages.config
 
 ARG OS_BASE

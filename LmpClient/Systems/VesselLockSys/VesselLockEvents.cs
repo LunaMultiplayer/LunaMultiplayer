@@ -94,7 +94,19 @@ namespace LmpClient.Systems.VesselLockSys
                     if (lockDefinition.PlayerName == SettingsSystem.CurrentSettings.PlayerName)
                     {
                         if (VesselCommon.IsSpectating)
+                        {
+                            // Zero the vessel's throttle before removing the spectate input lock.
+                            // The spectated vessel's ctrlState carries the previous controller's
+                            // last-sent throttle; without clearing it the new controller instantly
+                            // inherits full throttle on the frame the lock is granted.
+                            var spectatedVessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
+                            if (spectatedVessel != null)
+                            {
+                                spectatedVessel.ctrlState.mainThrottle = 0f;
+                                spectatedVessel.ctrlState.wheelThrottle = 0f;
+                            }
                             VesselLockSystem.Singleton.StopSpectating();
+                        }
                         LockSystem.Singleton.AcquireUpdateLock(lockDefinition.VesselId, true);
                         LockSystem.Singleton.AcquireUnloadedUpdateLock(lockDefinition.VesselId, true);
                         LockSystem.Singleton.AcquireKerbalLock(lockDefinition.VesselId, true);

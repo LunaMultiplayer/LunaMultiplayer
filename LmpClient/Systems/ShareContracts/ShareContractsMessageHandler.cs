@@ -244,7 +244,12 @@ namespace LmpClient.Systems.ShareContracts
                         GameEvents.Contract.onFinished.Fire(ContractSystem.Instance.Contracts[contractIndex]);
                         break;
                     case Contract.State.Offered:
-                        GameEvents.Contract.onOffered.Fire(ContractSystem.Instance.Contracts[contractIndex]);
+                        // Do not fire the global onOffered event here. KSP systems such as
+                        // ContractPreLoader listen to it and enforce slot limits by withdrawing
+                        // existing server contracts when new ones are offered, which causes
+                        // contracts received in earlier batches to disappear. The Available tab
+                        // will still refresh because onContractsListChanged is fired at the end
+                        // of ContractUpdate(), which is all the UI needs.
                         break;
                     case Contract.State.Withdrawn:
                         GameEvents.Contract.onFinished.Fire(ContractSystem.Instance.Contracts[contractIndex]);

@@ -168,6 +168,8 @@
     <Compile Include="Harmony\EVAConstructionModeEditor_AttachPart.cs" />
     <Compile Include="Harmony\EVAConstructionModeEditor_DropAttachablePart.cs" />
     <Compile Include="Harmony\ModuleDockingNode_DockToVessel.cs" />
+    <Compile Include="Harmony\ContractPreLoader_Filter.cs" />
+    <Compile Include="Harmony\ContractSystem_LoadContract.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
     <Compile Include="Harmony\ContractSystem_OnLoad.cs" />
     <Compile Include="Harmony\FlightDriver_SetStartupNewVessel.cs" />
@@ -201,6 +203,7 @@
     <Compile Include="Harmony\TourismContract_ClearKerbalsHard.cs" />
     <Compile Include="Harmony\TourismContract_ClearKerbalsSoft.cs" />
     <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
+    <Compile Include="Harmony\UIPlanetariumDateTime_SetTime.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
@@ -239,6 +242,8 @@
     <Compile Include="Harmony\Vessel_Load.cs" />
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
+    <Compile Include="Harmony\Vessel_UpdateCaches.cs" />
+    <Compile Include="Harmony\VesselModule_Start.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
     <Compile Include="Localization\Structures\BannedPartsResourcesWindowText.cs" />
     <Compile Include="Localization\Structures\ButtonTooltips.cs" />
@@ -285,6 +290,7 @@
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsSystem.cs" />
     <Compile Include="Systems\ShareCareer\ShareCareerSystem.cs" />
+    <Compile Include="Systems\ShareContracts\LmpUnavailableContract.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsEvents.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsMessageHandler.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsMessageSender.cs" />

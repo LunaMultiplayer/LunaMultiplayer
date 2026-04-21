@@ -79,13 +79,30 @@ namespace LmpClient.Systems.VesselPositionSys.ExtensionMethods
             {
                 for (var i = 0; i < vessel.parts.Count; i++)
                 {
-                    vessel.parts[i].partTransform.rotation = rotation * vessel.parts[i].orgRot;
-                    if (vessel.packed || vessel.parts[i].physicalSignificance == Part.PhysicalSignificance.FULL)
+                    var part = vessel.parts[i];
+                    var partRotation = rotation * part.orgRot;
+                    part.partTransform.rotation = partRotation;
+
+                    if (vessel.packed || part.physicalSignificance == Part.PhysicalSignificance.FULL)
                     {
-                        vessel.parts[i].partTransform.position = position + vessel.vesselTransform.rotation * vessel.parts[i].orgPos;
+                        // Use the interpolated rotation for part offsets — vessel.vesselTransform.rotation
+                        // is stale (previous frame) and causes rotational position lag on large vessels
+                        var partPosition = position + rotation * part.orgPos;
+                        part.partTransform.position = partPosition;
                     }
+
+                    // For unpacked parts with rigidbodies, sync rb directly so the physics engine
+                    // doesn't fight LMP's positioning on the next step (setting only transform.position
+                    // on a non-kinematic Rigidbody causes visible oscillation as physics snaps it back)
+                    if (!vessel.packed && part.rb)
+                    {
+                        part.rb.rotation = partRotation;
+                        if (part.physicalSignificance == Part.PhysicalSignificance.FULL)
+                            part.rb.position = part.partTransform.position;
+                    }
+
                     //We always need to set the part velocity (and it's rigidbody velocity)! Otherwise during dockings it won't be possible to dock
-                    vessel.parts[i].ResumeVelocity();
+                    part.ResumeVelocity();
                 }
             }
         }

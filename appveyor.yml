@@ -99,7 +99,7 @@ after_build:
 #Post it on discord
 on_success:
   - ps: |
-      if ($env:configuration -like "Debug") {
+      if ($env:configuration -like "Debug" -And $env:appveyor_repo_branch -like "master") {
         Invoke-RestMethod https://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/appveyor_discord.ps1 -o appveyor_discord.ps1
         ./appveyor_discord.ps1 success $env:WEBHOOK_URL
       }

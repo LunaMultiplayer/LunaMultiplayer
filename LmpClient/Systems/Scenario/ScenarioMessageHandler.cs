@@ -62,8 +62,32 @@ namespace LmpClient.Systems.Scenario
                     {
                         LunaLog.Log($"[ShareContracts]: Finished Contract - GUID: {contract.GetValue("guid")} | Type: {contract.GetValue("type")} | State: {contract.GetValue("state")}");
                     }
-                }
 
+                    // Capture all Offered GUIDs and their full ConfigNodes from the server snapshot.
+                    // GUIDs are used by the ContractOffered guard to prevent re-fired onOffered
+                    // events from withdrawing valid server contracts.
+                    // Full nodes are injected into ContractPreLoader so KSPCF's patched
+                    // GenerateContracts can restore all server contracts when it runs (triggered
+                    // by CC's onContractsLoaded handler).  Without them, KSPCF treats every
+                    // server contract as unlisted and clears them, leaving 0 Available.
+                    var offeredGuids = new System.Collections.Generic.List<string>();
+                    var offeredNodes = new System.Collections.Generic.List<ConfigNode>();
+                    foreach (var contract in contracts)
+                    {
+                        if (contract.GetValue("state") == "Offered")
+                        {
+                            var guid = contract.GetValue("guid");
+                            if (!string.IsNullOrEmpty(guid))
+                            {
+                                offeredGuids.Add(guid);
+                                offeredNodes.Add(contract);
+                            }
+                        }
+                    }
+                    LunaLog.Log($"[ShareContracts]: Captured {offeredGuids.Count} Offered GUIDs and full nodes from server snapshot.");
+                    ShareContracts.ShareContractsSystem.Singleton?.SetServerOfferedContractGuids(offeredGuids);
+                    ShareContracts.ShareContractsSystem.Singleton?.SetServerOfferedContractNodes(offeredNodes);
+                }
                 var entry = new ScenarioEntry
                 {
                     ScenarioModule = scenarioModule,

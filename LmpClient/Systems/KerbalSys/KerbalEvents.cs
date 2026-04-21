@@ -169,8 +169,9 @@ namespace LmpClient.Systems.KerbalSys
                 System.RefreshCrewDialog();
             }
 
-            //Trigger a ValidateAssignments so missing crews are set as assigned
-            HighLogic.CurrentGame.Updated();
+            // Defer the ValidateAssignments call so bulk vessel loads (e.g. scene transition with
+            // many server vessels) coalesce into a single Updated() rather than one per vessel.
+            System.RequestGameUpdate();
         }
     }
 }

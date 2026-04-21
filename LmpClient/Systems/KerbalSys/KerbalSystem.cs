@@ -19,6 +19,8 @@ namespace LmpClient.Systems.KerbalSys
         public ConcurrentQueue<string> KerbalsToRemove { get; private set; } = new ConcurrentQueue<string>();
         public ConcurrentQueue<ConfigNode> KerbalsToProcess { get; private set; } = new ConcurrentQueue<ConfigNode>();
 
+        private bool _pendingGameUpdate;
+
         public bool KerbalSystemReady => Enabled && HighLogic.CurrentGame?.CrewRoster != null;
 
         public KerbalEvents KerbalEvents { get; } = new KerbalEvents();
@@ -79,6 +81,7 @@ namespace LmpClient.Systems.KerbalSys
             base.OnDisabled();
             KerbalsToRemove = new ConcurrentQueue<string>();
             KerbalsToProcess = new ConcurrentQueue<ConfigNode>();
+            _pendingGameUpdate = false;
             VesselAssemblyEvent.onVesselValidationBeforAssembly.Remove(KerbalEvents.ValidationBeforeAssembly);
             GameEvents.onKerbalStatusChange.Remove(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Remove(KerbalEvents.TypeChange);
@@ -93,6 +96,16 @@ namespace LmpClient.Systems.KerbalSys
         #endregion
 
         #region Public
+
+        /// <summary>
+        /// Schedules a single <see cref="Game.Updated"/> call to be made on the next routine tick.
+        /// Callers should use this instead of calling Updated() directly so that rapid successive
+        /// requests (e.g. bulk vessel loads) are coalesced into one call.
+        /// </summary>
+        public void RequestGameUpdate()
+        {
+            _pendingGameUpdate = true;
+        }
 
         /// <summary>
         /// Load all the received kerbals from the server into the game
@@ -151,13 +164,21 @@ namespace LmpClient.Systems.KerbalSys
 
         /// <summary>
         /// Loads the unloaded (either because they are new or they are updated) kerbals into the game.
-        /// We load them only when we are actually ready to play
+        /// We load them only when we are actually ready to play.
+        /// Also flushes any pending <see cref="Game.Updated"/> request that was deferred to avoid
+        /// calling it once per vessel during bulk loads.
         /// </summary>
         private void LoadKerbals()
         {
             if (KerbalSystemReady && HighLogic.LoadedScene >= GameScenes.SPACECENTER)
             {
                 ProcessKerbalQueue();
+
+                if (_pendingGameUpdate)
+                {
+                    _pendingGameUpdate = false;
+                    HighLogic.CurrentGame.Updated();
+                }
             }
         }
 

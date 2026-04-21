@@ -1,5 +1,6 @@
 using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
+using Server.Log;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -36,13 +37,18 @@ namespace Server.System.Scenario
                     else
                     {
                         if (experimentalPartMsg.Count == 0)
-                            expPartNode.Value.RemoveValue(specificExpPart.Value);
+                        {
+                            expPartNode?.Value.RemoveValue(experimentalPartMsg.PartName);
+                            LunaLog.Debug($"Removing experimental part: {experimentalPartMsg.PartName}");
+                        }
                         else
                             specificExpPart.Value = experimentalPartMsg.Count.ToString(CultureInfo.InvariantCulture);
                     }
 
                     if (expPartNode?.Value.GetAllValues().Count == 0)
-                        scenario.RemoveNode(expPartNode.Value);
+                        expPartNode.Value.CreateValue(new CfgNodeValue<string, string>("dummyPart", "0"));
+                        // Create a dummy part - LMP treats empty expPartsNode as null, which causes creating a new one
+                    ScenarioStoreSystem.BackupScenarios();
                 }
             });
         }

@@ -319,8 +319,8 @@ namespace LmpClient
         public void DisconnectFromGame()
         {
             ForceQuit = true;
-            NetworkConnection.Disconnect("Quit");
             ScenarioSystem.Singleton.SendScenarioModules();
+            NetworkConnection.Disconnect("Quit");
         }
 
         #endregion

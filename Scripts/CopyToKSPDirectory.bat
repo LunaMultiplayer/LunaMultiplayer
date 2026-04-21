@@ -7,7 +7,7 @@
 :: SET KSPPATH2=C:\Users\Malte\Desktop\Kerbal Space Program
 call "%~dp0\SetDirectories.bat"
 
-IF DEFINED KSPPATH (ECHO KSPPATH is defined) ELSE (SET KSPPATH=C:\Kerbal Space Program)
+IF DEFINED KSPPATH (ECHO KSPPATH is defined) ELSE (ECHO KSPPATH not set in SetDirectories.bat — skipping KSP install. && EXIT /B 0)
 IF DEFINED KSPPATH2 (ECHO KSPPATH2 is defined)
 ::%1
 SET SOLUTIONCONFIGURATION=Debug

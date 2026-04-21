@@ -75,8 +75,8 @@ Global
 		{3D681959-4DA3-4A71-A68B-704D6411D5EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B496412-5859-4C6C-9EB7-A09CD7C1F78D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B496412-5859-4C6C-9EB7-A09CD7C1F78D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B496412-5859-4C6C-9EB7-A09CD7C1F78D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B496412-5859-4C6C-9EB7-A09CD7C1F78D}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{7B496412-5859-4C6C-9EB7-A09CD7C1F78D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B496412-5859-4C6C-9EB7-A09CD7C1F78D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7AD735F5-A076-44D2-97EC-02ECAD827001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7AD735F5-A076-44D2-97EC-02ECAD827001}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AD735F5-A076-44D2-97EC-02ECAD827001}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -144,11 +144,12 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46CE1FFE-A52F-4C6D-8FF1-11B6E792761B}
 	EndGlobalSection
-	        GlobalSection(SharedMSBuildProjectFiles) = preSolution
-	                Lidgren\Lidgren.projitems*{8629f82e-4f6e-41cf-9ed8-884bde9a0b1e}*SharedItemsImports = 5
-	                Lidgren\Lidgren.projitems*{dcd22705-5f24-4533-98f9-4907cfbbea54}*SharedItemsImports = 4
-	                Lidgren\Lidgren.projitems*{de924f66-77bd-474b-922e-399b361cf20b}*SharedItemsImports = 13
-	        EndGlobalSection	GlobalSection(MonoDevelopProperties) = preSolution
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Lidgren\Lidgren.projitems*{8629f82e-4f6e-41cf-9ed8-884bde9a0b1e}*SharedItemsImports = 5
+		Lidgren\Lidgren.projitems*{dcd22705-5f24-4533-98f9-4907cfbbea54}*SharedItemsImports = 4
+		Lidgren\Lidgren.projitems*{de924f66-77bd-474b-922e-399b361cf20b}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Server\Server.csproj
 	EndGlobalSection
 EndGlobal
