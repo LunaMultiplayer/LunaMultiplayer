@@ -127,6 +127,12 @@ namespace LmpClient.VesselUtilities
         }
 
         /// <summary>
+        /// Check if an update should be done immediately or if we should wait
+        /// Returns true if we should do the update now
+        /// </summary>
+        public static bool CompareGameTimestamps(double LocalGameTime, double msgGameTime) => LocalGameTime >= msgGameTime
+
+        /// <summary>
         /// Return all the vessels except the active one that we have the update lock and that are loaded
         /// </summary>
         public static IEnumerable<Vessel> GetSecondaryVessels()
