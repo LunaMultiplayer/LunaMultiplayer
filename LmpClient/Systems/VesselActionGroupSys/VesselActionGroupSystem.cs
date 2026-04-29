@@ -28,6 +28,10 @@ namespace LmpClient.Systems.VesselActionGroupSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, ProcessVesselActionGroups));
 
             ActionGroupEvent.onActionGroupFired.Add(VesselActionGroupEvents.ActionGroupFired);
@@ -37,6 +41,8 @@ namespace LmpClient.Systems.VesselActionGroupSys
         {
             base.OnDisabled();
             VesselActionGroups.Clear();
+
+            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
 
             ActionGroupEvent.onActionGroupFired.Remove(VesselActionGroupEvents.ActionGroupFired);
         }

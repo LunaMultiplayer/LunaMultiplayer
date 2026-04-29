@@ -84,9 +84,10 @@ namespace LmpClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
 
+            TimingManager.FixedUpdateRemove(HandlePositionsStage, HandleVesselUpdates);
+
             TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
 
-            TimingManager.FixedUpdateRemove(HandlePositionsStage, HandleVesselUpdates);
             TimingManager.LateUpdateRemove(SendPositionsStage, SendVesselPositionUpdates);
 
             CurrentVesselUpdate.Clear();
