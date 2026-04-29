@@ -66,6 +66,9 @@ namespace LmpClient.Systems.VesselPositionSys
 
             TimingManager.FixedUpdateAdd(HandlePositionsStage, HandleVesselUpdates);
 
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
             TimingManager.LateUpdateAdd(SendPositionsStage, SendVesselPositionUpdates);
 

@@ -1,6 +1,7 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.VesselUtilities;
+using LmpClient.Systems.Warp;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -11,6 +12,8 @@ namespace LmpClient.Systems.VesselPositionSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
+        public ConcurrentQueue<VesselPositionMsgData> StoredMessagesData { get; set; } = new ConcurrentQueue<VesselPositionMsgData>();
+
         public void HandleMessage(IServerMessageBase msg)
         {
             if (!(msg.Data is VesselPositionMsgData msgData)) return;
@@ -19,6 +22,27 @@ namespace LmpClient.Systems.VesselPositionSys
             if (!VesselCommon.DoVesselChecks(vesselId))
                 return;
 
+            // This code helps prevent time paradoxes.
+            // Why? Because this code makes sure that we only apply updates that aren't from the future.
+            // Additionally, to prevent us from getting desynchronised, we store updates from the future if they change the orbit of the craft, so that we can apply them later.
+            // Note that if we stored ALL updates, then the client's RAM would get filled up really quickly with all these updates whenever someone warps a few years into the future.
+            var IsFromFuture = VesselCommon.UpdateIsFromFuture(msgData.GameTime, WarpSystem.Singleton.CurrentSubspaceTime);
+
+            if (IsFromFuture && VesselCommon.VesselHasSameOrbit(vesselId, msgData.Orbit))
+            {
+                return;
+            }
+            else if (IsFromFuture)
+            {
+                StoredMessagesData.Enqueue(msgData);
+            }
+
+            TryQueueUpdate(msgData)
+        }
+
+        public void TryQueueUpdate(VesselPositionMsgData msgData)
+        {
+            var vesselId = msgData.VesselId;
             if (!VesselPositionSystem.CurrentVesselUpdate.ContainsKey(vesselId))
             {
                 VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, new VesselPositionUpdate(msgData));
@@ -28,6 +52,21 @@ namespace LmpClient.Systems.VesselPositionSys
             {
                 VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(vesselId, out var queue);
                 queue?.Enqueue(msgData);
+            }
+        }
+
+        // Search through all stored updates and apply any that are no longer from the future
+        public void OnUpdate()
+        {
+            while (StoredMessagesData.TryDequeue(out var StoredMessageData))
+            {
+                // Ensure that the update is no longer considered to be from the future
+                if (VesselCommon.UpdateIsFromFuture(msgData.GameTime, WarpSystem.Singleton.CurrentSubspaceTime))
+                    StoredMessagesData.Enqueue(StoredMessageData);
+                    continue;
+
+                // Apply the update
+                TryQueueUpdate(StoredMessageData);
             }
         }
     }

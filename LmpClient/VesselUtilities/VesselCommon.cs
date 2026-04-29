@@ -33,6 +33,13 @@ namespace LmpClient.VesselUtilities
             return !IsSpectating && FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == vesselId;
         }
 
+        /// <summary>
+        /// Used to checks if an update came from the (in-game) future.
+        /// It simply checks if the update's timestamp (provided first) is greater than the local timestamp and returns true if it is.
+        /// We might make this function more complex in the future, though.
+        /// </summary>
+        public static bool UpdateIsFromFuture(double UpdateTimestamp, double LocalTimestamp) => UpdateTimestamp > LocalTimestamp;
+
         private static bool _isSpectating;
         public static bool IsSpectating
         {
@@ -127,10 +134,23 @@ namespace LmpClient.VesselUtilities
         }
 
         /// <summary>
-        /// Check if an update should be done immediately or if we should wait
-        /// Returns true if we should do the update now
+        /// Checks if the vessel with the provided ID has the provided orbit and returns true if it does.
         /// </summary>
-        public static bool CompareGameTimestamps(double LocalGameTime, double msgGameTime) => LocalGameTime >= msgGameTime
+        public static bool VesselHasSameOrbit(Guid vesselId, double[] orbit)
+        {
+            var vessel = FlightGlobals.FindVessel(vesselId);
+
+            var delta = Math.Pow(10, -15); // Acceptable margin of error
+
+            return Math.Abs(orbit[0] - vessel.orbit.inclination)                      < delta &&
+                   Math.Abs(orbit[1] - vessel.orbit.eccentricity)                     < delta &&
+                   Math.Abs(orbit[2] - vessel.orbit.semiMajorAxis)                    < delta &&
+                   Math.Abs(orbit[3] - vessel.orbit.LAN)                              < delta &&
+                   Math.Abs(orbit[4] - vessel.orbit.argumentOfPeriapsis)              < delta &&
+                   Math.Abs(orbit[5] - vessel.orbit.meanAnomalyAtEpoch)               < delta &&
+                   Math.Abs(orbit[6] - vessel.orbit.epoch)                            < delta &&
+                   Math.Abs(orbit[7] - vessel.orbit.referenceBody.flightGlobalsIndex) < delta;
+        }
 
         /// <summary>
         /// Return all the vessels except the active one that we have the update lock and that are loaded
