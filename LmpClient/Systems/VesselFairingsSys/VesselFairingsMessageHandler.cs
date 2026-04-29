@@ -67,5 +67,4 @@ namespace LmpClient.Systems.VesselFairingsSys
             }
         }
     }
-    }
 }
