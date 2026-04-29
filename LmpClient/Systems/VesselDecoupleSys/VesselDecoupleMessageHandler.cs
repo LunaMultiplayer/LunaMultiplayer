@@ -30,6 +30,8 @@ namespace LmpClient.Systems.VesselDecoupleSys
                 StoredMessagesData.Enqueue(msgData);
             }
 
+            TryQueueUpdate(msgData);
+
         }
         
         public void TryQueueUpdate(VesselDecoupleMsgData msgData)
