@@ -37,7 +37,7 @@ namespace LmpClient.Systems.VesselPositionSys
                 return;
             }
 
-            TryQueueUpdate(msgData)
+            TryQueueUpdate(msgData);
         }
 
         public void TryQueueUpdate(VesselPositionMsgData msgData)

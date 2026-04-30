@@ -46,8 +46,10 @@ namespace LmpClient.Systems.VesselRemoveSys
             {
                 // Ensure that the update is no longer considered to be from the future
                 if (VesselCommon.UpdateIsFromFuture(StoredMessageData.GameTime, WarpSystem.Singleton.CurrentSubspaceTime))
+                {
                     StoredMessagesData.Enqueue(StoredMessageData);
                     continue;
+                }
 
                 // Apply the update
                 TryQueueUpdate(StoredMessageData);
