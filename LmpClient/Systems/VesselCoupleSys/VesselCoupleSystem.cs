@@ -35,6 +35,10 @@ namespace LmpClient.Systems.VesselCoupleSys
             base.OnEnabled();
             PartEvent.onPartCoupling.Add(VesselCoupleEvents.CoupleStart);
             PartEvent.onPartCoupled.Add(VesselCoupleEvents.CoupleComplete);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselCouples));
         }
 
@@ -43,6 +47,9 @@ namespace LmpClient.Systems.VesselCoupleSys
             base.OnDisabled();
             PartEvent.onPartCoupling.Remove(VesselCoupleEvents.CoupleStart);
             PartEvent.onPartCoupled.Remove(VesselCoupleEvents.CoupleComplete);
+
+            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+
             VesselCouples.Clear();
         }
 
