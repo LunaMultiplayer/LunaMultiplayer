@@ -25,12 +25,17 @@ namespace LmpClient.Systems.VesselResourceSys
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselResources));
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, ProcessVesselResources));
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             VesselResources.Clear();
+
+            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
         }
 
         #endregion
