@@ -41,6 +41,9 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             RevertEvent.onRevertedToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onReturnedToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, FlushRemovedVessels));
         }
@@ -56,6 +59,8 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             RevertEvent.onRevertedToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onReturnedToEditor.Remove(VesselRemoveEvents.OnRevertToEditor);
+
+            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
         }
 
         #endregion
