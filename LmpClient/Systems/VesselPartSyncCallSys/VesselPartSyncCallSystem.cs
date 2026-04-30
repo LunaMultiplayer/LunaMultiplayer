@@ -34,6 +34,10 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
         {
             base.OnEnabled();
             PartModuleEvent.onPartModuleMethodCalling.Add(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncCalls));
         }
 
@@ -41,6 +45,8 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
         {
             base.OnDisabled();
             PartModuleEvent.onPartModuleMethodCalling.Remove(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
+
+            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
 
             VesselPartsSyncs.Clear();
         }

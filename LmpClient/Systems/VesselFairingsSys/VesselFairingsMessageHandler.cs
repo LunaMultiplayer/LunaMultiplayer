@@ -10,6 +10,8 @@ namespace LmpClient.Systems.VesselFairingsSys
     public class VesselFairingsMessageHandler : SubSystem<VesselFairingsSystem>, IMessageHandler
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
+        
+        public ConcurrentQueue<VesselFairingMsgData> StoredMessagesData { get; set; } = new ConcurrentQueue<VesselFairingMsgData>();
 
         public void HandleMessage(IServerMessageBase msg)
         {

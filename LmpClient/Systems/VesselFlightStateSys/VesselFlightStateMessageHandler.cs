@@ -11,6 +11,8 @@ namespace LmpClient.Systems.VesselFlightStateSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
+        public ConcurrentQueue<VesselFlightStateMsgData> StoredMessagesData { get; set; } = new ConcurrentQueue<VesselFlightStateMsgData>();
+
         public void HandleMessage(IServerMessageBase msg)
         {
             if (!(msg.Data is VesselFlightStateMsgData msgData)) return;

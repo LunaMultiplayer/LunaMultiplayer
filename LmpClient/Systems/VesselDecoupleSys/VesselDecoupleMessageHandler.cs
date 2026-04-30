@@ -10,6 +10,8 @@ namespace LmpClient.Systems.VesselDecoupleSys
     public class VesselDecoupleMessageHandler : SubSystem<VesselDecoupleSystem>, IMessageHandler
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
+        
+        public ConcurrentQueue<VesselDecoupleMsgData> IncomingMessages { get; set; } = new ConcurrentQueue<VesselDecoupleMsgData>();
 
         public void HandleMessage(IServerMessageBase msg)
         {
