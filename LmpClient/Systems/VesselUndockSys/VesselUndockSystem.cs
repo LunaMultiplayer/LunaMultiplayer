@@ -31,6 +31,9 @@ namespace LmpClient.Systems.VesselUndockSys
             base.OnEnabled();
             PartEvent.onPartUndocking.Add(VesselUndockEvents.UndockStart);
             PartEvent.onPartUndocked.Add(VesselUndockEvents.UndockComplete);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselUndocks));
         }
@@ -40,6 +43,8 @@ namespace LmpClient.Systems.VesselUndockSys
             base.OnDisabled();
             PartEvent.onPartUndocking.Remove(VesselUndockEvents.UndockStart);
             PartEvent.onPartUndocked.Remove(VesselUndockEvents.UndockComplete);
+
+            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
 
             VesselUndocks.Clear();
         }
