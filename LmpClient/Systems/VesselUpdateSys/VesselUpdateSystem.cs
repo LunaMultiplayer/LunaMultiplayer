@@ -36,6 +36,10 @@ namespace LmpClient.Systems.VesselUpdateSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, SendVesselUpdates));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselUpdates));
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, SendSecondaryVesselUpdates));
@@ -45,6 +49,9 @@ namespace LmpClient.Systems.VesselUpdateSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
+
+            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+
             VesselUpdates.Clear();
         }
 
