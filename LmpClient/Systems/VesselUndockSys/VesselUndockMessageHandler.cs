@@ -35,7 +35,7 @@ namespace LmpClient.Systems.VesselUndockSys
             TryQueueUpdate(msgData);
         }
         
-        public void TryQueueUpdate(VesselPartSyncFieldMsgData msgData)
+        public void TryQueueUpdate(VesselUndockMsgData msgData)
         {
             if (!System.VesselUndocks.ContainsKey(msgData.VesselId))
             {
@@ -69,6 +69,12 @@ namespace LmpClient.Systems.VesselUndockSys
                 // Apply the update
                 TryQueueUpdate(StoredMessageData);
             }
+        }
+        
+        // Log out the amount of memory we're using to store messages
+        public void LogQueuedMessagesSize()
+        {
+            LunaLog.Debug($"Current memory usage for stored messages in the VesselUndock system: {Math.Floor(StoredMessagesData.Count * sizeof(VesselUndockMsgData) / 1024)}KB");
         }
     }
 }

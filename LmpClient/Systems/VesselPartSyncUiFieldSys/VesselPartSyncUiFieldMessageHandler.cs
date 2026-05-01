@@ -35,7 +35,7 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             TryQueueUpdate(msgData);
         }
         
-        public void TryQueueUpdate(VesselPartSyncFieldMsgData msgData)
+        public void TryQueueUpdate(VesselPartSyncUiFieldMsgData msgData)
         {
             if (!System.VesselPartsUiFieldsSyncs.ContainsKey(msgData.VesselId))
             {
@@ -63,6 +63,12 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
                 // Apply the update
                 TryQueueUpdate(StoredMessageData);
             }
+        }
+        
+        // Log out the amount of memory we're using to store messages
+        public void LogQueuedMessagesSize()
+        {
+            LunaLog.Debug($"Current memory usage for stored messages in the VesselPartSyncUiField system: {Math.Floor(StoredMessagesData.Count * sizeof(VesselPartSyncUiFieldMsgData) / 1024)}KB");
         }
     }
 }

@@ -46,6 +46,9 @@ namespace LmpClient.Systems.VesselRemoveSys
             TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, FlushRemovedVessels));
+            
+            // Debug logging
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
         }
 
         protected override void OnDisabled()

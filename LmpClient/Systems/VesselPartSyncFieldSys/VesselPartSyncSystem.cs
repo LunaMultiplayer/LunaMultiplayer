@@ -52,6 +52,9 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncs));
+            
+            // Debug logging
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
         }
 
         protected override void OnDisabled()

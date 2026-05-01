@@ -64,5 +64,11 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
                 TryQueueUpdate(StoredMessageData);
             }
         }
+        
+        // Log out the amount of memory we're using to store messages
+        public void LogQueuedMessagesSize()
+        {
+            LunaLog.Debug($"Current memory usage for stored messages in the VesselPartSyncCall system: {Math.Floor(StoredMessagesData.Count * sizeof(VesselPartSyncCallMsgData) / 1024)}KB");
+        }
     }
 }

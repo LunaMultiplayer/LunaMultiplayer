@@ -36,6 +36,9 @@ namespace LmpClient.Systems.VesselUndockSys
             TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselUndocks));
+            
+            // Debug logging
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
         }
 
         protected override void OnDisabled()

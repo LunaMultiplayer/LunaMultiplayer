@@ -34,7 +34,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             System.KillVessel(msgData.VesselId, msgData.AddToKillList, "Received a vessel remove message from the server");
         }
         
-        public void TryQueueUpdate(VesselPartSyncFieldMsgData msgData)
+        public void TryQueueUpdate(VesselRemoveMsgData msgData)
         {
             System.KillVessel(msgData.VesselId, msgData.AddToKillList, "Applied a vessel remove message from the server");
         }
@@ -54,6 +54,12 @@ namespace LmpClient.Systems.VesselRemoveSys
                 // Apply the update
                 TryQueueUpdate(StoredMessageData);
             }
+        }
+        
+        // Log out the amount of memory we're using to store messages
+        public void LogQueuedMessagesSize()
+        {
+            LunaLog.Debug($"Current memory usage for stored messages in the VesselRemove system: {Math.Floor(StoredMessagesData.Count * sizeof(VesselRemoveMsgData) / 1024)}KB");
         }
     }
 }

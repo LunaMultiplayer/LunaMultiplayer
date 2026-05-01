@@ -32,6 +32,9 @@ namespace LmpClient.Systems.VesselFairingsSys
             TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselFairings));
+            
+            // Debug logging
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
         }
 
         protected override void OnDisabled()
