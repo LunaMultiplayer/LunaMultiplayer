@@ -1,9 +1,12 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.VesselUtilities;
+using LmpClient.Systems.Warp;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System.Collections.Concurrent;
+using System;
+using System.Linq;
 
 namespace LmpClient.Systems.VesselFlightStateSys
 {
@@ -45,6 +48,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
         
         public void TryQueueUpdate(VesselFlightStateMsgData msgData)
         {
+            var vesselId = msgData.VesselId;
             if (!VesselFlightStateSystem.CurrentFlightState.ContainsKey(vesselId))
             {
                 VesselFlightStateSystem.CurrentFlightState.TryAdd(vesselId, new VesselFlightStateUpdate(msgData));
@@ -77,7 +81,12 @@ namespace LmpClient.Systems.VesselFlightStateSys
         // Log out the amount of memory we're using to store messages
         public void LogQueuedMessagesSize()
         {
-            LunaLog.Debug($"Current memory usage for stored messages in the VesselFlightState system: {Math.Floor(StoredMessagesData.Count * sizeof(VesselFlightStateMsgData) / 1024)}KB");
+            var memUsage = 0;
+            if (StoredMessagesData.Count > 0)
+            {
+                memUsage = StoredMessagesData.Count * StoredMessagesData.First().GetMessageSize() / 1024; // This is in Kilobytes
+            }
+            LunaLog.Log($"Current memory usage for stored messages in the VesselFlightState system: {memUsage}KB");
         }
     }
 }

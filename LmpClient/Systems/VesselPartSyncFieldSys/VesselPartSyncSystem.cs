@@ -49,7 +49,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleEnumFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
             
             // Attempt to load all the from-future messages we've been storing
-            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncs));
             
@@ -76,7 +76,7 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleObjectFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
             PartModuleEvent.onPartModuleEnumFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
 
-            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             VesselPartsSyncs.Clear();
         }

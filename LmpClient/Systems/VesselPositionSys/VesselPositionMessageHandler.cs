@@ -5,6 +5,8 @@ using LmpClient.Systems.Warp;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System.Collections.Concurrent;
+using System;
+using System.Linq;
 
 namespace LmpClient.Systems.VesselPositionSys
 {
@@ -62,8 +64,10 @@ namespace LmpClient.Systems.VesselPositionSys
             {
                 // Ensure that the update is no longer considered to be from the future
                 if (VesselCommon.UpdateIsFromFuture(StoredMessageData.GameTime, WarpSystem.Singleton.CurrentSubspaceTime))
+                {
                     StoredMessagesData.Enqueue(StoredMessageData);
                     continue;
+                }
 
                 // Apply the update
                 TryQueueUpdate(StoredMessageData);
@@ -73,7 +77,12 @@ namespace LmpClient.Systems.VesselPositionSys
         // Log out the amount of memory we're using to store messages
         public void LogQueuedMessagesSize()
         {
-            LunaLog.Debug($"Current memory usage for stored messages in the VesselPosition system: {Math.Floor(StoredMessagesData.Count * sizeof(VesselPositionMsgData) / 1024)}KB");
+            var memUsage = 0;
+            if (StoredMessagesData.Count > 0)
+            {
+                memUsage = StoredMessagesData.Count * StoredMessagesData.First().GetMessageSize() / 1024; // This is in Kilobytes
+            }
+            LunaLog.Log($"Current memory usage for stored messages in the VesselPosition system: {memUsage}KB");
         }
     }
 }

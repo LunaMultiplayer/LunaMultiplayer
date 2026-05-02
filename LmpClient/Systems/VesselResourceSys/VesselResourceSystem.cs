@@ -27,7 +27,7 @@ namespace LmpClient.Systems.VesselResourceSys
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, ProcessVesselResources));
             
             // Attempt to load all the from-future messages we've been storing
-            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
             
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
@@ -38,7 +38,7 @@ namespace LmpClient.Systems.VesselResourceSys
             base.OnDisabled();
             VesselResources.Clear();
 
-            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
         }
 
         #endregion

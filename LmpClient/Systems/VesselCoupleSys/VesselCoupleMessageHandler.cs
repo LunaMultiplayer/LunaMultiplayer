@@ -1,17 +1,22 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.VesselUtilities;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Systems.Warp;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System.Collections.Concurrent;
+using System;
+using System.Linq;
 
 namespace LmpClient.Systems.VesselCoupleSys
 {
     public class VesselCoupleMessageHandler : SubSystem<VesselCoupleSystem>, IMessageHandler
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
+
+        public ConcurrentQueue<VesselCoupleMsgData> StoredMessagesData { get; set; } = new ConcurrentQueue<VesselCoupleMsgData>();
 
         public void HandleMessage(IServerMessageBase msg)
         {
@@ -48,7 +53,7 @@ namespace LmpClient.Systems.VesselCoupleSys
             TryQueueUpdate(msgData);
         }
         
-        public void TryQueueUpdate(VesselPartSyncFieldMsgData msgData)
+        public void TryQueueUpdate(VesselCoupleMsgData msgData)
         {
             if (!System.VesselCouples.ContainsKey(msgData.VesselId))
             {
@@ -94,7 +99,12 @@ namespace LmpClient.Systems.VesselCoupleSys
         // Log out the amount of memory we're using to store messages
         public void LogQueuedMessagesSize()
         {
-            LunaLog.Debug($"Current memory usage for stored messages in the VesselCouple system: {Math.Floor(StoredMessagesData.Count * sizeof(VesselCoupleMsgData) / 1024)}KB");
+            var memUsage = 0;
+            if (StoredMessagesData.Count > 0)
+            {
+                memUsage = StoredMessagesData.Count * StoredMessagesData.First().GetMessageSize() / 1024; // This is in Kilobytes
+            }
+            LunaLog.Log($"Current memory usage for stored messages in the VesselCouple system: {memUsage}KB");
         }
     }
 }

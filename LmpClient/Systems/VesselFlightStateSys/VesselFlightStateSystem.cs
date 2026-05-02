@@ -76,7 +76,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             SpectateEvent.onFinishedSpectating.Add(FlightStateEvents.OnFinishedSpectating);
             
             // Attempt to load all the from-future messages we've been storing
-            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             //Send the flight state updates after all the calculations are done.
             TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
@@ -97,7 +97,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
             SpectateEvent.onStartSpectating.Remove(FlightStateEvents.OnStartSpectating);
             SpectateEvent.onFinishedSpectating.Remove(FlightStateEvents.OnFinishedSpectating);
 
-            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
 

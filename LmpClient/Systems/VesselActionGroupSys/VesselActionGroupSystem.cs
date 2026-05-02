@@ -30,7 +30,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
             base.OnEnabled();
 
             // Attempt to load all the from-future messages we've been storing
-            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, ProcessVesselActionGroups));
 
@@ -45,7 +45,7 @@ namespace LmpClient.Systems.VesselActionGroupSys
             base.OnDisabled();
             VesselActionGroups.Clear();
 
-            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             ActionGroupEvent.onActionGroupFired.Remove(VesselActionGroupEvents.ActionGroupFired);
         }

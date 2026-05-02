@@ -29,7 +29,7 @@ namespace LmpClient.Systems.VesselFairingsSys
             GameEvents.onFairingsDeployed.Add(VesselFairingEvents.FairingsDeployed);
             
             // Attempt to load all the from-future messages we've been storing
-            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselFairings));
             
@@ -42,7 +42,7 @@ namespace LmpClient.Systems.VesselFairingsSys
             base.OnDisabled();
             GameEvents.onFairingsDeployed.Remove(VesselFairingEvents.FairingsDeployed);
 
-            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             VesselFairings.Clear();
         }

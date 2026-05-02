@@ -33,7 +33,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
             PartEvent.onPartDecoupled.Add(VesselDecoupleEvents.DecoupleComplete);
 
             // Attempt to load all the from-future messages we've been storing
-            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselDecouples));
             
@@ -47,7 +47,7 @@ namespace LmpClient.Systems.VesselDecoupleSys
             PartEvent.onPartDecoupling.Remove(VesselDecoupleEvents.DecoupleStart);
             PartEvent.onPartDecoupled.Remove(VesselDecoupleEvents.DecoupleComplete);
 
-            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             VesselDecouples.Clear();
         }

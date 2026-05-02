@@ -68,7 +68,7 @@ namespace LmpClient.Systems.VesselProtoSys
             GameEvents.onManeuverRemoved.Add(VesselProtoEvents.ManeuverNodeRemoved);
             
             // Attempt to load all the from-future messages we've been storing
-            TimingManager.UpdateAdd(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselDefinition));
@@ -97,7 +97,7 @@ namespace LmpClient.Systems.VesselProtoSys
             GameEvents.onManeuverAdded.Remove(VesselProtoEvents.ManeuverNodeAdded);
             GameEvents.onManeuverRemoved.Remove(VesselProtoEvents.ManeuverNodeRemoved);
 
-            TimingManager.UpdateRemove(HandlePositionsStage, MessageHandler.OnUpdate);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store too
             VesselProtos.Clear();

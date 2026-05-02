@@ -31,6 +31,7 @@ namespace LmpClient.Systems.VesselUpdateSys
         public bool WasControllable;
         public int Stage;
         public float[] Com = new float[3];
+        public string BodyName;
 
         #endregion
 
