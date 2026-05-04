@@ -22,32 +22,31 @@ namespace LmpClient.Systems.VesselCoupleSys
         {
             if (!(msg.Data is VesselCoupleMsgData msgData)) return;
 
-            //We don't call VesselCommon.DoVesselChecks(msgData.VesselId) because we may receive a 
-            //proto update on our own vessel (when someone docks against us and we don't detect it for example
-            //Therefore, we must manually call VesselWillBeKilled and implement only 1 of the checks
+            // We don't call VesselCommon.DoVesselChecks(msgData.VesselId) because we may receive a 
+            // proto update on our own vessel (when someone docks against us and we don't detect it for example
+            // Therefore, we must manually call VesselWillBeKilled and implement only 1 of the checks
             if (VesselRemoveSystem.Singleton.VesselWillBeKilled(msgData.VesselId))
                 return;
             
+
+            var affectsActiveVessel = FlightGlobals.ActiveVessel && (FlightGlobals.ActiveVessel.id == msgData.VesselId || FlightGlobals.ActiveVessel.id == msgData.CoupledVesselId);
+
+            // If the coupling packet affects our active vessel (even if we are spectating) jump to the future subspace
+            if (affectsActiveVessel)
+            {
+                LunaLog.Log($"Received a coupling against our own vessel! We own the {(FlightGlobals.ActiveVessel.id == msgData.VesselId ? "Dominant" : "Weak")} vessel");
+                WarpSystem.Singleton.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
+            }
+
             // This code helps prevent time paradoxes.
             // Why? Because this code makes sure that we only apply updates that aren't from the future.
             // Additionally, to prevent us from getting desynchronised, we store updates from the future, so that we can apply them later.
             var IsFromFuture = VesselCommon.UpdateIsFromFuture(msgData.GameTime, WarpSystem.Singleton.CurrentSubspaceTime);
 
-            if (IsFromFuture)
+            if (IsFromFuture && !affectsActiveVessel)
             {
                 StoredMessagesData.Enqueue(msgData);
                 return;
-            }
-
-            var affectsActiveVessel = FlightGlobals.ActiveVessel && (FlightGlobals.ActiveVessel.id == msgData.VesselId || FlightGlobals.ActiveVessel.id == msgData.CoupledVesselId);
-
-            //If the coupling packet affects our active vessel (even if we are spectating) jump to the future subspace
-            // Note: This code may not play nicely with the time paradoxes fix.
-            // If something breaks with this system when players warp, then this code is probably the cause. Try moving the time paradoxes fix below this conditional.
-            if (affectsActiveVessel)
-            {
-                LunaLog.Log($"Received a coupling against our own vessel! We own the {(FlightGlobals.ActiveVessel.id == msgData.VesselId ? "Dominant" : "Weak")} vessel");
-                WarpSystem.Singleton.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
             }
             
             TryQueueUpdate(msgData);
