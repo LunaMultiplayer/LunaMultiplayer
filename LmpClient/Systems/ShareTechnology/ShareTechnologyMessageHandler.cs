@@ -37,13 +37,6 @@ namespace LmpClient.Systems.ShareTechnology
             //Unlock the technology
             ResearchAndDevelopment.Instance.UnlockProtoTechNode(node);
 
-            //Refresh RD nodes in case we are in the RD screen
-            if (RDController.Instance && RDController.Instance.partList)
-            {
-                RDController.Instance.partList.Refresh();
-                RDController.Instance.UpdatePanel();
-            }
-
             //Refresh the tech tree
             ResearchAndDevelopment.RefreshTechTreeUI();
 

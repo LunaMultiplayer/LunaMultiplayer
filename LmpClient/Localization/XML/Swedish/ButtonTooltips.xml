@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SettingsIcon>Settings</SettingsIcon>
-  <ServerIcon>Servers</ServerIcon>
-  <ConnectIcon>Connect</ConnectIcon>
-  <DisconnectIcon>Disconnect</DisconnectIcon>
-  <SyncIcon>Warp to</SyncIcon>
-  <RefreshIcon>Refresh</RefreshIcon>
-  <UploadIcon>Upload</UploadIcon>
-  <DeleteIcon>Delete</DeleteIcon>
-  <PlusIcon>Add</PlusIcon>
-  <SaveIcon>Save</SaveIcon>
-  <KeyIcon>Password</KeyIcon>
-  <GlobeIcon>Country</GlobeIcon>
-  <ChatIcon>Chat</ChatIcon>
-  <CameraIcon>Screenshots</CameraIcon>
-  <RocketIcon>Vessels</RocketIcon>
+  <SettingsIcon>Inställningar</SettingsIcon>
+  <ServerIcon>Servrar</ServerIcon>
+  <ConnectIcon>Anslut</ConnectIcon>
+  <DisconnectIcon>Koppla från</DisconnectIcon>
+  <SyncIcon>Snabbspola till</SyncIcon>
+  <RefreshIcon>Uppdatera</RefreshIcon>
+  <UploadIcon>Ladda upp</UploadIcon>
+  <DeleteIcon>Ta bort</DeleteIcon>
+  <PlusIcon>Lägg till</PlusIcon>
+  <SaveIcon>Spara</SaveIcon>
+  <KeyIcon>Lösenord</KeyIcon>
+  <GlobeIcon>Land</GlobeIcon>
+  <ChatIcon>Chatt</ChatIcon>
+  <CameraIcon>Skärmbilder</CameraIcon>
+  <RocketIcon>Farkoster</RocketIcon>
   <AdminIcon>Admin</AdminIcon>
-  <KickIcon>Kick</KickIcon>
-  <BanIcon>Ban</BanIcon>
+  <KickIcon>Sparka</KickIcon>
+  <BanIcon>Bannlys</BanIcon>
   <DekesslerIcon>Dekessler</DekesslerIcon>
   <NukeIcon>Nuke KSC</NukeIcon>
-  <RestartServerIcon>Restart server</RestartServerIcon>
-  <DownloadIcon>Download</DownloadIcon>
-  <CycleFirstIcon>First</CycleFirstIcon>
-  <CyclePreviousIcon>Previous</CyclePreviousIcon>
-  <CycleNextIcon>Next</CycleNextIcon>
-  <CycleLastIcon>Last</CycleLastIcon>
+  <RestartServerIcon>Starta om servern</RestartServerIcon>
+  <DownloadIcon>Ladda ner</DownloadIcon>
+  <CycleFirstIcon>Först</CycleFirstIcon>
+  <CyclePreviousIcon>Föregående</CyclePreviousIcon>
+  <CycleNextIcon>Nästa</CycleNextIcon>
+  <CycleLastIcon>Sista</CycleLastIcon>
 </ButtonTooltips>

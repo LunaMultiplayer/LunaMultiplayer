@@ -1,5 +1,8 @@
 ﻿using LmpClient.Base;
 using LmpClient.VesselUtilities;
+using UnityEngine;
+using LmpClient.Systems.SettingsSys;
+using LmpCommon.Enums;
 
 namespace LmpClient.Systems.Warp
 {
@@ -34,6 +37,12 @@ namespace LmpClient.Systems.Warp
                 System.CurrentSubspace = System.LatestSubspace;
                 System.SyncedToLastSubspace = true;
                 System.ProcessNewSubspace();
+            }
+
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.None)
+            {
+                TimeWarp.fetch.physicsWarpRates = new float[] { 1f };
+                TimeWarp.fetch.warpRates = new float[] { 1f };
             }
         }
     }

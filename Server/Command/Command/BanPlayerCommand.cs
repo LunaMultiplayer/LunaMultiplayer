@@ -38,7 +38,7 @@ namespace Server.Command.Command
             }
             else
             {
-                LunaLog.Normal("Undefined function. Usage: /ban [username] [reason]");
+                LunaLog.Error("Syntax error. Usage: /ban [username] [reason]");
             }
 
             return false;

@@ -1,7 +1,7 @@
 using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode.CfgNode;
+using Server.Log;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -15,23 +15,42 @@ namespace Server.System.Scenario
         {
             _ = Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
+                try
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
-
-                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(scienceSubject.Data, 0, scienceSubject.NumBytes)) { Parent = scenario, Name = "Science" };
-                    if (receivedNode.IsEmpty()) return;
-
-                    var techNodes = scenario.GetNodes("Science").Select(v => v.Value);
-                    var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == receivedNode.GetValue("id").Value);
-                    if (specificTechNode != null)
+                    lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                     {
-                        scenario.ReplaceNode(specificTechNode, receivedNode);
+                        if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
+
+                        var receivedNode = ParseClientConfigNode(scienceSubject.Data, scienceSubject.NumBytes, "Science");
+                        receivedNode.Parent = scenario;
+                        if (receivedNode.IsEmpty()) return;
+
+                        var receivedId = receivedNode.GetValue("id");
+                        if (receivedId == null)
+                        {
+                            LunaLog.Error("Science subject update received with no id — skipping");
+                            return;
+                        }
+
+                        var scienceNodes = scenario.GetNodes("Science").Select(v => v.Value);
+                        var specificNode = scienceNodes.FirstOrDefault(n =>
+                        {
+                            var id = n.GetValue("id");
+                            return id != null && id.Value == receivedId.Value;
+                        });
+                        if (specificNode != null)
+                        {
+                            scenario.ReplaceNode(specificNode, receivedNode);
+                        }
+                        else
+                        {
+                            scenario.AddNode(receivedNode);
+                        }
                     }
-                    else
-                    {
-                        scenario.AddNode(receivedNode);
-                    }
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Error updating science subject scenario data: {e}");
                 }
             });
         }

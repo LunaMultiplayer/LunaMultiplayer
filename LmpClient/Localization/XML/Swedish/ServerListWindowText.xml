@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Server list</Title>
+  <Title>Server lista</Title>
   <NoServers>Inga servrar!</NoServers>
   <Ping>Latens</Ping>
   <Players>Spelare</Players>
   <MaxPlayers>Max antal spelare</MaxPlayers>
   <Mode>Spelläge</Mode>
-  <WarpMode>Snabbspolnings läge</WarpMode>
+  <WarpMode>Warp läge</WarpMode>
   <Terrain>Terräng</Terrain>
   <Cheats>Fusk</Cheats>
   <Name>Namn</Name>
@@ -16,5 +16,5 @@
   <ServerDetailTitle>Anslut till server</ServerDetailTitle>
   <Password>Lösenord</Password>
   <Connect>Anslut</Connect>
-  <Dedicated>Dedicated</Dedicated>
+  <Dedicated>Dedikerad</Dedicated>
 </ServerListWindowText>

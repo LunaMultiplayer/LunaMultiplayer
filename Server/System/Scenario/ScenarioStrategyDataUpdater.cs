@@ -1,7 +1,7 @@
 using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode.CfgNode;
+using Server.Log;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -15,25 +15,38 @@ namespace Server.System.Scenario
         {
             _ = Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("StrategySystem", new object()))
+                try
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("StrategySystem", out var scenario)) return;
-
-                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(strategy.Data, 0, strategy.NumBytes)) { Name = "STRATEGY" };
-                    if (receivedNode.IsEmpty()) return;
-
-                    var strategiesNode = scenario.GetNode("STRATEGIES").Value;
-                    if (strategiesNode != null)
+                    lock (Semaphore.GetOrAdd("StrategySystem", new object()))
                     {
-                        var strategiesList = strategiesNode.GetNodes("STRATEGY").Select(v => v.Value);
-                        var specificstrategyNode = strategiesList.FirstOrDefault(n => n.GetValue("name").Value == strategy.Name);
-                        if (specificstrategyNode != null)
-                        {
-                            strategiesNode.ReplaceNode(specificstrategyNode, receivedNode);
-                        }
+                        if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("StrategySystem", out var scenario)) return;
 
-                        strategiesNode.AddNode(receivedNode);
+                        var receivedNode = ParseClientConfigNode(strategy.Data, strategy.NumBytes, "STRATEGY");
+                        if (receivedNode.IsEmpty()) return;
+
+                        var strategiesNode = scenario.GetNode("STRATEGIES")?.Value;
+                        if (strategiesNode != null)
+                        {
+                            var strategiesList = strategiesNode.GetNodes("STRATEGY").Select(v => v.Value);
+                            var specificstrategyNode = strategiesList.FirstOrDefault(n =>
+                            {
+                                var name = n.GetValue("name");
+                                return name != null && name.Value == strategy.Name;
+                            });
+                            if (specificstrategyNode != null)
+                            {
+                                strategiesNode.ReplaceNode(specificstrategyNode, receivedNode);
+                            }
+                            else
+                            {
+                                strategiesNode.AddNode(receivedNode);
+                            }
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Error updating strategy scenario data: {e}");
                 }
             });
         }
