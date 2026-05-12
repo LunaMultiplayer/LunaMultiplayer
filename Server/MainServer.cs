@@ -41,7 +41,7 @@ namespace Server
 
         private static bool IsRestart = false;
 
-        public static async Task Main(string[] args)
+        public static Task Main(string[] args)
         {
             //Verify the .NET runtime before anything else so we can give users a clear,
             //actionable message instead of failing later with a confusing error.
@@ -58,18 +58,17 @@ namespace Server
             RootCommand rootCommand = new("Luna Multiplayer Server");
             rootCommand.Options.Add(dataDirectoryOption);
 
-            var parseResult = rootCommand.Parse(args);
-            if (parseResult.Errors.Count != 0)
+            rootCommand.SetAction((parseResult, cancellationToken) =>
             {
-                foreach (var parseError in parseResult.Errors)
-                {
-                    await Console.Error.WriteLineAsync(parseError.Message);
-                }
-                Environment.Exit(1);
-            }
+                ServerContext.DataDirectory = parseResult.GetValue(dataDirectoryOption).FullName;
+                return RunServer(cancellationToken);
+            });
 
-            ServerContext.DataDirectory = parseResult.GetValue(dataDirectoryOption).FullName;
+            return rootCommand.Parse(args).InvokeAsync(new InvocationConfiguration {ProcessTerminationTimeout = null}, CancellationTokenSrc.Token);
+        }
 
+        private static async Task RunServer(CancellationToken cancellationToken)
+        {
             try
             {
                 // Force culture to en-US to avoid 'System.Net.Sockets.resources' assembly load error.
@@ -133,26 +132,24 @@ namespace Server
                 WebServer.StartWebServer();
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
-                _ = LongRunTaskFactory.StartNew(CommandHandler.ThreadMainAsync, CancellationTokenSrc.Token);
+                _ = LongRunTaskFactory.StartNew(CommandHandler.ThreadMainAsync, cancellationToken);
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformationAsync, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformationAsync, cancellationToken));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPortAsync, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThreadAsync, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(ClientMainThread.ThreadMainAsync, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPortAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThreadAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(ClientMainThread.ThreadMainAsync, cancellationToken));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformBackupsAsync(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformArchiveBackupsAsync(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => WarpSystem.PerformSoloSubspaceChecksAsync(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceivingMessagesAsync, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServerAsync, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.CheckNATTypeAsync, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => WarpSystem.PerformSoloSubspaceChecksAsync(cancellationToken), cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformBackupsAsync(cancellationToken), cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceivingMessagesAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServerAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.CheckNATTypeAsync, cancellationToken));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersionAsync, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsgAsync, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersionAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsgAsync, cancellationToken));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => GcSystem.PerformGarbageCollectionAsync(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
-
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => GcSystem.PerformGarbageCollectionAsync(cancellationToken), cancellationToken));
                 while (ServerContext.ServerStarting)
                     Thread.Sleep(500);
 
