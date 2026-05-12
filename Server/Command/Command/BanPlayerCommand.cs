@@ -1,6 +1,7 @@
 ﻿using Server.Client;
 using Server.Command.Command.Base;
 using Server.Command.Common;
+using Server.Context;
 using Server.Log;
 using Server.Server;
 using Server.System;
@@ -46,7 +47,7 @@ namespace Server.Command.Command
 
         public static IEnumerable<string> GetBannedPlayers()
         {
-            return FileHandler.ReadFileLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPPlayerBans.txt"));
+            return FileHandler.ReadFileLines(Path.Combine(ServerContext.DataDirectory, "LMPPlayerBans.txt"));
         }
     }
 }

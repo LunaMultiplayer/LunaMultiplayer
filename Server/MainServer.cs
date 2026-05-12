@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.CommandLine;
 
 namespace Server
 {
@@ -40,11 +41,34 @@ namespace Server
 
         private static bool IsRestart = false;
 
-        public static async Task Main()
+        public static async Task Main(string[] args)
         {
             //Verify the .NET runtime before anything else so we can give users a clear,
             //actionable message instead of failing later with a confusing error.
             DotNetRuntimeChecker.EnsureCorrectRuntimeOrExit();
+
+            Option<DirectoryInfo> dataDirectoryOption = new("--data-directory", ["-d"])
+            {
+                Description = "The location to store the server runtime data",
+                DefaultValueFactory = parseResult => new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory)
+            };
+
+            dataDirectoryOption.AcceptExistingOnly();
+
+            RootCommand rootCommand = new("Luna Multiplayer Server");
+            rootCommand.Options.Add(dataDirectoryOption);
+
+            var parseResult = rootCommand.Parse(args);
+            if (parseResult.Errors.Count != 0)
+            {
+                foreach (var parseError in parseResult.Errors)
+                {
+                    await Console.Error.WriteLineAsync(parseError.Message);
+                }
+                Environment.Exit(1);
+            }
+
+            ServerContext.DataDirectory = parseResult.GetValue(dataDirectoryOption).FullName;
 
             try
             {
@@ -87,7 +111,9 @@ namespace Server
                 ServerContext.Day = LunaNetworkTime.Now.Day;
 
                 LunaLog.Normal($"Luna Server version: {LmpVersioning.CurrentVersion} ({AppContext.BaseDirectory})");
+                
                 LunaLog.Normal($"[fork] {ForkBuildInfo.ForkName} — fixes active: {string.Join(" ", ForkBuildInfo.ActiveFixes)}");
+                LunaLog.Normal($"Server Data Directory: {ServerContext.DataDirectory}");
 
                 Universe.CheckUniverse();
                 LoadSettingsAndGroups();

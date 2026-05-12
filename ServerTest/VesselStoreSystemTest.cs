@@ -17,7 +17,7 @@ namespace ServerTest
         public void Setup()
         {
             // Set up a mock universe directory
-            ServerContext.UniverseDirectory = Path.Combine(Path.GetTempPath(), "LMPTestUniverse_" + Guid.NewGuid());
+            ServerContext.DataDirectory = Path.Combine(Path.GetTempPath(), "LMPTestData_" + Guid.NewGuid());
             if (!Directory.Exists(ServerContext.UniverseDirectory))
                 Directory.CreateDirectory(ServerContext.UniverseDirectory);
             
@@ -31,8 +31,8 @@ namespace ServerTest
         [TestCleanup]
         public void Cleanup()
         {
-            if (Directory.Exists(ServerContext.UniverseDirectory))
-                Directory.Delete(ServerContext.UniverseDirectory, true);
+            if (Directory.Exists(ServerContext.DataDirectory))
+                Directory.Delete(ServerContext.DataDirectory, true);
         }
 
         private string GetValidVesselData(Guid id)
