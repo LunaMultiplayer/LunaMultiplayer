@@ -168,6 +168,8 @@
     <Compile Include="Harmony\EVAConstructionModeEditor_AttachPart.cs" />
     <Compile Include="Harmony\EVAConstructionModeEditor_DropAttachablePart.cs" />
     <Compile Include="Harmony\ModuleDockingNode_DockToVessel.cs" />
+    <Compile Include="Harmony\ModuleDockingNode_Undock.cs" />
+    <Compile Include="Harmony\ModuleDockingNode_UndockSameVessel.cs" />
     <Compile Include="Harmony\ContractPreLoader_Filter.cs" />
     <Compile Include="Harmony\ContractSystem_LoadContract.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
