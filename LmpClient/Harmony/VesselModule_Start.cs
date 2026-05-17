@@ -29,7 +29,7 @@ namespace LmpClient.Harmony
 
             if (__exception is NullReferenceException)
             {
-                var moduleName  = __instance?.GetType().Name ?? "unknown";
+                var moduleName = __instance?.GetType().Name ?? "unknown";
                 var gameObjName = __instance?.gameObject?.name ?? "unknown";
                 LunaLog.LogWarning($"[LMP]: Suppressed NullReferenceException in {moduleName}.OnStart on '{gameObjName}'. " +
                                    "The vessel was likely loaded with incomplete data from the server.");

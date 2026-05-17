@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using LmpCommon.Message.Data.Groups;
+﻿using LmpCommon.Message.Data.Groups;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Server;
 using LmpCommon.Message.Types;
@@ -8,6 +7,7 @@ using Server.Context;
 using Server.Message.Base;
 using Server.Server;
 using Server.System;
+using System.Linq;
 
 namespace Server.Message
 {

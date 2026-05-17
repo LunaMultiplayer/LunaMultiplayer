@@ -1,5 +1,4 @@
-﻿using System;
-using LmpCommon.Message.Data.Facility;
+﻿using LmpCommon.Message.Data.Facility;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Server;
 using LmpCommon.Message.Types;
@@ -8,6 +7,7 @@ using Server.Log;
 using Server.Message.Base;
 using Server.Server;
 using Server.System.Scenario;
+using System;
 
 namespace Server.Message
 {

@@ -105,8 +105,7 @@ namespace MasterServer
         /// </summary>
         private static void StopMasterServerDll()
         {
-            if (_stopDLLCallback != null)
-                _stopDLLCallback();
+            _stopDLLCallback?.Invoke();
             Console.Clear();
         }
 

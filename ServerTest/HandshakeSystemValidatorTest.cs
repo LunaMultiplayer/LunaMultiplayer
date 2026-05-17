@@ -1,8 +1,8 @@
-using LmpCommon;
+﻿using LmpCommon;
 using LmpCommon.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Server.System;
 using Server.Settings.Structures;
+using Server.System;
 using System.IO;
 
 namespace ServerTest
@@ -20,7 +20,7 @@ namespace ServerTest
         {
             // Set up local version for comparison
             var localVersion = LmpVersioning.CurrentVersion.ToString();
-            
+
             // Should succeed with current version
             Assert.IsTrue(LmpVersioning.IsCompatible(localVersion));
 
@@ -33,7 +33,7 @@ namespace ServerTest
         {
             // Set server to NOT use a whitelist
             GeneralSettings.SettingsStore.ModControl = false;
-            
+
             // If mod control is disabled, HandshakeReply should have ModControl = false
             Assert.IsFalse(GeneralSettings.SettingsStore.ModControl);
         }

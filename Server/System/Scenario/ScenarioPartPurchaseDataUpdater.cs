@@ -1,4 +1,4 @@
-using LmpCommon.Message.Data.ShareProgress;
+﻿using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
 using Server.Log;
 using System.Globalization;
@@ -47,7 +47,7 @@ namespace Server.System.Scenario
 
                     if (expPartNode?.Value.GetAllValues().Count == 0)
                         expPartNode.Value.CreateValue(new CfgNodeValue<string, string>("dummyPart", "0"));
-                        // Create a dummy part - LMP treats empty expPartsNode as null, which causes creating a new one
+                    // Create a dummy part - LMP treats empty expPartsNode as null, which causes creating a new one
                     ScenarioStoreSystem.BackupScenarios();
                 }
             });

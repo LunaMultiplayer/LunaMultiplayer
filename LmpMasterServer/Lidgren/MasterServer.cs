@@ -168,7 +168,9 @@ namespace LmpMasterServer.Lidgren
 
                                     // Give the first introduction attempt some time
                                     Thread.Sleep(50);
-                                } else {
+                                }
+                                else
+                                {
                                     LunaLog.Normal(
                                         $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
                                 }
@@ -269,7 +271,9 @@ namespace LmpMasterServer.Lidgren
             if (ServerDictionary.TryGetValue(msgData.Id, out var existing))
             {
                 existing.Update(msgData, netMsg.SenderEndPoint);
-            } else {
+            }
+            else
+            {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
                 LunaLog.Normal($"NEW SERVER: {netMsg.SenderEndPoint}");
             }
@@ -315,7 +319,8 @@ namespace LmpMasterServer.Lidgren
                 }
             });
             _ = t.ContinueWith(
-                (t2) => {
+                (t2) =>
+                {
                     LunaLog.Fatal(t2.Exception.ToString());
                     Environment.Exit(1);
                 },
@@ -327,14 +332,14 @@ namespace LmpMasterServer.Lidgren
         {
             var t = Task.Run(async () =>
             {
-                while(RunServer)
+                while (RunServer)
                 {
                     if (Server.CountryCodeRefreshQueue.TryDequeue(out var item))
                     {
                         (var id, var endpoint) = item;
                         if (ServerDictionary.TryGetValue(id, out var server))
                         {
-                            try 
+                            try
                             {
                                 if (await server.SetCountryFromEndpointAsync(endpoint))
                                     await Task.Delay(Server.MinCountryCodeRefreshInterval);
@@ -346,13 +351,16 @@ namespace LmpMasterServer.Lidgren
                                 Server.CountryCodeRefreshQueue.Enqueue(item);
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         await Task.Delay(CountryCodeRefreshInterval);
                     }
                 }
             });
             _ = t.ContinueWith(
-                (t2) => {
+                (t2) =>
+                {
                     LunaLog.Fatal(t2.Exception.ToString());
                     Environment.Exit(1);
                 },

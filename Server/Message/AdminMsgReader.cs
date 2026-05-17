@@ -1,5 +1,4 @@
-﻿using System;
-using LmpCommon.Enums;
+﻿using LmpCommon.Enums;
 using LmpCommon.Message.Data.Admin;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Server;
@@ -11,6 +10,7 @@ using Server.Log;
 using Server.Message.Base;
 using Server.Server;
 using Server.Settings.Structures;
+using System;
 
 namespace Server.Message
 {

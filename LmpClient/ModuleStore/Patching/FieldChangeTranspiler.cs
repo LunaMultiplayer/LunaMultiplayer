@@ -124,7 +124,7 @@ namespace LmpClient.ModuleStore.Patching
             var startComparisonInstructions = new List<CodeInstruction>();
             var jmpInstructions = new List<CodeInstruction>();
 
-            var fields = _definition.Fields.DistinctBy(f=> f.FieldName).ToList();
+            var fields = _definition.Fields.DistinctBy(f => f.FieldName).ToList();
             for (var i = 0; i < fields.Count; i++)
             {
                 var field = AccessTools.Field(_originalMethod.DeclaringType, fields[i].FieldName);
@@ -169,7 +169,7 @@ namespace LmpClient.ModuleStore.Patching
                     _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
                     _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Quaternion), "op_Inequality")));
                 }
-                else if(field.FieldType == typeof(Vector2))
+                else if (field.FieldType == typeof(Vector2))
                 {
                     _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldarg_0));
                     _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldfld, field));
@@ -191,7 +191,7 @@ namespace LmpClient.ModuleStore.Patching
                     _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ldc_I4_0));
                     _codes.Insert(LastIndex, new CodeInstruction(OpCodes.Ceq));
                 }
-                
+
                 //Here we store the result of the comparison between the fields.
                 switch (evaluationVar.LocalIndex)
                 {

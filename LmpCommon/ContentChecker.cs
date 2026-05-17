@@ -35,7 +35,7 @@ namespace LmpCommon
             using (var fileStream = File.OpenRead(pathToFile))
             {
                 var buffer = new byte[4096];
-                int totalRead = 0;
+                var totalRead = 0;
                 int read;
                 while ((read = fileStream.Read(buffer, 0, Math.Min(buffer.Length, numBytes - totalRead))) > 0)
                 {

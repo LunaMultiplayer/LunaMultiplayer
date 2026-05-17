@@ -1,4 +1,4 @@
-using LmpCommon.Message.Data.ShareProgress;
+﻿using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
 using Server.Log;
 using System;
@@ -48,15 +48,15 @@ namespace Server.System.Scenario
                             finishedNode = finishedNodeEntry.Value;
                         }
 
-                        var existingActive   = contractsNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
+                        var existingActive = contractsNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
                         var existingFinished = finishedNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
 
                         foreach (var contract in contractsMsg.Contracts.Select(v => ParseClientConfigNode(v.Data, v.NumBytes, "CONTRACT")))
                         {
-                            var guid  = contract.GetValue("guid")?.Value;
+                            var guid = contract.GetValue("guid")?.Value;
                             var state = contract.GetValue("state")?.Value ?? string.Empty;
 
-                            var inActive   = existingActive.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
+                            var inActive = existingActive.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
                             var inFinished = existingFinished.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
 
                             if (FinishedContractStates.Contains(state))

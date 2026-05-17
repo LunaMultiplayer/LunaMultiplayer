@@ -1,4 +1,4 @@
-using LmpCommon.Message.Data.ShareProgress;
+﻿using LmpCommon.Message.Data.ShareProgress;
 using Server.Log;
 using System;
 using System.Linq;

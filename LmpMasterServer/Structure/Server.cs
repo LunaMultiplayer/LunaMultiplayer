@@ -124,7 +124,7 @@ namespace LmpMasterServer.Structure
                         Country = await IpLocate.GetCountryAsync(externalEndpoint);
 
                     if (string.IsNullOrEmpty(Country))
-                        Country = await IpLocate.GetCountryAsyncGeoIp2(externalEndpoint);
+                        Country = await IpLocate.GetCountryAsyncGeoIp2Async(externalEndpoint);
 
                     if (string.IsNullOrEmpty(Country))
                         LunaLog.Debug($"SetCountryFromEndpoint failed for {externalEndpoint}: No lookup successful");

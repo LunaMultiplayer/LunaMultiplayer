@@ -77,7 +77,7 @@ namespace LmpClient.Systems.Scenario
             //ResourceScenario.Instance.Load();
 
             var validScenarios = KSPScenarioType.GetAllScenarioTypesInAssemblies()
-                .Where(s => !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) 
+                .Where(s => !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name)
                             && LoadModuleByGameMode(s)
                             && IsDlcScenarioInstalled(s.ModuleType.Name));
 
@@ -97,7 +97,7 @@ namespace LmpClient.Systems.Scenario
             {
                 try
                 {
-                    var modules = ScenarioRunner.GetLoadedModules().Where(s=> s != null);
+                    var modules = ScenarioRunner.GetLoadedModules().Where(s => s != null);
                     ParseModulesToConfigNodes(modules);
                     TaskFactory.StartNew(SendModulesConfigNodes);
                 }
@@ -397,7 +397,7 @@ namespace LmpClient.Systems.Scenario
         private static int MigrateFinishedContractsIntoMain(ConfigNode scenarioNode)
         {
             var contractsNode = scenarioNode.GetNode("CONTRACTS");
-            var finishedNode  = scenarioNode.GetNode("CONTRACTS_FINISHED");
+            var finishedNode = scenarioNode.GetNode("CONTRACTS_FINISHED");
             if (contractsNode == null || finishedNode == null) return 0;
 
             // Index CONTRACTS_FINISHED by GUID.

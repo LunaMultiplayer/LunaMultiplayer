@@ -48,7 +48,7 @@ namespace LmpMasterServer.Structure
                 return true;
             }
 
-            value = default(TValue);
+            value = default;
             return false;
         }
     }

@@ -1,4 +1,4 @@
-using Server.Command.Command.Base;
+﻿using Server.Command.Command.Base;
 using Server.Log;
 using Server.System;
 
@@ -9,7 +9,7 @@ namespace Server.Command.Command
         public override bool Execute(string commandArgs)
         {
             var args = commandArgs.Trim().ToLower();
-            
+
             if (string.IsNullOrEmpty(args) || args == "now")
             {
                 LunaLog.Normal("Manual backup initiated...");
@@ -17,7 +17,7 @@ namespace Server.Command.Command
                 LunaLog.Normal("Manual backup completed successfully.");
                 return true;
             }
-            
+
             LunaLog.Normal("Usage: /backup [now]");
             return false;
         }

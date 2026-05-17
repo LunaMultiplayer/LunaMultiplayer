@@ -97,7 +97,7 @@ namespace LmpCommon.Message.Data.Vessel
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize()
-                + sizeof(double) * 4 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int) + sizeof(float) * 3 
+                + sizeof(double) * 4 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int) + sizeof(float) * 3
                 + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount()
                 + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount()
                 + BodyName.GetByteCount();

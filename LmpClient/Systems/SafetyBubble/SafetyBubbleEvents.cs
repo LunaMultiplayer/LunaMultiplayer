@@ -24,8 +24,8 @@ namespace LmpClient.Systems.SafetyBubble
             if (FlightGlobals.ActiveVessel.vesselSpawning)
             {
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
-                CoroutineUtil.StartDelayedRoutine(nameof(SafetyBubbleEvents), 
-                    ()=> LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.CheckParts, 15f, ScreenMessageStyle.UPPER_CENTER, Color.red), 25f);
+                CoroutineUtil.StartDelayedRoutine(nameof(SafetyBubbleEvents),
+                    () => LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.CheckParts, 15f, ScreenMessageStyle.UPPER_CENTER, Color.red), 25f);
             }
         }
     }

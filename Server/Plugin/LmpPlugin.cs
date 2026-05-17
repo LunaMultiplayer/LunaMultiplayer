@@ -1,4 +1,4 @@
-using LmpCommon.Message.Interface;
+﻿using LmpCommon.Message.Interface;
 using Server.Client;
 
 namespace Server.Plugin

@@ -1,6 +1,6 @@
-﻿using System;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LmpCommon.Message.Base;
+using System;
 
 namespace LmpCommon.Message.Data.ShareProgress
 {

@@ -10,20 +10,24 @@ using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+#if WINDOWS
+using System.Drawing;
+using System.Drawing.Imaging;
 using Graphics = System.Drawing.Graphics;
+#endif
 
 namespace Server.System
 {
     public class ScreenshotSystem
     {
-        private const string SmallFilePrefix = "small_";
         public static readonly string ScreenshotPath = Path.Combine(ServerContext.UniverseDirectory, "Screenshots");
 
+#if WINDOWS
+        private const string SmallFilePrefix = "small_";
         private static readonly ConcurrentDictionary<string, DateTime> LastUploadRequest = new ConcurrentDictionary<string, DateTime>();
 
         #region Public Methods
@@ -274,5 +278,26 @@ namespace Server.System
         }
 
         #endregion
+#else
+        /// <summary>
+        /// No-op implementation on non-Windows platforms
+        /// </summary>
+        public static void SaveScreenshot(ClientStructure client, ScreenshotDataMsgData data) { }
+
+        /// <summary>
+        /// No-op implementation on non-Windows platforms
+        /// </summary>
+        public static void SendScreenshotFolders(ClientStructure client) { }
+
+        /// <summary>
+        /// No-op implementation on non-Windows platforms
+        /// </summary>
+        public static void SendScreenshotList(ClientStructure client, ScreenshotListRequestMsgData data) { }
+
+        /// <summary>
+        /// No-op implementation on non-Windows platforms
+        /// </summary>
+        public static void SendScreenshot(ClientStructure client, ScreenshotDownloadRequestMsgData data) { }
+#endif
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using LmpCommon.Message.Data.PlayerStatus;
+﻿using LmpCommon.Message.Data.PlayerStatus;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Server;
 using LmpCommon.Message.Types;
@@ -7,6 +6,7 @@ using Server.Client;
 using Server.Context;
 using Server.Message.Base;
 using Server.Server;
+using System.Linq;
 
 namespace Server.Message
 {

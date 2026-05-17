@@ -1,4 +1,4 @@
-using Server.Log;
+﻿using Server.Log;
 using Server.Settings.Definition;
 using Server.Settings.Structures;
 using System;

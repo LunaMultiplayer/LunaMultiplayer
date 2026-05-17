@@ -146,7 +146,8 @@ namespace LmpClient.Network
                         NetworkSender.QueueOutgoingMessage(introduceMsg);
 
                         // If the NAT introduction didn't succeed after 10s, show a
-                        Base.SystemBase.TaskFactory.StartNew(() => {
+                        Base.SystemBase.TaskFactory.StartNew(() =>
+                        {
                             Thread.Sleep(10000);
                             if (!receivedNATIntroductionSuccessResponse)
                             {
@@ -204,7 +205,7 @@ namespace LmpClient.Network
             {
                 LunaLog.Log($"[LMP]: Nat introduction success against {msg.SenderEndPoint}. Token: {MainSystem.UniqueIdentifier}");
                 receivedNATIntroductionSuccessResponse = true;
-                NetworkConnection.ConnectToServer(new []{ msg.SenderEndPoint }, Password);
+                NetworkConnection.ConnectToServer(new[] { msg.SenderEndPoint }, Password);
             }
             else
             {

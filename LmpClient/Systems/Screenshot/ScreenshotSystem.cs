@@ -132,7 +132,7 @@ namespace LmpClient.Systems.Screenshot
                 {
                     FoldersWithNewContent.Add(item);
                 }
-                
+
                 MessageSender.RequestMiniatures(selectedFolder);
                 return;
             }

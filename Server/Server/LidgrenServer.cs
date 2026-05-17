@@ -30,12 +30,13 @@ namespace Server.Server
                 LunaLog.Error($"Could not parse ListenAddress, falling back on {(Socket.OSSupportsIPv6 ? "[::]" : "0.0.0.0")}.");
                 // Fall back on whatever unspecified address we can
                 listenAddress = Socket.OSSupportsIPv6 ? IPAddress.IPv6Any : IPAddress.Any;
-            };
+            }
+            ;
 
             // Warn the user if the set address is not one of the unspecified addresses
             if (!listenAddress.Equals(IPAddress.IPv6Any) && !listenAddress.Equals(IPAddress.Any))
                 LunaLog.Warning("ListenAddress is not the unspecified address ([::] or 0.0.0.0). This is very unlikely to be correct and the server may not work.");
-            
+
             // Ensure that the OS supports IPv6 if we're using it
             if (listenAddress.AddressFamily == AddressFamily.InterNetworkV6 && !Socket.OSSupportsIPv6)
             {

@@ -37,7 +37,7 @@ namespace LmpClient.Systems.KerbalSys
                 }
             }
         }
-        
+
         /// <summary>
         /// Event triggered when any kerbal status changes (kerbal dies, etc)
         /// </summary>

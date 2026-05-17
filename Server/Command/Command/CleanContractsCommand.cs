@@ -1,4 +1,4 @@
-using LunaConfigNode.CfgNode;
+﻿using LunaConfigNode.CfgNode;
 using Server.Command.Command.Base;
 using Server.Log;
 using Server.System;
@@ -49,7 +49,7 @@ namespace Server.Command.Command
                 finishedNode = finishedNodeEntry.Value;
             }
 
-            var activeContracts  = contractsNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
+            var activeContracts = contractsNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
             var finishedContracts = finishedNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
 
             var moved = 0;

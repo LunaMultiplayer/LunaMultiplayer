@@ -34,10 +34,10 @@ namespace LmpMasterServer
             {
                 ConsoleUtil.DisableConsoleQuickEdit();
 
-                Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
-
+                var title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
                 if (IsNightly)
-                    Console.Title += " NIGHTLY";
+                    title += " NIGHTLY";
+                Console.Title = title;
             }
 
             Console.OutputEncoding = Encoding.UTF8;

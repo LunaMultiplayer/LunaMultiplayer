@@ -1,4 +1,4 @@
-using Server.Command.Command.Base;
+﻿using Server.Command.Command.Base;
 using Server.Log;
 using Server.System;
 using System;
@@ -28,7 +28,7 @@ namespace Server.Command.Command
             else
             {
                 // Try to find by name
-                vessel = VesselStoreSystem.CurrentVessels.Values.FirstOrDefault(v => 
+                vessel = VesselStoreSystem.CurrentVessels.Values.FirstOrDefault(v =>
                     v.Fields.GetSingle("name")?.Value.Equals(identifier, StringComparison.OrdinalIgnoreCase) == true);
             }
 
@@ -41,13 +41,13 @@ namespace Server.Command.Command
                 var orbitingBody = vessel.GetOrbitingBodyName();
                 var flightSituation = vessel.Fields.GetSingle("sit")?.Value ?? "Unknown";
                 var partCount = vessel.Parts.Count();
-                
+
                 LunaLog.Normal($"--- Vessel Info: {name} ---");
                 LunaLog.Normal($"ID: {pidStr}");
                 LunaLog.Normal($"Type: {type}");
                 LunaLog.Normal($"Location: {flightSituation} at {orbitingBody}");
                 LunaLog.Normal($"Parts: {partCount}");
-                
+
                 if (Guid.TryParse(pidStr, out var pid))
                 {
                     var controlLockOwner = LockSystem.LockQuery.GetControlLockOwner(pid);

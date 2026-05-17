@@ -1,4 +1,4 @@
-using LmpCommon.Locks;
+﻿using LmpCommon.Locks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Server.System;
 using System;
@@ -30,8 +30,7 @@ namespace ServerTest
             var lockDef = new LockDefinition(LockType.Control, _player1, _vessel1);
 
             // Acquire
-            bool repeated;
-            Assert.IsTrue(LockSystem.AcquireLock(lockDef, false, out repeated));
+            Assert.IsTrue(LockSystem.AcquireLock(lockDef, false, out var repeated));
             Assert.IsFalse(repeated);
             Assert.IsTrue(LockSystem.LockQuery.LockBelongsToPlayer(LockType.Control, _vessel1, null, _player1));
 
@@ -46,9 +45,8 @@ namespace ServerTest
             var lockDef1 = new LockDefinition(LockType.Control, _player1, _vessel1);
             var lockDef2 = new LockDefinition(LockType.Control, _player2, _vessel1);
 
-            bool repeated;
-            Assert.IsTrue(LockSystem.AcquireLock(lockDef1, false, out repeated));
-            
+            Assert.IsTrue(LockSystem.AcquireLock(lockDef1, false, out var repeated));
+
             // Player2 tries to take it
             Assert.IsFalse(LockSystem.AcquireLock(lockDef2, false, out repeated));
             Assert.IsTrue(LockSystem.LockQuery.LockBelongsToPlayer(LockType.Control, _vessel1, null, _player1));
@@ -60,9 +58,8 @@ namespace ServerTest
             var lockDef1 = new LockDefinition(LockType.Control, _player1, _vessel1);
             var lockDef2 = new LockDefinition(LockType.Control, _player2, _vessel1);
 
-            bool repeated;
-            LockSystem.AcquireLock(lockDef1, false, out repeated);
-            
+            LockSystem.AcquireLock(lockDef1, false, out var repeated);
+
             // Player2 forces it
             Assert.IsTrue(LockSystem.AcquireLock(lockDef2, true, out repeated));
             Assert.IsTrue(LockSystem.LockQuery.LockBelongsToPlayer(LockType.Control, _vessel1, null, _player2));
@@ -74,13 +71,12 @@ namespace ServerTest
             var lockDef1 = new LockDefinition(LockType.Control, _player1, _vessel1);
             var lockDef2 = new LockDefinition(LockType.Control, _player1, _vessel2);
 
-            bool repeated;
-            LockSystem.AcquireLock(lockDef1, false, out repeated);
+            LockSystem.AcquireLock(lockDef1, false, out var repeated);
             Assert.IsTrue(LockSystem.LockQuery.LockExists(LockType.Control, _vessel1, null));
 
             // Acquire second control lock, first should be released
             LockSystem.AcquireLock(lockDef2, false, out repeated);
-            
+
             Assert.IsFalse(LockSystem.LockQuery.LockExists(LockType.Control, _vessel1, null));
             Assert.IsTrue(LockSystem.LockQuery.LockExists(LockType.Control, _vessel2, null));
         }

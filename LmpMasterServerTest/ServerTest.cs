@@ -1,4 +1,4 @@
-using LmpCommon.Message;
+﻿using LmpCommon.Message;
 using LmpCommon.Message.Data.MasterServer;
 using LmpMasterServer.Structure;
 using System.Net;

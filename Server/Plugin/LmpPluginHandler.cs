@@ -1,12 +1,12 @@
+﻿using LmpCommon.Message.Interface;
+using Server.Client;
+using Server.Log;
+using Server.System;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using LmpCommon.Message.Interface;
-using Server.Client;
-using Server.Log;
-using Server.System;
 
 namespace Server.Plugin
 {
@@ -15,10 +15,7 @@ namespace Server.Plugin
         private static object ListLock { get; } = new object();
         private static List<ILmpPlugin> LoadedPlugins { get; } = new List<ILmpPlugin>();
 
-        static LmpPluginHandler()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
+        static LmpPluginHandler() => AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {

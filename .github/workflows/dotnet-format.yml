@@ -1,0 +1,30 @@
+name: Dotnet Format Check
+
+on:
+  push:
+    paths:
+      - '**.cs'
+      - '.editorconfig'
+      - '**.csproj'
+      - '**.sln'
+  pull_request:
+    paths:
+      - '**.cs'
+      - '.editorconfig'
+      - '**.csproj'
+      - '**.sln'
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Verify code formatting
+        run: dotnet format --verify-no-changes --verbosity diagnostic --exclude Lidgren --exclude uhttpsharp

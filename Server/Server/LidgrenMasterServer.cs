@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using LmpCommon;
+﻿using LmpCommon;
 using LmpCommon.Message.Data.MasterServer;
 using LmpCommon.Message.MasterServer;
 using LmpCommon.RepoRetrievers;
@@ -12,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Server
@@ -145,7 +145,8 @@ namespace Server.Server
             LunaLog.Debug("Detected NAT addresses: " + string.Join(", ", distinctAddresses.Select(a => a.ToString())));
 
             var numberDistinct = distinctAddresses.Count();
-            if (numberDistinct > 1) {
+            if (numberDistinct > 1)
+            {
                 if (ServerContext.Config.DualStack)
                 {
                     LunaLog.Error("Symmetric NAT detected. " +

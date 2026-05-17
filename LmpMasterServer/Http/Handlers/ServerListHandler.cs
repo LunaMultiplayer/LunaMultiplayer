@@ -16,7 +16,7 @@ namespace LmpMasterServer.Http.Handlers
     public class ServerListHandler : IHttpRequestHandler
     {
         private static readonly KeyValuePair<string, string> cspHeader = new("Content-Security-Policy", "default-src 'self' 'unsafe-eval'; img-src 'self' data:");
-        private static readonly List<KeyValuePair<string, string>> headerList =  new() {cspHeader};
+        private static readonly List<KeyValuePair<string, string>> headerList = new() { cspHeader };
 
         public async Task Handle(IHttpContext context, Func<Task> next)
         {

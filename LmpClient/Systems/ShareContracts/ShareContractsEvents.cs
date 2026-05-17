@@ -78,8 +78,8 @@ namespace LmpClient.Systems.ShareContracts
             var cs = ContractSystem.Instance;
             if (cs != null)
             {
-                var offered  = cs.Contracts.Count(c => c.ContractState == Contract.State.Offered);
-                var active   = cs.Contracts.Count(c => c.ContractState == Contract.State.Active);
+                var offered = cs.Contracts.Count(c => c.ContractState == Contract.State.Offered);
+                var active = cs.Contracts.Count(c => c.ContractState == Contract.State.Active);
                 var finished = cs.ContractsFinished.Count;
                 LunaLog.Log($"[ShareContracts]: Contract list changed — {offered} Offered, {active} Active, {finished} Finished in ContractsFinished.");
             }
@@ -279,11 +279,11 @@ namespace LmpClient.Systems.ShareContracts
                 switch (c.ContractState)
                 {
                     case Contract.State.Offered: available++; break;
-                    case Contract.State.Active:  active++;    break;
+                    case Contract.State.Active: active++; break;
                 }
             }
 
-            var archived     = ContractSystem.Instance.ContractsFinished.Count;
+            var archived = ContractSystem.Instance.ContractsFinished.Count;
             var droppedParts = System.LastDroppedMissingPartCount;
             var droppedBodies = System.LastDroppedMissingBodyCount;
 
@@ -309,8 +309,8 @@ namespace LmpClient.Systems.ShareContracts
                 if (c == null) continue;
                 switch (c.ContractState)
                 {
-                    case Contract.State.Offered:    offered++;  break;
-                    case Contract.State.Active:     active++;   break;
+                    case Contract.State.Offered: offered++; break;
+                    case Contract.State.Active: active++; break;
                     case Contract.State.Completed:
                     case Contract.State.Failed:
                     case Contract.State.Cancelled:

@@ -126,17 +126,17 @@ namespace LmpCommon
         {
             try
             {
-                    // [2001:db8::1]:8800
-                    // 192.0.2.1:8800
-                    var indexOfPortSeparator = endpoint.LastIndexOf(":", StringComparison.Ordinal);
-                    var ip = endpoint.Substring(0, indexOfPortSeparator);
-                    var port = int.Parse(endpoint.Substring(indexOfPortSeparator + 1));
-                    if (IPAddress.TryParse(ip, out var addr))
-                        return new IPEndPoint(addr, port);
+                // [2001:db8::1]:8800
+                // 192.0.2.1:8800
+                var indexOfPortSeparator = endpoint.LastIndexOf(":", StringComparison.Ordinal);
+                var ip = endpoint.Substring(0, indexOfPortSeparator);
+                var port = int.Parse(endpoint.Substring(indexOfPortSeparator + 1));
+                if (IPAddress.TryParse(ip, out var addr))
+                    return new IPEndPoint(addr, port);
 
-                    var dnsIp = Dns.GetHostAddresses(ip.Trim());
-                    var ipv4Address = dnsIp.FirstOrDefault(d => d.AddressFamily == AddressFamily.InterNetwork);
-                    return ipv4Address != null ? new IPEndPoint(ipv4Address, port) : null;
+                var dnsIp = Dns.GetHostAddresses(ip.Trim());
+                var ipv4Address = dnsIp.FirstOrDefault(d => d.AddressFamily == AddressFamily.InterNetwork);
+                return ipv4Address != null ? new IPEndPoint(ipv4Address, port) : null;
             }
             catch (Exception)
             {
@@ -150,13 +150,13 @@ namespace LmpCommon
             {
                 if (IPAddress.TryParse(address, out var ip))
                 {
-                    return new []{ ip };
+                    return new[] { ip };
                 }
                 return Dns.GetHostAddresses(address);
             }
             catch (Exception)
             {
-                return new IPAddress[]{};
+                return new IPAddress[] { };
             }
         }
 

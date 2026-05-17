@@ -23,7 +23,7 @@ namespace LmpMasterServer.Geolocalization
             }
         }
 
-        public static async Task<string> GetCountryAsyncGeoIp2(IPEndPoint externalEndpoint)
+        public static async Task<string> GetCountryAsyncGeoIp2Async(IPEndPoint externalEndpoint)
         {
             try
             {

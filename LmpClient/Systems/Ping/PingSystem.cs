@@ -47,7 +47,7 @@ namespace LmpClient.Systems.Ping
         {
             while (PingQueue.TryTake(out var serverId))
             {
-                foreach (var ipv6 in new []{true, false})
+                foreach (var ipv6 in new[] { true, false })
                 {
                     if (!RunningPings.Contains((serverId, ipv6)))
                     {
