@@ -111,8 +111,8 @@ namespace LmpMasterServer.Structure
         /// and writes it to the Country field.
         /// </summary>
         /// <returns>
-        /// A bool indicating whether a request to an external service has been made (true)
-        /// or the value could be fetched from cache (false).
+        /// A bool indicating whether a request to an external geolocation service has been made (true)
+        /// or the value could be fetched from cache (local or Valkey) (false).
         /// </returns>
         public async Task<bool> SetCountryFromEndpointAsync(IPEndPoint externalEndpoint)
         {
@@ -122,28 +122,42 @@ namespace LmpMasterServer.Structure
                     // Already resolved
                     return false;
 
+                // Check in-memory cache first, maybe we already looked it up in the meantime
                 if (AddressCountries.TryGet(externalEndpoint.Address, out var countryCode))
                 {
                     Country = countryCode;
                     return false;
                 }
+
+                // Try Valkey cache second
+                Country = await ValkeyCache.GetCountryAsync(externalEndpoint);
+                if (!string.IsNullOrEmpty(Country))
+                {
+                    LunaLog.Debug($"COUNTRY CODE FOUND in Valkey cache for {externalEndpoint}");
+                    AddressCountries.TryAdd(externalEndpoint.Address, Country);
+                    return false;
+                }
+
+                // Otherwise hit external APIs
+                LunaLog.Normal($"COUNTRY CODE LOOKUP for {externalEndpoint}");
+                if (string.IsNullOrEmpty(Country))
+                    Country = await GeoIp2.GetCountryAsync(externalEndpoint);
+                if (string.IsNullOrEmpty(Country))
+                    Country = await IpApi.GetCountryAsync(externalEndpoint);
+                if (string.IsNullOrEmpty(Country))
+                    Country = await IpLocate.GetCountryAsync(externalEndpoint);
+
+                // Check if any lookup was successful
+                if (string.IsNullOrEmpty(Country))
+                    LunaLog.Debug($"SetCountryFromEndpoint failed for {externalEndpoint}: No lookup successful");
                 else
                 {
-                    LunaLog.Normal($"COUNTRY CODE LOOKUP for {externalEndpoint}");
-                    Country = await GeoIp2.GetCountryAsync(externalEndpoint);
-                    if (string.IsNullOrEmpty(Country))
-                        Country = await IpApi.GetCountryAsync(externalEndpoint);
-
-                    if (string.IsNullOrEmpty(Country))
-                        Country = await IpLocate.GetCountryAsync(externalEndpoint);
-
-                    if (string.IsNullOrEmpty(Country))
-                        LunaLog.Debug($"SetCountryFromEndpoint failed for {externalEndpoint}: No lookup successful");
-                    else
-                        AddressCountries.TryAdd(externalEndpoint.Address, Country);
-
-                    return true;
+                    // And if so store in in-memory cache and Valkey cache for future lookups
+                    AddressCountries.TryAdd(externalEndpoint.Address, Country);
+                    ValkeyCache.SetCountryAsync(externalEndpoint, Country).Forget();
                 }
+
+                return true;
             }
             catch (Exception e)
             {
