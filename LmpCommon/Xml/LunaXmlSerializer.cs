@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -84,14 +85,14 @@ namespace LmpCommon.Xml
             string returnString;
             try
             {
-                using (var s = new StringWriter())
+                using (var s = new Utf8StringWriter())
                 using (var w = new XmlTextWriter(s))
                 {
                     w.Formatting = Formatting.Indented;
                     var serializer = new XmlSerializer(objectToSerialize.GetType());
                     serializer.Serialize(w, objectToSerialize);
                     var tempString = WriteComments(objectToSerialize, s.ToString());
-                    using (var sw = new StringWriter())
+                    using (var sw = new Utf8StringWriter())
                     using (var sr = new StringReader(tempString))
                     using (var xmlReader = new XmlTextReader(sr))
                     {
@@ -162,7 +163,7 @@ namespace LmpCommon.Xml
         {
             try
             {
-                using (var stringWriter = new StringWriter())
+                using (var stringWriter = new Utf8StringWriter())
                 {
                     var propertyComments = GetPropertiesAndComments(objectToSerialize);
                     if (!propertyComments.Any()) return contents;
@@ -203,6 +204,11 @@ namespace LmpCommon.Xml
                 })
                 .ToDictionary(t => t.Name, t => t.Value);
             return propertyComments;
+        }
+
+        private class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
         }
 
         #endregion
