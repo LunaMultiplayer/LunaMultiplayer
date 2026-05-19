@@ -26,14 +26,30 @@ namespace LmpMasterServer.Http
 
             FileHandler.HttpRootDirectory = WebHandler.BasePath;
 
+            // Exception handler, shows the user an error if an exception occurs
             Server.Use(new ExceptionHandler());
+
+            // Head handler, handles HTTP HEAD requests (like GET but without the content body)
             Server.Use(new HeadHandler());
+
+            // Compression handler
             Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
+
+            // Path guard, blocks path traversal attacks
             Server.Use(new PathGuard(WebHandler.BasePath));
+
+            // File handler, sends files if they're present on the server
             Server.Use(new FileHandler());
+
+            // HTTP router, selects between certain other handlers depending on the path
+            var listHandler = new ServerListHandler();
             Server.Use(new HttpRouter()
-                .With(string.Empty, new ServerListHandler())
-                .With("json", new RestHandler<ServerJson>(new ServerInfoRestHandler(), JsonResponseProvider.Default)));
+                .With(string.Empty, listHandler) // List handler, sends the server list
+                .With("serverlist", listHandler) // A reference to the same list handler as above
+                .With("json", new RestHandler<ServerJson>(new ServerInfoRestHandler(), JsonResponseProvider.Default))); // Sends a JSON version of the server list
+
+            // NotFound handler, returns a 404 page if nothing else.
+            Server.Use(new NotFoundHandler());
 
             Server.Start();
         }
