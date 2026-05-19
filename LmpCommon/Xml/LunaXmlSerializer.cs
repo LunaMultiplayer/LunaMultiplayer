@@ -56,7 +56,10 @@ namespace LmpCommon.Xml
                 return null;
             try
             {
-                using (TextReader r = new StreamReader(path))
+                var xml = File.ReadAllText(path);
+                xml = xml.Replace(">True<", ">true<").Replace(">False<", ">false<");
+
+                using (TextReader r = new StringReader(xml))
                 {
                     var deserializer = new XmlSerializer(classType);
                     var structure = deserializer.Deserialize(r);
