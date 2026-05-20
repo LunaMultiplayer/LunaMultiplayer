@@ -3,3 +3,5 @@
 
 #Cloning usernames
 37.187.251.11
+#Use of inappropriate/illegal signs in server name & description
+80.213.61.14
