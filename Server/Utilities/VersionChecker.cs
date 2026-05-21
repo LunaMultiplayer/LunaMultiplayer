@@ -26,21 +26,23 @@ namespace Server.Utilities
         {
             while (ServerContext.ServerRunning)
             {
+                var multiplier = 1;
                 if (LatestVersion > LmpVersioning.CurrentVersion)
                 {
-                    LunaLog.Warning($"There is a new version of LMP! Please download it! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");
+                    LunaLog.Info($"There is an update available for LMP, please download it when you're able to: {LmpVersioning.CurrentVersion} -> {LatestVersion}");
                     if (LmpVersioning.IsCompatible(LatestVersion))
                     {
-                        LunaLog.Debug("Your version is compatible with the latest version so you will still be listed in the master servers.");
+                        LunaLog.Info($"This update is not required to stay compattibile with updated master servers and clients.");
+                        multiplier = 60;
                     }
                     else
                     {
-                        LunaLog.Warning("Your version is NOT compatible with the latest version. You won't be listed in the master servers!");
+                        LunaLog.Warning("This update is mandatory to be shown on the server list once it's updated. You should go update");
                     }
                 }
 
-                //Sleep for 30 seconds...
-                await Task.Delay(30 * 1000);
+                // Repeat again in an hour if it's non-essential, or in a minute if it is essential.
+                await Task.Delay(60 * 1000 * multiplier);
             }
         }
     }
