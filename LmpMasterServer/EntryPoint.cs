@@ -1,4 +1,5 @@
 ﻿using LmpCommon;
+using LmpCommon.RepoRetrievers;
 using LmpMasterServer.Dedicated;
 using LmpMasterServer.Http;
 using LmpMasterServer.Log;
@@ -64,6 +65,7 @@ namespace LmpMasterServer
                 Http.Handlers.WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
                 Task.Run(DedicatedServerRetriever.RefreshDedicatedServersList);
+                BannedIpsRetriever.Prewarm();
                 Task.Run(MasterServerPortMapper.RefreshUpnpPort);
                 Task.Run(Lidgren.MasterServer.Start);
             }

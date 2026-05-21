@@ -15,20 +15,24 @@ namespace LmpCommon.RepoRetrievers
     public static class BannedIpsRetriever
     {
         private static readonly ConcurrentHashSet<IPAddress> PrivBannedIPs = new ConcurrentHashSet<IPAddress>();
+        private static readonly object RefreshLock = new object();
+
         private static ConcurrentHashSet<IPAddress> BannedIps
         {
             get
             {
+                var now = LunaComputerTime.UtcNow;
                 if (_lastRequestTime == DateTime.MinValue)
                 {
-                    //Run syncronously if it's the first time
+                    //Run synchronously if it's the first time
                     RefreshBannedIps();
-                    _lastRequestTime = LunaComputerTime.UtcNow;
                 }
-                else if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
+                else if (now - _lastRequestTime > MaxRequestInterval)
                 {
-                    Task.Run(() => RefreshBannedIps());
-                    _lastRequestTime = LunaComputerTime.UtcNow;
+                    // Update the timestamp eagerly so concurrent callers don't schedule
+                    // a flurry of background refreshes before the first one completes.
+                    _lastRequestTime = now;
+                    Task.Run(RefreshBannedIps);
                 }
 
                 return PrivBannedIPs;
@@ -44,45 +48,62 @@ namespace LmpCommon.RepoRetrievers
         }
 
         /// <summary>
-        /// Download the banned ips list from the <see cref="RepoConstants.BannedIpListUrl"/> and return the ones that are correctly written
+        /// Kick off an asynchronous refresh so the banned-ip cache is populated as early
+        /// as possible. Safe to call before any <see cref="IsBanned"/> call; subsequent
+        /// refreshes are coalesced via <see cref="MaxRequestInterval"/>.
+        /// </summary>
+        public static void Prewarm()
+        {
+            Task.Run(RefreshBannedIps);
+        }
+
+        /// <summary>
+        /// Download the banned ips list from <see cref="RepoConstants.BannedIpListUrl"/>
+        /// and store the correctly formed entries in <see cref="PrivBannedIPs"/>.
+        /// Concurrent calls are serialized; calls that arrive while a recent refresh is
+        /// still considered fresh are coalesced.
         /// </summary>
         private static void RefreshBannedIps()
         {
-            try
+            lock (RefreshLock)
             {
-                ServicePointManager.ServerCertificateValidationCallback = GithubCertification.MyRemoteCertificateValidationCallback;
-                using (var client = new WebClient())
-                using (var stream = client.OpenRead(RepoConstants.BannedIpListUrl))
+                // Another caller already refreshed recently; skip to avoid stomping the set.
+                if (_lastRequestTime != DateTime.MinValue && LunaComputerTime.UtcNow - _lastRequestTime < MaxRequestInterval)
+                    return;
+
+                try
                 {
+                    ServicePointManager.ServerCertificateValidationCallback = GithubCertification.MyRemoteCertificateValidationCallback;
+                    using (var client = new WebClient())
+                    using (var stream = client.OpenRead(RepoConstants.BannedIpListUrl))
                     using (var reader = new StreamReader(stream))
                     {
                         var content = reader.ReadToEnd();
                         var ips = content
-                            .Trim().Split('\n')
-                            .Where(s => !s.StartsWith("#") && !string.IsNullOrEmpty(s)).ToArray();
+                            .Split('\n')
+                            .Select(s => s.Trim()) // Trim whitespace and \r in case of Windows line breaks
+                            .Where(s => !s.StartsWith("#") && !string.IsNullOrWhiteSpace(s))
+                            .ToArray();
 
                         PrivBannedIPs.Clear();
 
                         foreach (var ip in ips)
                         {
-                            try
+                            if (IPAddress.TryParse(ip, out var ipAddr))
                             {
-                                if (!IPAddress.TryParse(ip, out var ipAddr))
-                                {
-                                    PrivBannedIPs.Add(ipAddr);
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                //Ignore the bad server   
+                                PrivBannedIPs.Add(ipAddr);
                             }
                         }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                //Ignored
+                catch (Exception)
+                {
+                    //Ignored
+                }
+
+                // Always update so failures fall back to the normal periodic cadence
+                // rather than retrying synchronously on every IsBanned call.
+                _lastRequestTime = LunaComputerTime.UtcNow;
             }
         }
     }
