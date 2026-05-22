@@ -37,7 +37,8 @@ namespace Server.Utilities
                     }
                     else
                     {
-                        LunaLog.Warning("This update is mandatory to be shown on the server list once it's updated. You should update the server ASAP.");
+                        LunaLog.Warning("This update is required in order to be shown on the server list and to connect with clients running the new version.\n"
+                        + "You should update the server ASAP.");
                     }
                 }
 
