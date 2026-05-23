@@ -9,7 +9,7 @@ namespace Server.Settings.Definition
     {
         [XmlComment(Value = "Specify the warp Type. Values: None, Subspace")]
         public WarpMode WarpMode { get; set; } = WarpMode.Subspace;
-        [XmlComment(Value = "Tells the server to warp forward on startup to compensate for the time the server was down.")]
-        public bool WarpSyncOnStartup { get; set; } = true;
+        [XmlComment(Value = "Tells the server to pause the time whilst off. If set to false the server will keep track of time and affect crafts")]
+        public bool PauseTimeWhileShutdown { get; set; } = false;
     }
 }

@@ -19,7 +19,7 @@ namespace Server.System
         {
             LoadSavedTimes();
 
-            if (!WarpSettings.SettingsStore.WarpSyncOnStartup)
+            if (WarpSettings.SettingsStore.PauseTimeWhileShutdown)
             {
                 var timeDiffrence = TimeContext.StartTime - TimeContext.EndTime;
                 TimeContext.StartTime += timeDiffrence;
