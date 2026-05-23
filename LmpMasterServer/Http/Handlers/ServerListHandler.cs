@@ -34,16 +34,10 @@ namespace LmpMasterServer.Http.Handlers
                 {
                     writer.Write("<!DOCTYPE html>");
                     writer.RenderBeginTag(HtmlTextWriterTag.Html);
-                    RenderHead(writer);
+                    RenderMetadata(writer);
                     writer.RenderBeginTag(HtmlTextWriterTag.Body);
 
-                    writer.RenderBeginTag(HtmlTextWriterTag.H1); writer.Write($"Luna Multiplayer servers - Version: {LmpVersioning.CurrentVersion}"); writer.RenderEndTag();
-
-                    writer.RenderBeginTag(HtmlTextWriterTag.H3);
-                    writer.Write($"Servers: {servers.Length}");
-                    writer.WriteBreak();
-                    writer.Write($"Players: {servers.Sum(s => s.PlayerCount)}");
-                    writer.RenderEndTag();
+                    RenderHeader(writer, servers);
 
                     RenderServersTable(writer, servers);
                     RenderFooter(writer);
@@ -55,7 +49,7 @@ namespace LmpMasterServer.Http.Handlers
             });
         }
 
-        private static void RenderHead(HtmlTextWriter writer)
+        private static void RenderMetadata(HtmlTextWriter writer)
         {
             // HtmlTextWriter makes <script> tags self-closing, which violates the HTML standard and is rejected by browsers.
             // So let's just do the <head> manually.
@@ -70,6 +64,19 @@ namespace LmpMasterServer.Http.Handlers
 	<script src=""js/lmp.js""></script>
 </head>
 ");
+        }
+
+        private static void RenderHeader(HtmlTextWriter writer, ServerInfo[] servers)
+        {
+
+            writer.RenderBeginTag(HtmlTextWriterTag.H1); writer.Write($"Luna Multiplayer servers - Version {LmpVersioning.CurrentVersion}"); writer.RenderEndTag();
+
+            writer.RenderBeginTag(HtmlTextWriterTag.H3);
+            writer.Write($"Servers: {servers.Length}");
+            writer.WriteBreak();
+            writer.Write($"Players: {servers.Sum(s => s.PlayerCount)}");
+            writer.RenderEndTag();
+            
         }
 
         private static void RenderFooter(HtmlTextWriter writer)
