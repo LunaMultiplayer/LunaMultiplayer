@@ -103,68 +103,97 @@ namespace Server.Server
                     var msg = Server.ReadMessage();
                     if (msg != null)
                     {
-                        var client = TryGetClient(msg);
-                        switch (msg.MessageType)
+                        // Every NetIncomingMessage and its underlying byte[] payload comes from
+                        // Lidgren's internal pool. The previous code dequeued messages here but
+                        // never returned them, so the pool was forced to allocate fresh ones
+                        // forever and the released messages piled up on the managed heap until
+                        // GC reclaimed them. The finally block returns each message (and its
+                        // storage buffer) to the pool exactly once, even if a handler throws.
+                        try
                         {
-                            case NetIncomingMessageType.ConnectionApproval:
-                                if (ServerContext.UsePassword)
-                                {
-                                    var password = msg.ReadString();
-                                    if (password != GeneralSettings.SettingsStore.Password)
+                            var client = TryGetClient(msg);
+                            switch (msg.MessageType)
+                            {
+                                case NetIncomingMessageType.ConnectionApproval:
+                                    if (ServerContext.UsePassword)
                                     {
-                                        msg.SenderConnection.Deny("Invalid password");
-                                        break;
+                                        var password = msg.ReadString();
+                                        if (password != GeneralSettings.SettingsStore.Password)
+                                        {
+                                            msg.SenderConnection.Deny("Invalid password");
+                                            break;
+                                        }
                                     }
-                                }
-                                msg.SenderConnection.Approve();
-                                break;
-                            case NetIncomingMessageType.Data:
-                                ClientMessageReceiver.ReceiveCallback(client, msg);
-                                break;
-                            case NetIncomingMessageType.WarningMessage:
-                                LunaLog.Warning(msg.ReadString());
-                                break;
-                            case NetIncomingMessageType.DebugMessage:
-                                LunaLog.NetworkDebug(msg.ReadString());
-                                break;
-                            case NetIncomingMessageType.ConnectionLatencyUpdated:
-                            case NetIncomingMessageType.VerboseDebugMessage:
-                                LunaLog.NetworkVerboseDebug(msg.ReadString());
-                                break;
-                            case NetIncomingMessageType.Error:
-                                LunaLog.Error(msg.ReadString());
-                                break;
-                            case NetIncomingMessageType.StatusChanged:
-                                switch ((NetConnectionStatus)msg.ReadByte())
-                                {
-                                    case NetConnectionStatus.Connected:
-                                        var endpoint = msg.SenderConnection.RemoteEndPoint;
-                                        LunaLog.Normal($"New client Connection from {endpoint.Address}:{endpoint.Port}");
-                                        ClientConnectionHandler.ConnectClient(msg.SenderConnection);
-                                        break;
-                                    case NetConnectionStatus.Disconnected:
-                                        var reason = msg.ReadString();
-                                        if (client != null)
-                                            ClientConnectionHandler.DisconnectClient(client, reason);
-                                        break;
-                                }
-                                break;
-                            case NetIncomingMessageType.UnconnectedData:
-                                // Only process message if we are still waiting for STUN responses
-                                if (await LidgrenMasterServer.ReceiveSTUNResponses.WaitAsync(0))
-                                {
-                                    var message = ServerContext.MasterServerMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
-                                    if (message.Data is MsSTUNSuccessResponseMsgData data)
+                                    msg.SenderConnection.Approve();
+                                    break;
+                                case NetIncomingMessageType.Data:
+                                    ClientMessageReceiver.ReceiveCallback(client, msg);
+                                    break;
+                                case NetIncomingMessageType.WarningMessage:
+                                    LunaLog.Warning(msg.ReadString());
+                                    break;
+                                case NetIncomingMessageType.DebugMessage:
+                                    LunaLog.NetworkDebug(msg.ReadString());
+                                    break;
+                                case NetIncomingMessageType.ConnectionLatencyUpdated:
+                                case NetIncomingMessageType.VerboseDebugMessage:
+                                    LunaLog.NetworkVerboseDebug(msg.ReadString());
+                                    break;
+                                case NetIncomingMessageType.Error:
+                                    LunaLog.Error(msg.ReadString());
+                                    break;
+                                case NetIncomingMessageType.StatusChanged:
+                                    switch ((NetConnectionStatus)msg.ReadByte())
                                     {
-                                        LidgrenMasterServer.DetectedSTUNTransportAddresses.Add(data.TransportAddress);
+                                        case NetConnectionStatus.Connected:
+                                            var endpoint = msg.SenderConnection.RemoteEndPoint;
+                                            LunaLog.Normal($"New client Connection from {endpoint.Address}:{endpoint.Port}");
+                                            ClientConnectionHandler.ConnectClient(msg.SenderConnection);
+                                            break;
+                                        case NetConnectionStatus.Disconnected:
+                                            var reason = msg.ReadString();
+                                            if (client != null)
+                                                ClientConnectionHandler.DisconnectClient(client, reason);
+                                            break;
                                     }
-                                    LidgrenMasterServer.ReceiveSTUNResponses.Release();
-                                }
-                                break;
-                            default:
-                                var details = msg.PeekString();
-                                LunaLog.Debug($"Lidgren: {msg.MessageType.ToString().ToUpper()} -- {details}");
-                                break;
+                                    break;
+                                case NetIncomingMessageType.UnconnectedData:
+                                    // Only process message if we are still waiting for STUN responses
+                                    if (LidgrenMasterServer.ReceiveSTUNResponses.Wait(0))
+                                    {
+                                        var message = ServerContext.MasterServerMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
+                                        if (message.Data is MsSTUNSuccessResponseMsgData data)
+                                        {
+                                            LidgrenMasterServer.DetectedSTUNTransportAddresses.Add(data.TransportAddress);
+                                        }
+                                        LidgrenMasterServer.ReceiveSTUNResponses.Release();
+                                    }
+                                    break;
+                                default:
+                                    var details = msg.PeekString();
+                                    LunaLog.Debug($"Lidgren: {msg.MessageType.ToString().ToUpper()} -- {details}");
+                                    break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            // A malformed packet must never terminate the receive thread.
+                            // The most common culprit is UnconnectedData arriving during the
+                            // STUN response window: random internet UDP traffic (port scans,
+                            // stale NAT-punch packets, mismatched protocol versions) gets fed
+                            // to MasterServerMessageFactory.Deserialize, which throws when the
+                            // leading bytes do not map to a known MasterServerMessageType.
+                            // Without this catch the exception escaped to the outer try/catch,
+                            // logged a Fatal, and exited the while loop -- silently killing
+                            // the entire server's networking. The regular client Data path is
+                            // already protected inside MessageReceiver.DeserializeMessage; this
+                            // is the safety net for everything else flowing through the switch.
+                            var sender = msg.SenderEndPoint?.ToString() ?? "<unknown>";
+                            LunaLog.Error($"Dropping incoming {msg.MessageType} message from {sender}: {e}");
+                        }
+                        finally
+                        {
+                            Server.Recycle(msg);
                         }
                     }
                     else
