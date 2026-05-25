@@ -186,6 +186,22 @@ namespace Server.Server
                                     break;
                             }
                         }
+                        catch (Exception e)
+                        {
+                            // A malformed packet must never terminate the receive thread.
+                            // The most common culprit is UnconnectedData arriving during the
+                            // STUN response window: random internet UDP traffic (port scans,
+                            // stale NAT-punch packets, mismatched protocol versions) gets fed
+                            // to MasterServerMessageFactory.Deserialize, which throws when the
+                            // leading bytes do not map to a known MasterServerMessageType.
+                            // Without this catch the exception escaped to the outer try/catch,
+                            // logged a Fatal, and exited the while loop -- silently killing
+                            // the entire server's networking. The regular client Data path is
+                            // already protected inside MessageReceiver.DeserializeMessage; this
+                            // is the safety net for everything else flowing through the switch.
+                            var sender = msg.SenderEndPoint?.ToString() ?? "<unknown>";
+                            LunaLog.Error($"Dropping incoming {msg.MessageType} message from {sender}: {e}");
+                        }
                         finally
                         {
                             Server.Recycle(msg);
