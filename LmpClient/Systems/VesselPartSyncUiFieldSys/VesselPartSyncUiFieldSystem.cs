@@ -35,16 +35,20 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             LockEvent.onLockAcquire.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartUiFieldsSyncs));
+            SetupRoutine(new RoutineDefinition(50, RoutineExecution.Update, FlushOutgoingFieldChanges));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
 
-            LockEvent.onLockAcquire.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
+            LockEvent.onLockAcquire.Remove(VesselPartModuleSyncUiFieldEvents.LockAcquire);
 
+            VesselPartModuleSyncUiFieldEvents.ClearPending();
             VesselPartsUiFieldsSyncs.Clear();
         }
+
+        private void FlushOutgoingFieldChanges() => VesselPartModuleSyncUiFieldEvents.FlushPending();
 
         #endregion
 

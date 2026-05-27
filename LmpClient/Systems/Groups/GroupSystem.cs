@@ -2,6 +2,7 @@
 using LmpClient.Network;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Message.Data.Groups;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,16 +27,16 @@ namespace LmpClient.Systems.Groups
         {
             if (Groups.TryGetValue(groupName, out var existingVal))
             {
-                if (existingVal.Members.All(m => m != SettingsSystem.CurrentSettings.PlayerName) &&
-                    existingVal.Invited.All(m => m != SettingsSystem.CurrentSettings.PlayerName))
+                var me = SettingsSystem.CurrentSettings.PlayerName;
+                if (existingVal.Members.All(m => m != me) && existingVal.Invited.All(m => m != me))
                 {
-                    var expectedGroup = existingVal.Clone();
-
-                    var newInvited = new List<string>(expectedGroup.Invited) { SettingsSystem.CurrentSettings.PlayerName };
-                    expectedGroup.Invited = newInvited.ToArray();
+                    var newInvited = new string[existingVal.Invited.Length + 1];
+                    Array.Copy(existingVal.Invited, newInvited, existingVal.Invited.Length);
+                    newInvited[existingVal.Invited.Length] = me;
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
-                    msgData.Group = expectedGroup;
+                    msgData.Group = existingVal.Clone();
+                    msgData.Group.Invited = newInvited;
 
                     MessageSender.SendMessage(msgData);
                 }
@@ -69,17 +70,16 @@ namespace LmpClient.Systems.Groups
             if (Groups.TryGetValue(groupName, out var existingVal)
                 && existingVal.Owner == SettingsSystem.CurrentSettings.PlayerName)
             {
-                //TODO: remove this clone and do as with flags to avoid garbage
-                var expectedGroup = existingVal.Clone();
+                var newMembers = new string[existingVal.Members.Length + 1];
+                Array.Copy(existingVal.Members, newMembers, existingVal.Members.Length);
+                newMembers[existingVal.Members.Length] = username;
 
-                var newMembers = new List<string>(expectedGroup.Members) { username };
-                expectedGroup.Members = newMembers.ToArray();
-
-                var newInvited = new List<string>(expectedGroup.Invited.Except(new[] { username }));
-                expectedGroup.Invited = newInvited.ToArray();
+                var newInvited = existingVal.Invited.Where(m => m != username).ToArray();
 
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
-                msgData.Group = expectedGroup;
+                msgData.Group = existingVal.Clone();
+                msgData.Group.Members = newMembers;
+                msgData.Group.Invited = newInvited;
 
                 MessageSender.SendMessage(msgData);
             }
@@ -90,17 +90,13 @@ namespace LmpClient.Systems.Groups
             if (Groups.TryGetValue(groupName, out var existingVal)
                 && existingVal.Owner == SettingsSystem.CurrentSettings.PlayerName)
             {
-                //TODO: remove this clone and do as with flags to avoid garbage
-                var expectedGroup = existingVal.Clone();
-
-                var newMembers = new List<string>(expectedGroup.Members.Except(new[] { username })) { username };
-                expectedGroup.Members = newMembers.ToArray();
-
-                var newInvited = new List<string>(expectedGroup.Invited.Except(new[] { username }));
-                expectedGroup.Invited = newInvited.ToArray();
+                var newMembers = existingVal.Members.Where(m => m != username).ToArray();
+                var newInvited = existingVal.Invited.Where(m => m != username).ToArray();
 
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
-                msgData.Group = expectedGroup;
+                msgData.Group = existingVal.Clone();
+                msgData.Group.Members = newMembers;
+                msgData.Group.Invited = newInvited;
 
                 MessageSender.SendMessage(msgData);
             }

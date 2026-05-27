@@ -13,5 +13,6 @@
         FacilityUpgrade = 8,
         PartPurchase = 9,
         ExperimentalPart = 10,
+        ScienceSubjectRevert = 11,
     }
 }

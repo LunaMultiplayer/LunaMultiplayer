@@ -30,6 +30,7 @@ namespace LmpCommon.Message.Client
             [(ushort)ShareProgressMessageType.FacilityUpgrade] = typeof(ShareProgressFacilityUpgradeMsgData),
             [(ushort)ShareProgressMessageType.PartPurchase] = typeof(ShareProgressPartPurchaseMsgData),
             [(ushort)ShareProgressMessageType.ExperimentalPart] = typeof(ShareProgressExperimentalPartMsgData),
+            [(ushort)ShareProgressMessageType.ScienceSubjectRevert] = typeof(ShareProgressScienceSubjectRevertMsgData),
         };
 
         public override ClientMessageType MessageType => ClientMessageType.ShareProgress;

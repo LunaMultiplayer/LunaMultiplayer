@@ -30,6 +30,7 @@ namespace LmpCommon.Message.Server
             [(ushort)ShareProgressMessageType.FacilityUpgrade] = typeof(ShareProgressFacilityUpgradeMsgData),
             [(ushort)ShareProgressMessageType.PartPurchase] = typeof(ShareProgressPartPurchaseMsgData),
             [(ushort)ShareProgressMessageType.ExperimentalPart] = typeof(ShareProgressExperimentalPartMsgData),
+            [(ushort)ShareProgressMessageType.ScienceSubjectRevert] = typeof(ShareProgressScienceSubjectRevertMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.ShareProgress;

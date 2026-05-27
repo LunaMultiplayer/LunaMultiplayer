@@ -1,4 +1,4 @@
-﻿using LmpClient.Base;
+using LmpClient.Base;
 using LmpClient.Base.Interface;
 using LmpClient.Extensions;
 using LmpCommon.Message.Data.ShareProgress;
@@ -6,6 +6,7 @@ using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace LmpClient.Systems.ShareScienceSubject
 {
@@ -13,51 +14,128 @@ namespace LmpClient.Systems.ShareScienceSubject
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
+        // Tracks the highest science value we've seen per subject to prevent out-of-order downgrades
+        private static readonly ConcurrentDictionary<string, float> _highWaterMark = new ConcurrentDictionary<string, float>();
+
         public void HandleMessage(IServerMessageBase msg)
         {
             if (!(msg.Data is ShareProgressBaseMsgData msgData)) return;
-            if (msgData.ShareProgressMessageType != ShareProgressMessageType.ScienceSubjectUpdate) return;
 
-            if (msgData is ShareProgressScienceSubjectMsgData data)
+            switch (msgData.ShareProgressMessageType)
             {
-                var subject = new ScienceSubjectInfo(data.ScienceSubject); //create a copy of the tech value so it will not change in the future.
-                LunaLog.Log($"Queue Science subject: {subject.Id}");
-                System.QueueAction(() =>
-                {
-                    NewScienceSubject(subject);
-                });
+                case ShareProgressMessageType.ScienceSubjectUpdate:
+                    if (msgData is ShareProgressScienceSubjectMsgData updateData)
+                    {
+                        var copy = new ScienceSubjectInfo(updateData.ScienceSubject);
+                        LunaLog.Log($"Queue science subject update: {copy.Id} sci={copy.Science} isDelta={copy.IsDelta}");
+                        System.QueueAction(() => ApplyScienceSubjectUpdate(copy));
+                    }
+                    break;
+
+                case ShareProgressMessageType.ScienceSubjectRevert:
+                    if (msgData is ShareProgressScienceSubjectRevertMsgData revertData)
+                    {
+                        var copies = new ScienceSubjectInfo[revertData.SubjectCount];
+                        for (var i = 0; i < revertData.SubjectCount; i++)
+                            copies[i] = new ScienceSubjectInfo(revertData.Subjects[i]);
+                        LunaLog.Log($"Queue science subject revert: {revertData.SubjectCount} subjects");
+                        System.QueueAction(() => ApplyScienceSubjectRevert(copies));
+                    }
+                    break;
             }
         }
 
-        private static void NewScienceSubject(ScienceSubjectInfo subject)
+        private static void ApplyScienceSubjectUpdate(ScienceSubjectInfo info)
         {
-            System.StartIgnoringEvents();
-
-            var currentSubjects = System.ScienceSubjects;
-            var receivedSubject = ConvertByteArrayToScienceSubject(subject.Data, subject.NumBytes);
-
-            if (!currentSubjects.TryGetValue(subject.Id, out var existingSubject))
+            // Deduplicate: ignore if we already have a higher value (handles network reorder / duplicates)
+            if (_highWaterMark.TryGetValue(info.Id, out var knownBest) && info.Science < knownBest)
             {
-                currentSubjects.Add(receivedSubject.id, receivedSubject);
+                LunaLog.Log($"Science subject '{info.Id}' ignored: incoming {info.Science} < known best {knownBest}");
+                return;
+            }
+
+            System.StartIgnoringEvents();
+            var currentSubjects = System.ScienceSubjects;
+
+            if (info.IsDelta)
+            {
+                ApplyDelta(currentSubjects, info);
             }
             else
             {
-                existingSubject.dataScale = receivedSubject.dataScale;
-                existingSubject.scientificValue = receivedSubject.scientificValue;
-                existingSubject.subjectValue = receivedSubject.subjectValue;
-                existingSubject.science = receivedSubject.science;
-                existingSubject.scienceCap = receivedSubject.scienceCap;
+                ApplyFull(currentSubjects, info);
+            }
+
+            _highWaterMark[info.Id] = Math.Max(info.Science, knownBest);
+            System.StopIgnoringEvents();
+            LunaLog.Log($"Science subject applied: {info.Id} sci={info.Science} collectedBy={info.CollectedBy}");
+        }
+
+        private static void ApplyDelta(Dictionary<string, ScienceSubject> subjects, ScienceSubjectInfo delta)
+        {
+            if (!subjects.TryGetValue(delta.Id, out var existing))
+            {
+                LunaLog.Warning($"Received delta for unknown subject '{delta.Id}' — ignored (not yet discovered locally)");
+                return;
+            }
+
+            existing.science = delta.Science;
+            existing.scienceCap = delta.ScienceCap;
+            existing.dataScale = delta.DataScale;
+            existing.scientificValue = delta.ScientificValue;
+            existing.subjectValue = delta.SubjectValue;
+        }
+
+        private static void ApplyFull(Dictionary<string, ScienceSubject> subjects, ScienceSubjectInfo info)
+        {
+            var received = ConvertToScienceSubject(info.Data, info.NumBytes);
+            if (received == null) return;
+
+            if (!subjects.TryGetValue(info.Id, out var existing))
+            {
+                subjects.Add(received.id, received);
+            }
+            else
+            {
+                existing.science = received.science;
+                existing.scienceCap = received.scienceCap;
+                existing.dataScale = received.dataScale;
+                existing.scientificValue = received.scientificValue;
+                existing.subjectValue = received.subjectValue;
+            }
+        }
+
+        private static void ApplyScienceSubjectRevert(ScienceSubjectInfo[] snapshot)
+        {
+            System.StartIgnoringEvents();
+            var currentSubjects = System.ScienceSubjects;
+
+            foreach (var info in snapshot)
+            {
+                if (info == null) continue;
+                if (!currentSubjects.TryGetValue(info.Id, out var existing)) continue;
+
+                // Merge: never roll back science that we or another player earned above this value
+                if (existing.science > info.Science)
+                {
+                    LunaLog.Log($"Revert ignored for '{info.Id}': local {existing.science} > reverted {info.Science}");
+                    continue;
+                }
+
+                existing.science = info.Science;
+                existing.scienceCap = info.ScienceCap;
+                existing.dataScale = info.DataScale;
+                existing.scientificValue = info.ScientificValue;
+                existing.subjectValue = info.SubjectValue;
+
+                _highWaterMark[info.Id] = info.Science;
             }
 
             System.StopIgnoringEvents();
-            LunaLog.Log($"Science subject received: {subject.Id}");
+            LunaLog.Log($"Science subject revert applied: {snapshot.Length} subjects");
         }
 
-        /// <summary>
-        /// Convert a byte array to a ConfigNode and then to a ScienceSubject.
-        /// If anything goes wrong it will return null.
-        /// </summary>
-        private static ScienceSubject ConvertByteArrayToScienceSubject(byte[] data, int numBytes)
+        private static ScienceSubject ConvertToScienceSubject(byte[] data, int numBytes)
         {
             var node = new ConfigNode("Science");
             try
@@ -69,7 +147,6 @@ namespace LmpClient.Systems.ShareScienceSubject
                 LunaLog.LogError($"[LMP]: Error while deserializing science subject configNode: {e}");
                 return null;
             }
-
             return new ScienceSubject(node);
         }
     }

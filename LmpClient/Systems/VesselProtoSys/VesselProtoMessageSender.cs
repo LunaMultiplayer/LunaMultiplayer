@@ -57,45 +57,55 @@ namespace LmpClient.Systems.VesselProtoSys
         private void SendVesselMessage(ProtoVessel protoVessel, bool forceReload)
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
-            //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
-            //TODO: Check if this works fine with the new unity version as it used to crash....
+            // ConfigNode serialization calls into Lingoona which can be thread-sensitive.
+            // PrepareAndSendProtoVessel now has a full try/catch so failures are logged, not fatal.
             TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, forceReload));
-            //PrepareAndSendProtoVessel(protoVessel);
         }
 
         /// <summary>
-        /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
+        /// This method prepares the protovessel class and send the message, it's intended to be run in another thread.
+        /// The entire body is wrapped in a try/catch because ConfigNode serialization via Lingoona can fail in some
+        /// Unity versions and we must not propagate the exception onto the background thread pool.
         /// </summary>
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool forceReload)
         {
-            //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
 
-            //VesselSerializedBytes is shared so lock it!
-            lock (VesselArraySyncLock)
+            try
             {
-                VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
-                if (numBytes > 0)
+                lock (VesselArraySyncLock)
                 {
-                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    msgData.GameTime = TimeSyncSystem.UniversalTime;
-                    msgData.VesselId = protoVessel.vesselID;
-                    msgData.NumBytes = numBytes;
-                    msgData.ForceReload = forceReload;
-                    if (msgData.Data.Length < numBytes)
-                        Array.Resize(ref msgData.Data, numBytes);
-                    Array.Copy(VesselSerializedBytes, 0, msgData.Data, 0, numBytes);
-
-                    SendMessage(msgData);
-                }
-                else
-                {
-                    if (protoVessel.vesselType == VesselType.Debris)
+                    VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
+                    if (numBytes > 0)
                     {
-                        LunaLog.Log($"Serialization of debris vessel: {protoVessel.vesselID} name: {protoVessel.vesselName} failed. Adding to kill list");
-                        VesselRemoveSystem.Singleton.KillVessel(protoVessel.vesselID, true, "Serialization of debris failed");
+                        var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+                        msgData.GameTime = TimeSyncSystem.UniversalTime;
+                        msgData.VesselId = protoVessel.vesselID;
+                        msgData.NumBytes = numBytes;
+                        msgData.ForceReload = forceReload;
+                        if (msgData.Data.Length < numBytes)
+                            Array.Resize(ref msgData.Data, numBytes);
+                        Array.Copy(VesselSerializedBytes, 0, msgData.Data, 0, numBytes);
+
+                        SendMessage(msgData);
+                    }
+                    else
+                    {
+                        if (protoVessel.vesselType == VesselType.Debris)
+                        {
+                            LunaLog.Log($"Serialization of debris vessel {protoVessel.vesselID} ({protoVessel.vesselName}) failed — adding to kill list");
+                            VesselRemoveSystem.Singleton.KillVessel(protoVessel.vesselID, true, "Serialization of debris failed");
+                        }
+                        else
+                        {
+                            LunaLog.LogWarning($"Serialization of vessel {protoVessel.vesselID} ({protoVessel.vesselName}) produced 0 bytes — skipping send");
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                LunaLog.LogError($"[LMP]: Exception serializing vessel {protoVessel.vesselID} ({protoVessel.vesselName}): {ex}");
             }
         }
 

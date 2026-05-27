@@ -276,6 +276,9 @@ namespace LmpClient.Network
                         case ShareProgressMessageType.ExperimentalPart:
                             ShareExperimentalPartsSystem.Singleton.EnqueueMessage(msg);
                             break;
+                        case ShareProgressMessageType.ScienceSubjectRevert:
+                            ShareScienceSubjectSystem.Singleton.EnqueueMessage(msg);
+                            break;
                     }
                     break;
                 case ServerMessageType.Screenshot:

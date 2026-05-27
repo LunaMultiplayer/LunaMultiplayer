@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using LmpClient.Events;
 using LmpClient.Systems.ShareProgress;
 using LmpCommon.Enums;
@@ -12,7 +12,10 @@ namespace LmpClient.Systems.ShareScienceSubject
 
         private ShareScienceSubjectEvents ShareScienceSubjectEvents { get; } = new ShareScienceSubjectEvents();
 
-        private Dictionary<string, ScienceSubject> _lastScienceSubjects = new Dictionary<string, ScienceSubject>();
+        // Static so it survives OnDisabled()/OnEnabled() across scene transitions.
+        // Captured at the moment the player launches, so revert can restore to that baseline.
+        private static Dictionary<string, ScienceSubject> _preFlightSnapshot;
+        private static bool _hasPreFlightSnapshot;
 
         private static Dictionary<string, ScienceSubject> _scienceSubjects;
         public Dictionary<string, ScienceSubject> ScienceSubjects
@@ -23,7 +26,6 @@ namespace LmpClient.Systems.ShareScienceSubject
                 {
                     _scienceSubjects = Traverse.Create(ResearchAndDevelopment.Instance).Field("scienceSubjects").GetValue<Dictionary<string, ScienceSubject>>();
                 }
-
                 return _scienceSubjects;
             }
         }
@@ -44,35 +46,53 @@ namespace LmpClient.Systems.ShareScienceSubject
             RevertEvent.onRevertingToLaunch.Add(ShareScienceSubjectEvents.RevertingDetected);
             RevertEvent.onReturningToEditor.Add(ShareScienceSubjectEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Add(ShareScienceSubjectEvents.LevelLoaded);
-
+            GameEvents.onFlightReady.Add(OnFlightReady);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
 
-            //Always try to remove the event, as when we disconnect from a server the server settings will get the default values
             GameEvents.OnScienceRecieved.Remove(ShareScienceSubjectEvents.ScienceRecieved);
 
             RevertEvent.onRevertingToLaunch.Remove(ShareScienceSubjectEvents.RevertingDetected);
             RevertEvent.onReturningToEditor.Remove(ShareScienceSubjectEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Remove(ShareScienceSubjectEvents.LevelLoaded);
+            GameEvents.onFlightReady.Remove(OnFlightReady);
 
             Reverting = false;
-            _lastScienceSubjects.Clear();
             _scienceSubjects = null;
         }
 
         public override void SaveState()
         {
             base.SaveState();
-            _lastScienceSubjects = ScienceSubjects;
+            // Preserve existing pre-flight snapshot — SaveState is also called during revert
+            // and we don't want to overwrite the snapshot with in-flight data
         }
 
         public override void RestoreState()
         {
             base.RestoreState();
-            Traverse.Create(ResearchAndDevelopment.Instance).Field("scienceSubjects").SetValue(_lastScienceSubjects);
+            if (_hasPreFlightSnapshot)
+                Traverse.Create(ResearchAndDevelopment.Instance).Field("scienceSubjects").SetValue(_preFlightSnapshot);
+        }
+
+        /// <summary>
+        /// Sends the pre-flight snapshot to the server so it and other clients can revert.
+        /// Called from RevertingDetected before any scene transition wipes state.
+        /// </summary>
+        public void SendRevertSnapshot()
+        {
+            if (!_hasPreFlightSnapshot || _preFlightSnapshot.Count == 0) return;
+            MessageSender.SendScienceSubjectRevert(_preFlightSnapshot);
+        }
+
+        private void OnFlightReady()
+        {
+            if (!ShareSystemReady) return;
+            _preFlightSnapshot = new Dictionary<string, ScienceSubject>(ScienceSubjects);
+            _hasPreFlightSnapshot = true;
         }
     }
 }

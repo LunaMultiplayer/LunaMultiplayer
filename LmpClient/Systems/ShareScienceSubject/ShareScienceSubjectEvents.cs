@@ -1,4 +1,4 @@
-﻿using LmpClient.Base;
+using LmpClient.Base;
 
 namespace LmpClient.Systems.ShareScienceSubject
 {
@@ -8,17 +8,25 @@ namespace LmpClient.Systems.ShareScienceSubject
         {
             if (System.IgnoreEvents) return;
 
-            System.MessageSender.SendScienceSubjectMessage(subject);
+            // reverseEngineered == true means the sample was physically recovered (not transmitted)
+            var wasTransmitted = !reverseEngineered;
+            System.MessageSender.SendScienceSubjectMessage(subject, wasTransmitted);
         }
 
         public void RevertingDetected()
         {
+            // Send the pre-flight snapshot NOW, before scene transitions clear the science state.
+            // The server applies merge logic, so other players' science is never rolled back.
+            System.SendRevertSnapshot();
+
             System.Reverting = true;
             System.StartIgnoringEvents();
         }
 
         public void RevertingToEditorDetected(EditorFacility data)
         {
+            System.SendRevertSnapshot();
+
             System.Reverting = true;
             System.StartIgnoringEvents();
         }

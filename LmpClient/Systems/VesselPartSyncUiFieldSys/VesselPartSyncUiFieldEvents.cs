@@ -1,13 +1,32 @@
-﻿using LmpClient.Base;
+using LmpClient.Base;
 using LmpClient.Extensions;
 using LmpClient.ModuleStore;
 using LmpClient.Systems.SettingsSys;
 using LmpCommon.Locks;
+using LmpCommon.Time;
+using System;
+using System.Collections.Concurrent;
 
 namespace LmpClient.Systems.VesselPartSyncUiFieldSys
 {
     public class VesselPartSyncUiFieldEvents : SubSystem<VesselPartSyncUiFieldSystem>
     {
+        private const int DebounceMs = 200;
+
+        private class PendingChange
+        {
+            public Vessel Vessel;
+            public Part Part;
+            public string ModuleName;
+            public string FieldName;
+            public object Value;
+            public Type FieldType;
+            public DateTime LastChangedAt;
+        }
+
+        private readonly ConcurrentDictionary<string, PendingChange> _pending
+            = new ConcurrentDictionary<string, PendingChange>();
+
         private static bool CallIsValid(PartModule module)
         {
             var vessel = module.vessel;
@@ -18,7 +37,6 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             if (part == null)
                 return false;
 
-            //The vessel is immortal so we are sure that it's not ours
             if (module.vessel.IsImmortal())
                 return false;
 
@@ -43,9 +61,9 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
                     {
                         foreach (var field in module.Fields)
                         {
-                            if (field.uiControlFlight.GetType() != typeof(UI_Toggle) //bool
-                                && field.uiControlFlight.GetType() != typeof(UI_FloatRange) //float
-                                && field.uiControlFlight.GetType() != typeof(UI_Cycle)) //int
+                            if (field.uiControlFlight.GetType() != typeof(UI_Toggle)
+                                && field.uiControlFlight.GetType() != typeof(UI_FloatRange)
+                                && field.uiControlFlight.GetType() != typeof(UI_Cycle))
                                 continue;
 
                             field.uiControlFlight.onFieldChanged -= OnFieldChanged;
@@ -56,21 +74,53 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             }
         }
 
-        private static void OnFieldChanged(BaseField baseField, object oldValue)
+        private void OnFieldChanged(BaseField baseField, object oldValue)
         {
             var partModule = (PartModule)baseField.host;
             if (!CallIsValid(partModule)) return;
 
-            //TODO: add some sort of buffering so it sends the value after 500ms to avoid clogging in case a user changes it too often
+            var key = $"{partModule.part.flightID}_{partModule.moduleName}_{baseField.name}";
+            _pending[key] = new PendingChange
+            {
+                Vessel = partModule.vessel,
+                Part = partModule.part,
+                ModuleName = partModule.moduleName,
+                FieldName = baseField.name,
+                Value = baseField.GetValue(baseField.host),
+                FieldType = baseField.FieldInfo.FieldType,
+                LastChangedAt = LunaComputerTime.UtcNow
+            };
+        }
 
-            var fieldType = baseField.FieldInfo.FieldType;
+        /// <summary>
+        /// Flushes pending outgoing UI field changes that have been stable for DebounceMs.
+        /// Called by the system's update routine.
+        /// </summary>
+        public void FlushPending()
+        {
+            if (_pending.IsEmpty) return;
 
-            if (fieldType == typeof(bool))
-                System.MessageSender.SendVesselPartSyncUiFieldBoolMsg(partModule.vessel, partModule.part, partModule.moduleName, baseField.name, (bool)baseField.GetValue(baseField.host));
-            else if (fieldType == typeof(int))
-                System.MessageSender.SendVesselPartSyncUiFieldIntMsg(partModule.vessel, partModule.part, partModule.moduleName, baseField.name, (int)baseField.GetValue(baseField.host));
-            else if (fieldType == typeof(float))
-                System.MessageSender.SendVesselPartSyncUiFieldFloatMsg(partModule.vessel, partModule.part, partModule.moduleName, baseField.name, (float)baseField.GetValue(baseField.host));
+            var cutoff = LunaComputerTime.UtcNow.AddMilliseconds(-DebounceMs);
+            foreach (var kvp in _pending)
+            {
+                if (kvp.Value.LastChangedAt > cutoff) continue;
+
+                if (!_pending.TryRemove(kvp.Key, out var change)) continue;
+
+                SendChange(change);
+            }
+        }
+
+        public void ClearPending() => _pending.Clear();
+
+        private void SendChange(PendingChange change)
+        {
+            if (change.FieldType == typeof(bool))
+                System.MessageSender.SendVesselPartSyncUiFieldBoolMsg(change.Vessel, change.Part, change.ModuleName, change.FieldName, (bool)change.Value);
+            else if (change.FieldType == typeof(int))
+                System.MessageSender.SendVesselPartSyncUiFieldIntMsg(change.Vessel, change.Part, change.ModuleName, change.FieldName, (int)change.Value);
+            else if (change.FieldType == typeof(float))
+                System.MessageSender.SendVesselPartSyncUiFieldFloatMsg(change.Vessel, change.Part, change.ModuleName, change.FieldName, (float)change.Value);
         }
     }
 }

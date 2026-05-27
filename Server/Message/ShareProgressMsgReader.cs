@@ -47,6 +47,9 @@ namespace Server.Message
                 case ShareProgressMessageType.ExperimentalPart:
                     ShareExperimentalPartSystem.ExperimentalPartReceived(client, (ShareProgressExperimentalPartMsgData)data);
                     break;
+                case ShareProgressMessageType.ScienceSubjectRevert:
+                    ShareScienceSubjectSystem.ScienceSubjectRevertReceived(client, (ShareProgressScienceSubjectRevertMsgData)data);
+                    break;
             }
         }
     }

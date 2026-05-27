@@ -21,11 +21,39 @@ namespace LmpClient.Systems.VesselPositionSys
 
         private static DateTime LastVesselUpdatesSentTime { get; set; } = LunaComputerTime.UtcNow;
 
-        private static int UpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval
-            / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
+        // Cached intervals — recalculated only when Time.fixedDeltaTime changes (very rare)
+        private static float _cachedFixedDeltaTime = -1f;
+        private static int _cachedUpdateInterval;
+        private static int _cachedSecondaryUpdateInterval;
 
-        private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity => (int)(Math.Floor(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval
-            / TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds) * TimeSpan.FromSeconds(Time.fixedDeltaTime).TotalMilliseconds);
+        private static int UpdateIntervalLockedToUnity
+        {
+            get
+            {
+                RefreshIntervalCache();
+                return _cachedUpdateInterval;
+            }
+        }
+
+        private static int SecondaryVesselUpdatesUpdateIntervalLockedToUnity
+        {
+            get
+            {
+                RefreshIntervalCache();
+                return _cachedSecondaryUpdateInterval;
+            }
+        }
+
+        private static void RefreshIntervalCache()
+        {
+            var fdt = Time.fixedDeltaTime;
+            if (Math.Abs(fdt - _cachedFixedDeltaTime) < float.Epsilon) return;
+
+            _cachedFixedDeltaTime = fdt;
+            var fixedMs = TimeSpan.FromSeconds(fdt).TotalMilliseconds;
+            _cachedUpdateInterval = (int)(Math.Floor(SettingsSystem.ServerSettings.VesselUpdatesMsInterval / fixedMs) * fixedMs);
+            _cachedSecondaryUpdateInterval = (int)(Math.Floor(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval / fixedMs) * fixedMs);
+        }
 
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
             (LunaComputerTime.UtcNow - LastVesselUpdatesSentTime).TotalMilliseconds > UpdateIntervalLockedToUnity :
@@ -72,7 +100,7 @@ namespace LmpClient.Systems.VesselPositionSys
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendSecondaryVesselPositionUpdates));
-            //SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendUnloadedSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendUnloadedSecondaryVesselPositionUpdates));
 
             WarpEvent.onTimeWarpStopped.Add(PositionEvents.WarpStopped);
         }
