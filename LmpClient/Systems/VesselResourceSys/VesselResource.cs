@@ -45,6 +45,8 @@ namespace LmpClient.Systems.VesselResourceSys
                 }
 
                 var partSnapshot = vessel.protoVessel.GetProtoPart(Resources[i].PartFlightId);
+
+                //The part may have been removed (e.g. destroyed by a collision) while this update was in flight, skip it
                 if (partSnapshot == null)
                 {
                     LunaLog.LogWarning(
@@ -69,6 +71,8 @@ namespace LmpClient.Systems.VesselResourceSys
                     if (partSnapshot.partRef != null)
                     {
                         var foundResource = partSnapshot.partRef.FindResource(resourceSnapshot.resourceName);
+
+                        //The resource may no longer exist on the part (e.g. the part is being destroyed by a collision)
                         if (foundResource != null)
                         {
                             foundResource.amount = Resources[i].Amount;
@@ -76,8 +80,7 @@ namespace LmpClient.Systems.VesselResourceSys
                         }
                         else
                         {
-                            LunaLog.LogWarning(
-                                $"[LMP]: Skipping ProtoPart resource write due to failure to match (vessel {VesselId}, part {Resources[i].PartFlightId}, resource '{resourceSnapshot.resourceName}', reason: live resource not found on part).");
+                            LunaLog.LogWarning($"[LMP]: Skipping ProtoPart resource write due to failure to match (vessel {VesselId}, part {Resources[i].PartFlightId}, resource '{resourceSnapshot.resourceName}', reason: live resource not found on part).");
                         }
                     }
                 }
