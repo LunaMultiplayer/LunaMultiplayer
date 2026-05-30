@@ -37,6 +37,11 @@ namespace LmpClient.Systems.VesselResourceSys
             for (var i = 0; i < ResourcesCount; i++)
             {
                 var partSnapshot = vessel.protoVessel.GetProtoPart(Resources[i].PartFlightId);
+
+                //The part may have been removed (e.g. destroyed by a collision) while this update was in flight, skip it
+                if (partSnapshot == null)
+                    continue;
+
                 var resourceSnapshot = partSnapshot.FindResourceInProtoPart(Resources[i].ResourceName);
                 if (resourceSnapshot != null)
                 {
@@ -49,8 +54,13 @@ namespace LmpClient.Systems.VesselResourceSys
                         if (partSnapshot.partRef != null)
                         {
                             var foundResource = partSnapshot.partRef.FindResource(resourceSnapshot.resourceName);
-                            foundResource.amount = Resources[i].Amount;
-                            foundResource.flowState = Resources[i].FlowState;
+
+                            //The resource may no longer exist on the part (e.g. the part is being destroyed by a collision)
+                            if (foundResource != null)
+                            {
+                                foundResource.amount = Resources[i].Amount;
+                                foundResource.flowState = Resources[i].FlowState;
+                            }
                         }
                     }
                     else
