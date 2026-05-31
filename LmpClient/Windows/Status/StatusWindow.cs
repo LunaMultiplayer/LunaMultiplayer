@@ -2,6 +2,7 @@
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.Warp;
 using LmpClient.Utilities;
+using LmpCommon;
 using LmpCommon.Enums;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,7 +42,7 @@ namespace LmpClient.Windows.Status
 #if DEBUG
         private static readonly string Title = $"LMP - PID: {CommonUtil.ProcessId}";
 #else
-        private static readonly string Title = $"LMP - Luna Multiplayer";
+        private static readonly string Title = $"Luna Multiplayer {LmpVersioning.CurrentVersion}";
 #endif
 
         #endregion
