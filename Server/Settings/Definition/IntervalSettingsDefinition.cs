@@ -20,8 +20,8 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Main thread polling in ms. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
         public int MainTimeTick { get; set; } = 5;
 
-        [XmlComment(Value = "Interval in ms at which internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be backed up to a file")]
-        public int BackupIntervalMs { get; set; } = 30000;
+        [XmlComment(Value = "Interval in ms at which internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be saved to a file")]
+        public int SaveIntervalMs { get; set; } = 30000;
 
         [XmlComment(Value = "Interval to force a garbage collection and reduce the memory usage. Specify this value in minutes. 0 = deactivated.")]
         public int GcMinutesInterval { get; set; } = 15;

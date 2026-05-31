@@ -10,7 +10,7 @@ namespace Server.System
     public class BackupSystem
     {
         //Subscribe to the exit event so a backup is performed when closing the server
-        static BackupSystem() => ExitEvent.ServerClosing += RunBackup;
+        static BackupSystem() => ExitEvent.ServerClosing += RunSave;
 
         private static readonly object LockObj = new object();
 
@@ -20,12 +20,12 @@ namespace Server.System
             {
                 if (ServerContext.PlayerCount > 0)
                 {
-                    RunBackup();
+                    RunSave();
                 }
 
                 try
                 {
-                    await Task.Delay(IntervalSettings.SettingsStore.BackupIntervalMs, token);
+                    await Task.Delay(IntervalSettings.SettingsStore.SaveIntervalMs, token);
                 }
                 catch (TaskCanceledException)
                 {
@@ -34,15 +34,24 @@ namespace Server.System
             }
         }
 
-        public static void RunBackup()
+        public static void RunSave()
         {
             lock (LockObj)
             {
-                LunaLog.Debug("Performing backups...");
+                LunaLog.Debug("Performing save...");
                 VesselStoreSystem.BackupVessels();
                 WarpSystem.BackupSubspaces();
                 TimeSystem.BackupStartTime();
                 ScenarioStoreSystem.BackupScenarios();
+                LunaLog.Debug("Saving done");
+            }
+        }
+
+        public static void RunBackup()
+        {
+            lock (LockObj)
+            {
+                LunaLog.Debug("Performing backup...");
                 LunaLog.Debug("Backups done");
             }
         }
