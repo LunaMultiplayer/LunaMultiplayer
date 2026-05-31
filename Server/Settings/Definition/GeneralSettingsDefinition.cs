@@ -81,7 +81,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Max number of parts that a vessel can have when spawning")]
         public int MaxVesselParts { get; set; } = 200;
 
-        [XmlComment(Value = "Max amount of backups to keep, minimum value of 0. BackupInterval in IntervalSettings can be used to turn off/on backups")]
+        [XmlComment(Value = "Max amount of backups to keep, minimum value of 1. BackupInterval in IntervalSettings can be used to turn off/on backups")]
         public int MaxBackups { get; set; } = 5;
     }
 }
