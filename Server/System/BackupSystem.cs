@@ -52,13 +52,13 @@ namespace Server.System
 
             while (ServerContext.ServerRunning)
             {
-                RunBackup();
-
                 try
                 {
                     await Task.Delay(IntervalSettings.SettingsStore.BackupMinutesInterval*60000, token);
                 }
                 catch (TaskCanceledException) { break; }
+
+                RunBackup();
             }
         }
 
