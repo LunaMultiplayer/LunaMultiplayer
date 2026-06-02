@@ -45,8 +45,10 @@ namespace Server.System
 
         private static async Task RunBackupsAsync(CancellationToken token)
         {
-            if (IntervalSettings.SettingsStore.BackupIntervalMs == 0)
+            if (IntervalSettings.SettingsStore.BackupIntervalMs == 0 || GeneralSettings.SettingsStore.MaxBackups == 0) {
+                LunaLog.Normal("Backups are off");
                 return;
+            }
 
             while (ServerContext.ServerRunning)
             {
@@ -105,11 +107,6 @@ namespace Server.System
         public static void RunBackup()
         {
             LunaLog.Debug("Performing backup...");
-
-            if (GeneralSettings.SettingsStore.MaxBackups <= 0) {
-                LunaLog.Warning("Max backups is set to less than 1 but backup interval is above 0");
-                return;
-            }
 
             if (!Path.Exists(ServerContext.BackupDirectory))
                 Directory.CreateDirectory(ServerContext.BackupDirectory);
