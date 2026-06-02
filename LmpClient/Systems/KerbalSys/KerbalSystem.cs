@@ -2,6 +2,7 @@
 using KSP.UI.Screens;
 using LmpClient.Base;
 using LmpClient.Events;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
@@ -32,7 +33,7 @@ namespace LmpClient.Systems.KerbalSys
             {
                 if (_astronautComplex == null)
                 {
-                    _astronautComplex = Object.FindObjectOfType<AstronautComplex>();
+                    _astronautComplex = UnityEngine.Object.FindObjectOfType<AstronautComplex>();
                 }
                 return _astronautComplex;
             }
@@ -194,7 +195,21 @@ namespace LmpClient.Systems.KerbalSys
             var refreshDialog = false;
             while (KerbalsToProcess.TryDequeue(out var kerbalNode))
             {
-                LoadKerbal(kerbalNode);
+                try
+                {
+                    LoadKerbal(kerbalNode);
+                }
+                catch (Exception e)
+                {
+                    // Isolate per-kerbal so one corrupt roster entry (e.g. a boolean field that is
+                    // not "True"/"False", which makes KSP's ProtoCrewMember ctor throw a
+                    // FormatException) cannot abort the whole queue and strand the player at connect
+                    // inside MainSystem.StartGameNow. The full node is logged so the offending value
+                    // can be identified from the log without a debugger.
+                    var kerbalName = kerbalNode?.GetValue("name") ?? "<unknown>";
+                    LunaLog.LogError($"[LMP]: Failed to load kerbal '{kerbalName}' from server data; skipping it. " +
+                                     $"Exception: {e}{Environment.NewLine}Kerbal node:{Environment.NewLine}{kerbalNode}");
+                }
                 refreshDialog = true;
             }
 
