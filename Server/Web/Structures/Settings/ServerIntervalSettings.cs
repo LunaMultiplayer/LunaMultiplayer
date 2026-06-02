@@ -9,6 +9,6 @@ namespace Server.Web.Structures.Settings
         public int SendReceiveThreadTickMs => IntervalSettings.SettingsStore.SendReceiveThreadTickMs;
         public int MainTimeTick => IntervalSettings.SettingsStore.MainTimeTick;
         public int SaveIntervalMs => IntervalSettings.SettingsStore.SaveIntervalMs;
-        public int BackupIntervalMs => IntervalSettings.SettingsStore.BackupIntervalMs;
+        public int BackupMinutesInterval => IntervalSettings.SettingsStore.BackupMinutesInterval;
     }
 }

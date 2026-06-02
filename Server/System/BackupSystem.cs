@@ -45,7 +45,7 @@ namespace Server.System
 
         private static async Task RunBackupsAsync(CancellationToken token)
         {
-            if (IntervalSettings.SettingsStore.BackupIntervalMs == 0 || GeneralSettings.SettingsStore.MaxBackups == 0) {
+            if (IntervalSettings.SettingsStore.BackupMinutesInterval == 0 || GeneralSettings.SettingsStore.MaxBackups == 0) {
                 LunaLog.Normal("Backups are off");
                 return;
             }
@@ -56,7 +56,7 @@ namespace Server.System
 
                 try
                 {
-                    await Task.Delay(IntervalSettings.SettingsStore.BackupIntervalMs, token);
+                    await Task.Delay(IntervalSettings.SettingsStore.BackupMinutesInterval*60000, token);
                 }
                 catch (TaskCanceledException) { break; }
             }

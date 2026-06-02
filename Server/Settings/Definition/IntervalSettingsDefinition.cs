@@ -24,7 +24,7 @@ namespace Server.Settings.Definition
         public int SaveIntervalMs { get; set; } = 30000;
 
         [XmlComment(Value = "Interval in ms at which internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be backed up for longer storage. Set to 0 to avoid backups")]
-        public int BackupIntervalMs { get; set; } = 3600000;
+        public int BackupMinutesInterval { get; set; } = 60;
 
         [XmlComment(Value = "Interval to force a garbage collection and reduce the memory usage. Specify this value in minutes. 0 = deactivated.")]
         public int GcMinutesInterval { get; set; } = 15;
