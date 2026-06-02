@@ -6,6 +6,7 @@ using LmpClient.Systems.Warp;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace LmpClient.Systems.VesselProtoSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
         
-        public ConcurrentQueue<VesselProtoMsgData> StoredMessagesData { get; set; } = new ConcurrentQueue<VesselProtoMsgData>();
+        public SortedList<double,VesselProtoMsgData> StoredMessagesData { get; set; } = new SortedList<double,VesselProtoMsgData>();
 
         public void HandleMessage(IServerMessageBase msg)
         {
@@ -34,7 +35,22 @@ namespace LmpClient.Systems.VesselProtoSys
 
             if (IsFromFuture)
             {
-                StoredMessagesData.Enqueue(msgData);
+                
+                double delta = 0;
+                while(true)
+                {
+                    try
+                    {
+                        StoredMessagesData.Add(msgData.GameTime - delta, msgData);
+                        break;
+                    }
+                    catch (ArgumentException)
+                    {
+                        // If we recieve another message of the same type, with the same game time, apply a small delta so that it's not exactly the same
+                        // These floating point precision issues happen anyways so it shouldn't be too big of an issue
+                        delta += 0.001;
+                    }
+                }
                 return;
             }
 
@@ -56,18 +72,28 @@ namespace LmpClient.Systems.VesselProtoSys
         // Search through all stored updates and apply any that are no longer from the future
         public void OnUpdate()
         {
-            while (StoredMessagesData.TryDequeue(out var StoredMessageData))
+            var softDeleted = new List<double>();
+            foreach (var kvp in StoredMessagesData)
             {
                 // Ensure that the update is no longer considered to be from the future
-                if (VesselCommon.UpdateIsFromFuture(StoredMessageData.GameTime, WarpSystem.Singleton.CurrentSubspaceTime))
+                if (VesselCommon.UpdateIsFromFuture(kvp.Key, WarpSystem.Singleton.CurrentSubspaceTime))
                 {
-                    StoredMessagesData.Enqueue(StoredMessageData);
-                    continue;
+                    break;
                 }
 
+                // Soft delete the key-value pair
+                softDeleted.Add(kvp.Key);
+
                 // Apply the update
-                TryQueueUpdate(StoredMessageData);
+                TryQueueUpdate(kvp.Value);
             }
+
+            if (softDeleted.Count > 0)
+                return;
+
+            // Finish deleting everything
+            foreach (double key in softDeleted)
+                StoredMessagesData.Remove(key);
         }
         
         // Log out the amount of memory we're using to store messages
@@ -76,7 +102,7 @@ namespace LmpClient.Systems.VesselProtoSys
             var memUsage = 0;
             if (StoredMessagesData.Count > 0)
             {
-                memUsage = StoredMessagesData.Count * StoredMessagesData.First().GetMessageSize() / 1024; // This is in Kilobytes
+                memUsage = StoredMessagesData.Count * StoredMessagesData.First().Value.GetMessageSize() / 1024; // This is in Kilobytes
             }
             LunaLog.Log($"Current memory usage for stored messages in the VesselProto system: {memUsage}KB");
         }
