@@ -17,6 +17,8 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
         
         public SortedList<double,VesselPartSyncUiFieldMsgData> StoredMessagesData { get; set; } = new SortedList<double,VesselPartSyncUiFieldMsgData>();
 
+        private readonly object StoredMessagesLock = new object();
+
         public void HandleMessage(IServerMessageBase msg)
         {
             if (!(msg.Data is VesselPartSyncUiFieldMsgData msgData)) return;
@@ -32,20 +34,22 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
 
             if (IsFromFuture)
             {
-                
                 double delta = 0;
-                while(true)
+                lock (StoredMessagesLock)
                 {
-                    try
+                    while(true)
                     {
-                        StoredMessagesData.Add(msgData.GameTime - delta, msgData);
-                        break;
-                    }
-                    catch (ArgumentException)
-                    {
-                        // If we recieve another message of the same type, with the same game time, apply a small delta so that it's not exactly the same
-                        // These floating point precision issues happen anyways so it shouldn't be too big of an issue
-                        delta += 0.001;
+                        try
+                        {
+                            StoredMessagesData.Add(msgData.GameTime - delta, msgData);
+                            break;
+                        }
+                        catch (ArgumentException)
+                        {
+                            // If we recieve another message of the same type, with the same game time, apply a small delta so that it's not exactly the same
+                            // These floating point precision issues happen anyways so it shouldn't be too big of an issue
+                            delta += 0.001;
+                        }
                     }
                 }
                 return;
@@ -71,27 +75,32 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
         public void OnUpdate()
         {
             var softDeleted = new List<double>();
-            foreach (var kvp in StoredMessagesData)
+
+            // Lock the SortedList of stored messages
+            lock (StoredMessagesLock)
             {
-                // Ensure that the update is no longer considered to be from the future
-                if (VesselCommon.UpdateIsFromFuture(kvp.Key, WarpSystem.Singleton.CurrentSubspaceTime))
+                foreach (var kvp in StoredMessagesData)
                 {
-                    break;
+                    // Ensure that the update is no longer considered to be from the future
+                    if (VesselCommon.UpdateIsFromFuture(kvp.Key, WarpSystem.Singleton.CurrentSubspaceTime))
+                    {
+                        break;
+                    }
+
+                    // Soft delete the key-value pair
+                    softDeleted.Add(kvp.Key);
+
+                    // Apply the update
+                    TryQueueUpdate(kvp.Value);
                 }
 
-                // Soft delete the key-value pair
-                softDeleted.Add(kvp.Key);
+                if (softDeleted.Count == 0)
+                    return;
 
-                // Apply the update
-                TryQueueUpdate(kvp.Value);
+                // Finish deleting everything
+                foreach (double key in softDeleted)
+                    StoredMessagesData.Remove(key);
             }
-
-            if (softDeleted.Count == 0)
-                return;
-
-            // Finish deleting everything
-            foreach (double key in softDeleted)
-                StoredMessagesData.Remove(key);
         }
         
         // Log out the amount of memory we're using to store messages
