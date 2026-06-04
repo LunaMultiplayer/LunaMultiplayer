@@ -6,7 +6,6 @@ using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using System;
 using System.Linq;
 
@@ -107,10 +106,13 @@ namespace LmpClient.Systems.VesselActionGroupSys
         // Log out the amount of memory we're using to store messages
         public void LogQueuedMessagesSize()
         {
-            var memUsage = 0;
+            var memUsage = 0.0;
             if (StoredMessagesData.Count > 0)
             {
-                memUsage = StoredMessagesData.Count * StoredMessagesData.First().Value.GetMessageSize() / 1024; // This is in Kilobytes
+                // This is in Kilobytes
+                memUsage = StoredMessagesData.Count * StoredMessagesData.First().Value.GetMessageSize() / 1024.0;
+                // Only use 2 digits after the decimal point
+                memUsage = Math.Floor(memUsage * 100.0) / 100.0;
             }
             LunaLog.Log($"Current memory usage for stored messages in the VesselActionGroup system: {memUsage}KB");
         }
