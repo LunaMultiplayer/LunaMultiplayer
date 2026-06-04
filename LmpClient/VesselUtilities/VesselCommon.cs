@@ -38,7 +38,7 @@ namespace LmpClient.VesselUtilities
         /// It simply checks if the update's timestamp (provided first) is greater than the local timestamp and returns true if it is.
         /// We might make this function more complex in the future, though.
         /// </summary>
-        public static bool UpdateIsFromFuture(double UpdateTimestamp, double LocalTimestamp) => UpdateTimestamp > LocalTimestamp;
+        public static bool UpdateIsFromFuture(double updateTimestamp, double localTimestamp) => updateTimestamp > localTimestamp;
 
         private static bool _isSpectating;
         public static bool IsSpectating
