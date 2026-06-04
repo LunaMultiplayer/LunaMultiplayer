@@ -140,7 +140,11 @@ namespace LmpClient.VesselUtilities
         {
             var vessel = FlightGlobals.FindVessel(vesselId);
 
-            var delta = Math.Pow(10, -15); // Acceptable margin of error
+            // Invalid vessel/orbit
+            if (vessel == null || vessel.orbit == null || orbit.Count < 8)
+                return false;
+
+            var delta = Math.Pow(10, -5); // Acceptable margin of error
 
             return Math.Abs(orbit[0] - vessel.orbit.inclination)                      < delta &&
                    Math.Abs(orbit[1] - vessel.orbit.eccentricity)                     < delta &&
