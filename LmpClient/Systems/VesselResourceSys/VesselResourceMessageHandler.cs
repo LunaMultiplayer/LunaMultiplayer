@@ -86,7 +86,7 @@ namespace LmpClient.Systems.VesselResourceSys
                 TryQueueUpdate(kvp.Value);
             }
 
-            if (softDeleted.Count > 0)
+            if (softDeleted.Count == 0)
                 return;
 
             // Finish deleting everything
