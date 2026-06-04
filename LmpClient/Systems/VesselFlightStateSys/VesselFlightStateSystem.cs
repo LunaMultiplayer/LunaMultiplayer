@@ -81,8 +81,10 @@ namespace LmpClient.Systems.VesselFlightStateSys
             //Send the flight state updates after all the calculations are done.
             TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
             
+#if DEBUG
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
 
             WarpEvent.onTimeWarpStopped.Add(FlightStateEvents.WarpStopped);
         }

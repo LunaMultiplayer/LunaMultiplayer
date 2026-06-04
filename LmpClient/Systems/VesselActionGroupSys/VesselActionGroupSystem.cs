@@ -34,8 +34,10 @@ namespace LmpClient.Systems.VesselActionGroupSys
 
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, ProcessVesselActionGroups));
 
+#if DEBUG
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
 
             ActionGroupEvent.onActionGroupFired.Add(VesselActionGroupEvents.ActionGroupFired);
         }

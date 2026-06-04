@@ -94,6 +94,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             }
         }
         
+#if DEBUG
         // Log out the amount of memory we're using to store messages
         public void LogQueuedMessagesSize()
         {
@@ -107,5 +108,6 @@ namespace LmpClient.Systems.VesselRemoveSys
             }
             LunaLog.Log($"Current memory usage for stored messages in the VesselRemove system: {memUsage}KB");
         }
+#endif
     }
 }

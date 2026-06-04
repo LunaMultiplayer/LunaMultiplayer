@@ -47,8 +47,10 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, FlushRemovedVessels));
             
+#if DEBUG
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()

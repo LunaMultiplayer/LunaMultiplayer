@@ -29,8 +29,10 @@ namespace LmpClient.Systems.VesselResourceSys
             // Attempt to load all the from-future messages we've been storing
             TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
             
+#if DEBUG
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()

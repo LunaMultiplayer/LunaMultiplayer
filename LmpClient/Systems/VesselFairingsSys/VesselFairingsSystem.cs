@@ -33,8 +33,10 @@ namespace LmpClient.Systems.VesselFairingsSys
 
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselFairings));
             
+#if DEBUG
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()

@@ -37,8 +37,10 @@ namespace LmpClient.Systems.VesselUndockSys
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselUndocks));
             
+#if DEBUG
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()

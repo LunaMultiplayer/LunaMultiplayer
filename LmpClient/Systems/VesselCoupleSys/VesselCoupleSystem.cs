@@ -41,8 +41,10 @@ namespace LmpClient.Systems.VesselCoupleSys
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselCouples));
             
+#if DEBUG
             // Debug logging
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
