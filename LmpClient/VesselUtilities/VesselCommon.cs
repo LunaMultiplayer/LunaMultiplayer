@@ -141,7 +141,7 @@ namespace LmpClient.VesselUtilities
             var vessel = FlightGlobals.FindVessel(vesselId);
 
             // Invalid vessel/orbit
-            if (vessel == null || vessel.orbit == null || orbit.Count < 8)
+            if (vessel == null || vessel.orbit == null || orbit.Length < 8)
                 return false;
 
             var delta = Math.Pow(10, -5); // Acceptable margin of error
