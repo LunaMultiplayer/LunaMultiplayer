@@ -109,8 +109,10 @@ namespace LmpClient.Network
                 var amListeningOnIPv6 =
                     NetworkMain.ClientConnection.Socket.AddressFamily == AddressFamily.InterNetworkV6;
 
-                // Ignore the 255.255.255.255 address (and IPv6 equivalent) as a local address
-                bool isValidInternalEndpoint = !(serverInfo.InternalEndpoint.Address.Equals(IPAddress.None) || (amListeningOnIPv6 && serverInfo.InternalEndpoint6.Address.Equals(IPAddress.IPv6None)));
+                // Ignore the loopback addresses when checking if the server is on the local network
+                // The server will itself never use one of these as an internal address, so it must have been a non-local address to begin with.
+                bool isValidInternalEndpoint = !(IPAddress.IsLoopback(serverInfo.InternalEndpoint.Address) ||
+                           (amListeningOnIPv6 && IPAddress.IsLoopback(serverInfo.InternalEndpoint6.Address)));
 
                 if ((ServerIsInLocalLan(serverInfo.ExternalEndpoint) || (amListeningOnIPv6 && ServerIsInLocalLan(serverInfo.InternalEndpoint6))) && isValidInternalEndpoint)
                 {

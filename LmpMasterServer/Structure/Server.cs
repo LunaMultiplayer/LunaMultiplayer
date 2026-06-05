@@ -39,10 +39,10 @@ namespace LmpMasterServer.Structure
         {
             if (msg.InternalEndpoint == null || !IsLocalIpAddress(msg.InternalEndpoint.Address))
             {
-                // 255.255.255.255:port fallback address
+                // 127.0.0.1:port fallback address
                 // Clients can just ignore this address when checking if the server is on it's local network
-                InternalEndpoint = new IPEndPoint(IPAddress.None, msg.InternalEndpoint.Port);
-                InternalEndpoint6 = new IPEndPoint(IPAddress.IPv6None, msg.InternalEndpoint.Port);
+                InternalEndpoint = new IPEndPoint(IPAddress.Loopback, msg.InternalEndpoint.Port);
+                InternalEndpoint6 = new IPEndPoint(IPAddress.IPv6Loopback, msg.InternalEndpoint.Port);
             }
             else
             {
