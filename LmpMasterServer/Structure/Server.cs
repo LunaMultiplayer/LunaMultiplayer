@@ -37,7 +37,7 @@ namespace LmpMasterServer.Structure
 
         public void Update(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
-            if (!IsLocalIpAddress(msg.InternalEndpoint.Address))
+            if (msg.InternalEndpoint == null || !IsLocalIpAddress(msg.InternalEndpoint.Address))
             {
                 // 255.255.255.255:port fallback address
                 // Clients can just ignore this address when checking if the server is on it's local network
