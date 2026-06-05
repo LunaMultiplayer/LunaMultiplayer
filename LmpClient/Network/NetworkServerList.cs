@@ -109,7 +109,10 @@ namespace LmpClient.Network
                 var amListeningOnIPv6 =
                     NetworkMain.ClientConnection.Socket.AddressFamily == AddressFamily.InterNetworkV6;
 
-                if (ServerIsInLocalLan(serverInfo.ExternalEndpoint) || (amListeningOnIPv6 && ServerIsInLocalLan(serverInfo.InternalEndpoint6)))
+                // Ignore the 255.255.255.255 address (and IPv6 equivalent) as a local address
+                bool isValidInternalEndpoint = !(serverInfo.InternalEndpoint.Address.Equals(IPAddress.None) || (amListeningOnIPv6 && serverInfo.InternalEndpoint6.Address.Equals(IPAddress.IPv6None)));
+
+                if ((ServerIsInLocalLan(serverInfo.ExternalEndpoint) || (amListeningOnIPv6 && ServerIsInLocalLan(serverInfo.InternalEndpoint6))) && isValidInternalEndpoint)
                 {
                     LunaLog.Log("Server is in LAN. Skipping NAT punch");
                     var endpoints = new List<IPEndPoint>();
