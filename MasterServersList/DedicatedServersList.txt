@@ -9,3 +9,6 @@ ksp-na.styxnet.xyz:2140
 #Cygnus Servers
 abritin.space:8800
 abritin.space:9100
+
+#Wayde The Kiwi Server
+play.waydethekiwi.com:47786
