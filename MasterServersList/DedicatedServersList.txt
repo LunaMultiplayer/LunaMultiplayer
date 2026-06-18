@@ -10,5 +10,6 @@ ksp-na.styxnet.xyz:2140
 abritin.space:8800
 abritin.space:9100
 
-#Wayde The Kiwi Server
+# WTK Server
+# https://ksp.waydethekiwi.com/ << Setup/Join Guide and Server details
 play.waydethekiwi.com:47786
