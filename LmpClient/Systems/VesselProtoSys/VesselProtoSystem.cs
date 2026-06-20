@@ -26,41 +26,11 @@ namespace LmpClient.Systems.VesselProtoSys
 
         public ConcurrentDictionary<Guid, VesselProtoQueue> VesselProtos { get; } = new ConcurrentDictionary<Guid, VesselProtoQueue>();
 
-        //Per-vessel record of "the value of vessel.parts.Count the last time we
-        //broadcast a Part-count-drift message for this vessel id". Gates
-        //SendVesselDefinition's drift check so we never re-broadcast the same drift
-        //state more than once. Background: SendVesselDefinition fires every 2.5 s and
-        //compares vessel.parts.Count against vessel.protoVessel.protoPartSnapshots.Count.
-        //SendVesselMessage rewrites vessel.protoVessel via vessel.BackupVessel() on
-        //every send, BUT stock KSP's BackupVessel can legitimately produce a snapshot
-        //count that differs from the live parts.Count for several reasons (dynamic
-        //parts, EVA-suit attachment, robotic / breaking-parts states that don't
-        //round-trip 1:1 through serialisation). When that happens the drift check
-        //fires on every 2.5 s tick forever, broadcasting an identical proto and
-        //forcing every receiving client to pay a destructive ProtoVessel.Load on each
-        //arrival -- exactly the ~3 s cadence of full reloads observed in KSP.log when
-        //multiple peer vessels are present. Caching the count we last broadcast lets
-        //us short-circuit when the drift is "stable" (server has the latest data;
-        //nothing new to send) while still firing immediately when parts.Count moves
-        //to a value we have not yet sent (genuine structural change on the
-        //originating side).
+        //Tracks last broadcast drift count per vessel so identical drift states are not re-sent.
         private static readonly ConcurrentDictionary<Guid, int> LastBroadcastDriftPartCount =
             new ConcurrentDictionary<Guid, int>();
 
-        //Maximum number of expensive ProtoVessel.Load calls (fresh load or destructive
-        //reload) we will execute in a single CheckVesselsToLoad tick. The drain loop
-        //previously processed every queue whose head was ready in the same frame, so a
-        //burst of N peer-side broadcasts produced an N x ProtoVessel.Load spike --
-        //visible as 200-1000 ms of unaccounted single-frame work in KSP.log when three
-        //or more vessels needed reloading simultaneously, exactly the "1 second of lag
-        //every few seconds in the VAB" pattern. Capping the per-frame budget spreads
-        //the same total work across multiple frames; queues whose heads we skip stay
-        //peeked (not dequeued) so they are retried next tick in FIFO order with no
-        //starvation. Cheap proto-swap operations in SPACECENTER / EDITOR do NOT count
-        //against this budget -- only stock-KSP ProtoVessel.Load calls do, because they
-        //are the actual cost driver. 2 is conservative: enough headroom to catch up
-        //after a brief network burst without letting any single frame eat two full
-        //destructive reloads back-to-back from a dead start.
+        //Per-tick cap for expensive ProtoVessel.Load work to avoid frame spikes.
         private const int MaxExpensiveReloadsPerTick = 2;
 
         public bool ProtoSystemReady => Enabled && FlightGlobals.ready && HighLogic.LoadedScene == GameScenes.FLIGHT &&
@@ -154,16 +124,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Returns true when <paramref name="vessel"/> has a part-count drift we have not
-        /// already broadcast. Combines two short-circuits:
-        /// 1. <c>parts.Count == protoVessel.protoPartSnapshots.Count</c> means the live
-        ///    Vessel and its stored proto agree -- no drift, nothing to send.
-        /// 2. <c>parts.Count == LastBroadcastDriftPartCount[vesselId]</c> means we already
-        ///    broadcast at this exact part count; the server has the latest data and
-        ///    re-sending would just trigger an identical receiving-side reload storm.
-        /// The cache entry is updated when (and only when) we decide a broadcast is
-        /// warranted, so any subsequent change to <c>parts.Count</c> on the originating
-        /// side immediately re-arms the check.
+        /// Returns true only for new part-count drift states that have not been sent yet.
         /// </summary>
         private static bool ShouldBroadcastDriftFor(Vessel vessel)
         {
@@ -173,10 +134,7 @@ namespace LmpClient.Systems.VesselProtoSys
             var protoCount = vessel.protoVessel.protoPartSnapshots.Count;
             if (liveCount == protoCount) return false;
 
-            //ConcurrentDictionary even though VesselProtoSystem is single-threaded for
-            //the send path: we also clear entries from RemoveVessel which can be
-            //invoked from message-handling threads. The cost difference vs Dictionary
-            //is irrelevant at 2.5 s tick granularity.
+            //Concurrent map is used because entries may be cleared from message threads.
             if (LastBroadcastDriftPartCount.TryGetValue(vessel.id, out var lastSent) && lastSent == liveCount)
                 return false;
 
@@ -185,19 +143,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Returns true for scenes where peer vessels exist in FlightGlobals strictly as
-        /// data carriers (unloaded / packed) and the player cannot see or interact with
-        /// them in-world. In those scenes a wire-side structural update can be applied
-        /// with a cheap proto-swap (<see cref="VesselLoader.UpdateProtoInPlace"/>) instead
-        /// of the full destructive <see cref="VesselLoader.LoadVessel"/> path; the latter
-        /// would still create a brand-new <see cref="Vessel"/> <see cref="UnityEngine.GameObject"/>,
-        /// run every <c>VesselModule.Awake</c>, and pay stock KSP's per-part persistentId
-        /// collision walk for no visible benefit while the player is in the VAB / SPH or
-        /// the Space Center scene.
-        /// In FLIGHT (the in-world vessel may be loaded and rendered) and TRACKSTATION
-        /// (the UI binds against the live <see cref="Vessel"/>'s vesselModules / crew
-        /// portraits) we keep the destructive path so the player-visible state stays in
-        /// lockstep with the wire.
+        /// Scenes where proto-swap is cheaper and safe; FLIGHT/TRACKSTATION keep full reloads.
         /// </summary>
         private static bool IsProtoSwapEligibleScene(GameScenes scene)
             => scene == GameScenes.SPACECENTER || scene == GameScenes.EDITOR;
@@ -209,31 +155,12 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (HighLogic.LoadedScene < GameScenes.SPACECENTER) return;
 
-            //Snapshot the current scene for the diagnostic writer so the next
-            //batch of network-thread ARRIVED / DISCARDED lines can record a
-            //meaningful scene without touching HighLogic off-thread. Cheap (one
-            //int store, no allocation) and only runs when the player is in a
-            //scene that actually processes wire vessel updates.
+            //Snapshot current scene for off-thread diagnostics.
             VesselSyncDiagnostics.NotifyScene(HighLogic.LoadedScene);
 
             try
             {
-                // Drain any KerbalProto messages queued since the last KerbalSystem.LoadKerbals
-                // tick BEFORE running vesselProto.Load(...) on any vessel this tick. Background:
-                // KerbalSystem.LoadKerbals runs on its own ~1 s routine and consumes
-                // KerbalsToProcess only during that tick; CheckVesselsToLoad runs on a faster
-                // routine, so on a busy session (or during the burst that immediately follows
-                // initial sync, when KerbalProto messages can still be in flight as VesselProto
-                // messages start arriving) we can land here with named-but-unmerged kerbals
-                // sitting in KerbalsToProcess. Stock KSP's ProtoPartSnapshot ConfigNode ctor
-                // resolves "crew = NAME" against HighLogic.CurrentGame.CrewRoster *as it stands
-                // right now*, so any kerbal that's queued-but-not-merged still produces a null
-                // entry in protoModuleCrew + the "[Protocrewmember]: Instance of crewmember  in
-                // part X on Y does not exist in the roster" warning, exactly as if the kerbal
-                // had never been sent. Co-sending crew with each VesselProto already eliminates
-                // the originating-side gap; this drain eliminates the receiving-side timing
-                // gap so the two together close the loop. Cheap on the steady state -- the
-                // queue is normally empty, this is one TryDequeue/Count check.
+                // Merge queued kerbals first so vessel loads resolve crew entries correctly.
                 if (KerbalSystem.Singleton != null && !KerbalSystem.Singleton.KerbalsToProcess.IsEmpty)
                 {
                     KerbalSystem.Singleton.LoadKerbalsIntoGame();
@@ -247,16 +174,7 @@ namespace LmpClient.Systems.VesselProtoSys
                     if (!keyVal.Value.TryPeek(out var vesselProto)) continue;
                     if (vesselProto.GameTime > TimeSyncSystem.UniversalTime) continue;
 
-                    //Topology-mutation quarantine. If we just locally rewrote this
-                    //vessel's part tree via Couple / Decouple / Undock, refuse to
-                    //apply incoming server protos for it until the cascade has
-                    //settled (~250 ms after the last local mutation, with each
-                    //new mutation re-arming the clock). Leaving the queue head
-                    //peeked-but-not-dequeued retries it on the next Update tick
-                    //in FIFO order so there is no risk of starvation. LogDeferred
-                    //is one-shot per episode (see LocalTopologyTracker for the
-                    //flag mechanics); the matching follow-up event will appear in
-                    //the diagnostic file when the quarantine clears.
+                    //Delay incoming proto applies briefly after local topology mutations.
                     if (LocalTopologyTracker.IsQuarantined(keyVal.Key, out var firstObservation))
                     {
                         if (firstObservation)
@@ -267,12 +185,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         continue;
                     }
 
-                    //Probe FlightGlobals BEFORE dequeuing so we can decide whether this
-                    //tick will be cheap (proto-swap) or expensive (ProtoVessel.Load) and
-                    //rate-limit only the latter. When we're over budget on the
-                    //expensive path we leave the head peeked-but-not-dequeued so the
-                    //very next CheckVesselsToLoad tick retries it in FIFO order -- there
-                    //is no risk of starvation because TryPeek is non-mutating.
+                    //Decide swap-vs-reload before dequeue so expensive reloads can be rate-limited.
                     var existingVessel = FlightGlobals.FindVessel(vesselProto.VesselId);
                     var willUseProtoSwap = protoSwapEligible && existingVessel != null && !vesselProto.ForceReload;
 
@@ -299,9 +212,7 @@ namespace LmpClient.Systems.VesselProtoSys
                     var verboseErrors = !VesselsUnableToLoad.Contains(vesselId);
                     if (protoVessel == null)
                     {
-                        //CreateProtoVessel already logged its own DISCARDED line with
-                        //the precise malformed-config-node reason, so we don't double-
-                        //log here -- just bookkeep the kill-list and move on.
+                        //CreateProtoVessel already logged a discard reason.
                         VesselsUnableToLoad.Add(vesselId);
                         continue;
                     }
