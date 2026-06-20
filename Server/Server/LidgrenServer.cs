@@ -12,6 +12,7 @@ using Server.Utilities;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Server
@@ -24,28 +25,28 @@ namespace Server.Server
         public static void SetupLidgrenServer()
         {
             // ListenAddress and socket dual-stacking logic
-            // Try to parse the set address, error if it fails
+            // Default to [::], fall back to 0.0.0.0 if IPv6 is not supported by OS
             if (!IPAddress.TryParse(ConnectionSettings.SettingsStore.ListenAddress, out var listenAddress))
             {
-                LunaLog.Error($"Could not parse ListenAddress, falling back on {(Socket.OSSupportsIPv6 ? "[::]" : "0.0.0.0")}.");
-                // Fall back on whatever unspecified address we can
-                listenAddress = Socket.OSSupportsIPv6 ? IPAddress.IPv6Any : IPAddress.Any;
+                LunaLog.Warning("Could not parse ListenAddress, falling back to 0.0.0.0");
+                listenAddress = IPAddress.Any;
             };
-
-            // Warn the user if the set address is not one of the unspecified addresses
             if (!listenAddress.Equals(IPAddress.IPv6Any) && !listenAddress.Equals(IPAddress.Any))
-                LunaLog.Warning("ListenAddress is not the unspecified address ([::] or 0.0.0.0). This is very unlikely to be correct and the server may not work.");
-            
-            // Ensure that the OS supports IPv6 if we're using it
-            if (listenAddress.AddressFamily == AddressFamily.InterNetworkV6 && !Socket.OSSupportsIPv6)
             {
-                LunaLog.Warning("The OS does not support IPv6 or it has been disabled, falling back on 0.0.0.0. " +
-                "Consider enabling it for better reachability and connection success rate.");
+                LunaLog.Warning("ListenAddress is not the unspecified address ([::] or 0.0.0.0). This is very unlikely to be correct, this server will not work.");
+            }
+            if (listenAddress.Equals(IPAddress.IPv6Any) && !Socket.OSSupportsIPv6)
+            {
+                LunaLog.Warning("OS does not support IPv6 or it has been disabled, changing ListenAddress to 0.0.0.0. " +
+                "Consider enabling it for better reachability and connection success rate");
                 listenAddress = IPAddress.Any;
             }
             ServerContext.Config.LocalAddress = listenAddress;
-            // Listen on dual-stack when we're using IPv6
-            ServerContext.Config.DualStack = listenAddress.AddressFamily == AddressFamily.InterNetworkV6;
+            // Listen on dual-stack for the unspecified address in IPv6 format ([::]).
+            if (ServerContext.Config.LocalAddress.Equals(IPAddress.IPv6Any))
+            {
+                ServerContext.Config.DualStack = true;
+            }
 
             ServerContext.Config.Port = ConnectionSettings.SettingsStore.Port;
             ServerContext.Config.AutoExpandMTU = ConnectionSettings.SettingsStore.AutoExpandMtu;
@@ -86,16 +87,31 @@ namespace Server.Server
             ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds((double)DebugSettings.SettingsStore?.MinSimulatedLatencyMs).TotalSeconds;
 #endif
 
-            ServerContext.Config.AutoFlushSendQueue = false;
-
             Server = new NetServer(ServerContext.Config);
             Server.Start();
 
             ServerContext.ServerStarting = false;
         }
 
+        public static void StartReceivingMessages()
+        {
+            _ = StartReceivingMessagesAsync();
+        }
+
         public static async Task StartReceivingMessagesAsync()
         {
+            // A single PeriodicTimer replaces the per-empty-poll `await Task.Delay(...)` that
+            // previously dominated idle allocation in this thread. With no players connected the
+            // loop runs ~200 times/sec and each Task.Delay was allocating a fresh Task plus an
+            // async-state-machine box. PeriodicTimer allocates exactly once.
+            //
+            // Period is captured at start time and clamped to >=1 ms because PeriodicTimer rejects
+            // a non-positive period; this matches the "Keep this value low but at least above 2ms"
+            // guidance on SendReceiveThreadTickMs without crashing on misconfiguration.
+            var tickMs = Math.Max(1, IntervalSettings.SettingsStore.SendReceiveThreadTickMs);
+            using var idleTimer = new PeriodicTimer(TimeSpan.FromMilliseconds(tickMs));
+            var shutdownToken = MainServer.CancellationTokenSrc.Token;
+
             try
             {
                 while (ServerContext.ServerRunning)
@@ -198,9 +214,17 @@ namespace Server.Server
                     }
                     else
                     {
-                        await Task.Delay(IntervalSettings.SettingsStore.SendReceiveThreadTickMs);
+                        // WaitForNextTickAsync returns false when the timer is disposed or the
+                        // token is cancelled. Either signal means "stop looping" so we just exit.
+                        if (!await idleTimer.WaitForNextTickAsync(shutdownToken))
+                            break;
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                // Normal shutdown path — the cancellation token was tripped while we were waiting
+                // for the next tick. Nothing to log; the rest of the shutdown sequence handles it.
             }
             catch (Exception e)
             {
@@ -229,6 +253,9 @@ namespace Server.Server
             client.BytesSent += outmsg.LengthBytes;
 
             var sendResult = Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
+
+            //Force send of packets
+            FlushSendQueue();
         }
 
         public static void FlushSendQueue()

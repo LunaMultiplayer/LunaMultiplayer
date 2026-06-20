@@ -32,11 +32,13 @@ namespace Server.System.Vessel
             if (!(message is VesselPositionMsgData msgData)) return;
             if (VesselContext.RemovedVessels.ContainsKey(msgData.VesselId)) return;
 
+            ApplyOrbitalBodyNameFromPositionMessage(msgData);
+
             if (!LastPositionUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FilePositionUpdateIntervalMs)
             {
                 LastPositionUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
 
-                _ = Task.Run(() =>
+                Task.Run(() =>
                 {
                     lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                     {
@@ -65,12 +67,27 @@ namespace Server.System.Vessel
                         vessel.Orbit.Update("MNA", msgData.Orbit[5].ToString(CultureInfo.InvariantCulture));
                         vessel.Orbit.Update("EPH", msgData.Orbit[6].ToString(CultureInfo.InvariantCulture));
                         vessel.Orbit.Update("REF", msgData.Orbit[7].ToString(CultureInfo.InvariantCulture));
-
-                        ApplyOrbitIdent(vessel, msgData.BodyName);
-
-                        VesselStoreSystem.PersistVesselToFile(msgData.VesselId);
+                        vessel.Orbit.Update("body", msgData.BodyName);
                     }
                 });
+            }
+        }
+
+        /// <summary>
+        /// ORBIT/body is required for TUI location; apply it on every position message, not only on the throttled full patch.
+        /// </summary>
+        private static void ApplyOrbitalBodyNameFromPositionMessage(VesselPositionMsgData msgData)
+        {
+            if (string.IsNullOrEmpty(msgData.BodyName))
+                return;
+
+            var lockObj = Semaphore.GetOrAdd(msgData.VesselId, new object());
+            lock (lockObj)
+            {
+                if (!VesselStoreSystem.CurrentVessels.TryGetValue(msgData.VesselId, out var vessel))
+                    return;
+
+                vessel.Orbit.Update("body", msgData.BodyName);
             }
         }
     }
