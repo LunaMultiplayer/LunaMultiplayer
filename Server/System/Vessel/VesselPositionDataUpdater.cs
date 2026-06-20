@@ -1,7 +1,9 @@
 ﻿using LmpCommon.Message.Data.Vessel;
+using Server.Log;
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.System.Vessel
@@ -38,7 +40,7 @@ namespace Server.System.Vessel
             {
                 LastPositionUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
 
-                Task.Run(() =>
+                ObserveBackgroundTask(Task.Run(() =>
                 {
                     lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                     {
@@ -69,8 +71,19 @@ namespace Server.System.Vessel
                         vessel.Orbit.Update("REF", msgData.Orbit[7].ToString(CultureInfo.InvariantCulture));
                         vessel.Orbit.Update("body", msgData.BodyName);
                     }
-                });
+                }));
             }
+        }
+
+        private static void ObserveBackgroundTask(Task task)
+        {
+            if (task == null) return;
+
+            var ignored = task.ContinueWith(
+                t => LunaLog.Error($"Vessel position update task failed: {t.Exception}"),
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted,
+                TaskScheduler.Default);
         }
 
         /// <summary>

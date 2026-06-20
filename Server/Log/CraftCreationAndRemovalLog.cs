@@ -6,40 +6,21 @@ using System.Text.RegularExpressions;
 namespace Server.Log
 {
     /// <summary>
-    /// Dedicated audit log that records every time a craft is created (first time the server sees a
-    /// vessel's proto) or removed, so server operators can troubleshoot missing/re-appearing ships.
-    ///
-    /// The file lives at <c>logs/CraftCreationAndRemoval.txt</c> and is truncated at server start
-    /// (via the static constructor) so each server run produces a fresh audit trail.
-    ///
-    /// Writes go through a single <see cref="StreamWriter"/> that is kept open for the server's
-    /// lifetime and disposed on <see cref="ExitEvent.ServerClosing"/>. Keeping the stream open
-    /// avoids an <c>open/write/close</c> round-trip on every vessel create/remove event — the
-    /// previous implementation used <c>File.AppendAllText</c> per event, which created steady
-    /// FileStream/StreamWriter allocations under load.
-    ///
-    /// This class deliberately depends only on <see cref="LunaLog.LogFolder"/> (for the path),
-    /// <see cref="Server.System.FileHandler"/> (for the initial directory bootstrap), and
-    /// <see cref="ExitEvent"/> (for clean shutdown) to keep its single responsibility: write
-    /// audit entries. It does NOT extend <see cref="LmpCommon.BaseLogger"/> because we do not
-    /// want these entries echoed to the console or the general <c>lmpserver_*.log</c> file.
+    /// Writes craft create/remove audit entries to <c>logs/CraftCreationAndRemoval.txt</c>.
+    /// The file is reset on startup, kept open for the process lifetime, and closed on
+    /// <see cref="ExitEvent.ServerClosing"/>.
     /// </summary>
     public static class CraftCreationAndRemovalLog
     {
         private static readonly string LogFilePath = Path.Combine(LunaLog.LogFolder, "CraftCreationAndRemoval.txt");
 
         /// <summary>
-        /// Serializes all access to <see cref="_writer"/> and the close hook. <see cref="StreamWriter"/>
-        /// is not thread-safe and log events can arrive from any of the server's message-handler
-        /// tasks at once, so a single write lock is the simplest correct synchronization.
+        /// Serializes access to <see cref="_writer"/>.
         /// </summary>
         private static readonly object WriteLock = new object();
 
         /// <summary>
-        /// Persistent writer opened in the static constructor and disposed on server shutdown.
-        /// <c>null</c> if the file could not be opened, in which case every subsequent
-        /// <see cref="LogCreated"/>/<see cref="LogRemoved"/> call becomes a no-op (matching the
-        /// advisory semantics of the previous implementation).
+        /// Persistent writer. If opening fails, this remains null and logging is skipped.
         /// </summary>
         private static StreamWriter _writer;
 
@@ -50,9 +31,7 @@ namespace Server.Log
                 if (!System.FileHandler.FolderExists(LunaLog.LogFolder))
                     System.FileHandler.FolderCreate(LunaLog.LogFolder);
 
-                // FileMode.Create truncates any pre-existing file so each server run gets a fresh
-                // audit trail. FileShare.Read lets operators tail the file live while the server
-                // is running.
+                // Reset per run; allow read access for live tailing.
                 var stream = new FileStream(LogFilePath, FileMode.Create, FileAccess.Write, FileShare.Read);
                 _writer = new StreamWriter(stream) { NewLine = Environment.NewLine };
 
@@ -65,20 +44,18 @@ namespace Server.Log
             }
             catch (Exception e)
             {
-                // If we can't prepare the file (permissions, disk full, etc.) surface it in the
-                // main log but don't crash the server - the audit log is advisory.
+                // Audit logging is best-effort and must not crash startup.
                 LunaLog.Error($"Failed to initialize CraftCreationAndRemoval.txt: {e.Message}");
                 _writer = null;
             }
         }
 
         /// <summary>
-        /// Ensures the static constructor has run. Call this once at server startup so the audit
-        /// file is truncated even if no craft events happen before the first log write.
+        /// Forces static initialization so the audit file is reset at startup.
         /// </summary>
         public static void Initialize()
         {
-            // Touching a static member forces the static constructor to execute.
+            // Touching a static member triggers static initialization.
             _ = LogFilePath;
         }
 
@@ -99,10 +76,8 @@ namespace Server.Log
         }
 
         /// <summary>
-        /// Pulls the <c>name = ...</c> field out of a raw KSP vessel config-node string without
-        /// having to parse the whole node. Returns <c>null</c> if no name can be found.
-        /// We scope to the top of the text and match "name" as a standalone field so we don't
-        /// accidentally grab "moduleName" or part-level names.
+        /// Extracts the vessel-level <c>name = ...</c> field from raw config text.
+        /// Returns null when no vessel name is present.
         /// </summary>
         private static readonly Regex VesselNameRegex = new Regex(
             @"(?:^|\n)\s*name\s*=\s*(?<value>.*?)\s*(?:\r|\n|$)",
@@ -112,8 +87,7 @@ namespace Server.Log
         {
             if (string.IsNullOrEmpty(vesselConfigNodeText)) return null;
 
-            // Only scan the top of the file where the vessel-level fields live; past that we'd
-            // start hitting part-level "name = <part identifier>" lines and pick up garbage.
+            // Scan only the header to avoid part-level "name = ..." matches.
             var scanLength = Math.Min(vesselConfigNodeText.Length, 2048);
             var header = vesselConfigNodeText.Substring(0, scanLength);
 
@@ -136,8 +110,7 @@ namespace Server.Log
                 try
                 {
                     _writer.WriteLine(line);
-                    // Flush per entry so the on-disk file is usable for live troubleshooting
-                    // (e.g. tailing it while chasing a "where did my ship go?" report).
+                    // Flush per entry for live troubleshooting.
                     _writer.Flush();
                 }
                 catch (Exception e)
@@ -148,9 +121,7 @@ namespace Server.Log
         }
 
         /// <summary>
-        /// Flush and release the underlying stream. Invoked from <see cref="ExitEvent.ServerClosing"/>
-        /// so a clean shutdown (Ctrl+C on Linux, console-close handler on Windows) doesn't leave
-        /// buffered entries unwritten.
+        /// Flushes and closes the audit writer on shutdown.
         /// </summary>
         private static void CloseLog()
         {
