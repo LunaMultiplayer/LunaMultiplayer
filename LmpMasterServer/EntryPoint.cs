@@ -66,12 +66,30 @@ namespace LmpMasterServer
                 Lidgren.MasterServer.RunServer = true;
                 Http.Handlers.WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
-#pragma warning disable VSTHRD110 // Observe result of async calls
-                Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync);
+
+                // Fire background tasks with proper exception handling
+                Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync)
+                    .ContinueWith(t => 
+                    {
+                        if (t.IsFaulted)
+                            LunaLog.Error($"Failed to refresh dedicated servers: {t.Exception?.InnerException?.Message}");
+                    }, TaskScheduler.Default);
+
                 BannedIpsRetriever.Prewarm();
-                Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync);
-                Task.Run(Lidgren.MasterServer.StartAsync);
-#pragma warning restore VSTHRD110 // Observe result of async calls
+
+                Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync)
+                    .ContinueWith(t =>
+                    {
+                        if (t.IsFaulted)
+                            LunaLog.Error($"Failed to refresh UPnP port: {t.Exception?.InnerException?.Message}");
+                    }, TaskScheduler.Default);
+
+                Task.Run(Lidgren.MasterServer.StartAsync)
+                    .ContinueWith(t =>
+                    {
+                        if (t.IsFaulted)
+                            LunaLog.Error($"Lidgren server startup failed: {t.Exception?.InnerException?.Message}");
+                    }, TaskScheduler.Default);
             }
         }
 
