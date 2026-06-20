@@ -97,15 +97,7 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (VesselCommon.IsSpectating) return;
 
-            //Quarantine BOTH the vessel that the undocked part now belongs to AND
-            //the original vessel it came from — incoming server protos for either
-            //id while the part tree is still rebuilding can race with the local
-            //state and apply a stale snapshot on top of the freshly-undocked tree.
-            //Recorded BEFORE the lock check so a non-owned undock (e.g. another
-            //player's vessel that we observed undocking) still quarantines our
-            //local view of those ids; we only refuse to BROADCAST the change for
-            //non-owned vessels, but we always want to defer incoming protos when
-            //our local engine is mid-rewrite.
+            //Quarantine both vessel ids to avoid applying stale proto updates during local rewrites.
             LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
             LocalTopologyTracker.RecordMutation(originalVessel?.id ?? Guid.Empty);
 
@@ -121,14 +113,7 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (VesselCommon.IsSpectating || originalVessel == null) return;
 
-            //See PartUndocked for the rationale: quarantine BOTH the new vessel
-            //the decoupled part now belongs to AND the original vessel it came
-            //from, regardless of ownership. A Breaking Ground robotic joint pop
-            //or a docking-port stack split can cascade through 10+ Decouple
-            //events in a single physics frame; each call here re-arms the
-            //quarantine clock so the receiving-side drain in
-            //VesselProtoSystem.CheckVesselsToLoad refuses to apply any stale
-            //server snapshot for those ids until the cascade actually settles.
+            //Quarantine both vessel ids; local topology changes can arrive in bursts.
             LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
             LocalTopologyTracker.RecordMutation(originalVessel.id);
 
@@ -144,18 +129,7 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (VesselCommon.IsSpectating) return;
 
-            //Quarantine BOTH the surviving (dominant) vessel id AND the removed
-            //(weak) vessel id. The removed id is especially important: between
-            //the local Couple and the server-side audit removal, there's a
-            //window where the server can still re-send the removed vessel as a
-            //proto update (the kill-list filter in VesselProtoMessageHandler
-            //has not yet seen the OUTGOING VesselRemove for it). Without the
-            //quarantine that stale proto would resurrect a vessel the local
-            //engine has already consumed into the dominant tree, exactly the
-            //failure mode that produced the Mun Refill Station incident on
-            //2026-05-11 (see LocalTopologyTracker XML doc for the full
-            //post-mortem). Recorded before the lock check for the same reason
-            //as the undock/decouple paths.
+            //Quarantine both surviving and removed ids to block stale resurrection updates.
             LocalTopologyTracker.RecordMutation(partFrom?.vessel?.id ?? Guid.Empty);
             LocalTopologyTracker.RecordMutation(removedVesselId);
 
@@ -167,8 +141,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Fired when a maneuver node is added to a vessel's flight plan.
-        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// Re-sends vessel proto when a maneuver node is added.
         /// </summary>
         public void ManeuverNodeAdded(Vessel vessel, PatchedConicSolver solver)
         {
@@ -180,8 +153,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Fired when a maneuver node is removed from a vessel's flight plan.
-        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// Re-sends vessel proto when a maneuver node is removed.
         /// </summary>
         public void ManeuverNodeRemoved(Vessel vessel, PatchedConicSolver solver)
         {
@@ -193,9 +165,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Appends a log entry to LMP_ManeuverNodes.log at the KSP root.
-        /// Format: one line per current node — vessel, burn UT, time-until, total ΔV, and prograde/normal/radial components.
-        /// ManeuverNode.DeltaV is in the local orbital Frenet frame: z=prograde, x=radial-out, y=normal.
+        /// Appends maneuver-node diagnostics to LMP_ManeuverNodes.log.
         /// </summary>
         private static void WriteManeuverLog(string action, Vessel vessel, PatchedConicSolver solver)
         {
