@@ -1,7 +1,9 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
+using Server.Log;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -9,10 +11,7 @@ namespace Server.System.Scenario
     public partial class ScenarioDataUpdater
     {
         /// <summary>
-        /// Parent node that KSP uses to persist BOTH active and finished contracts.
-        /// KSP does not use a separate CONTRACTS_FINISHED parent; instead it stores
-        /// finished entries as CONTRACT_FINISHED siblings of CONTRACT entries inside
-        /// this single CONTRACTS parent.
+        /// KSP stores active and finished contracts together under a single CONTRACTS parent.
         /// </summary>
         private const string ContractsParentNodeName = "CONTRACTS";
 
@@ -29,19 +28,13 @@ namespace Server.System.Scenario
         private const string FinishedContractNodeName = "CONTRACT_FINISHED";
 
         /// <summary>
-        /// We received a contract message so update the scenario file accordingly.
-        ///
-        /// Each incoming contract is renamed (CONTRACT vs CONTRACT_FINISHED) based on
-        /// its serialized state value, then upserted into a guid-indexed view of the
-        /// existing contracts. The CONTRACTS parent is rebuilt from that view via
-        /// clear-then-add. This is necessary because LunaConfigNode 1.8.1's
-        /// <c>RemoveNode(ConfigNode)</c> overload only updates the lookup dictionaries
-        /// and not the underlying serialized list, so any other approach leaves stale
-        /// duplicates on disk that KSP loads back as still-active missions.
+        /// Applies incoming contract updates by state-normalizing each node and upserting by guid.
+        /// The CONTRACTS parent is then rebuilt (clear + add) to avoid LunaConfigNode 1.8.1
+        /// RemoveNode list-sync issues that can leave stale duplicate entries on disk.
         /// </summary>
         public static void WriteContractDataToFile(ShareProgressContractsMsgData contractsMsg)
         {
-            Task.Run(() =>
+            ObserveBackgroundTask(Task.Run(() =>
             {
                 lock (Semaphore.GetOrAdd("ContractSystem", new object()))
                 {
@@ -80,7 +73,18 @@ namespace Server.System.Scenario
 
                     RebuildContractsParent(contractsParent, nonContractChildren, survivors);
                 }
-            });
+            }));
+        }
+
+        private static void ObserveBackgroundTask(Task task)
+        {
+            if (task == null) return;
+
+            var ignored = task.ContinueWith(
+                t => LunaLog.Error($"Background contract update task failed: {t.Exception}"),
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted,
+                TaskScheduler.Default);
         }
 
         /// <summary>
