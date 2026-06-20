@@ -68,7 +68,8 @@ namespace LmpMasterServer
                 LunaHttpServer.Start();
 
                 // Fire background tasks with proper exception handling
-                Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync)
+                // Use discard _ to explicitly indicate fire-and-forget pattern
+                _ = Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync)
                     .ContinueWith(t => 
                     {
                         if (t.IsFaulted)
@@ -77,14 +78,14 @@ namespace LmpMasterServer
 
                 BannedIpsRetriever.Prewarm();
 
-                Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync)
+                _ = Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync)
                     .ContinueWith(t =>
                     {
                         if (t.IsFaulted)
                             LunaLog.Error($"Failed to refresh UPnP port: {t.Exception?.InnerException?.Message}");
                     }, TaskScheduler.Default);
 
-                Task.Run(Lidgren.MasterServer.StartAsync)
+                _ = Task.Run(Lidgren.MasterServer.StartAsync)
                     .ContinueWith(t =>
                     {
                         if (t.IsFaulted)
