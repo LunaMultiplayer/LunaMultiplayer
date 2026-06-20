@@ -35,10 +35,12 @@ namespace LmpMasterServer
             {
                 ConsoleUtil.DisableConsoleQuickEdit();
 
+#pragma warning disable CA1416 // Platform compatibility check via Common.PlatformIsWindows()
                 Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
 
                 if (IsNightly)
                     Console.Title += " NIGHTLY";
+#pragma warning restore CA1416
             }
 
             Console.OutputEncoding = Encoding.UTF8;
@@ -64,10 +66,12 @@ namespace LmpMasterServer
                 Lidgren.MasterServer.RunServer = true;
                 Http.Handlers.WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
+#pragma warning disable VSTHRD110 // Observe result of async calls
                 Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync);
                 BannedIpsRetriever.Prewarm();
                 Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync);
                 Task.Run(Lidgren.MasterServer.StartAsync);
+#pragma warning restore VSTHRD110 // Observe result of async calls
             }
         }
 
