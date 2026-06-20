@@ -75,6 +75,7 @@ namespace LmpClient.Systems.VesselPositionSys
             //SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendUnloadedSecondaryVesselPositionUpdates));
 
             WarpEvent.onTimeWarpStopped.Add(PositionEvents.WarpStopped);
+            GameEvents.onVesselSwitching.Add(PositionEvents.OnVesselSwitching);
         }
 
         protected override void OnDisabled()
@@ -84,6 +85,7 @@ namespace LmpClient.Systems.VesselPositionSys
             TimingManager.FixedUpdateRemove(HandlePositionsStage, HandleVesselUpdates);
             TimingManager.LateUpdateRemove(SendPositionsStage, SendVesselPositionUpdates);
 
+            GameEvents.onVesselSwitching.Remove(PositionEvents.OnVesselSwitching);
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
         }

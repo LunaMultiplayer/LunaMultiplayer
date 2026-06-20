@@ -96,6 +96,19 @@ namespace LmpClient.Systems.VesselProtoSys
         public void PartUndocked(Part part, DockedVesselInfo dockedInfo, Vessel originalVessel)
         {
             if (VesselCommon.IsSpectating) return;
+
+            //Quarantine BOTH the vessel that the undocked part now belongs to AND
+            //the original vessel it came from — incoming server protos for either
+            //id while the part tree is still rebuilding can race with the local
+            //state and apply a stale snapshot on top of the freshly-undocked tree.
+            //Recorded BEFORE the lock check so a non-owned undock (e.g. another
+            //player's vessel that we observed undocking) still quarantines our
+            //local view of those ids; we only refuse to BROADCAST the change for
+            //non-owned vessels, but we always want to defer incoming protos when
+            //our local engine is mid-rewrite.
+            LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(originalVessel?.id ?? Guid.Empty);
+
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             System.MessageSender.SendVesselMessage(part.vessel);
@@ -107,6 +120,18 @@ namespace LmpClient.Systems.VesselProtoSys
         public void PartDecoupled(Part part, float breakForce, Vessel originalVessel)
         {
             if (VesselCommon.IsSpectating || originalVessel == null) return;
+
+            //See PartUndocked for the rationale: quarantine BOTH the new vessel
+            //the decoupled part now belongs to AND the original vessel it came
+            //from, regardless of ownership. A Breaking Ground robotic joint pop
+            //or a docking-port stack split can cascade through 10+ Decouple
+            //events in a single physics frame; each call here re-arms the
+            //quarantine clock so the receiving-side drain in
+            //VesselProtoSystem.CheckVesselsToLoad refuses to apply any stale
+            //server snapshot for those ids until the cascade actually settles.
+            LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(originalVessel.id);
+
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             System.MessageSender.SendVesselMessage(part.vessel);
@@ -118,6 +143,21 @@ namespace LmpClient.Systems.VesselProtoSys
         public void PartCoupled(Part partFrom, Part partTo, Guid removedVesselId)
         {
             if (VesselCommon.IsSpectating) return;
+
+            //Quarantine BOTH the surviving (dominant) vessel id AND the removed
+            //(weak) vessel id. The removed id is especially important: between
+            //the local Couple and the server-side audit removal, there's a
+            //window where the server can still re-send the removed vessel as a
+            //proto update (the kill-list filter in VesselProtoMessageHandler
+            //has not yet seen the OUTGOING VesselRemove for it). Without the
+            //quarantine that stale proto would resurrect a vessel the local
+            //engine has already consumed into the dominant tree, exactly the
+            //failure mode that produced the Mun Refill Station incident on
+            //2026-05-11 (see LocalTopologyTracker XML doc for the full
+            //post-mortem). Recorded before the lock check for the same reason
+            //as the undock/decouple paths.
+            LocalTopologyTracker.RecordMutation(partFrom?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(removedVesselId);
 
             //If neither the vessel 1 or vessel2 locks belong to us, ignore the coupling
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName) &&

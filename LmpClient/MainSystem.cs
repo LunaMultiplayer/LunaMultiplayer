@@ -2,6 +2,7 @@
 using HarmonyLib;
 using KSP.UI.Screens;
 using LmpClient.Base;
+using LmpClient.Diagnostics;
 using LmpClient.Events.Base;
 using LmpClient.Localization;
 using LmpClient.ModuleStore;
@@ -77,12 +78,76 @@ namespace LmpClient
 
         #endregion
 
+        #region Heartbeat
+
+        /// <summary>
+        /// Wall-clock time (<see cref="Time.realtimeSinceStartup"/>) of the
+        /// most recent heartbeat emission. Throttles the log to roughly one
+        /// line per second so an idle session doesn't fill KSP.log with
+        /// noise, while a stall is still trivially visible as a gap in the
+        /// timestamp sequence.
+        /// </summary>
+        private static float _lastHeartbeatRealtime;
+
+        /// <summary>
+        /// Per-second diagnostic emission to KSP.log to make Unity-main-thread
+        /// stalls (VAB freezes, tracking-station entry storms, ProtoVessel
+        /// load avalanches) directly visible from the log alone:
+        /// <list type="bullet">
+        ///   <item>A gap between consecutive <c>[LMP][HEARTBEAT]</c> lines
+        ///         larger than ~1s shows the main thread was busy or stalled
+        ///         for exactly that long.</item>
+        ///   <item>The frame-count delta between two lines, divided by the
+        ///         timestamp delta, gives a no-tool fps estimate.</item>
+        ///   <item><c>dt</c> is the previous frame's
+        ///         <see cref="Time.unscaledDeltaTime"/>; a value much above
+        ///         ~0.5s in steady-state means one very expensive frame just
+        ///         landed (scene-load tail, vessel storm, etc.).</item>
+        /// </list>
+        /// Also drives the per-second flush of <see cref="TsLoadProfiler"/>
+        /// so its <c>[LMP][TS-PROFILE]</c> line is emitted only on seconds
+        /// where an instrumented bucket actually fired — keeping the log
+        /// quiet on idle seconds and dense on contention seconds.
+        /// </summary>
+        private static void EmitHeartbeatIfDue()
+        {
+            var now = Time.realtimeSinceStartup;
+            if (now - _lastHeartbeatRealtime < 1.0f) return;
+            _lastHeartbeatRealtime = now;
+
+            //Defensive: very early in startup (or during the brief window
+            //between scene unload and load) FlightGlobals can be null or
+            //throw on Count. The heartbeat must never itself be the source
+            //of a log exception — that would mask the stall it exists to
+            //expose.
+            int vesselCount;
+            try { vesselCount = FlightGlobals.Vessels?.Count ?? 0; }
+            catch { vesselCount = -1; }
+
+            LunaLog.Log(
+                $"[LMP][HEARTBEAT] tick t={Time.timeSinceLevelLoad:F1}s " +
+                $"scene={HighLogic.LoadedScene} vessels={vesselCount} " +
+                $"frame={Time.frameCount} dt={Time.unscaledDeltaTime:F2}s");
+
+            var tsProfile = TsLoadProfiler.FlushSnapshotOrNull();
+            if (tsProfile != null) LunaLog.Log(tsProfile);
+        }
+
+        #endregion
+
         #region Update methods
 
         public void Update()
         {
             LunaLog.ProcessLogMessages();
             LunaScreenMsg.ProcessScreenMessages();
+
+            //Heartbeat runs BEFORE the Enabled gate so it still emits when LMP
+            //has self-disabled (e.g. compatibility-check failure, disclaimer
+            //pending). A stall that happens with LMP disabled is just as
+            //interesting as one with it enabled — both surface as a gap in the
+            //HEARTBEAT timestamp sequence in KSP.log.
+            EmitHeartbeatIfDue();
 
             if (!Enabled) return;
 
@@ -292,6 +357,17 @@ namespace LmpClient
             NetworkConnection.Disconnect("Quit game");
             NetworkState = ClientState.Disconnected;
             LunaLog.ProcessLogMessages();
+            //Drain the vessel-sync diagnostic's in-memory buffer before the process
+            //ends. With AutoFlush=false the periodic FlushIfDirty in NotifyScene
+            //would already have written most events, but the final batch between
+            //the last CheckVesselsToLoad tick and quit lives only in the StreamWriter
+            //buffer until something forces a flush. The FileStream finalizer would
+            //do it on graceful AppDomain unload, but Unity's shutdown order doesn't
+            //guarantee finalizers run before the process actually exits — and the
+            //events most worth keeping are the ones that fired in the seconds before
+            //the user decided to quit (often the same seconds they want to send us a
+            //bug report about).
+            VesselSyncDiagnostics.Flush();
         }
 
         public Game.Modes ConvertGameMode(GameMode inputMode)
@@ -319,8 +395,8 @@ namespace LmpClient
         public void DisconnectFromGame()
         {
             ForceQuit = true;
-            ScenarioSystem.Singleton.SendScenarioModules();
             NetworkConnection.Disconnect("Quit");
+            ScenarioSystem.Singleton.SendScenarioModules();
         }
 
         #endregion

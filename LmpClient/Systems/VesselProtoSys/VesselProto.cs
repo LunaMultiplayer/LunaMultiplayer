@@ -1,4 +1,5 @@
-﻿using LmpClient.Extensions;
+﻿using LmpClient.Diagnostics;
+using LmpClient.Extensions;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
@@ -25,6 +26,10 @@ namespace LmpClient.Systems.VesselProtoSys
             if (configNode == null || configNode.VesselHasNaNPosition())
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
+                VesselSyncDiagnostics.LogDiscarded(VesselId, vesselName: null, parts: -1,
+                    reason: configNode == null
+                        ? "DeserializeToConfigNode returned null (wire payload was unparseable)"
+                        : "ConfigNode contained NaN position values (configNode.VesselHasNaNPosition)");
                 VesselRemoveSystem.Singleton.KillVessel(VesselId, true, "Malformed vessel");
                 return null;
             }
@@ -33,6 +38,8 @@ namespace LmpClient.Systems.VesselProtoSys
             if (newProto == null)
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
+                VesselSyncDiagnostics.LogDiscarded(VesselId, vesselName: null, parts: -1,
+                    reason: "VesselSerializer.CreateSafeProtoVesselFromConfigNode returned null (ProtoVessel ctor refused the node)");
                 VesselRemoveSystem.Singleton.KillVessel(VesselId, true, "Malformed vessel");
                 return null;
             }

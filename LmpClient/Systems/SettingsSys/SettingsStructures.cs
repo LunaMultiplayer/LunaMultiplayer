@@ -32,6 +32,19 @@ namespace LmpClient.Systems.SettingsSys
 
         public string CustomMasterServer { get; set; } = "";
 
+        /// <summary>
+        /// Master switch for the append-only vessel-sync trace at
+        /// <c>{KspPath}/Logs/LMP/VesselSyncLog.txt</c> (see
+        /// <see cref="LmpClient.Diagnostics.VesselSyncDiagnostics"/>). Default on
+        /// because the I/O cost is negligible (one line per wire-side vessel
+        /// event, ~seconds-scale not per-frame) and the trace is the easiest
+        /// way to answer "which vessels did the server send me, which got
+        /// dropped and why, and which am I actually carrying right now" after
+        /// a bug report. Flip to false here if you ever want it gone without
+        /// having to delete the file at session start.
+        /// </summary>
+        public bool VesselSyncDiagnosticsEnabled { get; set; } = true;
+
         /*
          * You can use this debug switches for testing purposes.
          * For example do one part or the code or another in case the debugX is on/off

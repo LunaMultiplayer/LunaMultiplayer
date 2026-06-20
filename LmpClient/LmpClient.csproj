@@ -187,6 +187,8 @@
     <Compile Include="Harmony\Part_CheckPartPressure.cs" />
     <Compile Include="Harmony\Part_CheckPartTemp.cs" />
     <Compile Include="Harmony\Part_Couple.cs" />
+    <Compile Include="Harmony\Part_RegisterCrew.cs" />
+    <Compile Include="Harmony\KnowledgeBase_GetVesselCrewByAvailablePart.cs" />
     <Compile Include="Harmony\Part_Decouple.cs" />
     <Compile Include="Harmony\Part_Die.cs" />
     <Compile Include="Harmony\Part_Undock.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="Harmony\Strategy_CanBeDeactivated.cs" />
     <Compile Include="Harmony\Strategy_Deactivate.cs" />
     <Compile Include="Harmony\Strategy_Activate.cs" />
+    <Compile Include="Harmony\DefaultDateTimeFormatter_ClampDateInputs.cs" />
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Harmony\TrackingStationWidget_Update.cs" />
@@ -414,6 +417,7 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
+    <Compile Include="Systems\VesselProtoSys\LocalTopologyTracker.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProto.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoQueue.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageHandler.cs" />
@@ -448,6 +452,7 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
+    <Compile Include="VesselUtilities\DiscoveryInfoSanitizer.cs" />
     <Compile Include="VesselUtilities\OwnVesselReloader.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
@@ -520,6 +525,8 @@
     <Compile Include="Systems\Warp\WarpMessageHandler.cs" />
     <Compile Include="Systems\Warp\WarpMessageSender.cs" />
     <Compile Include="Systems\Warp\WarpStructures.cs" />
+    <Compile Include="Diagnostics\TsLoadProfiler.cs" />
+    <Compile Include="Diagnostics\VesselSyncDiagnostics.cs" />
     <Compile Include="Utilities\CommonUtil.cs" />
     <Compile Include="Extensions\ConfigNodeSerializer.cs" />
     <Compile Include="Systems\AsteroidComet\AsteroidCometSystem.cs" />

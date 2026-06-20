@@ -23,6 +23,17 @@ namespace LmpClient.Systems.ShareFunds
 
         public Tuple<Guid, float> CurrentShipCost { get; set; }
 
+        /// <summary>
+        /// Last <see cref="Funding.Funds"/> value we observed via <see cref="GameEvents.OnFundsChanged"/>.
+        /// Used to compute the delta of a subsequent funds-change event so that when KSP fires a
+        /// <see cref="TransactionReasons.VesselRollout"/> (the launch charge), we can record the exact
+        /// amount debited and refund it on revert-to-editor. We cannot derive the launch cost from
+        /// <c>ShipConstruction.AssembleForLaunch</c> because KSP debits the funds *before* that method
+        /// runs (the save-for-revert snapshot is taken in between), so any pre/post measurement around
+        /// <c>AssembleForLaunch</c> sees zero delta.
+        /// </summary>
+        public double? LastKnownFunds { get; set; }
+
         protected override void OnEnabled()
         {
             base.OnEnabled();
@@ -34,7 +45,6 @@ namespace LmpClient.Systems.ShareFunds
             RevertEvent.onReturningToEditor.Add(ShareFundsEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Add(ShareFundsEvents.LevelLoaded);
             GameEvents.onVesselSwitching.Add(ShareFundsEvents.VesselSwitching);
-            VesselAssemblyEvent.onAssembledVessel.Add(ShareFundsEvents.VesselAssembled);
         }
 
         protected override void OnDisabled()
@@ -48,10 +58,11 @@ namespace LmpClient.Systems.ShareFunds
             RevertEvent.onReturningToEditor.Remove(ShareFundsEvents.RevertingToEditorDetected);
             GameEvents.onLevelWasLoadedGUIReady.Remove(ShareFundsEvents.LevelLoaded);
             GameEvents.onVesselSwitching.Remove(ShareFundsEvents.VesselSwitching);
-            VesselAssemblyEvent.onAssembledVessel.Remove(ShareFundsEvents.VesselAssembled);
 
             _lastFunds = 0;
             Reverting = false;
+            CurrentShipCost = null;
+            LastKnownFunds = null;
         }
 
         public override void SaveState()
