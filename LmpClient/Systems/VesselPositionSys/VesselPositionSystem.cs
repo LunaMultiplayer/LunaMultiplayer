@@ -78,8 +78,8 @@ namespace LmpClient.Systems.VesselPositionSys
             //SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendUnloadedSecondaryVesselPositionUpdates));
             
 #if DEBUG
-            // Debug logging
-            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
 #endif
 
             WarpEvent.onTimeWarpStopped.Add(PositionEvents.WarpStopped);
