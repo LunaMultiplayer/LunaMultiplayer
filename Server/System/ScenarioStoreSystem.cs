@@ -20,12 +20,18 @@ namespace Server.System
         private static readonly object BackupLock = new object();
 
         /// <summary>
-        /// Returns a scenario in the standard KSP format
+        /// Returns a scenario as text for sending to clients.
+        /// Must NOT have outer { } braces — KSP's RecurseFormat treats bare lines as
+        /// root-level key-value pairs, which is what ProtoScenarioModule expects.
+        /// Wrapping in braces would nest everything in an unnamed child node,
+        /// causing node.GetValue("name") to return null on the client.
         /// </summary>
         public static string GetScenarioInConfigNodeFormat(string scenarioName)
         {
-            return CurrentScenarios.TryGetValue(scenarioName, out var scenario) ?
-                scenario.ToString() : null;
+            if (!CurrentScenarios.TryGetValue(scenarioName, out var scenario))
+                return null;
+
+            return scenario.ToString();
         }
 
         /// <summary>
@@ -38,7 +44,11 @@ namespace Server.System
             {
                 foreach (var file in Directory.GetFiles(ScenarioSystem.ScenariosPath).Where(f => Path.GetExtension(f) == ScenarioSystem.ScenarioFileFormat))
                 {
-                    CurrentScenarios.TryAdd(Path.GetFileNameWithoutExtension(file), new ConfigNode(File.ReadAllText(file)));
+                    var raw = File.ReadAllText(file).Trim();
+                    if (raw.StartsWith("{") && raw.EndsWith("}"))
+                        raw = raw.Substring(1, raw.Length - 2);
+
+                    CurrentScenarios.TryAdd(Path.GetFileNameWithoutExtension(file), new ConfigNode(raw) { Name = Path.GetFileNameWithoutExtension(file) });
                 }
 
                 if (createdFromScratch)

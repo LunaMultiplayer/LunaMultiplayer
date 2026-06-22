@@ -1,7 +1,7 @@
 using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode.CfgNode;
+using Server.Log;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -15,18 +15,29 @@ namespace Server.System.Scenario
         {
             _ = Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
+                try
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
+                    lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
+                    {
+                        if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ResearchAndDevelopment", out var scenario)) return;
 
-                    var receivedNode = new ConfigNode(Encoding.UTF8.GetString(techMsg.TechNode.Data, 0, techMsg.TechNode.NumBytes)) { Name = "Tech" };
-                    if (receivedNode.IsEmpty()) return;
+                        var receivedNode = ParseClientConfigNode(techMsg.TechNode.Data, techMsg.TechNode.NumBytes, "Tech");
+                        if (receivedNode.IsEmpty()) return;
 
-                    var techNodes = scenario.GetNodes("Tech").Select(v => v.Value);
-                    var specificTechNode = techNodes.FirstOrDefault(n => n.GetValue("id").Value == techMsg.TechNode.Id);
-                    if (specificTechNode != null) return; //The science node already exists so quit
+                        var techNodes = scenario.GetNodes("Tech").Select(v => v.Value);
+                        var specificTechNode = techNodes.FirstOrDefault(n =>
+                        {
+                            var id = n.GetValue("id");
+                            return id != null && id.Value == techMsg.TechNode.Id;
+                        });
+                        if (specificTechNode != null) return; //The tech node already exists so quit
 
-                    scenario.AddNode(receivedNode);
+                        scenario.AddNode(receivedNode);
+                    }
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Error updating technology scenario data: {e}");
                 }
             });
         }

@@ -34,6 +34,12 @@ namespace LmpMasterServer.Lidgren
             new TimeoutConcurrentDictionary<IPAddress, object>(1000);
         private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 
+        /// <summary>
+        /// Checks if the server version provided is less than or equal to the version of the master server.
+        /// Later versions will be invalid (false return value) unless specified as compattible in CrossCompatibleVersionLines.
+        /// </summary>
+        public static bool IsValidServerVersion(Version ServerVersion) => (ServerVersion <= LmpVersioning.CurrentVersion) || LmpVersioning.IsCompatible(ServerVersion);
+
         public static async Task StartAsync()
         {
             var config = new NetPeerConfiguration("masterserver")
@@ -254,6 +260,11 @@ namespace LmpMasterServer.Lidgren
         private static void RegisterServer(IMessageBase message, NetIncomingMessage netMsg)
         {
             var msgData = (MsRegisterServerMsgData)message.Data;
+            if (!Version.TryParse(msgData.ServerVersion, out var serverVersion) || !IsValidServerVersion(serverVersion))
+            {
+                LunaLog.Debug($"Server registration rejected for server at {netMsg.SenderEndPoint} with provided version \"{msgData.ServerVersion}\". (not a valid server version)");
+                return;
+            }
 
             if (ServerDictionary.TryGetValue(msgData.Id, out var existing))
             {

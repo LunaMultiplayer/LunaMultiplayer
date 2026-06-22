@@ -1,6 +1,6 @@
 using LmpCommon.Message.Data.ShareProgress;
-using LunaConfigNode.CfgNode;
-using System.Text;
+using Server.Log;
+using System;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -14,24 +14,31 @@ namespace Server.System.Scenario
         {
             _ = Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("ProgressTracking", new object()))
+                try
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ProgressTracking", out var scenario)) return;
-
-                    var progressNodeHeader = scenario.GetNode("Progress").Value;
-                    if (progressNodeHeader != null)
+                    lock (Semaphore.GetOrAdd("ProgressTracking", new object()))
                     {
-                        var specificNode = progressNodeHeader.GetNode(achievementMsg.Id);
-                        var receivedNode = new ConfigNode(Encoding.UTF8.GetString(achievementMsg.Data, 0, achievementMsg.NumBytes)) { Name = achievementMsg.Id };
-                        if (specificNode != null)
+                        if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ProgressTracking", out var scenario)) return;
+
+                        var progressNodeHeader = scenario.GetNode("Progress")?.Value;
+                        if (progressNodeHeader != null)
                         {
-                            progressNodeHeader.ReplaceNode(specificNode.Value, receivedNode);
-                        }
-                        else
-                        {
-                            progressNodeHeader.AddNode(receivedNode);
+                            var specificNode = progressNodeHeader.GetNode(achievementMsg.Id);
+                            var receivedNode = ParseClientConfigNode(achievementMsg.Data, achievementMsg.NumBytes, achievementMsg.Id);
+                            if (specificNode != null)
+                            {
+                                progressNodeHeader.ReplaceNode(specificNode.Value, receivedNode);
+                            }
+                            else
+                            {
+                                progressNodeHeader.AddNode(receivedNode);
+                            }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Error updating achievement scenario data: {e}");
                 }
             });
         }

@@ -262,6 +262,61 @@ namespace LmpClient.VesselUtilities
         }
 
         /// <summary>
+        /// Ensure the docking node is in a state where an undock call is valid.
+        /// If the node is stuck in a recoverable transient state, this method
+        /// attempts to recover it to a docked state before undock proceeds.
+        /// </summary>
+        public static bool EnsureRecoverableForUndock(ModuleDockingNode node, string context, out string failureReason)
+        {
+            failureReason = null;
+
+            if (node?.fsm == null)
+            {
+                failureReason = "docking node or FSM is null";
+                return false;
+            }
+
+            if (IsInDockedState(node))
+                return true;
+
+            if (IsInRecoverableTransientState(node))
+            {
+                var targetState = InferDockedStateForUndock(node);
+                if (TryRecoverToDockedState(node, targetState))
+                    return true;
+
+                failureReason =
+                    $"failed transient recovery in {context}: '{node.fsm.currentStateName}' -> '{targetState}'";
+                return false;
+            }
+
+            // Fallback: when FSM reports an unexpected state, try to rehydrate the docking pair
+            // from part-tree / dockedPartUId data before hard-blocking undock.
+            var partner = FindPartnerFromPartTree(node);
+            if (partner == null && node.dockedPartUId != 0)
+                partner = FindPartnerByUId(node.dockedPartUId, node.vessel) ?? FindPartnerByUId(node.dockedPartUId);
+
+            if (partner?.fsm != null)
+            {
+                string nodeState, partnerState;
+                InferDockerDockeeRoles(node, partner, out nodeState, out partnerState);
+                RecoverDockedPair(node, partner, nodeState, partnerState,
+                    $"fallback pre-undock recovery from fsm='{node.fsm.currentStateName}'", node.vessel);
+
+                if (IsInDockedState(node))
+                    return true;
+            }
+
+            var inferredState = InferDockedStateForUndock(node);
+            if (TryRecoverToDockedState(node, inferredState))
+                return true;
+
+            failureReason =
+                $"unsupported undock state in {context}: '{node.fsm.currentStateName}'";
+            return false;
+        }
+
+        /// <summary>
         /// Attempt to recover a docking port for the remote-undock path (VesselUndock.cs).
         /// Sets up otherNode before forcing FSM to avoid NullRef.
         /// </summary>

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <BannedPartsResourcesWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Banned parts/resources</Title>
-  <Text>contains the following banned parts/resources and cannot be launched</Text>
-  <BannedParts>Banned parts:</BannedParts>
-  <BannedResources>Banned resources:</BannedResources>
-  <TooManyParts>Your vessel has too many parts. This server allows vessels with a max part count of:</TooManyParts>
+  <Title>LunaMultiplayer - Bannlysta delar/resurser</Title>
+  <Text>innehåller följande bannlysta delar/resurser och kan inte skjutas upp</Text>
+  <BannedParts>Bannlysta delar:</BannedParts>
+  <BannedResources>Bannlysta resurser:</BannedResources>
+  <TooManyParts>Din farkost består av för många delar. Denna server tillåter bara farkoster med ett maxantal av bitar på:</TooManyParts>
 </BannedPartsResourcesWindowText>

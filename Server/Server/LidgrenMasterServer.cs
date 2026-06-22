@@ -146,8 +146,17 @@ namespace Server.Server
 
             var numberDistinct = distinctAddresses.Count();
             if (numberDistinct > 1) {
-                LunaLog.Error("Symmetric NAT detected. " +
-                              "Players will not be able to join this server unless port forwarding is set up through UPnP or manually.");
+                if (ServerContext.Config.DualStack)
+                {
+                    LunaLog.Error("Symmetric NAT detected. " +
+                                  "Players will only be able to join this server via IPv6, unless port forwarding is set up, either through UPnP or manually.");
+                }
+                else
+                {
+                    LunaLog.Error("Symmetric NAT detected. " +
+                                  "Players will not be able to join this server unless port forwarding is set up through UPnP or manually. " +
+                                  "Consider enabling IPv6 in the server's connection settings so that players can still use the server.");
+                }
             }
             DetectedSTUNTransportAddresses = null;
         }

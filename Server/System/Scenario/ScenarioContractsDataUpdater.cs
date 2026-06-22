@@ -1,8 +1,9 @@
 using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
+using Server.Log;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -25,58 +26,65 @@ namespace Server.System.Scenario
         {
             _ = Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("ContractSystem", new object()))
+                try
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
-
-                    var contractsNode = scenario.GetNode("CONTRACTS")?.Value;
-                    if (contractsNode == null) return;
-
-                    // Get CONTRACTS_FINISHED, creating it if the scenario pre-dates the node.
-                    var finishedNodeEntry = scenario.GetNode("CONTRACTS_FINISHED");
-                    ConfigNode finishedNode;
-                    if (finishedNodeEntry == null)
+                    lock (Semaphore.GetOrAdd("ContractSystem", new object()))
                     {
-                        finishedNode = new ConfigNode("") { Name = "CONTRACTS_FINISHED" };
-                        scenario.AddNode(finishedNode);
-                    }
-                    else
-                    {
-                        finishedNode = finishedNodeEntry.Value;
-                    }
+                        if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
 
-                    var existingActive   = contractsNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
-                    var existingFinished = finishedNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
+                        var contractsNode = scenario.GetNode("CONTRACTS")?.Value;
+                        if (contractsNode == null) return;
 
-                    foreach (var contract in contractsMsg.Contracts.Select(v => new ConfigNode(Encoding.UTF8.GetString(v.Data, 0, v.NumBytes)) { Name = "CONTRACT" }))
-                    {
-                        var guid  = contract.GetValue("guid")?.Value;
-                        var state = contract.GetValue("state")?.Value ?? string.Empty;
-
-                        var inActive   = existingActive.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
-                        var inFinished = existingFinished.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
-
-                        if (FinishedContractStates.Contains(state))
+                        // Get CONTRACTS_FINISHED, creating it if the scenario pre-dates the node.
+                        var finishedNodeEntry = scenario.GetNode("CONTRACTS_FINISHED");
+                        ConfigNode finishedNode;
+                        if (finishedNodeEntry == null)
                         {
-                            // Remove from active list so it no longer blocks an offered-contract slot.
-                            if (inActive != null)
-                                contractsNode.RemoveNode(inActive);
-
-                            // Upsert into CONTRACTS_FINISHED.
-                            if (inFinished != null)
-                                finishedNode.ReplaceNode(inFinished, contract);
-                            else
-                                finishedNode.AddNode(contract);
+                            finishedNode = new ConfigNode("") { Name = "CONTRACTS_FINISHED" };
+                            scenario.AddNode(finishedNode);
                         }
                         else
                         {
-                            // Not finished — update in place within CONTRACTS.
-                            if (inActive != null)
-                                contractsNode.ReplaceNode(inActive, contract);
+                            finishedNode = finishedNodeEntry.Value;
+                        }
+
+                        var existingActive   = contractsNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
+                        var existingFinished = finishedNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
+
+                        foreach (var contract in contractsMsg.Contracts.Select(v => ParseClientConfigNode(v.Data, v.NumBytes, "CONTRACT")))
+                        {
+                            var guid  = contract.GetValue("guid")?.Value;
+                            var state = contract.GetValue("state")?.Value ?? string.Empty;
+
+                            var inActive   = existingActive.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
+                            var inFinished = existingFinished.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
+
+                            if (FinishedContractStates.Contains(state))
+                            {
+                                // Remove from active list so it no longer blocks an offered-contract slot.
+                                if (inActive != null)
+                                    contractsNode.RemoveNode(inActive);
+
+                                // Upsert into CONTRACTS_FINISHED.
+                                if (inFinished != null)
+                                    finishedNode.ReplaceNode(inFinished, contract);
+                                else
+                                    finishedNode.AddNode(contract);
+                            }
                             else
-                                contractsNode.AddNode(contract);
+                            {
+                                // Not finished — update in place within CONTRACTS.
+                                if (inActive != null)
+                                    contractsNode.ReplaceNode(inActive, contract);
+                                else
+                                    contractsNode.AddNode(contract);
+                            }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Error updating contract scenario data: {e}");
                 }
             });
         }

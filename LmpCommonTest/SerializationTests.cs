@@ -4,6 +4,7 @@ using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Chat;
 using LmpCommon.Message.Data.Kerbal;
 using LmpCommon.Message.Data.Vessel;
+using LmpCommon.Xml;
 using LmpCommonTest.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -120,6 +121,19 @@ namespace LmpCommonTest
                     throw new AggregateException("Serialize failed under parallel load", ex);
                 }
             });
+        }
+
+        [TestMethod]
+        public void TestXmlSerializationUsesUtf8Declaration()
+        {
+            var serialized = LunaXmlSerializer.SerializeToXml(new XmlSerializationTestData { Value = "Test" });
+
+            StringAssert.StartsWith(serialized, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        }
+
+        public class XmlSerializationTestData
+        {
+            public string Value { get; set; }
         }
     }
 }

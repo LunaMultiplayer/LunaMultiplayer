@@ -1,5 +1,6 @@
 ﻿using LmpCommon;
 using LmpCommon.Enums;
+using Server.Context;
 using Server.Settings.Structures;
 using Server.System;
 using System;
@@ -17,7 +18,7 @@ namespace Server.Log
                 FileHandler.FolderCreate(LogFolder);
         }
 
-        public static string LogFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+        public static string LogFolder = Path.Combine(ServerContext.DataDirectory, "logs");
 
         public static string LogFilename = Path.Combine(LogFolder, $"lmpserver_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
 
