@@ -60,15 +60,15 @@ namespace LmpClient.Systems.TimeSync
         /// <summary>
         /// Minimum speed that the game can go
         /// </summary>
-        private const float MinPhysicsClockRate = 0.85f;
+        private const float MinPhysicsClockRate = 0.60f;
         /// <summary>
         /// Max speed that the game can go. If you put this number too high the game will lag a lot.
         /// </summary>
-        private const float MaxPhysicsClockRate = 1.20f;
+        private const float MaxPhysicsClockRate = 1.60f;
         /// <summary>
         /// Limit at which we won't fix the time with the GAME timescale
         /// </summary>
-        private const int MaxPhysicsClockMsError = 3500;
+        private const int MaxPhysicsClockMsError = 7500;
 
         #endregion
 
