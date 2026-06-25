@@ -12,6 +12,8 @@
     <RootNamespace>LmpClient</RootNamespace>
     <AssemblyName>LmpClient</AssemblyName>
     <TargetFramework>net472</TargetFramework>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -155,6 +157,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PreBuildEvent Condition="'$(OS)' != 'Unix'">xcopy /Y /S "$(ProjectDir)..\External\Dependencies\*.dll" "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent Condition="'$(OS)' != 'Unix'">
+      xcopy /Y /S /I /R "$(MSBuildProjectDirectory)\..\External\Dependencies\*.dll" "$(MSBuildProjectDirectory)$(OutDir)"
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
