@@ -44,6 +44,8 @@ namespace LmpClient.Extensions
         /// </summary>
         public static void AdvanceShipPosition(this Vessel vessel, double time)
         {
+            var throttle = vessel.ctrlState.MainThrottle;
+
             //If we advance the orbit when flying, we risk going inside the terrain as the orbit goes deep down the planet!
             if (vessel.situation <= Vessel.Situations.FLYING) return;
 
@@ -59,6 +61,8 @@ namespace LmpClient.Extensions
             OrbitPhysicsManager.CheckReferenceFrame();
             OrbitPhysicsManager.HoldVesselUnpack(10);
             vessel.IgnoreGForces(20);
+
+            vessel.ctrlState.MainThrottle = throttle;
         }
 
         /// <summary>
