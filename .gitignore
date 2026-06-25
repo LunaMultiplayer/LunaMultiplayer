@@ -12,7 +12,6 @@
 **/obj/
 
 External/KSPLibraries/*.dll
-External/KSPLibraries/*.xml
 External/Nuget/*
 TestResults/*
 Config/
