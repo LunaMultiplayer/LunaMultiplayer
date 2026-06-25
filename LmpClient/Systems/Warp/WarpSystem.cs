@@ -265,6 +265,11 @@ namespace LmpClient.Systems.Warp
             return ClientSubspaceList.ContainsKey(playerName) ? ClientSubspaceList[playerName] : 0;
         }
 
+        public string[] GetSubspacePlayers(int subspace)
+        {
+            return ClientSubspaceList.Where(kvp => kvp.Value == subspace).Select(kvp => kvp.Key).ToArray();
+        }
+
         public void DisplayMessage(string messageText, float messageDuration)
         {
             if (WarpMessage != null)
@@ -355,11 +360,13 @@ namespace LmpClient.Systems.Warp
         /// <summary>
         /// Task that requests a new subspace to the server.
         /// </summary>
-        private void RequestNewSubspace()
+        private void RequestNewSubspace(bool is_stopped_warping = true)
         {
             WaitingSubspaceIdFromServer = true;
             MessageSender.SendNewSubspace();
-            _stoppedWarpingTimeStamp = LunaComputerTime.UtcNow;
+
+            if (is_stopped_warping)
+                _stoppedWarpingTimeStamp = LunaComputerTime.UtcNow;
         }
 
         #endregion
