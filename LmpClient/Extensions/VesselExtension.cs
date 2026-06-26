@@ -49,9 +49,11 @@ namespace LmpClient.Extensions
             if (vessel.situation <= Vessel.Situations.FLYING)
             {
                 // Account for the rotation of the main body
+                /*
                 vessel.SetPosition(vessel.mainBody.rotation * (vessel.CurrentCoM - vessel.mainBody.position));
                 vessel.SetRotation(vessel.mainBody.rotation * (QuaternionD)vessel.transform.rotation);
                 vessel.SetWorldVelocity(vessel.mainBody.rotation * vessel.srf_velocity);
+                */
             }
             else
             {
