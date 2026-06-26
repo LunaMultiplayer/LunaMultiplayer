@@ -68,7 +68,7 @@ namespace LmpClient.Systems.TimeSync
         /// <summary>
         /// Limit at which we won't fix the time with the GAME timescale
         /// </summary>
-        private const int MaxPhysicsClockMsError = 7500;
+        private const int MaxPhysicsClockMsError = 2500;
 
         #endregion
 
