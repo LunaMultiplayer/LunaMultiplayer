@@ -9,8 +9,14 @@ namespace Server.Log
     /// Dedicated audit log that records every time a craft is created (first time the server sees a
     /// vessel's proto) or removed, so server operators can troubleshoot missing/re-appearing ships.
     ///
-    /// The file lives at <c>logs/CraftCreationAndRemoval.txt</c> and is truncated at server start
-    /// (via the static constructor) so each server run produces a fresh audit trail.
+    /// The file lives at <c>logs/audit/CraftCreationAndRemoval.txt</c> and is truncated at server
+    /// start (via the static constructor) so each server run produces a fresh audit trail. It sits
+    /// in an <c>audit</c> subfolder (rather than directly in <c>logs/</c>) on purpose: it is a
+    /// per-run audit trail, not a rotating server log, so it must be kept out of the
+    /// <see cref="LogExpire"/> sweep. That sweep enumerates <c>logs/</c> with
+    /// <see cref="System.IO.SearchOption.TopDirectoryOnly"/> and would otherwise repeatedly try to
+    /// delete this file once it aged past the expiry threshold — failing every time because the
+    /// stream below is held open for the server's lifetime.
     ///
     /// Writes go through a single <see cref="StreamWriter"/> that is kept open for the server's
     /// lifetime and disposed on <see cref="ExitEvent.ServerClosing"/>. Keeping the stream open
@@ -26,7 +32,14 @@ namespace Server.Log
     /// </summary>
     public static class CraftCreationAndRemovalLog
     {
-        private static readonly string LogFilePath = Path.Combine(LunaLog.LogFolder, "CraftCreationAndRemoval.txt");
+        /// <summary>
+        /// Dedicated audit subfolder under <see cref="LunaLog.LogFolder"/>. Living in a subfolder
+        /// keeps this file out of <see cref="LogExpire"/>'s top-directory-only expiry sweep while
+        /// still grouping it with the other logs an operator would collect for troubleshooting.
+        /// </summary>
+        private static readonly string LogDirectory = Path.Combine(LunaLog.LogFolder, "audit");
+
+        private static readonly string LogFilePath = Path.Combine(LogDirectory, "CraftCreationAndRemoval.txt");
 
         /// <summary>
         /// Serializes all access to <see cref="_writer"/> and the close hook. <see cref="StreamWriter"/>
@@ -47,8 +60,8 @@ namespace Server.Log
         {
             try
             {
-                if (!System.FileHandler.FolderExists(LunaLog.LogFolder))
-                    System.FileHandler.FolderCreate(LunaLog.LogFolder);
+                if (!System.FileHandler.FolderExists(LogDirectory))
+                    System.FileHandler.FolderCreate(LogDirectory);
 
                 // FileMode.Create truncates any pre-existing file so each server run gets a fresh
                 // audit trail. FileShare.Read lets operators tail the file live while the server
