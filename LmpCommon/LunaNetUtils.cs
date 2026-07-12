@@ -36,6 +36,35 @@ namespace LmpCommon
             }
         }
 
+        /// <summary>
+        /// Probes whether a UDP socket can actually be bound to the given address (optionally in dual-stack mode).
+        /// This is more reliable than <see cref="Socket.OSSupportsIPv6"/> because some Windows hosts report IPv6
+        /// as supported while it has been disabled at the OS level, which makes binding to [::] throw
+        /// SocketException 10049 (WSAEADDRNOTAVAIL). The probe binds on an ephemeral port (0) so it never
+        /// collides with the real listen port.
+        /// </summary>
+        public static bool CanBindUdp(IPAddress address, bool dualStack)
+        {
+            Socket socket = null;
+            try
+            {
+                socket = new Socket(address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+                if (dualStack && address.AddressFamily == AddressFamily.InterNetworkV6)
+                    socket.DualMode = true;
+
+                socket.Bind(new IPEndPoint(address, 0));
+                return true;
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+            finally
+            {
+                socket?.Dispose();
+            }
+        }
+
         public static IPAddress GetOwnInternalIPv4Address()
         {
             var ni = GetNetworkInterface(AddressFamily.InterNetwork);

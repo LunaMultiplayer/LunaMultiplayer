@@ -41,6 +41,15 @@ namespace Server.Server
                 "Consider enabling it for better reachability and connection success rate");
                 listenAddress = IPAddress.Any;
             }
+            // Some Windows hosts report IPv6 as supported (Socket.OSSupportsIPv6 == true) but have it disabled at the
+            // OS level, so binding to [::] throws SocketException 10049 (WSAEADDRNOTAVAIL). Probe the real bind and
+            // fall back to 0.0.0.0 so the server starts on IPv4 instead of crashing the main thread.
+            if (listenAddress.Equals(IPAddress.IPv6Any) && !LunaNetUtils.CanBindUdp(IPAddress.IPv6Any, true))
+            {
+                LunaLog.Warning("Could not bind to [::] (IPv6 appears to be disabled on this host), changing ListenAddress to 0.0.0.0. " +
+                "Consider enabling IPv6 for better reachability and connection success rate");
+                listenAddress = IPAddress.Any;
+            }
             ServerContext.Config.LocalAddress = listenAddress;
             // Listen on dual-stack for the unspecified address in IPv6 format ([::]).
             if (ServerContext.Config.LocalAddress.Equals(IPAddress.IPv6Any))
