@@ -64,7 +64,8 @@ namespace LmpClient.Systems.VesselProtoSys
             PartEvent.onPartCoupled.Add(VesselProtoEvents.PartCoupled);
 
             WarpEvent.onTimeWarpStopped.Add(VesselProtoEvents.WarpStopped);
-
+            GameEvents.onManeuverAdded.Add(VesselProtoEvents.ManeuverNodeAdded);
+            
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselDefinition));
         }
