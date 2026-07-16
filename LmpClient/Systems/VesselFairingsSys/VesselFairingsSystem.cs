@@ -27,13 +27,25 @@ namespace LmpClient.Systems.VesselFairingsSys
         {
             base.OnEnabled();
             GameEvents.onFairingsDeployed.Add(VesselFairingEvents.FairingsDeployed);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
+
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ProcessVesselFairings));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onFairingsDeployed.Remove(VesselFairingEvents.FairingsDeployed);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
+
             VesselFairings.Clear();
         }
 

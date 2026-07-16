@@ -47,8 +47,16 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleStringFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
             PartModuleEvent.onPartModuleObjectFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
             PartModuleEvent.onPartModuleEnumFieldChanged.Add(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncs));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
@@ -69,6 +77,8 @@ namespace LmpClient.Systems.VesselPartSyncFieldSys
             PartModuleEvent.onPartModuleStringFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleStringFieldChanged);
             PartModuleEvent.onPartModuleObjectFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleObjectFieldChanged);
             PartModuleEvent.onPartModuleEnumFieldChanged.Remove(VesselPartModuleSyncFieldEvents.PartModuleEnumFieldChanged);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             VesselPartsSyncs.Clear();
         }

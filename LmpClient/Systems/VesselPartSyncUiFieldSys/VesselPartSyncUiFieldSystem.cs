@@ -33,8 +33,16 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             base.OnEnabled();
 
             LockEvent.onLockAcquire.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartUiFieldsSyncs));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
@@ -42,6 +50,8 @@ namespace LmpClient.Systems.VesselPartSyncUiFieldSys
             base.OnDisabled();
 
             LockEvent.onLockAcquire.Add(VesselPartModuleSyncUiFieldEvents.LockAcquire);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             VesselPartsUiFieldsSyncs.Clear();
         }

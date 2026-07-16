@@ -35,7 +35,16 @@ namespace LmpClient.Systems.VesselCoupleSys
             base.OnEnabled();
             PartEvent.onPartCoupling.Add(VesselCoupleEvents.CoupleStart);
             PartEvent.onPartCoupled.Add(VesselCoupleEvents.CoupleComplete);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
+
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselCouples));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
@@ -43,6 +52,9 @@ namespace LmpClient.Systems.VesselCoupleSys
             base.OnDisabled();
             PartEvent.onPartCoupling.Remove(VesselCoupleEvents.CoupleStart);
             PartEvent.onPartCoupled.Remove(VesselCoupleEvents.CoupleComplete);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
+
             VesselCouples.Clear();
         }
 

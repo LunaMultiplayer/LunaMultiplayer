@@ -30,8 +30,8 @@ namespace LmpClient.Systems.VesselUpdateSys
         public string AutoCleanReason;
         public bool WasControllable;
         public int Stage;
-        public string BodyName;
         public float[] Com = new float[3];
+        public string BodyName;
 
         #endregion
 

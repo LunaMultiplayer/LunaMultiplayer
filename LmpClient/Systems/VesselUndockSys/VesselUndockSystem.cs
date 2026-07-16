@@ -31,8 +31,16 @@ namespace LmpClient.Systems.VesselUndockSys
             base.OnEnabled();
             PartEvent.onPartUndocking.Add(VesselUndockEvents.UndockStart);
             PartEvent.onPartUndocked.Add(VesselUndockEvents.UndockComplete);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ProcessVesselUndocks));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
@@ -40,6 +48,8 @@ namespace LmpClient.Systems.VesselUndockSys
             base.OnDisabled();
             PartEvent.onPartUndocking.Remove(VesselUndockEvents.UndockStart);
             PartEvent.onPartUndocked.Remove(VesselUndockEvents.UndockComplete);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             VesselUndocks.Clear();
         }

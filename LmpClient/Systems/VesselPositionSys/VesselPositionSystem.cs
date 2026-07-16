@@ -66,6 +66,9 @@ namespace LmpClient.Systems.VesselPositionSys
 
             TimingManager.FixedUpdateAdd(HandlePositionsStage, HandleVesselUpdates);
 
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
+
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
             TimingManager.LateUpdateAdd(SendPositionsStage, SendVesselPositionUpdates);
 
@@ -73,6 +76,11 @@ namespace LmpClient.Systems.VesselPositionSys
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendSecondaryVesselPositionUpdates));
             //SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.LateUpdate, SendUnloadedSecondaryVesselPositionUpdates));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
 
             WarpEvent.onTimeWarpStopped.Add(PositionEvents.WarpStopped);
         }
@@ -82,6 +90,9 @@ namespace LmpClient.Systems.VesselPositionSys
             base.OnDisabled();
 
             TimingManager.FixedUpdateRemove(HandlePositionsStage, HandleVesselUpdates);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
+
             TimingManager.LateUpdateRemove(SendPositionsStage, SendVesselPositionUpdates);
 
             CurrentVesselUpdate.Clear();

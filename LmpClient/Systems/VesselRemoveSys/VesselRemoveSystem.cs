@@ -41,8 +41,16 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             RevertEvent.onRevertedToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onReturnedToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, FlushRemovedVessels));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
@@ -56,6 +64,8 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             RevertEvent.onRevertedToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onReturnedToEditor.Remove(VesselRemoveEvents.OnRevertToEditor);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
         }
 
         #endregion

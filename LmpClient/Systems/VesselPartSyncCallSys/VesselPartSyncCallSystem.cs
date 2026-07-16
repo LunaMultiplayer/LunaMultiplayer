@@ -34,13 +34,24 @@ namespace LmpClient.Systems.VesselPartSyncCallSys
         {
             base.OnEnabled();
             PartModuleEvent.onPartModuleMethodCalling.Add(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
+            
+            // Attempt to load all the from-future messages we've been storing
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
+
             SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, ProcessVesselPartSyncCalls));
+            
+#if DEBUG
+            // Debug logging (every 2 minutes)
+            SetupRoutine(new RoutineDefinition(120000, RoutineExecution.Update, MessageHandler.LogQueuedMessagesSize));
+#endif
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             PartModuleEvent.onPartModuleMethodCalling.Remove(VesselPartModuleSyncCallEvents.PartModuleMethodCalled);
+
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, MessageHandler.OnUpdate);
 
             VesselPartsSyncs.Clear();
         }
