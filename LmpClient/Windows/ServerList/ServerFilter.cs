@@ -16,6 +16,7 @@ namespace LmpClient.Windows.ServerList
             {
                 SettingsSystem.CurrentSettings.ServerFilters.HideFullServers = hideFullServers;
                 SettingsSystem.SaveSettings();
+                ServerListWindow.MarkDirty();
             }
             GUILayout.FlexibleSpace();
             var hideEmptyServers = GUILayout.Toggle(SettingsSystem.CurrentSettings.ServerFilters.HideEmptyServers, LocalizationContainer.ServerListFiltersText.HideEmptyServers);
@@ -23,6 +24,7 @@ namespace LmpClient.Windows.ServerList
             {
                 SettingsSystem.CurrentSettings.ServerFilters.HideEmptyServers = hideEmptyServers;
                 SettingsSystem.SaveSettings();
+                ServerListWindow.MarkDirty();
             }
             GUILayout.FlexibleSpace();
             var hidePrivateServers = GUILayout.Toggle(SettingsSystem.CurrentSettings.ServerFilters.HidePrivateServers, LocalizationContainer.ServerListFiltersText.HidePrivateServers);
@@ -30,6 +32,7 @@ namespace LmpClient.Windows.ServerList
             {
                 SettingsSystem.CurrentSettings.ServerFilters.HidePrivateServers = hidePrivateServers;
                 SettingsSystem.SaveSettings();
+                ServerListWindow.MarkDirty();
             }
             GUILayout.FlexibleSpace();
             var dedicatedServersOnly = GUILayout.Toggle(SettingsSystem.CurrentSettings.ServerFilters.DedicatedServersOnly, LocalizationContainer.ServerListFiltersText.DedicatedServersOnly);
@@ -37,6 +40,7 @@ namespace LmpClient.Windows.ServerList
             {
                 SettingsSystem.CurrentSettings.ServerFilters.DedicatedServersOnly = dedicatedServersOnly;
                 SettingsSystem.SaveSettings();
+                ServerListWindow.MarkDirty();
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

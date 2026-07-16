@@ -74,6 +74,7 @@ namespace LmpClient.Systems.Ping
                     {
                         serverInfo.Ping6 = int.MaxValue;
                         serverInfo.DisplayedPing6 = "X";
+                        NetworkServerList.NotifyServersChanged();
                         RunningPings.Remove((serverId, ipv6));
                         yield break;
                     }
@@ -85,6 +86,7 @@ namespace LmpClient.Systems.Ping
                     {
                         serverInfo.Ping = int.MaxValue;
                         serverInfo.DisplayedPing = "X";
+                        NetworkServerList.NotifyServersChanged();
                         RunningPings.Remove((serverId, ipv6));
                         yield break;
                     }
@@ -115,6 +117,8 @@ namespace LmpClient.Systems.Ping
                         server.Ping = result;
                         server.DisplayedPing = finished ? result.ToString() : "∞";
                     }
+
+                    NetworkServerList.NotifyServersChanged();
                 }
 
                 RunningPings.Remove((serverId, ipv6));

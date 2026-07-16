@@ -20,12 +20,28 @@ namespace LmpClient.Network
 
         private static bool receivedNATIntroductionSuccessResponse = false;
 
+        private static int _serversVersion;
+
+        /// <summary>
+        /// Monotonic counter bumped every time the <see cref="Servers"/> collection or any of its
+        /// entries changes. Consumers (e.g. the server list window) can compare against a cached value
+        /// to detect whether they need to rebuild their view instead of doing it every frame.
+        /// </summary>
+        public static int ServersVersion => Volatile.Read(ref _serversVersion);
+
+        /// <summary>
+        /// Signals that the server list (or one of its entries) has changed.
+        /// Safe to call from any thread.
+        /// </summary>
+        public static void NotifyServersChanged() => Interlocked.Increment(ref _serversVersion);
+
         /// <summary>
         /// Sends a request for the server list to the master servers
         /// </summary>
         public static void RequestServers()
         {
             Servers.Clear();
+            NotifyServersChanged();
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsRequestServersMsgData>();
             var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
             NetworkSender.QueueOutgoingMessage(requestMsg);
@@ -76,6 +92,7 @@ namespace LmpClient.Network
                     Array.Copy(data.Color, server.Color, 3);
 
                     Servers.AddOrUpdate(data.Id, server, (l, info) => MergeServerInfos(info, server));
+                    NotifyServersChanged();
                     PingSystem.QueuePing(data.Id);
                 }
             }
