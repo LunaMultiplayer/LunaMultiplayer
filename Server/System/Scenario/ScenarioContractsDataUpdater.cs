@@ -101,32 +101,32 @@ namespace Server.System.Scenario
                                     contractsNode.AddNode(contract);
                             }
                         }
-                    }
-
-                    var byGuid = IndexExistingContractsByGuid(contractsParent, out var unidentified);
-                    var nonContractChildren = CollectNonContractChildren(contractsParent);
-
-                    foreach (var contractInfo in contractsMsg.Contracts)
-                    {
-                        var incomingNode = new ConfigNode(Encoding.UTF8.GetString(contractInfo.Data, 0, contractInfo.NumBytes));
-                        var stateValue = incomingNode.GetValue("state")?.Value;
-                        incomingNode.Name = IsFinishedContractState(stateValue) ? FinishedContractNodeName : ActiveContractNodeName;
-
-                        var guid = incomingNode.GetValue("guid")?.Value;
-                        if (string.IsNullOrEmpty(guid))
+                        var byGuid = IndexExistingContractsByGuid(contractsNode, out var unidentified);
+                        var nonContractChildren = CollectNonContractChildren(contractsNode);
+                        
+                        foreach (var contractInfo in contractsMsg.Contracts)
                         {
-                            unidentified.Add(incomingNode);
-                            continue;
-                        }
+                            var incomingNode = new ConfigNode(Encoding.UTF8.GetString(contractInfo.Data, 0, contractInfo.NumBytes));
+                            var stateValue = incomingNode.GetValue("state")?.Value;
+                            incomingNode.Name = IsFinishedContractState(stateValue) ? FinishedContractNodeName : ActiveContractNodeName;
 
-                        byGuid[guid] = incomingNode;
+                            var guid = incomingNode.GetValue("guid")?.Value;
+                            if (string.IsNullOrEmpty(guid))
+                            {
+                                unidentified.Add(incomingNode);
+                                continue;
+                            }
+                            
+                            byGuid[guid] = incomingNode;
+                        }
+                        
+                        var survivors = new List<ConfigNode>(byGuid.Count + unidentified.Count);
+                        survivors.AddRange(byGuid.Values);
+                        survivors.AddRange(unidentified);
+                        
+                        RebuildContractsParent(contractsNode, nonContractChildren, survivors);
                     }
 
-                    var survivors = new List<ConfigNode>(byGuid.Count + unidentified.Count);
-                    survivors.AddRange(byGuid.Values);
-                    survivors.AddRange(unidentified);
-
-                    RebuildContractsParent(contractsParent, nonContractChildren, survivors);
                 }
                 catch (Exception e)
                 {

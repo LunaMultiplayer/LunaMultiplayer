@@ -806,7 +806,7 @@ namespace LmpClient.VesselUtilities
                     Object.Destroy(vesselProto.vesselRef.gameObject);
                 }
                 HighLogic.CurrentGame.flightState.protoVessels.Remove(vesselProto);
-                return false;
+                return VesselLoadOutcome.Failed;
             }
 
             if (vesselProto.vesselRef == null)
@@ -852,7 +852,7 @@ namespace LmpClient.VesselUtilities
                         if (p?.gameObject != null) Object.Destroy(p.gameObject);
                     Object.Destroy(vesselProto.vesselRef.gameObject);
                     HighLogic.CurrentGame.flightState.protoVessels.Remove(vesselProto);
-                    return false;
+                    return VesselLoadOutcome.Failed;
                 }
             }
 
@@ -871,7 +871,7 @@ namespace LmpClient.VesselUtilities
                     Object.Destroy(part.gameObject);
                 Object.Destroy(vesselProto.vesselRef.gameObject);
                 HighLogic.CurrentGame.flightState.protoVessels.Remove(vesselProto);
-                return false;
+                return VesselLoadOutcome.Failed;
             }
 
             LogPostLoadVesselSanity(vesselProto);

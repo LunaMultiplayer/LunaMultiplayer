@@ -372,6 +372,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         VesselsUnableToLoad.Add(vesselId);
                         continue;
                     }
+                    
                     if (!protoVessel.Validate(verboseErrors))
                     {
                         VesselSyncDiagnostics.LogDiscarded(vesselId, SafeName(protoVessel),
@@ -380,6 +381,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         VesselsUnableToLoad.Add(vesselId);
                         continue;
                     }
+                    
                     if (protoVessel.HasInvalidParts(verboseErrors))
                     {
                         VesselSyncDiagnostics.LogDiscarded(vesselId, SafeName(protoVessel),
@@ -393,8 +395,6 @@ namespace LmpClient.Systems.VesselProtoSys
 
                     if (willUseProtoSwap)
                     {
-                        var verboseErrors = !VesselsUnableToLoad.Contains(vesselProto.VesselId);
-
                         //SPACECENTER / EDITOR fast path: pointer-swap protoVessel without
                         //destroying the live Vessel. No reload event fires here -- the
                         //live Vessel was never touched, so any listener that did real

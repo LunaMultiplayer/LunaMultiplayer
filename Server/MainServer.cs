@@ -61,13 +61,13 @@ namespace Server
             rootCommand.SetAction((parseResult, cancellationToken) =>
             {
                 ServerContext.DataDirectory = parseResult.GetValue(dataDirectoryOption).FullName;
-                return RunServer(cancellationToken);
+                return RunServer(cancellationToken, args);
             });
 
             return rootCommand.Parse(args).InvokeAsync(new InvocationConfiguration {ProcessTerminationTimeout = null}, CancellationTokenSrc.Token);
         }
 
-        private static async Task RunServer(CancellationToken cancellationToken)
+        private static async Task RunServer(CancellationToken cancellationToken, string[] args)
         {
             // Memory diagnostics are an opt-in operator tool. Gating them on a CLI flag
             // (rather than just the IntervalSettings entry) keeps the production log clean
