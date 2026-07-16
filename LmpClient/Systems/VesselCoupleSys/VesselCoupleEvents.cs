@@ -1,4 +1,4 @@
-﻿using LmpClient.Base;
+using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.VesselRemoveSys;
@@ -39,20 +39,19 @@ namespace LmpClient.Systems.VesselCoupleSys
 
             System.MessageSender.SendVesselCouple(partFrom.vessel, partTo.flightID, removedVesselId, partFrom.flightID, trigger);
 
-            var ownFinalVessel = LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName);
-            if (ownFinalVessel)
+            // FIX: Force acquire all locks for the combined vessel
+            // The player who initiated the docking should control the combined vessel
+            LockSystem.Singleton.AcquireControlLock(partFrom.vessel.id, true);
+            LockSystem.Singleton.AcquireUpdateLock(partFrom.vessel.id, true);
+            LockSystem.Singleton.AcquireUnloadedUpdateLock(partFrom.vessel.id, true);
+            
+            foreach (var kerbal in partFrom.vessel.GetVesselCrew())
             {
-                foreach (var kerbal in partFrom.vessel.GetVesselCrew())
-                {
-                    LockSystem.Singleton.AcquireKerbalLock(kerbal.name, true);
-                }
+                LockSystem.Singleton.AcquireKerbalLock(kerbal.name, true);
+            }
+            
 
-                JumpIfVesselOwnerIsInFuture(removedVesselId);
-            }
-            else
-            {
-                JumpIfVesselOwnerIsInFuture(partFrom.vessel.id);
-            }
+            JumpIfVesselOwnerIsInFuture(removedVesselId);
 
             VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(removedVesselId, false);
             VesselRemoveSystem.Singleton.DelayedKillVessel(removedVesselId, false, "Killing coupled vessel during a detected coupling", 500);

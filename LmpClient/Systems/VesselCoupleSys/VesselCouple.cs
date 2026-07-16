@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using LmpClient.Extensions;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.VesselUtilities;
@@ -40,10 +40,22 @@ namespace LmpClient.Systems.VesselCoupleSys
             _activeVesselIsDominantVessel = FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == VesselId;
 
             var coupleResult = ProcessCoupleInternal(VesselId, CoupledVesselId, PartFlightId, CoupledPartFlightId, Trigger);
-            AfterCouplingEvent();
 
-            if (!coupleResult)
-                VesselRemoveSystem.Singleton.KillVessel(CoupledVesselId, false, "Killing coupled vessel during a undetected coupling");
+            // FIX: Only call AfterCouplingEvent if coupling succeeded
+            if (coupleResult)
+            {
+                AfterCouplingEvent();
+            }
+            else
+            {
+                // Reset static state to prevent stale data
+                _dominantVessel = null;
+                _weakVessel = null;
+                
+                VesselRemoveSystem.Singleton.KillVessel(CoupledVesselId, false,
+                "Killing coupled vessel during a undetected coupling");
+
+            }
 
             return coupleResult;
         }
@@ -145,8 +157,11 @@ namespace LmpClient.Systems.VesselCoupleSys
 
             if (_activeVesselIsDominantVessel)
             {
-                _dominantVessel.MakeActive();
-                FlightInputHandler.SetNeutralControls();
+                if (_dominantVessel)
+                {
+                    _dominantVessel.MakeActive();
+                    FlightInputHandler.SetNeutralControls();
+                }
             }
         }
     }

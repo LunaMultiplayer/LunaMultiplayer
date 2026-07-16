@@ -1,4 +1,4 @@
-﻿using LmpClient.Base;
+using LmpClient.Base;
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareScienceSubject;
@@ -123,7 +123,7 @@ namespace LmpClient.Systems.VesselProtoSys
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName) &&
                 !LockSystem.LockQuery.UpdateLockBelongsToPlayer(removedVesselId, SettingsSystem.CurrentSettings.PlayerName)) return;
 
-            System.MessageSender.SendVesselMessage(partFrom.vessel);
+            System.MessageSender.SendVesselMessage(partFrom.vessel, forceReload: true);
         }
 
         /// <summary>
