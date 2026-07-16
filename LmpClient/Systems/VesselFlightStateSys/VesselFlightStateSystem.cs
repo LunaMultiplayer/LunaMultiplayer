@@ -262,7 +262,7 @@ namespace LmpClient.Systems.VesselFlightStateSys
 
         private void TryRemoveCallback(Vessel vesselToRemove)
         {
-            if (FlyByWireDictionary.ContainsKey(vesselToRemove.id) && vesselToRemove.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
+            if (FlyByWireDictionary.ContainsKey(vesselToRemove.id) && vesselToRemove.OnFlyByWire.GetInvocationList().Any(d => d.Method.Name == nameof(LunaOnVesselFlyByWire)))
                 vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
         }
 

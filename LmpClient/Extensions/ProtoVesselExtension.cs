@@ -45,20 +45,26 @@ namespace LmpClient.Extensions
             {
                 if (ModSystem.Singleton.ModControl && !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
                 {
-                    (bannedParts ?? (bannedParts = new HashSet<string>())).Add(pps.partName);
-                    sawHardFailure = true;
+                    if (verboseErrors)
+                    {
+                        var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the BANNED PART '{pps.partName}'. Skipping load.";
+                        LunaLog.LogWarning(msg);
+                        ChatSystem.Singleton.PmMessageServer(msg);
+                    }
+
+                    return true;
                 }
 
-                if (ModSystem.Singleton.ModControl)
+                var nonWhitelistedResources = pps.resources.Select(r => r.resourceName)
+                    .Except(ModSystem.Singleton.AllowedResources)
+                    .Where(r => PartResourceLibrary.Instance.resourceDefinitions.Contains(r))
+                    .Distinct()
+                    .ToArray();
+                if (ModSystem.Singleton.ModControl && nonWhitelistedResources.Any() && verboseErrors)
                 {
-                    foreach (var res in pps.resources.Select(r => r.resourceName))
-                    {
-                        if (!ModSystem.Singleton.AllowedResources.Contains(res))
-                        {
-                            (bannedResources ?? (bannedResources = new HashSet<string>())).Add(res);
-                            sawHardFailure = true;
-                        }
-                    }
+                    var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains RESOURCE/S '{string.Join(", ", nonWhitelistedResources)}' not present in the server allowlist on part '{pps.partName}'. Allowing load because the resources exist locally.";
+                    LunaLog.LogWarning(msg);
+                    ChatSystem.Singleton.PmMessageServer(msg);
                 }
 
                 if (pps.partInfo == null)

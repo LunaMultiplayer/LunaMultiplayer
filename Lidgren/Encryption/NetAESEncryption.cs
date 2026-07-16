@@ -10,7 +10,7 @@ namespace Lidgren.Network
 #if UNITY
 			: base(peer, new RijndaelManaged())
 #else
-			: base(peer, new AesCryptoServiceProvider())
+			: base(peer, Aes.Create())
 #endif
 		{
 		}
@@ -19,7 +19,7 @@ namespace Lidgren.Network
 #if UNITY
 			: base(peer, new RijndaelManaged())
 #else
-			: base(peer, new AesCryptoServiceProvider())
+			: base(peer, Aes.Create())
 #endif
 		{
 			SetKey(key);
@@ -29,7 +29,7 @@ namespace Lidgren.Network
 #if UNITY
 			: base(peer, new RijndaelManaged())
 #else
-			: base(peer, new AesCryptoServiceProvider())
+			: base(peer, Aes.Create())
 #endif
 		{
 			SetKey(data, offset, count);

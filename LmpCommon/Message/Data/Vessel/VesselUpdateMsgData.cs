@@ -29,6 +29,11 @@ namespace LmpCommon.Message.Data.Vessel
         public int Stage;
         public float[] Com = new float[3];
 
+        /// <summary>
+        /// Reference body name for ORBIT IDENT (same meaning as VesselPositionMsgData.BodyName).
+        /// </summary>
+        public string BodyName;
+
         public override string ClassName { get; } = nameof(VesselUpdateMsgData);
 
 
@@ -56,6 +61,8 @@ namespace LmpCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(Com[i]);
+
+            lidgrenMsg.Write(BodyName);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -82,6 +89,9 @@ namespace LmpCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 Com[i] = lidgrenMsg.ReadFloat();
+
+            if (lidgrenMsg.Position < lidgrenMsg.LengthBits)
+                BodyName = lidgrenMsg.ReadString();
         }
 
         internal override int InternalGetMessageSize()
@@ -89,7 +99,8 @@ namespace LmpCommon.Message.Data.Vessel
             return base.InternalGetMessageSize()
                 + sizeof(double) * 4 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int) + sizeof(float) * 3 
                 + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount()
-                + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount();
+                + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount()
+                + BodyName.GetByteCount();
         }
     }
 }

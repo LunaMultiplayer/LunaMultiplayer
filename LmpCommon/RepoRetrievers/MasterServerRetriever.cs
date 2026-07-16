@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+#pragma warning disable SYSLIB0014
+
 namespace LmpCommon.RepoRetrievers
 {
     /// <summary>
@@ -28,7 +30,7 @@ namespace LmpCommon.RepoRetrievers
                 }
                 else if (LunaComputerTime.UtcNow - _lastRequestTime > MaxRequestInterval)
                 {
-                    Task.Run(RefreshMasterServersList);
+                    _ = Task.Run(RefreshMasterServersList);
                     _lastRequestTime = LunaComputerTime.UtcNow;
                 }
 

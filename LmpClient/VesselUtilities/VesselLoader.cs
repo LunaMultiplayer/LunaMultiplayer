@@ -732,10 +732,10 @@ namespace LmpClient.VesselUtilities
                 if (!forceReload && existingPartCount == vesselProto.protoPartSnapshots.Count &&
                     existingCrewCount == vesselProto.GetVesselCrew().Count)
                 {
-                    //Structure matches — no work needed. Returning the dedicated outcome
-                    //lets the caller skip the misleading "Vessel reloaded" log line and
-                    //the VesselReloadEvent fire that previously ran on every wire-drift
-                    //broadcast even when nothing actually changed.
+                    // Always keep the stored flight plan current even when skipping a full reload.
+                    // Without this, maneuver node changes are discarded and the vessel's
+                    // PatchedConicSolver loads stale (empty) data on the next GoOffRails.
+                    existingVessel.protoVessel.flightPlan = vesselProto.flightPlan;
                     return VesselLoadOutcome.UnchangedEarlyOut;
                 }
 
@@ -756,6 +756,7 @@ namespace LmpClient.VesselUtilities
                 // NREs in Vessel.RebuildCrewList()/CommNetVessel.UpdateComm() the moment
                 // Vessel.Start() runs the next frame.
                 HighLogic.CurrentGame.flightState.protoVessels.RemoveAll(v => v == null || v.vesselID == existingVessel.id);
+                
                 // Disable immediately so Unity stops calling FixedUpdate on this vessel before
                 // Object.Destroy is processed — same deferred-destroy race that causes
                 // Vessel.UpdateCaches() NullReferenceExceptions (see VesselRemoveSystem.KillVessel).
@@ -782,6 +783,32 @@ namespace LmpClient.VesselUtilities
             DiscoveryInfoSanitizer.EnsureSafeDiscoveryInfo(vesselProto);
 
             vesselProto.Load(HighLogic.CurrentGame.flightState);
+
+            SanitizePersistentIds(vesselProto);
+
+            try
+            {
+                vesselProto.Load(HighLogic.CurrentGame.flightState);
+            }
+            catch (Exception loadEx)
+            {
+                // KSP may have created the Vessel GameObject before the exception (e.g. OrbitSnapshot.Load
+                // throws when the vessel's referenceBody index is out of range because the server has extra
+                // celestial bodies from a mod the client doesn't have).  Without cleanup the zombie vessel
+                // stays in FlightGlobals and causes NullReferenceExceptions in Vessel.UpdateCaches() on
+                // every physics tick.
+                LunaLog.LogError($"[LMP]: Vessel {vesselProto.vesselID} threw during ProtoVessel.Load — removing to prevent zombie vessel. Error: {loadEx.Message}");
+                if (vesselProto.vesselRef != null)
+                {
+                    FlightGlobals.RemoveVessel(vesselProto.vesselRef);
+                    foreach (var part in vesselProto.vesselRef.parts)
+                        Object.Destroy(part.gameObject);
+                    Object.Destroy(vesselProto.vesselRef.gameObject);
+                }
+                HighLogic.CurrentGame.flightState.protoVessels.Remove(vesselProto);
+                return false;
+            }
+
             if (vesselProto.vesselRef == null)
             {
                 LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} failed to create a vessel!");
@@ -794,6 +821,58 @@ namespace LmpClient.VesselUtilities
             // ConfigNode) and BEFORE the corruption walks / scene→FLIGHT transition. See the full
             // rationale on ScrubInvalidProtoCrew itself.
             ScrubInvalidProtoCrew(vesselProto);
+
+            // Verify that every part module loaded successfully.  When the server has a mod that the
+            // client lacks, KSP may instantiate a part but leave null slots in Part.Modules — these
+            // cause Vessel.UpdateCaches() to throw a NullReferenceException on every physics tick.
+            if (vesselProto.vesselRef.parts != null)
+            {
+                string badDetail = null;
+                for (var pi = 0; pi < vesselProto.vesselRef.parts.Count && badDetail == null; pi++)
+                {
+                    var p = vesselProto.vesselRef.parts[pi];
+                    if (p == null) { badDetail = $"null part at index {pi}"; break; }
+                    if (p.Modules == null) continue;
+                    for (var mi = 0; mi < p.Modules.Count; mi++)
+                    {
+                        if (p.Modules[mi] == null)
+                        {
+                            badDetail = $"null module at index {mi} on part '{p.partName}'";
+                            break;
+                        }
+                    }
+                }
+
+                if (badDetail != null)
+                {
+                    LunaLog.LogError($"[LMP]: Vessel {vesselProto.vesselID} ({vesselProto.vesselName}) loaded with {badDetail} — removing to prevent Vessel.UpdateCaches NullReferenceException spam.");
+                    FlightGlobals.RemoveVessel(vesselProto.vesselRef);
+                    vesselProto.vesselRef.gameObject.SetActive(false);
+                    foreach (var p in vesselProto.vesselRef.parts)
+                        if (p?.gameObject != null) Object.Destroy(p.gameObject);
+                    Object.Destroy(vesselProto.vesselRef.gameObject);
+                    HighLogic.CurrentGame.flightState.protoVessels.Remove(vesselProto);
+                    return false;
+                }
+            }
+
+            // Safety-net: verify the ProtoVessel can be saved before keeping it in the flight state.
+            // If ProtoVessel.Save() throws (e.g. from a null resource definition left by a server mod),
+            // GamePersistence.SaveGame() would also throw, causing the UI to freeze on any menu close.
+            try
+            {
+                vesselProto.Save(new ConfigNode());
+            }
+            catch (Exception saveEx)
+            {
+                LunaLog.LogError($"[LMP]: Vessel {vesselProto.vesselID} ({vesselProto.vesselName}) cannot be saved — removing to prevent UI freezes. Error: {saveEx.Message}");
+                FlightGlobals.RemoveVessel(vesselProto.vesselRef);
+                foreach (var part in vesselProto.vesselRef.parts)
+                    Object.Destroy(part.gameObject);
+                Object.Destroy(vesselProto.vesselRef.gameObject);
+                HighLogic.CurrentGame.flightState.protoVessels.Remove(vesselProto);
+                return false;
+            }
 
             LogPostLoadVesselSanity(vesselProto);
             ScheduleDeferredPostStartSanityWalk(vesselProto);
@@ -847,6 +926,55 @@ namespace LmpClient.VesselUtilities
             //Only the destructive-reload branch and the brand-new-vessel branch reach
             //here; the structure-matches early-out returned UnchangedEarlyOut above.
             return hadExistingVessel ? VesselLoadOutcome.Reloaded : VesselLoadOutcome.FreshlyLoaded;
+        }
+
+        #endregion
+
+        #region ID sanitization
+
+        /// <summary>
+        /// Proactively remaps any persistentId values in vesselProto that already exist in the
+        /// running FlightGlobals registries (PersistentVesselIds, PersistentLoadedPartIds,
+        /// PersistentUnloadedPartIds) before the vessel is loaded into the game.
+        ///
+        /// Without this, KSP's HandlePartPersistentIdCollision fires O(n) times per conflicting
+        /// part on the main thread, which under concurrent LMP vessel loads can cascade into a
+        /// freeze when many parts collide simultaneously.  By remapping upfront using
+        /// FlightGlobals.GetUniquepersistentId() we hand KSP clean IDs and the collision handler
+        /// never fires.
+        ///
+        /// The incoming proto IDs are transient transport values — they only need to be unique on
+        /// this client.  The authoritative state is the server's save, so remapping here is safe.
+        /// </summary>
+        private static void SanitizePersistentIds(ProtoVessel vesselProto)
+        {
+            // Strip null crew slots before load — Vessel.Start() calls RebuildCrewList() which
+            // iterates protoModuleCrew on every ProtoPartSnapshot; a null slot causes a
+            // NullReferenceException that Unity catches internally (never reaches our catch block).
+            foreach (var snapshot in vesselProto.protoPartSnapshots)
+                snapshot.protoModuleCrew?.RemoveAll(c => c == null);
+
+            // Vessel-level persistentId
+            if (FlightGlobals.PersistentVesselIds.ContainsKey(vesselProto.persistentId))
+            {
+                var newId = FlightGlobals.GetUniquepersistentId();
+                LunaLog.Log($"[LMP]: PersistentId collision — remapping vessel {vesselProto.vesselID} " +
+                            $"vessel persistentId {vesselProto.persistentId} → {newId}");
+                vesselProto.persistentId = newId;
+            }
+
+            // Per-part persistentId (ProtoPartSnapshot)
+            foreach (var part in vesselProto.protoPartSnapshots)
+            {
+                if (FlightGlobals.PersistentLoadedPartIds.ContainsKey(part.persistentId) ||
+                    FlightGlobals.PersistentUnloadedPartIds.ContainsKey(part.persistentId))
+                {
+                    var newId = FlightGlobals.GetUniquepersistentId();
+                    LunaLog.Log($"[LMP]: PersistentId collision — remapping vessel {vesselProto.vesselID} " +
+                                $"part {part.partName} persistentId {part.persistentId} → {newId}");
+                    part.persistentId = newId;
+                }
+            }
         }
 
         #endregion

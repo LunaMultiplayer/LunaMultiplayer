@@ -30,7 +30,7 @@ namespace LmpCommon.Locks
         /// </summary>
         public LockDefinition GetKerbalLock(string kerbalName)
         {
-            return LockStore.KerbalLocks[kerbalName];
+            return LockStore.KerbalLocks.TryGetValue(kerbalName, out var lockDef) ? lockDef : null;
         }
 
         /// <summary>

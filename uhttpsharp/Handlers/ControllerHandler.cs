@@ -153,7 +153,7 @@ namespace uhttpsharp.Handlers
             }
 
             var response = await controller.Pipeline.Go(() => CallMethod(context, controller), context).ConfigureAwait(false);
-            context.Response = await response.Respond(context, _view).ConfigureAwait(false);
+            context.Response = await response.RespondAsync(context, _view).ConfigureAwait(false);
 
 
         }

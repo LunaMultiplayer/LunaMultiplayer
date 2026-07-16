@@ -244,7 +244,9 @@ namespace LmpClient.Windows.Options
             ScrollPos = GUILayout.BeginScrollView(ScrollPos);
             foreach (var saveFolder in UniverseConverter.GetSavedNames())
                 if (GUILayout.Button(saveFolder))
-                    UniverseConverter.GenerateUniverse(saveFolder);
+                {
+                    var _ = UniverseConverter.GenerateUniverse(saveFolder);
+                }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
         }

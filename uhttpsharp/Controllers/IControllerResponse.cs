@@ -7,7 +7,7 @@ namespace uhttpsharp.Handlers
 {
     public interface IControllerResponse
     {
-        Task<IHttpResponse> Respond(IHttpContext context, IView view);
+        Task<IHttpResponse> RespondAsync(IHttpContext context, IView view);
     }
 
     public class CustomResponse : IControllerResponse
@@ -17,7 +17,7 @@ namespace uhttpsharp.Handlers
         {
             _httpResponse = httpResponse;
         }
-        public Task<IHttpResponse> Respond(IHttpContext context, IView view)
+        public Task<IHttpResponse> RespondAsync(IHttpContext context, IView view)
         {
             return Task.FromResult(_httpResponse);
         }
@@ -40,7 +40,7 @@ namespace uhttpsharp.Handlers
         {
             get { return _code; }
         }
-        public async Task<IHttpResponse> Respond(IHttpContext context, IView view)
+        public async Task<IHttpResponse> RespondAsync(IHttpContext context, IView view)
         {
             var output = await view.Render(context, _state).ConfigureAwait(false);
             return StringHttpResponse.Create(output.Body, _code, output.ContentType);
@@ -54,7 +54,7 @@ namespace uhttpsharp.Handlers
         {
             _newLocation = newLocation;
         }
-        public Task<IHttpResponse> Respond(IHttpContext context, IView view)
+        public Task<IHttpResponse> RespondAsync(IHttpContext context, IView view)
         {
             var headers =
                 new[]
@@ -68,26 +68,26 @@ namespace uhttpsharp.Handlers
 
     public static class Response
     {
-        public static Task<IControllerResponse> Create(IControllerResponse response)
+        public static Task<IControllerResponse> CreateAsync(IControllerResponse response)
         {
             return Task.FromResult(response);
         }
 
         public static Task<IControllerResponse> Custom(IHttpResponse httpResponse)
         {
-            return Create(new CustomResponse(httpResponse));
+            return CreateAsync(new CustomResponse(httpResponse));
         }
         public static Task<IControllerResponse> Render(HttpResponseCode code, object state)
         {
-            return Create(new RenderResponse(code, state));
+            return CreateAsync(new RenderResponse(code, state));
         }
         public static Task<IControllerResponse> Render(HttpResponseCode code)
         {
-            return Create(new RenderResponse(code, null));
+            return CreateAsync(new RenderResponse(code, null));
         }
         public static Task<IControllerResponse> Redirect(Uri newLocation)
         {
-            return Create(new RedirectResponse(newLocation));
+            return CreateAsync(new RedirectResponse(newLocation));
         }
     }
 

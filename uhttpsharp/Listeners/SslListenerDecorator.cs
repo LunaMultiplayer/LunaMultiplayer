@@ -4,12 +4,12 @@ using uhttpsharp.Clients;
 
 namespace uhttpsharp.Listeners
 {
-    public class ListenerSslDecorator : IHttpListener
+    public class SslListenerDecorator : IHttpListener
     {
         private readonly IHttpListener _child;
         private readonly X509Certificate _certificate;
 
-        public ListenerSslDecorator(IHttpListener child, X509Certificate certificate)
+        public SslListenerDecorator(IHttpListener child, X509Certificate certificate)
         {
             _child = child;
             _certificate = certificate;

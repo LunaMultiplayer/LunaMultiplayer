@@ -1,4 +1,4 @@
-﻿using LmpCommon.Message.Data.ShareProgress;
+using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace Server.System.Scenario
         /// </summary>
         public static void WritePartPurchaseDataToFile(ShareProgressPartPurchaseMsgData partPurchaseMsg)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
                 {

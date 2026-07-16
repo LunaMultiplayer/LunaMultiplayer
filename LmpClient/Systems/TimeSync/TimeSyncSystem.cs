@@ -207,6 +207,12 @@ namespace LmpClient.Systems.TimeSync
         /// </summary>
         public void SetGameTime(double targetTick)
         {
+            if (double.IsNaN(targetTick) || double.IsInfinity(targetTick) || targetTick < 0)
+            {
+                LunaLog.LogWarning($"[LMP]: Ignoring invalid game-time sync target {targetTick} — value is non-finite or negative. This indicates a server time-difference calculation error.");
+                return;
+            }
+
             if (HighLogic.LoadedSceneIsFlight)
             {
                 //As we are syncing to a new game time, we must advance all the ship positions and put them in the correct orbit "epoch"

@@ -1,13 +1,23 @@
-﻿using LmpCommon.Message.Data.ShareProgress;
+using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
 using System.Collections.Generic;
 using System.Text;
+using Server.Log;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
 {
     public partial class ScenarioDataUpdater
     {
+        // States that mean a contract is done and should live in CONTRACTS_FINISHED, not CONTRACTS.
+        // KSP serialises Contract.State enum values by name (e.g. "Completed", not "3").
+        private static readonly IReadOnlyCollection<string> FinishedContractStates = new HashSet<string>
+        {
+            "Completed", "Failed", "Cancelled", "DeadlineExpired", "Withdrawn"
+        };
+
         /// <summary>
         /// Parent node that KSP uses to persist BOTH active and finished contracts.
         /// KSP does not use a separate CONTRACTS_FINISHED parent; instead it stores
@@ -30,29 +40,67 @@ namespace Server.System.Scenario
 
         /// <summary>
         /// We received a contract message so update the scenario file accordingly.
-        ///
-        /// Each incoming contract is renamed (CONTRACT vs CONTRACT_FINISHED) based on
-        /// its serialized state value, then upserted into a guid-indexed view of the
-        /// existing contracts. The CONTRACTS parent is rebuilt from that view via
-        /// clear-then-add. This is necessary because LunaConfigNode 1.8.1's
-        /// <c>RemoveNode(ConfigNode)</c> overload only updates the lookup dictionaries
-        /// and not the underlying serialized list, so any other approach leaves stale
-        /// duplicates on disk that KSP loads back as still-active missions.
+        /// Finished contracts are moved from CONTRACTS to CONTRACTS_FINISHED so that
+        /// they no longer occupy an offered-contract slot on the server.
         /// </summary>
         public static void WriteContractDataToFile(ShareProgressContractsMsgData contractsMsg)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("ContractSystem", new object()))
+                try
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
-
-                    var contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
-                    if (contractsParent == null)
+                    lock (Semaphore.GetOrAdd("ContractSystem", new object()))
                     {
-                        scenario.AddNode(new ConfigNode(ContractsParentNodeName, scenario));
-                        contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
-                        if (contractsParent == null) return;
+                        if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
+
+                        var contractsNode = scenario.GetNode(ContractsParentNodeName)?.Value;
+                        if (contractsNode == null) return;
+
+                        // Get CONTRACTS_FINISHED, creating it if the scenario pre-dates the node.
+                        var finishedNodeEntry = scenario.GetNode(FinishedContractNodeName);
+                        ConfigNode finishedNode;
+                        if (finishedNodeEntry == null)
+                        {
+                            finishedNode = new ConfigNode("") { Name = FinishedContractNodeName };
+                            scenario.AddNode(finishedNode);
+                        }
+                        else
+                        {
+                            finishedNode = finishedNodeEntry.Value;
+                        }
+
+                        var existingActive   = contractsNode.GetNodes(ActiveContractNodeName).Select(c => c.Value).ToArray();
+                        var existingFinished = finishedNode.GetNodes(ActiveContractNodeName).Select(c => c.Value).ToArray();
+
+                        foreach (var contract in contractsMsg.Contracts.Select(v => ParseClientConfigNode(v.Data, v.NumBytes, ActiveContractNodeName)))
+                        {
+                            var guid  = contract.GetValue("guid")?.Value;
+                            var state = contract.GetValue("state")?.Value ?? string.Empty;
+
+                            var inActive   = existingActive.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
+                            var inFinished = existingFinished.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
+
+                            if (FinishedContractStates.Contains(state))
+                            {
+                                // Remove from active list so it no longer blocks an offered-contract slot.
+                                if (inActive != null)
+                                    contractsNode.RemoveNode(inActive);
+
+                                // Upsert into CONTRACTS_FINISHED.
+                                if (inFinished != null)
+                                    finishedNode.ReplaceNode(inFinished, contract);
+                                else
+                                    finishedNode.AddNode(contract);
+                            }
+                            else
+                            {
+                                // Not finished — update in place within CONTRACTS.
+                                if (inActive != null)
+                                    contractsNode.ReplaceNode(inActive, contract);
+                                else
+                                    contractsNode.AddNode(contract);
+                            }
+                        }
                     }
 
                     var byGuid = IndexExistingContractsByGuid(contractsParent, out var unidentified);
@@ -79,6 +127,10 @@ namespace Server.System.Scenario
                     survivors.AddRange(unidentified);
 
                     RebuildContractsParent(contractsParent, nonContractChildren, survivors);
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Error updating contract scenario data: {e}");
                 }
             });
         }

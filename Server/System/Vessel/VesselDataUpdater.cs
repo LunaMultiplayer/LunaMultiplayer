@@ -1,4 +1,5 @@
-﻿using Server.Log;
+﻿using LunaConfigNode.CfgNode;
+using Server.Log;
 using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
@@ -24,11 +25,24 @@ namespace Server.System.Vessel
         #endregion
 
         /// <summary>
+        /// Sets ORBIT IDENT from the reference body name when provided (e.g. from position or update messages).
+        /// </summary>
+        internal static void ApplyOrbitIdent(Classes.Vessel vessel, string bodyName)
+        {
+            if (string.IsNullOrEmpty(bodyName)) return;
+
+            if (vessel.Orbit.Exists("IDENT"))
+                vessel.Orbit.Update("IDENT", bodyName);
+            else
+                vessel.Orbit.Add(new CfgNodeValue<string, string>("IDENT", bodyName));
+        }
+
+        /// <summary>
         /// Raw updates a vessel in the dictionary and takes care of the locking in case we received another vessel message type
         /// </summary>
         public static void RawConfigNodeInsertOrUpdate(Guid vesselId, string vesselDataInConfigNodeFormat)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 // The insert is scheduled asynchronously, so a VesselRemove for the same vessel may arrive
                 // while this task is queued. Re-check the kill list before touching the store so a delayed

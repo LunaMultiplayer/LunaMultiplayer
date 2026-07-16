@@ -45,6 +45,8 @@ namespace LmpClient.Systems.VesselUpdateSys
             msgData.Com[1] = vessel.localCoM.y;
             msgData.Com[2] = vessel.localCoM.z;
 
+            msgData.BodyName = vessel.mainBody != null ? vessel.mainBody.bodyName : string.Empty;
+
             SendMessage(msgData);
         }
     }

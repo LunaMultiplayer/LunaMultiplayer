@@ -12,7 +12,7 @@ namespace Server.System
     /// </summary>
     public class GcSystem
     {
-        public static async void PerformGarbageCollection(CancellationToken token)
+        public static async Task PerformGarbageCollectionAsync(CancellationToken token)
         {
             while (ServerContext.ServerRunning && IntervalSettings.SettingsStore.GcMinutesInterval != 0)
             {

@@ -20,6 +20,7 @@ namespace Server.Command
             //Register the server Commands
             RegisterCommand("ban", new BanPlayerCommand().Execute, "Bans someone from the server");
             RegisterCommand("changesettings", new ChangeSettingsCommand().Execute, "Changes the server settings");
+            RegisterCommand("cleancontracts", new CleanContractsCommand().Execute, "Moves finished contracts from CONTRACTS to CONTRACTS_FINISHED, freeing offered-contract slots");
             RegisterCommand("clearvessels", new ClearVesselsCommand().Execute, "Clears ALL SPECIFIED vessels from universe");
             RegisterCommand("connectionstats", new ConnectionStatsCommand().Execute, "Displays network traffic usage");
             RegisterCommand("countclients", new CountClientsCommand().Execute, "Counts connected clients");
@@ -40,7 +41,7 @@ namespace Server.Command
         /// <summary>
         /// We receive the console inputs with a pipe
         /// </summary>
-        public static async void ThreadMain()
+        public static async Task ThreadMainAsync()
         {
             try
             {

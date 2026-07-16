@@ -20,7 +20,7 @@ namespace LmpCommon.Message.Data.ShareProgress
         /// </summary>
         public ScienceSubjectInfo(ScienceSubjectInfo copyFrom)
         {
-            Id = string.Copy(copyFrom.Id);
+            Id = copyFrom.Id;
             NumBytes = copyFrom.NumBytes;
             if (Data.Length < NumBytes)
                 Data = new byte[NumBytes];

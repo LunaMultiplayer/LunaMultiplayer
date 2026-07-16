@@ -237,7 +237,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public static new readonly CryptoRandom Instance = new CryptoRandom();
 
-		private RandomNumberGenerator m_rnd = new RNGCryptoServiceProvider();
+		private RandomNumberGenerator m_rnd = RandomNumberGenerator.Create();
 
 		/// <summary>
 		/// Seed in CryptoRandom does not create deterministic sequences

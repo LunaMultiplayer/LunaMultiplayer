@@ -30,7 +30,7 @@ namespace LmpCommon.Locks
         /// </summary>
         public LockDefinition GetUnloadedUpdateLock(Guid vesselId)
         {
-            return LockStore.UnloadedUpdateLocks[vesselId];
+            return LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var lockDef) ? lockDef : null;
         }
 
         /// <summary>

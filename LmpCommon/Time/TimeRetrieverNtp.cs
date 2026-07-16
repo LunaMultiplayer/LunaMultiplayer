@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace LmpCommon.Time
 {
-    internal static class TimeRetrieverNtp
+    public static class TimeRetrieverNtp
     {
         private const int DaysTo1900 = 1900 * 365 + 95; // 95 = offset for leap-years etc.
         private const long TicksTo1900 = DaysTo1900 * TimeSpan.TicksPerDay;
@@ -14,7 +14,7 @@ namespace LmpCommon.Time
         private static byte[] _ntpData = new byte[NtpDataLength];
         private static IPEndPoint _serverAddress;
 
-        internal static DateTime GetNtpTime(string server)
+        public static DateTime GetNtpTime(string server)
         {
             InitializeStructure();
 

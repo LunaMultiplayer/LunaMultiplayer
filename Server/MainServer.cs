@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.CommandLine;
 
 namespace Server
 {
@@ -32,7 +33,7 @@ namespace Server
 
         private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
 
-        private static readonly WinExitSignal ExitSignal = Common.PlatformIsWindows() ? new WinExitSignal() : null;
+        private static readonly WinExitSignal ExitSignal = OperatingSystem.IsWindows() ? new WinExitSignal() : null;
 
         private static readonly List<Task> TaskContainer = new List<Task>();
 
@@ -40,7 +41,33 @@ namespace Server
 
         private static bool IsRestart = false;
 
-        public static void Main(string[] args)
+        public static Task Main(string[] args)
+        {
+            //Verify the .NET runtime before anything else so we can give users a clear,
+            //actionable message instead of failing later with a confusing error.
+            DotNetRuntimeChecker.EnsureCorrectRuntimeOrExit();
+
+            Option<DirectoryInfo> dataDirectoryOption = new("--data-directory", ["-d"])
+            {
+                Description = "The location to store the server runtime data",
+                DefaultValueFactory = parseResult => new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory)
+            };
+
+            dataDirectoryOption.AcceptExistingOnly();
+
+            RootCommand rootCommand = new("Luna Multiplayer Server");
+            rootCommand.Options.Add(dataDirectoryOption);
+
+            rootCommand.SetAction((parseResult, cancellationToken) =>
+            {
+                ServerContext.DataDirectory = parseResult.GetValue(dataDirectoryOption).FullName;
+                return RunServer(cancellationToken);
+            });
+
+            return rootCommand.Parse(args).InvokeAsync(new InvocationConfiguration {ProcessTerminationTimeout = null}, CancellationTokenSrc.Token);
+        }
+
+        private static async Task RunServer(CancellationToken cancellationToken)
         {
             // Memory diagnostics are an opt-in operator tool. Gating them on a CLI flag
             // (rather than just the IntervalSettings entry) keeps the production log clean
@@ -60,25 +87,24 @@ namespace Server
                 Thread.CurrentThread.CurrentCulture = ci;
                 Thread.CurrentThread.CurrentUICulture = ci;
 
-                if (Common.PlatformIsWindows())
-                    Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
+                Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
 
                 Console.OutputEncoding = Encoding.UTF8;
 
                 LunaLog.Info("Remember! Quit the server by using 'Control + C' so a backup is properly made before closing!");
                 LunaLog.Info("Documentation available at https://github.com/LunaMultiplayer/LunaMultiplayer/wiki");
 
-                if (Common.PlatformIsWindows())
-                    ExitSignal.Exit += (sender, args) => Exit();
+                if (OperatingSystem.IsWindows())
+                    ExitSignal.Exit += (sender, args) => _ = ExitAsync();
                 else
                 {
                     //Register the ctrl+c event and exit signal if we are on linux
-                    Console.CancelKeyPress += (sender, args) => Exit();
+                    Console.CancelKeyPress += (sender, args) => _ = ExitAsync();
                 }
 
                 //We disable quick edit as otherwise when you select some text for copy/paste then you can't write to the console and server freezes
                 //This just happens on windows....
-                if (Common.PlatformIsWindows())
+                if (OperatingSystem.IsWindows())
                     ConsoleUtil.DisableConsoleQuickEdit();
 
                 //We cannot run more than 6 instances ofd servers + clients as otherwise the sync time will fail (30 seconds / 5 seconds = 6) but we use 3 for safety
@@ -94,6 +120,7 @@ namespace Server
                 ServerContext.Day = LunaNetworkTime.Now.Day;
 
                 LunaLog.Normal($"Luna Server version: {LmpVersioning.CurrentVersion} ({AppContext.BaseDirectory})");
+                LunaLog.Normal($"Server Data Directory: {ServerContext.DataDirectory}");
 
                 // Truncate the craft create/remove audit file so each server run starts with a clean log.
                 CraftCreationAndRemovalLog.Initialize();
@@ -110,29 +137,27 @@ namespace Server
                 LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Address {ConnectionSettings.SettingsStore.ListenAddress} Port {ConnectionSettings.SettingsStore.Port}... ");
 
                 LidgrenServer.SetupLidgrenServer();
-                LmpPortMapper.OpenLmpPort().Wait();
-                LmpPortMapper.OpenWebPort().Wait();
+                await LmpPortMapper.OpenLmpPortAsync();
+                await LmpPortMapper.OpenWebPortAsync();
                 ServerContext.ServerRunning = true;
                 WebServer.StartWebServer();
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
-                LongRunTaskFactory.StartNew(CommandHandler.ThreadMain, CancellationTokenSrc.Token);
+                _ = LongRunTaskFactory.StartNew(CommandHandler.ThreadMainAsync, cancellationToken);
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformation, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformationAsync, cancellationToken));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPort, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThread, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(ClientMainThread.ThreadMain, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPortAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThreadAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(ClientMainThread.ThreadMainAsync, cancellationToken));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformBackups(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceivingMessages, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.CheckNATType, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformBackupsAsync(cancellationToken), cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceivingMessagesAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServerAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.CheckNATTypeAsync, cancellationToken));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg, CancellationTokenSrc.Token));
-
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => GcSystem.PerformGarbageCollection(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersionAsync, cancellationToken));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsgAsync, cancellationToken));
 
                 if (memoryDiagnosticsEnabled)
                 {
@@ -140,6 +165,7 @@ namespace Server
                     TaskContainer.Add(LongRunTaskFactory.StartNew(() => MemoryDiagnosticsLogger.LogMemoryDiagnostics(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
                 }
 
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => GcSystem.PerformGarbageCollectionAsync(cancellationToken), cancellationToken));
                 while (ServerContext.ServerStarting)
                     Thread.Sleep(500);
 
@@ -182,13 +208,11 @@ namespace Server
                 ModFileSystem.LoadModFile();
             }
 
-            if (Common.PlatformIsWindows())
-            {
-                Console.Title += $" ({GeneralSettings.SettingsStore.ServerName})";
+            var title = $"LMP {LmpVersioning.CurrentVersion} ({GeneralSettings.SettingsStore.ServerName})";
 #if DEBUG
-                Console.Title += " DEBUG";
+            title += " DEBUG";
 #endif
-            }
+            Console.Title = title;
         }
 
         /// <summary>
@@ -215,13 +239,13 @@ namespace Server
         /// <summary>
         /// Runs the exit logic
         /// </summary>
-        private static void Exit()
+        private static async Task ExitAsync()
         {
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
             ExitEvent.Exit();
 
-            CancellationTokenSrc.Cancel();
-            Task.WaitAll(TaskContainer.ToArray());
+            await CancellationTokenSrc.CancelAsync();
+            await Task.WhenAll(TaskContainer);
 
             ServerContext.Shutdown("Server is shutting down");
 
@@ -231,16 +255,15 @@ namespace Server
         /// <summary>
         /// Runs the restart logic
         /// </summary>
-        public static void Restart()
+        public static async Task RestartAsync()
         {
             //Perform Backups
-            BackupSystem.PerformBackups(CancellationTokenSrc.Token);
+            await BackupSystem.PerformBackupsAsync(CancellationTokenSrc.Token);
             LunaLog.Normal("Restarting...  Please wait until all threads are finished");
 
             ServerContext.Shutdown("Server is restarting");
-            CancellationTokenSrc.Cancel();
-
-            Task.WaitAll(TaskContainer.ToArray());
+            await CancellationTokenSrc.CancelAsync();
+            await Task.WhenAll(TaskContainer);
 
             IsRestart = true;
 

@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.15.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="ProDotNetZip" Version="1.20.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
@@ -20,6 +20,8 @@
   </Target>
 
 
-  <Import Project="..\LmpGlobal\LmpGlobal.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj" />
+  </ItemGroup>
 
 </Project>

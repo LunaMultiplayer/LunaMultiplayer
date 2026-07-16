@@ -25,10 +25,11 @@ namespace Server.Context
         public static bool UsePassword => !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
 
         public static Stopwatch ServerClock = new Stopwatch();
-        public static string UniverseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe");
-        public static string ConfigDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");
-        public static string ModFilePath = Path.Combine(ConfigDirectory, "LMPModControl.xml");
-        public static string OldModFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.xml");
+        public static string DataDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        public static string UniverseDirectory => Path.Combine(DataDirectory, "Universe");
+        public static string ConfigDirectory => Path.Combine(DataDirectory, "Config");
+        public static string ModFilePath => Path.Combine(ConfigDirectory, "LMPModControl.xml");
+        public static string OldModFilePath => Path.Combine(DataDirectory, "LMPModControl.xml");
 
         // Configuration object
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")

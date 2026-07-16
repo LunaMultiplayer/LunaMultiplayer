@@ -89,8 +89,12 @@ namespace LmpClient.Harmony
                     NanTrackers.TryRemove(driver.vessel.id, out _);
                     driver.vessel.Unload();
 
-                    VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(driver.vessel.id, true, "Corrupt vessel orbit (NaN)");
-                    VesselRemoveSystem.Singleton.KillVessel(driver.vessel.id, true, "Corrupt vessel orbit");
+                    // Do NOT send a server remove for a corrupt orbit — the orbit data is a client-side load
+                    // issue (bad server ConfigNode) and the server should keep the vessel so it can be
+                    // repaired by an admin.  Sending remove here permanently deletes the vessel from the
+                    // server and adds it to the in-memory kill-list, making recovery impossible without a
+                    // server restart.
+                    VesselRemoveSystem.Singleton.KillVessel(driver.vessel.id, false, "Corrupt vessel orbit");
 
                     return;
                 }

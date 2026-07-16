@@ -101,7 +101,7 @@ namespace Server.Web
         /// <summary>
         /// Refresh the server information
         /// </summary>
-        public static async void RefreshWebServerInformation()
+        public static async Task RefreshWebServerInformationAsync()
         {
             if (WebsiteSettings.SettingsStore.EnableWebsite)
             {

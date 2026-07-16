@@ -54,12 +54,12 @@ namespace uhttpsharp
             
             Logger.InfoFormat("Got Client {0}", _remoteEndPoint);
 
-            Task.Factory.StartNew(Process);
+            Task.Factory.StartNew(ProcessAsync);
 
             UpdateLastOperationTime();
         }
 
-        private async void Process()
+        private async Task ProcessAsync()
         {
             try
             {
@@ -85,7 +85,7 @@ namespace uhttpsharp
                         {
                             var streamWriter = new StreamWriter(limitedStream) { AutoFlush = false };
                             
-                            await WriteResponse(context, streamWriter).ConfigureAwait(false);
+                            await WriteResponseAsync(context, streamWriter).ConfigureAwait(false);
                             await limitedStream.ExplicitFlushAsync().ConfigureAwait(false);
 
                             if (!request.Headers.KeepAliveConnection() || context.Response.CloseConnection)
@@ -111,7 +111,7 @@ namespace uhttpsharp
 
             Logger.InfoFormat("Lost Client {0}", _remoteEndPoint);
         }
-        private async Task WriteResponse(HttpContext context, StreamWriter writer)
+        private async Task WriteResponseAsync(HttpContext context, StreamWriter writer)
         {
             var response = context.Response;
     

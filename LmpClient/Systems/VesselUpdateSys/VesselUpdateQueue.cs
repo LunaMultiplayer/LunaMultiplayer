@@ -28,6 +28,7 @@ namespace LmpClient.Systems.VesselUpdateSys
             value.WasControllable = msgData.WasControllable;
             value.Stage = msgData.Stage;
             Array.Copy(msgData.Com, value.Com, 3);
+            value.BodyName = msgData.BodyName?.Clone() as string;
         }
     }
 }

@@ -14,26 +14,34 @@
 ARG OS_BASE=alpine
 ARG OS_VERSION=3.20
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} AS base
+# SDK image: 10.0-alpine (10.0-alpine3.20 is not published on MCR for .NET 10).
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS base
 
 COPY .nuget                                 /LunaMultiplayer/.nuget
 COPY LunaMultiPlayer.sln                    /LunaMultiplayer/LunaMultiPlayer.sln
+COPY LmpCommon/LmpCommon.csproj             /LunaMultiplayer/LmpCommon/LmpCommon.csproj
+COPY LmpGlobal/LmpGlobal.csproj             /LunaMultiplayer/LmpGlobal/LmpGlobal.csproj
+COPY Lidgren/Lidgren.projitems              /LunaMultiplayer/Lidgren/Lidgren.projitems
 COPY Lidgren.Core/Lidgren.Core.csproj       /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
+COPY Lidgren.Net/Lidgren.Net.csproj         /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
 COPY uhttpsharp/uhttpsharp.csproj           /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
-COPY LmpCommonTest/LmpCommonTest.csproj     /LunaMultiplayer/LmpCommonTest/LmpCommonTest.csproj
 COPY LmpUpdater/LmpUpdater.csproj           /LunaMultiplayer/LmpUpdater/LmpUpdater.csproj
 COPY LmpMasterServer/LmpMasterServer.csproj /LunaMultiplayer/LmpMasterServer/LmpMasterServer.csproj
 COPY MasterServer/MasterServer.csproj       /LunaMultiplayer/MasterServer/MasterServer.csproj
-COPY LmpUpdater/packages.config             /LunaMultiplayer/LmpUpdater/packages.config
 COPY uhttpsharp/packages.config             /LunaMultiplayer/uhttpsharp/packages.config
 
 ARG OS_BASE
 ARG OS_VERSION
 ARG TARGETARCH
 ARG TARGETVARIANT
-RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
-    cd /LunaMultiplayer && \
-    dotnet restore MasterServer -r ${OS_BASE}.${OS_VERSION}-${TARGET}
+RUN case "${TARGETARCH}" in \
+    amd64) DOTNET_RID=linux-musl-x64 ;; \
+    arm64) DOTNET_RID=linux-musl-arm64 ;; \
+    arm) DOTNET_RID=linux-musl-arm ;; \
+    *) echo "Unsupported TARGETARCH=${TARGETARCH}"; exit 1 ;; \
+  esac && \
+  cd /LunaMultiplayer && \
+  dotnet restore MasterServer -r ${DOTNET_RID}
 
 FROM --platform=$BUILDPLATFORM base AS builder
 COPY . /LunaMultiplayer
@@ -42,8 +50,14 @@ ARG OS_BASE
 ARG OS_VERSION
 ARG TARGETARCH
 ARG TARGETVARIANT
-RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
-    dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${TARGET} --self-contained true -p:PublishTrimmed=true -o Publish
+# No PublishTrimmed: shared libs still build netstandard2.0; trimming fails with NETSDK1124.
+RUN case "${TARGETARCH}" in \
+    amd64) DOTNET_RID=linux-musl-x64 ;; \
+    arm64) DOTNET_RID=linux-musl-arm64 ;; \
+    arm) DOTNET_RID=linux-musl-arm ;; \
+    *) echo "Unsupported TARGETARCH=${TARGETARCH}"; exit 1 ;; \
+  esac && \
+  dotnet publish -c Release -r ${DOTNET_RID} --self-contained true -o Publish
 
 FROM ${OS_BASE}:${OS_VERSION}
 # icu-data-full is needed to cross-reference server country codes with a list of allowed CCs

@@ -15,7 +15,7 @@ namespace Server.Command.Command
         //Restarts the server
         private static void RestartServer()
         {
-            MainServer.Restart();
+            _ = MainServer.RestartAsync();
         }
     }
 }

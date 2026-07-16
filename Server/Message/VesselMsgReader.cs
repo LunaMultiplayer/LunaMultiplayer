@@ -1,4 +1,4 @@
-﻿using ByteSizeLib;
+using ByteSizeLib;
 using LmpCommon.Message.Data.Vessel;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Server;
@@ -107,6 +107,9 @@ namespace Server.Message
                 VesselStoreSystem.RemoveVessel(data.VesselId);
             }
 
+            if (data.AddToKillList)
+                VesselContext.RemovedVessels.TryAdd(data.VesselId, 0);
+
             //Relay the message.
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
         }
@@ -176,8 +179,9 @@ namespace Server.Message
                 if (vesselData.Length > 0)
                 {
                     var protoMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    protoMsg.Data = Encoding.UTF8.GetBytes(vesselData);
-                    protoMsg.NumBytes = vesselData.Length;
+                    var vesselBytes = Encoding.UTF8.GetBytes(vesselData);
+                    protoMsg.Data = vesselBytes;
+                    protoMsg.NumBytes = vesselBytes.Length;
                     protoMsg.VesselId = vesselId;
 
                     MessageQueuer.SendToClient<VesselSrvMsg>(client, protoMsg);

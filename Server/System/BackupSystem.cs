@@ -14,7 +14,7 @@ namespace Server.System
 
         private static readonly object LockObj = new object();
 
-        public static async void PerformBackups(CancellationToken token)
+        public static async Task PerformBackupsAsync(CancellationToken token)
         {
             while (ServerContext.ServerRunning)
             {

@@ -2,8 +2,11 @@
 using LmpClient.Systems.Lock;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareScienceSubject;
+using LmpClient.Utilities;
 using LmpClient.VesselUtilities;
 using System;
+using System.IO;
+using System.Text;
 
 namespace LmpClient.Systems.VesselProtoSys
 {
@@ -185,6 +188,76 @@ namespace LmpClient.Systems.VesselProtoSys
                 !LockSystem.LockQuery.UpdateLockBelongsToPlayer(removedVesselId, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             System.MessageSender.SendVesselMessage(partFrom.vessel, reason: "Parts coupled");
+        }
+
+        /// <summary>
+        /// Fired when a maneuver node is added to a vessel's flight plan.
+        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// </summary>
+        public void ManeuverNodeAdded(Vessel vessel, PatchedConicSolver solver)
+        {
+            if (VesselCommon.IsSpectating) return;
+            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
+
+            System.MessageSender.SendVesselMessage(vessel);
+            WriteManeuverLog("ADDED", vessel, solver);
+        }
+
+        /// <summary>
+        /// Fired when a maneuver node is removed from a vessel's flight plan.
+        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// </summary>
+        public void ManeuverNodeRemoved(Vessel vessel, PatchedConicSolver solver)
+        {
+            if (VesselCommon.IsSpectating) return;
+            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
+
+            System.MessageSender.SendVesselMessage(vessel);
+            WriteManeuverLog("REMOVED", vessel, solver);
+        }
+
+        /// <summary>
+        /// Appends a log entry to LMP_ManeuverNodes.log at the KSP root.
+        /// Format: one line per current node — vessel, burn UT, time-until, total ΔV, and prograde/normal/radial components.
+        /// ManeuverNode.DeltaV is in the local orbital Frenet frame: z=prograde, x=radial-out, y=normal.
+        /// </summary>
+        private static void WriteManeuverLog(string action, Vessel vessel, PatchedConicSolver solver)
+        {
+            try
+            {
+                var logPath = KSPUtil.ApplicationRootPath + "LMP_ManeuverNodes.log";
+                var now = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss UTC");
+                var currentUT = Planetarium.GetUniversalTime();
+                var nodes = solver.maneuverNodes;
+                var sb = new StringBuilder();
+
+                if (nodes.Count == 0)
+                {
+                    sb.AppendLine($"[{now}] {action} | Vessel: {vessel.vesselName} | Flight plan now empty");
+                }
+                else
+                {
+                    for (int i = 0; i < nodes.Count; i++)
+                    {
+                        var node = nodes[i];
+                        var timeUntil = node.UT - currentUT;
+                        var ts = TimeSpan.FromSeconds(Math.Max(0, timeUntil));
+                        var dv = node.DeltaV;
+                        var dvMag = dv.magnitude;
+                        sb.AppendLine(
+                            $"[{now}] {action} | Vessel: {vessel.vesselName} | " +
+                            $"Node {i + 1}/{nodes.Count} | Burn UT: {node.UT:F1} | " +
+                            $"T-: {(int)ts.TotalHours:D2}:{ts.Minutes:D2}:{ts.Seconds:D2} ({timeUntil:F1}s) | " +
+                            $"ΔV: {dvMag:F2} m/s | Pro: {dv.z:F2} | Nor: {dv.y:F2} | Rad: {dv.x:F2}");
+                    }
+                }
+
+                File.AppendAllText(logPath, sb.ToString());
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error writing maneuver log: {e}");
+            }
         }
     }
 }

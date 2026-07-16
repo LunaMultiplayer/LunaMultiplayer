@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using LmpCommon.Message.Interface;
 using Server.Client;
+using Server.Context;
 using Server.Log;
 using Server.System;
 
@@ -35,7 +36,7 @@ namespace Server.Plugin
 
         public static void LoadPlugins()
         {
-            var pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+            var pluginDirectory = Path.Combine(ServerContext.DataDirectory, "Plugins");
             if (!FileHandler.FolderExists(pluginDirectory))
                 FileHandler.FolderCreate(pluginDirectory);
             LunaLog.Debug("Loading plugins...");

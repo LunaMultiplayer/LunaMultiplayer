@@ -11,7 +11,7 @@ namespace Server.Utilities
     {
         private static Version LatestVersion { get; set; }
 
-        public static async void RefreshLatestVersion()
+        public static async Task RefreshLatestVersionAsync()
         {
             while (ServerContext.ServerRunning)
             {
@@ -22,7 +22,7 @@ namespace Server.Utilities
             }
         }
 
-        public static async void DisplayNewVersionMsg()
+        public static async Task DisplayNewVersionMsgAsync()
         {
             while (ServerContext.ServerRunning)
             {

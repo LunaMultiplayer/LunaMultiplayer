@@ -109,24 +109,8 @@ namespace LmpClient.VesselUtilities
                 return false;
             }
 
-            //Do not send the maneuver nodes
-            RemoveManeuverNodesFromProtoVessel(configNode);
             return true;
         }
-
-
-        #region Config node fixing
-
-        /// <summary>
-        /// Removes maneuver nodes from the vessel
-        /// </summary>
-        private static void RemoveManeuverNodesFromProtoVessel(ConfigNode vesselNode)
-        {
-            var flightPlanNode = vesselNode?.GetNode("FLIGHTPLAN");
-            flightPlanNode?.ClearData();
-        }
-
-        #endregion
 
         #endregion
     }

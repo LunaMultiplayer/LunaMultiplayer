@@ -32,11 +32,12 @@ namespace Server.System
                 client.PlayerName = data.PlayerName;
                 client.UniqueIdentifier = data.UniqueIdentifier;
                 client.KspVersion = string.IsNullOrWhiteSpace(data.KspVersion) ? "Unknown" : data.KspVersion;
+                client.LmpVersion = $"{data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}";
                 client.Authenticated = true;
 
                 LmpPluginHandler.FireOnClientAuthenticated(client);
 
-                LunaLog.Normal($"Client {data.PlayerName} ({data.UniqueIdentifier}) handshake successful, LMP Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}, KSP Version: {client.KspVersion}");
+                LunaLog.Normal($"Client {data.PlayerName} ({data.UniqueIdentifier}) handshake successful, LMP Version: {client.LmpVersion}, KSP Version: {client.KspVersion}");
 
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.HandshookSuccessfully, "success");
 

@@ -30,7 +30,7 @@ namespace LmpCommon.Locks
         /// </summary>
         public LockDefinition GetControlLock(Guid vesselId)
         {
-            return LockStore.ControlLocks[vesselId];
+            return LockStore.ControlLocks.TryGetValue(vesselId, out var lockDef) ? lockDef : null;
         }
 
         /// <summary>

@@ -30,6 +30,7 @@ namespace LmpClient.Systems.VesselUpdateSys
         public string AutoCleanReason;
         public bool WasControllable;
         public int Stage;
+        public string BodyName;
         public float[] Com = new float[3];
 
         #endregion
@@ -86,7 +87,15 @@ namespace LmpClient.Systems.VesselUpdateSys
             vessel.launchTime = LaunchTime;
             vessel.lastUT = LastUt;
             vessel.isPersistent = Persistent;
-            vessel.referenceTransformId = RefTransformId;
+
+            // Don't override referenceTransformId for the active vessel.
+            // The local player's "Control From Here" choice should be authoritative;
+            // overwriting it with server data causes mods like FastVesselChanger to
+            // lose the user's control reference every sync tick.
+            if (!vessel.isActiveVessel)
+                vessel.referenceTransformId = RefTransformId;
+            else if (vessel.referenceTransformId != RefTransformId)
+                UnityEngine.Debug.Log("[LMP-CFH] Guard: skipped overwrite of active vessel refTransformId (local=" + vessel.referenceTransformId + " server=" + RefTransformId + ")");
 
             if (AutoClean)
             {
@@ -121,6 +130,11 @@ namespace LmpClient.Systems.VesselUpdateSys
         {
             if (protoVessel == null) return;
 
+            // Determine whether this protoVessel belongs to the active vessel so we
+            // can skip the referenceTransform override (same reasoning as UpdateVesselFields).
+            var isActive = FlightGlobals.ActiveVessel != null
+                && FlightGlobals.ActiveVessel.protoVessel == protoVessel;
+
             protoVessel.vesselName = Name;
             protoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), Type);
             protoVessel.distanceTraveled = DistanceTraveled;
@@ -133,7 +147,9 @@ namespace LmpClient.Systems.VesselUpdateSys
             protoVessel.launchTime = LaunchTime;
             protoVessel.lastUT = LastUt;
             protoVessel.persistent = Persistent;
-            protoVessel.refTransform = RefTransformId;
+
+            if (!isActive)
+                protoVessel.refTransform = RefTransformId;
             protoVessel.autoClean = AutoClean;
             protoVessel.autoCleanReason = AutoCleanReason;
             protoVessel.wasControllable = WasControllable;

@@ -156,25 +156,39 @@ namespace LmpClient.Systems.SafetyBubble
 
         private void FillUpPositions()
         {
-            foreach (var launchsite in PSystemSetup.Instance.SpaceCenterFacilityLaunchSites)
-            {
-                if (!SpawnPoints.ContainsKey(launchsite.hostBody.name))
-                    SpawnPoints.Add(launchsite.hostBody.name, new List<SpawnPointLocation>());
+            if (PSystemSetup.Instance == null) return;
 
-                foreach (var spawnPoint in launchsite.spawnPoints)
+            var facilityLaunchSites = PSystemSetup.Instance.SpaceCenterFacilityLaunchSites;
+            if (facilityLaunchSites != null)
+            {
+                foreach (var launchsite in facilityLaunchSites)
                 {
-                    SpawnPoints[launchsite.hostBody.name].Add(new SpawnPointLocation(spawnPoint, launchsite.hostBody));
+                    if (launchsite?.hostBody == null) continue;
+
+                    if (!SpawnPoints.ContainsKey(launchsite.hostBody.name))
+                        SpawnPoints.Add(launchsite.hostBody.name, new List<SpawnPointLocation>());
+
+                    foreach (var spawnPoint in launchsite.spawnPoints)
+                    {
+                        SpawnPoints[launchsite.hostBody.name].Add(new SpawnPointLocation(spawnPoint, launchsite.hostBody));
+                    }
                 }
             }
 
-            foreach (var launchsite in PSystemSetup.Instance.StockLaunchSites)
+            var stockLaunchSites = PSystemSetup.Instance.StockLaunchSites;
+            if (stockLaunchSites != null)
             {
-                if (!SpawnPoints.ContainsKey(launchsite.Body.name))
-                    SpawnPoints.Add(launchsite.Body.name, new List<SpawnPointLocation>());
-
-                foreach (var spawnPoint in launchsite.spawnPoints)
+                foreach (var launchsite in stockLaunchSites)
                 {
-                    SpawnPoints[launchsite.Body.name].Add(new SpawnPointLocation(spawnPoint, launchsite.Body));
+                    if (launchsite?.Body == null) continue;
+
+                    if (!SpawnPoints.ContainsKey(launchsite.Body.name))
+                        SpawnPoints.Add(launchsite.Body.name, new List<SpawnPointLocation>());
+
+                    foreach (var spawnPoint in launchsite.spawnPoints)
+                    {
+                        SpawnPoints[launchsite.Body.name].Add(new SpawnPointLocation(spawnPoint, launchsite.Body));
+                    }
                 }
             }
         }

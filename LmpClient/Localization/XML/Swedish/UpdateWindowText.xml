@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <UpdateWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>New update available</Title>
-  <Text>There is a new version of LMP available for download</Text>
-  <StillCompatible>Your current LMP version is compatible with the latest version</StillCompatible>
-  <NotCompatible>Your current LMP version is not compatible with the latest version</NotCompatible>
-  <Changelog>Changelog</Changelog>
-  <CurrentVersion>Your current version:</CurrentVersion>
-  <LatestVersion>Latest version:</LatestVersion>
+  <Title>Ny uppdatering tillgänglig</Title>
+  <Text>Det finns en ny version av LMP tillgänglig att ladda ner</Text>
+  <StillCompatible>Din nuvarande version av LMP är kompatibel med den senaste versionen</StillCompatible>
+  <NotCompatible>Din nuvarande version av LMP är inte kompatibel med den senaste versionen</NotCompatible>
+  <Changelog>Ändringslogg</Changelog>
+  <CurrentVersion>Din nuvarande version:</CurrentVersion>
+  <LatestVersion>Senaste version:</LatestVersion>
 </UpdateWindowText>

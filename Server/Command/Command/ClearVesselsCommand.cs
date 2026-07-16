@@ -28,7 +28,7 @@ namespace Server.Command.Command
                                  $"You can use * on a search param to accept all possible values.{Environment.NewLine}" +
                                  $"Using * for all params like in the following example{Environment.NewLine}" +
                                  $"will clear every vessel from universe.{Environment.NewLine}" +
-                                 $"/clearvessels * * * * *{Environment.NewLine}" +
+                                 $"/clearvessels * * * *{Environment.NewLine}" +
                                  $"vesselType can be ship, plane, debris, spaceobject etc.{Environment.NewLine}" +
                                  $"vesselSituation can be orbiting, flying, landed.{Environment.NewLine}" +
                                  $"vesselSplashed can be true or false.{Environment.NewLine}" +

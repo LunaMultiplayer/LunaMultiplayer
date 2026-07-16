@@ -10,8 +10,6 @@ namespace LmpCommon
     /// </summary>
     public static class ContentChecker
     {
-        private const int BytesToRead = sizeof(long);
-
         /// <summary>
         /// Checks if the file contents and the string are equal
         /// </summary>
@@ -34,25 +32,23 @@ namespace LmpCommon
             if (numBytes != fileInfo.Length)
                 return false;
 
-            var iterations = (int)Math.Ceiling((double)numBytes / BytesToRead);
-
-            using (var contentStream = new MemoryStream(contents, 0, numBytes))
             using (var fileStream = File.OpenRead(pathToFile))
             {
-                var one = new byte[BytesToRead];
-                var two = new byte[BytesToRead];
-
-                for (var i = 0; i < iterations; i++)
+                var buffer = new byte[4096];
+                int totalRead = 0;
+                int read;
+                while ((read = fileStream.Read(buffer, 0, Math.Min(buffer.Length, numBytes - totalRead))) > 0)
                 {
-                    contentStream.Read(one, 0, BytesToRead);
-                    fileStream.Read(two, 0, BytesToRead);
-
-                    if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
-                        return false;
+                    for (var i = 0; i < read; i++)
+                    {
+                        if (buffer[i] != contents[totalRead + i])
+                            return false;
+                    }
+                    totalRead += read;
                 }
-            }
 
-            return true;
+                return totalRead == numBytes;
+            }
         }
 
     }

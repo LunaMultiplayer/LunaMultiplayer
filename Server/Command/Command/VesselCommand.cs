@@ -14,7 +14,7 @@ namespace Server.Command.Command
             var args = commandArgs.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (args.Length < 2 || args[0].ToLower() != "info")
             {
-                LunaLog.Normal("Usage: /vessel info [name/guid]");
+                LunaLog.Error("Syntax error. Usage: /vessel info [name/guid]");
                 return false;
             }
 

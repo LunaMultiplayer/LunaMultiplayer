@@ -23,7 +23,7 @@ namespace Server.System.Vessel
             if (VesselContext.RemovedVessels.ContainsKey(msgData.VesselId)) return;
 
             //Sync part changes ALWAYS and ignore the rate they arrive
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                 {

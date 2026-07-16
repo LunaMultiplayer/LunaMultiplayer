@@ -23,6 +23,7 @@ namespace Server.Web.Structures
         public double MeanAnomaly { get; set; }
         public double Epoch { get; set; }
         public int ReferenceBody { get; set; }
+        public string ReferenceBodyName { get; set; }
 
         public VesselInfo(Vessel vessel)
         {
@@ -54,6 +55,9 @@ namespace Server.Web.Structures
                 Epoch = eph;
             if (int.TryParse(vessel.Orbit.GetSingle("REF").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var refBody))
                 ReferenceBody = refBody;
+
+            // Prefer ORBIT "body" then IDENT (same rules as Vessel.GetOrbitingBodyName); raw IDENT alone throws if missing.
+            ReferenceBodyName = vessel.GetOrbitingBodyName();
         }
     }
 }

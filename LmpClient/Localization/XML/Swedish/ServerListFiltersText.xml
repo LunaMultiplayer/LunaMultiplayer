@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
 
 <ServerListFiltersText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <HideFullServers>Hide full servers</HideFullServers>
-  <HideEmptyServers>Hide empty servers</HideEmptyServers>
-  <HidePrivateServers>Hide private servers</HidePrivateServers>
-  <DedicatedServersOnly>Show only dedicated servers</DedicatedServersOnly>
+  <HideFullServers>Göm fulla servrar</HideFullServers>
+  <HideEmptyServers>Göm tomma servrar</HideEmptyServers>
+  <HidePrivateServers>Göm privata servrar</HidePrivateServers>
+  <DedicatedServersOnly>Visa endast dedikerade servrar</DedicatedServersOnly>
 </ServerListFiltersText>

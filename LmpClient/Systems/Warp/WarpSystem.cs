@@ -247,7 +247,17 @@ namespace LmpClient.Systems.Warp
         /// </summary>
         public double GetSubspaceTime(int subspace)
         {
-            return Subspaces.ContainsKey(subspace) ? TimeSyncSystem.ServerClockSec + Subspaces[subspace] : 0d;
+            if (!Subspaces.ContainsKey(subspace)) return 0d;
+
+            var result = TimeSyncSystem.ServerClockSec + Subspaces[subspace];
+            if (double.IsNaN(result) || double.IsInfinity(result) || result < 0)
+            {
+                LunaLog.LogWarning($"[LMP]: GetSubspaceTime({subspace}) produced invalid result {result} " +
+                                   $"(ServerClockSec={TimeSyncSystem.ServerClockSec}, offset={Subspaces[subspace]}). Returning 0.");
+                return 0d;
+            }
+
+            return result;
         }
 
         public int GetPlayerSubspace(string playerName)

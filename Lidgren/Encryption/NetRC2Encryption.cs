@@ -7,18 +7,18 @@ namespace Lidgren.Network
 	public class NetRC2Encryption : NetCryptoProviderBase
 	{
 		public NetRC2Encryption(NetPeer peer)
-			: base(peer, new RC2CryptoServiceProvider())
+			: base(peer, RC2.Create())
 		{
 		}
 
 		public NetRC2Encryption(NetPeer peer, string key)
-			: base(peer, new RC2CryptoServiceProvider())
+			: base(peer, RC2.Create())
 		{
 			SetKey(key);
 		}
 
 		public NetRC2Encryption(NetPeer peer, byte[] data, int offset, int count)
-			: base(peer, new RC2CryptoServiceProvider())
+			: base(peer, RC2.Create())
 		{
 			SetKey(data, offset, count);
 		}

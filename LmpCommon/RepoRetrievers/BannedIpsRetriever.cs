@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+#pragma warning disable SYSLIB0014
+
 namespace LmpCommon.RepoRetrievers
 {
     /// <summary>
@@ -63,7 +65,7 @@ namespace LmpCommon.RepoRetrievers
         /// Concurrent calls are serialized; calls that arrive while a recent refresh is
         /// still considered fresh are coalesced.
         /// </summary>
-        private static void RefreshBannedIps()
+        public static void RefreshBannedIps()
         {
             lock (RefreshLock)
             {
@@ -81,7 +83,7 @@ namespace LmpCommon.RepoRetrievers
                         var content = reader.ReadToEnd();
                         var ips = content
                             .Split('\n')
-                            .Select(s => s.Trim()) // Trim whitespace and \r in case of Windows line breaks
+                            .Select(s => s.Trim()) // Trim whitespace and \r characters in case of Windows line breaks
                             .Where(s => !s.StartsWith("#") && !string.IsNullOrWhiteSpace(s))
                             .ToArray();
 

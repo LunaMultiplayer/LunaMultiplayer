@@ -14,7 +14,7 @@ namespace Server.Client
 {
     public class ClientMainThread
     {
-        public static async void ThreadMain()
+        public static async Task ThreadMainAsync()
         {
             // PeriodicTimer instead of per-tick Task.Delay. At idle this loop runs ~200 times/sec
             // and the Task.Delay churn was, together with the Lidgren receive loop, the dominant

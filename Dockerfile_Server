@@ -14,12 +14,13 @@
 ARG OS_BASE=alpine
 ARG OS_VERSION=3.20
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-${OS_BASE}${OS_VERSION} AS base
+# SDK image: 10.0-alpine (10.0-alpine3.20 is not published on MCR for .NET 10).
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS base
 
 COPY .nuget                           /LunaMultiplayer/.nuget
-COPY LmpCommon/LmpCommon.shproj       /LunaMultiplayer/LmpCommon/LmpCommon.shproj
-COPY Lidgren/Lidgren.shproj           /LunaMultiplayer/Lidgren/Lidgren.shproj
-COPY LmpGlobal/LmpGlobal.shproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.shproj
+COPY LmpCommon/LmpCommon.csproj       /LunaMultiplayer/LmpCommon/LmpCommon.csproj
+COPY LmpGlobal/LmpGlobal.csproj       /LunaMultiplayer/LmpGlobal/LmpGlobal.csproj
+COPY Lidgren/Lidgren.projitems        /LunaMultiplayer/Lidgren/Lidgren.projitems
 COPY Lidgren.Core/Lidgren.Core.csproj /LunaMultiplayer/Lidgren.Core/Lidgren.Core.csproj
 COPY Lidgren.Net/Lidgren.Net.csproj   /LunaMultiplayer/Lidgren.Net/Lidgren.Net.csproj
 COPY uhttpsharp/uhttpsharp.csproj     /LunaMultiplayer/uhttpsharp/uhttpsharp.csproj
@@ -30,9 +31,15 @@ ARG OS_BASE
 ARG OS_VERSION
 ARG TARGETARCH
 ARG TARGETVARIANT
-RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
-    cd /LunaMultiplayer/Server && \
-    dotnet restore -r ${OS_BASE}.${OS_VERSION}-${TARGET}
+# Portable musl RIDs (.NET 8+); versioned alpine.* RIDs are not recognized (NETSDK1083).
+RUN case "${TARGETARCH}" in \
+    amd64) DOTNET_RID=linux-musl-x64 ;; \
+    arm64) DOTNET_RID=linux-musl-arm64 ;; \
+    arm) DOTNET_RID=linux-musl-arm ;; \
+    *) echo "Unsupported TARGETARCH=${TARGETARCH}"; exit 1 ;; \
+  esac && \
+  cd /LunaMultiplayer/Server && \
+  dotnet restore -r ${DOTNET_RID}
 
 COPY . /LunaMultiplayer
 
@@ -48,8 +55,13 @@ ARG OS_BASE
 ARG OS_VERSION
 ARG TARGETARCH
 ARG TARGETVARIANT
-RUN export TARGET=$(echo ${TARGETARCH}${TARGETVARIANT} | sed -e 's/amd64/x64/' -e 's/armv8/arm64/' -e 's/armv7/arm/'); \
-    dotnet publish -c Release -r ${OS_BASE}.${OS_VERSION}-${TARGET} -o Publish
+RUN case "${TARGETARCH}" in \
+    amd64) DOTNET_RID=linux-musl-x64 ;; \
+    arm64) DOTNET_RID=linux-musl-arm64 ;; \
+    arm) DOTNET_RID=linux-musl-arm ;; \
+    *) echo "Unsupported TARGETARCH=${TARGETARCH}"; exit 1 ;; \
+  esac && \
+  dotnet publish -c Release -r ${DOTNET_RID} --self-contained true -o Publish
 
 FROM ${OS_BASE}:${OS_VERSION}
 RUN apk add icu-libs libstdc++ libgcc

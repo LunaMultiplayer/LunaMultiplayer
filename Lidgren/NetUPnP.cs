@@ -3,6 +3,9 @@ using System.IO;
 using System.Xml;
 using System.Net;
 using System.Net.Sockets;
+#if !NET472
+using System.Net.Http;
+#endif
 using System.Threading;
 
 #if !__NOIPENDPOINT__
@@ -37,6 +40,9 @@ namespace Lidgren.Network
 	/// </summary>
 	public class NetUPnP
 	{
+#if !NET472
+		private static readonly HttpClient s_httpClient = new HttpClient();
+#endif
 		private const int c_discoveryTimeOutMillis = 1000;
 
 		private string m_serviceUrl;
@@ -97,8 +103,16 @@ namespace Lidgren.Network
 			{
 #endif
 			XmlDocument desc = new XmlDocument();
-			using (var response = WebRequest.Create(resp).GetResponse())
-				desc.Load(response.GetResponseStream());
+#if !NET472
+            using (var responseStream = s_httpClient.GetStreamAsync(resp).GetAwaiter().GetResult())
+                desc.Load(responseStream);
+#else
+			var request = WebRequest.Create(resp);
+			request.Method = "GET";
+			using (var response = request.GetResponse())
+			using (var responseStream = response.GetResponseStream())
+				desc.Load(responseStream);
+#endif
 
 			XmlNamespaceManager nsMgr = new XmlNamespaceManager(desc.NameTable);
 			nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
@@ -265,19 +279,42 @@ namespace Lidgren.Network
 			soap +
 			"</s:Body>" +
 			"</s:Envelope>";
-			WebRequest r = HttpWebRequest.Create(url);
-			r.Method = "POST";
-			byte[] b = System.Text.Encoding.UTF8.GetBytes(req);
-			r.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:" + m_serviceName + ":1#" + function + "\""); 
-			r.ContentType = "text/xml; charset=\"utf-8\"";
-			r.ContentLength = b.Length;
-			r.GetRequestStream().Write(b, 0, b.Length);
-			using (WebResponse wres = r.GetResponse()) {
-				XmlDocument resp = new XmlDocument();
-				Stream ress = wres.GetResponseStream();
-				resp.Load(ress);
-				return resp;
+
+#if !NET472
+			using (var request = new HttpRequestMessage(HttpMethod.Post, url))
+			{
+				request.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:" + m_serviceName + ":1#" + function + "\"");
+				request.Content = new StringContent(req, System.Text.Encoding.UTF8, "text/xml");
+				request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/xml");
+				request.Content.Headers.ContentType.CharSet = "utf-8";
+
+				using (var response = s_httpClient.SendAsync(request).GetAwaiter().GetResult())
+				using (var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
+				{
+					XmlDocument respObj = new XmlDocument();
+					respObj.Load(stream);
+					return respObj;
+				}
 			}
+#else
+			var request = WebRequest.Create(url);
+			request.Method = "POST";
+			byte[] body = System.Text.Encoding.UTF8.GetBytes(req);
+			request.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:" + m_serviceName + ":1#" + function + "\"");
+			request.ContentType = "text/xml; charset=\"utf-8\"";
+			request.ContentLength = body.Length;
+
+			using (var requestStream = request.GetRequestStream())
+				requestStream.Write(body, 0, body.Length);
+
+			using (var response = request.GetResponse())
+			using (var responseStream = response.GetResponseStream())
+			{
+				XmlDocument respObj = new XmlDocument();
+				respObj.Load(responseStream);
+				return respObj;
+			}
+#endif
 		}
 	}
 }

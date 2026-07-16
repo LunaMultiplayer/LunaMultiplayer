@@ -41,7 +41,7 @@ namespace Server.System
                     msgData.Group = newGroup;
 
                     MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
-                    Task.Run(() => SaveGroups());
+                    _ = Task.Run(() => SaveGroups());
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace Server.System
                 msgData.GroupName = groupName;
 
                 MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
-                Task.Run(() => SaveGroups());
+                _ = Task.Run(() => SaveGroups());
             }
         }
 
@@ -72,7 +72,7 @@ namespace Server.System
                         msgData.Group = group;
 
                         MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
-                        Task.Run(() => SaveGroups());
+                        _ = Task.Run(() => SaveGroups());
                     }
                 }
                 else
@@ -87,7 +87,7 @@ namespace Server.System
                             msgData.Group = group;
 
                             MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
-                            Task.Run(() => SaveGroups());
+                            _ = Task.Run(() => SaveGroups());
                         }
                     }
                 }

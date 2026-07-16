@@ -10,7 +10,7 @@ namespace Server.Log
         private static long _lastLogExpiredCheck;
         private static long _lastDayCheck;
 
-        public static async void RunLogThread()
+        public static async Task RunLogThreadAsync()
         {
             while (ServerContext.ServerRunning)
             {

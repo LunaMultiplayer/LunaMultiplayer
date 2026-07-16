@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -10,7 +10,7 @@ namespace Server.System.Scenario
         /// </summary>
         public static void WriteRepairedDestroyedDataToFile(string facilityId, bool intact)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 lock (Semaphore.GetOrAdd("ScenarioDestructibles", new object()))
                 {

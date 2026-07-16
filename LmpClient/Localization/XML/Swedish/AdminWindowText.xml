@@ -2,8 +2,8 @@
 
 <AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Title>Administration</Title>
-  <Password>Server administratörs lösenord</Password>
-  <ConfirmDialogTitle>Bekräftelse</ConfirmDialogTitle>
+  <Password>Server administratörslösenord</Password>
+  <ConfirmDialogTitle>Bekräfta</ConfirmDialogTitle>
   <BanText>Vill du verkligen bannlysa den här spelaren?</BanText>
   <KickText>Vill du verkligen sparka den här spelaren?</KickText>
   <Reason>Anledning:</Reason>

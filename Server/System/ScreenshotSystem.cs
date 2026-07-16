@@ -33,7 +33,7 @@ namespace Server.System
         /// </summary>
         public static void SaveScreenshot(ClientStructure client, ScreenshotDataMsgData data)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var playerFolder = Path.Combine(ScreenshotPath, client.PlayerName);
                 if (!Directory.Exists(playerFolder))
@@ -85,7 +85,7 @@ namespace Server.System
         /// </summary>
         public static void SendScreenshotFolders(ClientStructure client)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotFoldersReplyMsgData>();
                 msgData.Folders = Directory.GetDirectories(ScreenshotPath).Select(d => new DirectoryInfo(d).Name).ToArray();
@@ -102,7 +102,7 @@ namespace Server.System
         /// </summary>
         public static void SendScreenshotList(ClientStructure client, ScreenshotListRequestMsgData data)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var screenshots = new List<ScreenshotInfo>();
                 var folder = Path.Combine(ScreenshotPath, data.FolderName);
@@ -144,7 +144,7 @@ namespace Server.System
         /// </summary>
         public static void SendScreenshot(ClientStructure client, ScreenshotDownloadRequestMsgData data)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var file = Path.Combine(ScreenshotPath, data.FolderName, $"{data.DateTaken}.png");
                 if (File.Exists(file))

@@ -21,17 +21,17 @@ namespace Server.Utilities
         /// <summary>
         /// Major version of the .NET runtime the server is built against (see TargetFramework in Server.csproj).
         /// </summary>
-        private const int RequiredMajorVersion = 6;
+        private const int RequiredMajorVersion = 10;
 
         /// <summary>
         /// Friendly name of the required runtime, shown to the user if the check fails.
         /// </summary>
-        private const string RequiredRuntimeName = ".NET 6.0 Runtime";
+        private const string RequiredRuntimeName = ".NET 10.0 Runtime";
 
         /// <summary>
         /// Official Microsoft download page for the required runtime.
         /// </summary>
-        private const string RuntimeDownloadUrl = "https://dotnet.microsoft.com/en-us/download/dotnet/6.0";
+        private const string RuntimeDownloadUrl = "https://dotnet.microsoft.com/en-us/download/dotnet/10.0";
 
         /// <summary>
         /// Name of the shared framework the base .NET runtime ships under. Needed to tell apart
@@ -82,7 +82,7 @@ namespace Server.Utilities
 
         /// <summary>
         /// Shells out to <c>dotnet --list-runtimes</c> so the operator can see exactly what
-        /// is (and isn't) installed. Highlights the common misinstall case where a .NET 6
+        /// is (and isn't) installed. Highlights the common misinstall case where a .NET
         /// SDK / desktop / ASP.NET variant is present but the base runtime under
         /// <see cref="BaseRuntimeMoniker"/> is missing.
         /// </summary>
@@ -103,31 +103,31 @@ namespace Server.Utilities
             foreach (var runtime in installedRuntimes)
                 Console.Error.WriteLine($"   {runtime}");
 
-            var hasAnyNet6 = false;
-            var hasBaseNet6 = false;
+            var hasAnyCorrectNet = false;
+            var hasBaseCorrectNet = false;
             foreach (var runtime in installedRuntimes)
             {
                 if (!LooksLikeMajor(runtime, RequiredMajorVersion))
                     continue;
 
-                hasAnyNet6 = true;
+                hasAnyCorrectNet = true;
                 if (runtime.StartsWith(BaseRuntimeMoniker + " ", StringComparison.OrdinalIgnoreCase))
-                    hasBaseNet6 = true;
+                    hasBaseCorrectNet = true;
             }
 
             Console.Error.WriteLine();
-            if (hasAnyNet6 && !hasBaseNet6)
+            if (hasAnyCorrectNet && !hasBaseCorrectNet)
             {
-                Console.Error.WriteLine($" NOTE: A .NET 6 install is present, but the base '{BaseRuntimeMoniker}'");
+                Console.Error.WriteLine($" NOTE: A .NET {RequiredMajorVersion} install is present, but the base '{BaseRuntimeMoniker}'");
                 Console.Error.WriteLine(" runtime that LunaServer needs is missing. This typically happens when");
-                Console.Error.WriteLine(" only the .NET 6 SDK listing or a specialized runtime (Desktop /");
+                Console.Error.WriteLine($" only the .NET {RequiredMajorVersion} SDK listing or a specialized runtime (Desktop /");
                 Console.Error.WriteLine(" ASP.NET Core) got picked up. Install the plain \".NET Runtime\" 6.0.x");
                 Console.Error.WriteLine(" from the page above.");
             }
-            else if (!hasAnyNet6)
+            else if (!hasAnyCorrectNet)
             {
-                Console.Error.WriteLine(" NOTE: No .NET 6.x runtime was found. The versions listed above are");
-                Console.Error.WriteLine(" not compatible with this server - install .NET 6 as described.");
+                Console.Error.WriteLine($" NOTE: No .NET {RequiredMajorVersion}.x runtime was found. The versions listed above are");
+                Console.Error.WriteLine($" not compatible with this server - install .NET {RequiredMajorVersion} as described.");
             }
         }
 

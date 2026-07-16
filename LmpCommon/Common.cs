@@ -98,7 +98,7 @@ namespace LmpCommon
 
         public static string CalculateSha256Hash(byte[] data)
         {
-            using (var provider = new SHA256Managed())
+            using (var provider = SHA256.Create())
             {
                 var hashedBytes = provider.ComputeHash(data);
                 return BitConverter.ToString(hashedBytes);

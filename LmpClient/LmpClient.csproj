@@ -168,6 +168,10 @@
     <Compile Include="Harmony\EVAConstructionModeEditor_AttachPart.cs" />
     <Compile Include="Harmony\EVAConstructionModeEditor_DropAttachablePart.cs" />
     <Compile Include="Harmony\ModuleDockingNode_DockToVessel.cs" />
+    <Compile Include="Harmony\ModuleDockingNode_Undock.cs" />
+    <Compile Include="Harmony\ModuleDockingNode_UndockSameVessel.cs" />
+    <Compile Include="Harmony\ContractPreLoader_Filter.cs" />
+    <Compile Include="Harmony\ContractSystem_LoadContract.cs" />
     <Compile Include="Harmony\ContractSystem_OnAwake.cs" />
     <Compile Include="Harmony\ContractSystem_OnLoad.cs" />
     <Compile Include="Harmony\FlightDriver_SetStartupNewVessel.cs" />
@@ -196,6 +200,7 @@
     <Compile Include="Harmony\ScenarioDiscoverableObjects_SpawnAsteroid.cs" />
     <Compile Include="Harmony\ScenarioDiscoverableObjects_SpawnComet.cs" />
     <Compile Include="Harmony\ScenarioDiscoverableObjects_UpdateSpaceObjects.cs" />
+    <Compile Include="Harmony\ScenarioNewGameIntro_OnLoad.cs" />
     <Compile Include="Harmony\ShipConstruction_AssembleForLaunch.cs" />
     <Compile Include="Harmony\SpaceTracking_StopTrackingObject.cs" />
     <Compile Include="Harmony\SpaceTracking_StartTrackingObject.cs" />
@@ -203,6 +208,7 @@
     <Compile Include="Harmony\TourismContract_ClearKerbalsHard.cs" />
     <Compile Include="Harmony\TourismContract_ClearKerbalsSoft.cs" />
     <Compile Include="Harmony\UIPartActionButton_OnClick.cs" />
+    <Compile Include="Harmony\UIPlanetariumDateTime_SetTime.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
@@ -242,6 +248,8 @@
     <Compile Include="Harmony\Vessel_Load.cs" />
     <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
+    <Compile Include="Harmony\Vessel_UpdateCaches.cs" />
+    <Compile Include="Harmony\VesselModule_Start.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
     <Compile Include="Localization\Structures\BannedPartsResourcesWindowText.cs" />
     <Compile Include="Localization\Structures\ButtonTooltips.cs" />
@@ -290,6 +298,7 @@
     <Compile Include="Systems\ShareCareer\ShareCareerSystem.cs" />
     <Compile Include="Systems\ShareContracts\ContractPartReferenceChecker.cs" />
     <Compile Include="Systems\ShareContracts\ContractsScenarioSanitizer.cs" />
+    <Compile Include="Systems\ShareContracts\LmpUnavailableContract.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsEvents.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsMessageHandler.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsMessageSender.cs" />
@@ -497,6 +506,7 @@
     <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
     <Compile Include="VesselUtilities\VesselLoader.cs" />
+    <Compile Include="VesselUtilities\DockingPortUtil.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoSystem.cs" />
@@ -874,13 +884,19 @@
       <Project>{dcd22705-5f24-4533-98f9-4907cfbbea54}</Project>
       <Name>Lidgren.Net</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
+      <Project>{d558a5a6-3fae-4628-8d37-6dae155b645d}</Project>
+      <Name>LmpGlobal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LmpCommon\LmpCommon.csproj">
+      <Project>{d4832184-1a94-4ffc-8d4c-3e3214f109f1}</Project>
+      <Name>LmpCommon</Name>
+    </ProjectReference>
   </ItemGroup>
-  <Import Project="..\LmpCommon\LmpCommon.projitems" Label="Shared" />
-  <Import Project="..\LmpGlobal\LmpGlobal.projitems" Label="Shared" />
   <PropertyGroup>
-    <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(ProjectDir)..\Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent Condition="'$(OS)' != 'Unix'">xcopy /Y "$(SolutionDir)External\Dependencies\*.dll" "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent Condition="'$(OS)' != 'Unix'">xcopy /Y /S "$(ProjectDir)..\External\Dependencies\*.dll" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>

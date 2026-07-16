@@ -7,7 +7,7 @@
         /// </summary>
         public static ProtoPartResourceSnapshot FindResourceInProtoPart(this ProtoPartSnapshot protoPart, string resourceName)
         {
-            if (protoPart == null) return null;
+            if (protoPart == null || protoPart.resources == null) return null;
 
             for (var i = 0; i < protoPart.resources.Count; i++)
             {

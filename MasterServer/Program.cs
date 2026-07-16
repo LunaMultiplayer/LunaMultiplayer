@@ -91,7 +91,7 @@ namespace MasterServer
             if (entryPoint == null)
                 throw new Exception("Could not find entrypoint in LmpMasterServer DLL.");
 
-            entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new object[] { Arguments });
+            entryPoint.GetMethod("MainEntryPointAsync")?.Invoke(null, new object[] { Arguments });
 
             _stopDLLCallback = () =>
             {

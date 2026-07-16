@@ -3,6 +3,7 @@ using LmpClient.Systems.Lock;
 using LmpClient.Systems.VesselPositionSys;
 using LmpClient.VesselUtilities;
 using System;
+using System.Linq;
 
 namespace LmpClient.Systems.VesselUndockSys
 {
@@ -36,6 +37,18 @@ namespace LmpClient.Systems.VesselUndockSys
             {
                 if (protoPart.partRef)
                 {
+                    var dockingNode = protoPart.partRef.FindModulesImplementing<ModuleDockingNode>().FirstOrDefault();
+                    if (dockingNode != null)
+                    {
+                        if (!DockingPortUtil.EnsureRecoverableForUndock(dockingNode,
+                                "VesselUndock.ProcessUndock", out var failureReason))
+                        {
+                            LunaLog.LogWarning($"[LMP]: Skipping remote undock. {failureReason}. " +
+                                $"Part: {protoPart.partRef.partName}, Vessel: {VesselId}, PartFlightId: {PartFlightId}");
+                            return;
+                        }
+                    }
+
                     VesselUndockSystem.Singleton.ManuallyUndockingVesselId = protoPart.partRef.vessel.id;
                     VesselUndockSystem.Singleton.IgnoreEvents = true;
 

@@ -116,11 +116,16 @@ namespace LmpClient.Systems.VesselLockSys
                     {
                         if (VesselCommon.IsSpectating)
                         {
+                            var spectatedVessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
+
+                            // Remove the FlyByWire callback FIRST so the next physics tick cannot
+                            // overwrite our throttle zero with the previous controller's last state.
+                            VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
+
                             // Zero the vessel's throttle before removing the spectate input lock.
                             // The spectated vessel's ctrlState carries the previous controller's
                             // last-sent throttle; without clearing it the new controller instantly
                             // inherits full throttle on the frame the lock is granted.
-                            var spectatedVessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
                             if (spectatedVessel != null)
                             {
                                 spectatedVessel.ctrlState.mainThrottle = 0f;
@@ -134,7 +139,8 @@ namespace LmpClient.Systems.VesselLockSys
 
                         //As we got the lock of that vessel, remove its FS and position updates
                         //This is done so even if the vessel has queued updates, we ignore them as we are controlling it
-                        VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
+                        if (!VesselCommon.IsSpectating) // already removed above if we were spectating
+                            VesselCommon.RemoveVesselFromSystems(lockDefinition.VesselId);
                     }
                     else
                     {

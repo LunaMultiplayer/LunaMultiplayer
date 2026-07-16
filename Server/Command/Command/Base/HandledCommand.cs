@@ -1,4 +1,5 @@
-﻿using Server.Log;
+﻿using Server.Context;
+using Server.Log;
 using Server.System;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Server.Command.Command.Base
 
         protected virtual List<string> Items { get; set; } = new List<string>();
 
-        protected string FullPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FileName);
+        protected string FullPath => Path.Combine(ServerContext.DataDirectory, FileName);
 
         #region Protected methods
 

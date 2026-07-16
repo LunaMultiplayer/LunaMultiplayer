@@ -31,7 +31,7 @@ namespace Server.System
             if (client.PlayerName != data.CraftToDelete.FolderName)
                 return;
 
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var file = Path.Combine(CraftPath, data.CraftToDelete.FolderName, data.CraftToDelete.CraftType.ToString(),
                     $"{data.CraftToDelete.CraftName}.craft");
@@ -51,7 +51,7 @@ namespace Server.System
         /// </summary>
         public static void SaveCraft(ClientStructure client, CraftLibraryDataMsgData data)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var playerFolderType = Path.Combine(CraftPath, client.PlayerName, data.Craft.CraftType.ToString());
                 if (!Directory.Exists(playerFolderType))
@@ -107,7 +107,7 @@ namespace Server.System
         /// </summary>
         public static void SendCraftFolders(ClientStructure client)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryFoldersReplyMsgData>();
                 msgData.Folders = Directory.GetDirectories(CraftPath)
@@ -127,7 +127,7 @@ namespace Server.System
         /// </summary>
         public static void SendCraftList(ClientStructure client, CraftLibraryListRequestMsgData data)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var crafts = new List<CraftBasicInfo>();
                 var playerFolder = Path.Combine(CraftPath, data.FolderName);
@@ -167,7 +167,7 @@ namespace Server.System
         /// </summary>
         public static void SendCraft(ClientStructure client, CraftLibraryDownloadRequestMsgData data)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 var lastTime = LastRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
                 if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))

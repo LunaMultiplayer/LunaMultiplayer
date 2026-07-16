@@ -6,6 +6,8 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
+#pragma warning disable SYSLIB0014
+
 namespace LmpCommon
 {
     public static class LunaNetUtils
@@ -92,7 +94,7 @@ namespace LmpCommon
         /// Gets whether the address is an IPv6 Unique Local address.
         /// Backport of https://github.com/dotnet/runtime/pull/48853 landing in .NET 6
         /// </summary>
-        internal static bool IsIPv6UniqueLocal(this IPAddress address)
+        public static bool IsIPv6UniqueLocal(this IPAddress address)
         {
             if (address.AddressFamily != AddressFamily.InterNetworkV6)
                 return false;

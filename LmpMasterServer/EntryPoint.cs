@@ -24,10 +24,10 @@ namespace LmpMasterServer
         {
             Lidgren.MasterServer.RunServer = false;
             LunaHttpServer.Server.Dispose();
-            MasterServerPortMapper.RemoveOpenedPorts().Wait();
+            _ = Task.Run(MasterServerPortMapper.RemoveOpenedPortsAsync);
         }
 
-        public static void MainEntryPoint(string[] args)
+        public static async Task MainEntryPointAsync(string[] args)
         {
             MasterServerPortMapper.UseUpnp = !args.Any(a => a.Contains("noupnp"));
             IsNightly = args.Any(a => a.Contains("nightly"));
@@ -35,10 +35,7 @@ namespace LmpMasterServer
             {
                 ConsoleUtil.DisableConsoleQuickEdit();
 
-                Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
-
-                if (IsNightly)
-                    Console.Title += " NIGHTLY";
+                Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}" + (IsNightly ? " NIGHTLY" : "");
             }
 
             Console.OutputEncoding = Encoding.UTF8;
@@ -52,7 +49,7 @@ namespace LmpMasterServer
 
             if (!ParseMasterServerPortNumber(commandLineArguments)) return;
             if (!ParseHttpServerPort(commandLineArguments)) return;
-            MasterServerPortMapper.OpenPort().GetAwaiter().GetResult();
+            await MasterServerPortMapper.OpenPortAsync();
 
             LunaLog.Normal($"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
             if (IsNightly)
@@ -64,10 +61,11 @@ namespace LmpMasterServer
                 Lidgren.MasterServer.RunServer = true;
                 Http.Handlers.WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
-                Task.Run(DedicatedServerRetriever.RefreshDedicatedServersList);
+                _ = Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync);
                 BannedIpsRetriever.Prewarm();
-                Task.Run(MasterServerPortMapper.RefreshUpnpPort);
-                Task.Run(Lidgren.MasterServer.Start);
+                _ = Task.Run(() => BannedIpsRetriever.RefreshBannedIps());
+                _ = Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync);
+                _ = Task.Run(Lidgren.MasterServer.StartAsync);
             }
         }
 

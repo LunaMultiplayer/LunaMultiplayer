@@ -3,6 +3,8 @@ using LmpClient.Diagnostics;
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Systems.KerbalSys;
+using LmpClient.Systems.Lock;
+using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
@@ -21,6 +23,12 @@ namespace LmpClient.Systems.VesselProtoSys
         #region Fields & properties
 
         private static readonly HashSet<Guid> QueuedVesselsToSend = new HashSet<Guid>();
+
+        /// <summary>
+        /// Tracks last-sent maneuver node signatures per vessel to detect dV changes between periodic ticks.
+        /// Key: vessel ID. Value: concatenated UT|dV string for all nodes, or empty if no nodes.
+        /// </summary>
+        private static readonly Dictionary<Guid, string> ManeuverSignatures = new Dictionary<Guid, string>();
 
         public readonly HashSet<Guid> VesselsUnableToLoad = new HashSet<Guid>();
 
@@ -95,6 +103,9 @@ namespace LmpClient.Systems.VesselProtoSys
 
             WarpEvent.onTimeWarpStopped.Add(VesselProtoEvents.WarpStopped);
 
+            GameEvents.onManeuverAdded.Add(VesselProtoEvents.ManeuverNodeAdded);
+            GameEvents.onManeuverRemoved.Add(VesselProtoEvents.ManeuverNodeRemoved);
+
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselDefinition));
         }
@@ -116,12 +127,16 @@ namespace LmpClient.Systems.VesselProtoSys
 
             WarpEvent.onTimeWarpStopped.Remove(VesselProtoEvents.WarpStopped);
 
+            GameEvents.onManeuverAdded.Remove(VesselProtoEvents.ManeuverNodeAdded);
+            GameEvents.onManeuverRemoved.Remove(VesselProtoEvents.ManeuverNodeRemoved);
+
             //This is the main system that handles the vesselstore so if it's disabled clear the store too
             VesselProtos.Clear();
             VesselsUnableToLoad.Clear();
             QueuedVesselsToSend.Clear();
             LastBroadcastDriftPartCount.Clear();
             LocalTopologyTracker.ClearAll();
+            ManeuverSignatures.Clear();
         }
 
         #endregion
@@ -130,12 +145,20 @@ namespace LmpClient.Systems.VesselProtoSys
 
         /// <summary>
         /// Send the definition of our own vessel and the secondary vessels.
+        /// Also detects maneuver node dV changes (which fire no KSP event) and re-sends when they differ.
         /// </summary>
         private void SendVesselDefinition()
         {
             try
             {
                 if (!ProtoSystemReady) return;
+
+                var activeVessel = FlightGlobals.ActiveVessel;
+
+                if (activeVessel.parts.Count != activeVessel.protoVessel.protoPartSnapshots.Count)
+                    MessageSender.SendVesselMessage(activeVessel);
+
+                CheckAndSendManeuverChanges(activeVessel);
 
                 if (ShouldBroadcastDriftFor(FlightGlobals.ActiveVessel))
                     MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, reason: "Part count drift (active vessel)");
@@ -150,7 +173,51 @@ namespace LmpClient.Systems.VesselProtoSys
             {
                 LunaLog.LogError($"[LMP]: Error in SendVesselDefinition {e}");
             }
+        }
 
+        /// <summary>
+        /// Compares the current maneuver node state of a vessel against the last-sent snapshot.
+        /// Sends the vessel proto if anything has changed (node added, removed, or dV edited).
+        /// Only acts when we hold the update lock for this vessel.
+        /// </summary>
+        private void CheckAndSendManeuverChanges(Vessel vessel)
+        {
+            if (vessel == null) return;
+            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
+
+            var sig = GetManeuverSignature(vessel);
+            if (ManeuverSignatures.TryGetValue(vessel.id, out var lastSig))
+            {
+                if (lastSig != sig)
+                {
+                    ManeuverSignatures[vessel.id] = sig;
+                    LunaLog.Log($"[LMP]: Maneuver nodes changed on {vessel.vesselName}, sending updated proto");
+                    MessageSender.SendVesselMessage(vessel);
+                }
+            }
+            else
+            {
+                // First poll for this vessel — record baseline without sending
+                ManeuverSignatures[vessel.id] = sig;
+            }
+        }
+
+        /// <summary>
+        /// Produces a compact string signature of all maneuver nodes on a vessel.
+        /// Format: "UT|dVx,dVy,dVz;UT|dVx,dVy,dVz;...". Empty string if no nodes.
+        /// </summary>
+        private static string GetManeuverSignature(Vessel vessel)
+        {
+            var nodes = vessel?.patchedConicSolver?.maneuverNodes;
+            if (nodes == null || nodes.Count == 0) return string.Empty;
+
+            var parts = new string[nodes.Count];
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                var dv = nodes[i].DeltaV;
+                parts[i] = $"{nodes[i].UT:F1}|{dv.x:F4},{dv.y:F4},{dv.z:F4}";
+            }
+            return string.Join(";", parts);
         }
 
         /// <summary>
@@ -326,6 +393,8 @@ namespace LmpClient.Systems.VesselProtoSys
 
                     if (willUseProtoSwap)
                     {
+                        var verboseErrors = !VesselsUnableToLoad.Contains(vesselProto.VesselId);
+
                         //SPACECENTER / EDITOR fast path: pointer-swap protoVessel without
                         //destroying the live Vessel. No reload event fires here -- the
                         //live Vessel was never touched, so any listener that did real
@@ -334,7 +403,7 @@ namespace LmpClient.Systems.VesselProtoSys
                         //transition) is updated to the fresh proto. If the in-place
                         //swap itself fails for any reason, fall through to the
                         //destructive path so we don't silently drop a wire update.
-                        if (VesselLoader.UpdateProtoInPlace(existingVessel, protoVessel))
+                        if ((protoVessel == null || !protoVessel.Validate(verboseErrors) || protoVessel.HasInvalidParts(verboseErrors)) && VesselLoader.UpdateProtoInPlace(existingVessel, protoVessel))
                         {
                             VesselSyncDiagnostics.LogProtoSwapped(vesselId, SafeName(protoVessel),
                                 SafePartCount(protoVessel), SafeSituation(protoVessel));

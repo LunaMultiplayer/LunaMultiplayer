@@ -24,7 +24,7 @@ namespace LmpCommon.Message.Data.ShareProgress
         /// <param name="copyFrom"></param>
         public StrategyInfo(StrategyInfo copyFrom)
         {
-            Name = string.Copy(copyFrom.Name);
+            Name = copyFrom.Name;
             NumBytes = copyFrom.NumBytes;
             if (Data.Length < NumBytes)
                 Data = new byte[NumBytes];

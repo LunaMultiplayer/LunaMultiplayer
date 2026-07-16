@@ -120,7 +120,7 @@ namespace LmpClient.Systems.VesselRemoveSys
 
             try
             {
-                if (FlightGlobals.fetch.VesselTarget?.GetVessel().id == killVessel.id)
+                if (FlightGlobals.fetch?.VesselTarget?.GetVessel()?.id == killVessel.id)
                 {
                     FlightGlobals.fetch.SetVesselTarget(null);
                 }
@@ -140,7 +140,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                 }
                 Object.Destroy(killVessel.gameObject);
 
-                HighLogic.CurrentGame.flightState.protoVessels.RemoveAll(v => v == null || v.vesselID == killVessel.id);
+                HighLogic.CurrentGame?.flightState?.protoVessels?.RemoveAll(v => v == null || v.vesselID == killVessel.id);
                 if (KSCVesselMarkers.fetch) KSCVesselMarkers.fetch.RefreshMarkers();
             }
             catch (Exception killException)
@@ -176,7 +176,7 @@ namespace LmpClient.Systems.VesselRemoveSys
         {
             if (FlightGlobals.ActiveVessel && FlightGlobals.ActiveVessel.id == killVessel.id)
             {
-                FlightGlobals.fetch.SetVesselTarget(null);
+                if (FlightGlobals.fetch != null) FlightGlobals.fetch.SetVesselTarget(null);
 
                 //Try to switch to a nearby loaded vessel...
                 var otherVessel = FlightGlobals.FindNearestControllableVessel(killVessel);

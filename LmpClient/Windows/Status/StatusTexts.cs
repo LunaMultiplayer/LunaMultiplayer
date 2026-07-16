@@ -37,6 +37,9 @@ namespace LmpClient.Windows.Status
 
             var subspaceTime = WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId);
 
+            if (subspaceTime <= 0d)
+                return "----";
+
             StringBuilder.Append(KSPUtil.PrintDateCompact(subspaceTime, true, true));
 
             if (WarpSystem.Singleton.CurrentSubspace != currentEntry.SubspaceId)

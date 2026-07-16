@@ -19,7 +19,7 @@ For example: 0.29.1.*757*
 
 Which OS are you using? (e.g. Windows, Mac, Linux):
 What version of KSP are you running? (e.g. 1.12.5):
-What version of LMP are you playing? (e.g. 0.29.1, 0.29.1.757):
+What version of LMP are you playing? (e.g. 0.29.0, 0.29.1.757):
 Which KSP DLCs do you have? (e.g. Breaking Ground, Making History):
 
 <!-- The logs are found at "Kerbal Space Program/KSP.log" and "%appdata%/../LocalLow/Squad/Kerbal Space Program/output_log.txt". Make sure to attach both. -->

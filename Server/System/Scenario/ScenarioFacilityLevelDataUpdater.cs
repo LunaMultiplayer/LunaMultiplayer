@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -10,7 +10,7 @@ namespace Server.System.Scenario
         /// </summary>
         public static void WriteFacilityLevelDataToFile(string facilityId, float level)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
                 lock (Semaphore.GetOrAdd("ScenarioUpgradeableFacilities", new object()))
                 {
