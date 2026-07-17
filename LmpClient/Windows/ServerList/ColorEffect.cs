@@ -1,4 +1,5 @@
-﻿using LmpCommon;
+﻿using LmpClient.Windows.ServerList;
+using LmpCommon;
 using UnityEngine;
 
 namespace LmpClient.Windows
@@ -23,6 +24,11 @@ namespace LmpClient.Windows
         // ReSharper disable once InconsistentNaming
         public void OnGUI()
         {
+            //This behaviour lives for the whole game (DontDestroyOnLoad), but the rainbow effect is
+            //only ever consumed by the server list window. Skip the per-pass work when it's not shown.
+            if (!ServerListWindow.Singleton.Display)
+                return;
+
             if (_colorTime <= 1)
             {
                 _lerpedColor = Color.Lerp(Colors[_currentColorIndex], Colors[_currentColorIndex == Colors.Length - 1 ? 0 : _currentColorIndex + 1], _colorTime);
