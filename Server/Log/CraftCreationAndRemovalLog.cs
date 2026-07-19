@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Server.Log
 {
-    /// <summary>
+    /// <summary> 
     /// Dedicated audit log that records every time a craft is created (first time the server sees a
     /// vessel's proto) or removed, so server operators can troubleshoot missing/re-appearing ships.
     ///
