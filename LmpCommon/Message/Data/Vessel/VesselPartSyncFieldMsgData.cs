@@ -146,7 +146,7 @@ namespace LmpCommon.Message.Data.Vessel
                     break;
                 case PartSyncFieldType.Quaternion:
                     for (var i = 0; i < 4; i++)
-                        VectorValue[i] = lidgrenMsg.ReadFloat();
+                        QuaternionValue[i] = lidgrenMsg.ReadFloat();
                     break;
                 case PartSyncFieldType.Object:
                 case PartSyncFieldType.String:
@@ -203,6 +203,7 @@ namespace LmpCommon.Message.Data.Vessel
                 case PartSyncFieldType.Quaternion:
                     msgSize += sizeof(float) * 4;
                     break;
+                case PartSyncFieldType.Object:
                 case PartSyncFieldType.String:
                     msgSize += StrValue.GetByteCount();
                     break;

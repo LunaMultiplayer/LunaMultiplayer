@@ -18,6 +18,8 @@ namespace Server.Server
 {
     public class LidgrenServer
     {
+        private const string BenignNatPunchUnhandledWarning = "Connection received unhandled library message: NatPunchMessage";
+
         public static NetServer Server { get; private set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
 
@@ -130,7 +132,11 @@ namespace Server.Server
                                     ClientMessageReceiver.ReceiveCallback(client, msg);
                                     break;
                                 case NetIncomingMessageType.WarningMessage:
-                                    LunaLog.Warning(msg.ReadString());
+                                    var warningText = msg.ReadString();
+                                    if (!string.Equals(warningText, BenignNatPunchUnhandledWarning, StringComparison.Ordinal))
+                                    {
+                                        LunaLog.Warning(warningText);
+                                    }
                                     break;
                                 case NetIncomingMessageType.DebugMessage:
                                     LunaLog.NetworkDebug(msg.ReadString());
