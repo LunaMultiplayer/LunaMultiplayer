@@ -96,6 +96,11 @@ namespace LmpClient.Systems.VesselProtoSys
         public void PartUndocked(Part part, DockedVesselInfo dockedInfo, Vessel originalVessel)
         {
             if (VesselCommon.IsSpectating) return;
+
+            //Quarantine both vessel ids to avoid applying stale proto updates during local rewrites.
+            LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(originalVessel?.id ?? Guid.Empty);
+
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             System.MessageSender.SendVesselMessage(part.vessel);
@@ -107,6 +112,11 @@ namespace LmpClient.Systems.VesselProtoSys
         public void PartDecoupled(Part part, float breakForce, Vessel originalVessel)
         {
             if (VesselCommon.IsSpectating || originalVessel == null) return;
+
+            //Quarantine both vessel ids; local topology changes can arrive in bursts.
+            LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(originalVessel.id);
+
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
             System.MessageSender.SendVesselMessage(part.vessel);
@@ -119,6 +129,10 @@ namespace LmpClient.Systems.VesselProtoSys
         {
             if (VesselCommon.IsSpectating) return;
 
+            //Quarantine both surviving and removed ids to block stale resurrection updates.
+            LocalTopologyTracker.RecordMutation(partFrom?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(removedVesselId);
+
             //If neither the vessel 1 or vessel2 locks belong to us, ignore the coupling
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName) &&
                 !LockSystem.LockQuery.UpdateLockBelongsToPlayer(removedVesselId, SettingsSystem.CurrentSettings.PlayerName)) return;
@@ -127,8 +141,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Fired when a maneuver node is added to a vessel's flight plan.
-        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// Re-sends vessel proto when a maneuver node is added.
         /// </summary>
         public void ManeuverNodeAdded(Vessel vessel, PatchedConicSolver solver)
         {
@@ -140,8 +153,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Fired when a maneuver node is removed from a vessel's flight plan.
-        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// Re-sends vessel proto when a maneuver node is removed.
         /// </summary>
         public void ManeuverNodeRemoved(Vessel vessel, PatchedConicSolver solver)
         {
@@ -153,9 +165,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Appends a log entry to LMP_ManeuverNodes.log at the KSP root.
-        /// Format: one line per current node — vessel, burn UT, time-until, total ΔV, and prograde/normal/radial components.
-        /// ManeuverNode.DeltaV is in the local orbital Frenet frame: z=prograde, x=radial-out, y=normal.
+        /// Appends maneuver-node diagnostics to LMP_ManeuverNodes.log.
         /// </summary>
         private static void WriteManeuverLog(string action, Vessel vessel, PatchedConicSolver solver)
         {

@@ -7,9 +7,20 @@ namespace LmpClient.Systems.ShareFunds
     {
         public void FundsChanged(double funds, TransactionReasons reason)
         {
-            if (System.IgnoreEvents) return;
-
+            //Capture rollout debit here so revert-to-editor can refund the exact launch cost.
+            //Always update LastKnownFunds, even when events are ignored, to keep deltas correct.
+            if (System.LastKnownFunds.HasValue)
+            {
+                var delta = System.LastKnownFunds.Value - funds;
+                if (reason == TransactionReasons.VesselRollout && delta > 0)
+                {
+                    System.CurrentShipCost = new Tuple<Guid, float>(Guid.Empty, (float)delta);
+                }
+            }
+            System.LastKnownFunds = funds;
             LunaLog.Log($"Funds changed to: {funds} reason: {reason}");
+            
+            if (System.IgnoreEvents) return;
             System.MessageSender.SendFundsMessage(funds, reason.ToString());
         }
 
@@ -33,6 +44,10 @@ namespace LmpClient.Systems.ShareFunds
 
         public void LevelLoaded(GameScenes data)
         {
+            //Re-seed tracker because scene loads can change funds without firing OnFundsChanged.
+            if (Funding.Instance != null)
+                System.LastKnownFunds = Funding.Instance.Funds;
+
             if (System.Reverting)
             {
                 System.Reverting = false;
@@ -42,12 +57,9 @@ namespace LmpClient.Systems.ShareFunds
 
         public void VesselSwitching(Vessel data0, Vessel data1)
         {
+            //Keep pending launch refund during revert flows; clear it on normal vessel switches.
+            if (System.Reverting) return;
             System.CurrentShipCost = null;
-        }
-
-        public void VesselAssembled(Vessel vessel, ShipConstruct construct)
-        {
-            System.CurrentShipCost = new Tuple<Guid, float>(vessel.id, construct.GetShipCosts(out _, out _));
         }
     }
 }

@@ -60,6 +60,14 @@ namespace LmpClient.VesselUtilities
                 if (HighLogic.CurrentGame == null)
                     return null;
 
+                //Pre-construction sanitisation pass: catches vessels whose wire-side ConfigNode
+                //already contains "Infinity"/"NaN" inside DISCOVERY (asteroids/comets that
+                //round-tripped through the bug on a peer). The sister post-construction pass in
+                //VesselLoader catches the case this one cannot see -- vessels with no DISCOVERY
+                //sub-node at all, where stock KSP's ProtoVessel constructor synthesises the
+                //offending values itself.
+                DiscoveryInfoSanitizer.SanitizeVesselNode(inputNode, protoVesselId, "wire-input");
+
                 //Cannot reuse the Protovessel to save memory garbage as it does not have any clear method :(
                 return new ProtoVessel(inputNode, HighLogic.CurrentGame);
             }

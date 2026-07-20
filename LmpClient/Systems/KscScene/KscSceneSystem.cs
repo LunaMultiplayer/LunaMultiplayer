@@ -16,6 +16,10 @@ namespace LmpClient.Systems.KscScene
 
         private static KscSceneEvents KscSceneEvents { get; } = new KscSceneEvents();
 
+        //Coalesces tracking-station list refreshes into one rebuild per frame.
+        //Without this, bursty scene-init events can trigger repeated O(N) UI rebuilds.
+        private static volatile bool _trackingStationRebuildPending;
+
         #region Base overrides
 
         public override string SystemName { get; } = nameof(KscSceneSystem);
@@ -31,6 +35,8 @@ namespace LmpClient.Systems.KscScene
             GameEvents.onVesselRename.Add(KscSceneEvents.OnVesselRename);
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, IncreaseTimeWhileInEditor));
+            //Drain pending refresh once per frame after event bursts settle.
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.LateUpdate, FlushPendingRefreshes));
         }
 
         protected override void OnDisabled()
@@ -65,9 +71,32 @@ namespace LmpClient.Systems.KscScene
         #region Public methods
 
         /// <summary>
-        /// Refreshes the vessels displayed in the tracking station panel
+        /// Requests a tracking-station vessel-list refresh.
+        /// Calls are coalesced and drained in <see cref="FlushPendingRefreshes"/>.
         /// </summary>
         public void RefreshTrackingStationVessels()
+        {
+            _trackingStationRebuildPending = true;
+        }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Drains pending tracking-station refresh requests once per frame.
+        /// </summary>
+        private static void FlushPendingRefreshes()
+        {
+            if (!_trackingStationRebuildPending) return;
+            _trackingStationRebuildPending = false;
+            DoRefreshTrackingStationVessels();
+        }
+
+        /// <summary>
+        /// Performs the actual tracking-station rebuild when in TRACKSTATION.
+        /// </summary>
+        private static void DoRefreshTrackingStationVessels()
         {
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
             {
