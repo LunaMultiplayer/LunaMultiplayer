@@ -27,7 +27,12 @@ namespace LmpClient.Systems.VesselProtoSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselMessage(Vessel vessel, bool forceReload = false)
+        /// <summary>
+        /// Sends a vessel's proto/definition to the server.
+        /// <paramref name="reason"/> is a human-readable description (e.g. "Flight ready (launch)", "Part decoupled")
+        /// used by the server's craft create/remove audit log the first time a vessel is registered.
+        /// </summary>
+        public void SendVesselMessage(Vessel vessel, bool forceReload = false, string reason = null)
         {
             if (vessel == null || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
                 return;
@@ -41,32 +46,32 @@ namespace LmpClient.Systems.VesselProtoSys
             if (vessel.orbitDriver.Ready())
             {
                 vessel.protoVessel = vessel.BackupVessel();
-                SendVesselMessage(vessel.protoVessel, forceReload);
+                SendVesselMessage(vessel.protoVessel, forceReload, reason);
             }
             else
             {
                 //Orbit driver is not ready so wait max 10 frames until it's ready
                 CoroutineUtil.StartConditionRoutine("SendVesselMessage",
-                    () => SendVesselMessage(vessel),
+                    () => SendVesselMessage(vessel, forceReload, reason),
                     () => vessel.orbitDriver.Ready(), 10);
             }
         }
 
         #region Private methods
 
-        private void SendVesselMessage(ProtoVessel protoVessel, bool forceReload)
+        private void SendVesselMessage(ProtoVessel protoVessel, bool forceReload, string reason)
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
             //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
             //TODO: Check if this works fine with the new unity version as it used to crash....
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, forceReload));
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, forceReload, reason));
             //PrepareAndSendProtoVessel(protoVessel);
         }
 
         /// <summary>
         /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
         /// </summary>
-        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool forceReload)
+        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool forceReload, string reason)
         {
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
@@ -82,6 +87,7 @@ namespace LmpClient.Systems.VesselProtoSys
                     msgData.VesselId = protoVessel.vesselID;
                     msgData.NumBytes = numBytes;
                     msgData.ForceReload = forceReload;
+                    msgData.Reason = reason;
                     if (msgData.Data.Length < numBytes)
                         Array.Resize(ref msgData.Data, numBytes);
                     Array.Copy(VesselSerializedBytes, 0, msgData.Data, 0, numBytes);

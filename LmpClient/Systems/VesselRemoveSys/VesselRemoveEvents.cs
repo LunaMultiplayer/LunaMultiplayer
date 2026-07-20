@@ -33,14 +33,14 @@ namespace LmpClient.Systems.VesselRemoveSys
                 {
                     //Add to the kill list so it's also removed from the store later on!
                     System.KillVessel(dyingVessel.id, true, "OnVesselWillDestroy - " + reason);
-                    System.MessageSender.SendVesselRemove(dyingVessel);
+                    System.MessageSender.SendVesselRemove(dyingVessel, true, reason);
                 }
                 else
                 {
                     //We do not add our OWN vessel to the kill list as then if we revert we won't be able to send the vessel proto again
                     //As the "VesselWillBeKilled" method will return true.
                     //For this reason we also tell the other players to NOT keep it in the remove list
-                    System.MessageSender.SendVesselRemove(dyingVessel, false);
+                    System.MessageSender.SendVesselRemove(dyingVessel, false, reason);
                 }
 
                 //Vessel is dead so remove the locks. Do not remove the kerbal locks as that's done in the Kerbal system
@@ -75,7 +75,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             _recoveringTerminatingVesselId = recoveredVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
 
-            System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
+            System.MessageSender.SendVesselRemove(recoveredVessel.vesselID, true, "Recovered");
 
             //Vessel is recovered so remove the locks. Do not remove the kerbal locks as that's done in the Kerbal system
             LockSystem.Singleton.ReleaseAllVesselLocks(null, recoveredVessel.vesselID, 1);
@@ -101,7 +101,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             _recoveringTerminatingVesselId = terminatedVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
 
-            System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
+            System.MessageSender.SendVesselRemove(terminatedVessel.vesselID, true, "Terminated");
 
             //Vessel is terminated so remove locks Do not remove the kerbal locks as that's done in the Kerbal system
             LockSystem.Singleton.ReleaseAllVesselLocks(null, terminatedVessel.vesselID, 1);
@@ -121,8 +121,8 @@ namespace LmpClient.Systems.VesselRemoveSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log("[LMP]: Detected a revert to launch!");
-                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Assigned);
-                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel, false);
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Assigned, "Revert to Launch");
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel, false, "Revert to Launch");
                 VesselCommon.RemoveVesselFromSystems(FlightGlobals.ActiveVessel.id);
             }
         }
@@ -135,8 +135,10 @@ namespace LmpClient.Systems.VesselRemoveSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
-                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Available);
-                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel);
+                // data is VAB or SPH - surface it in the reason so the audit log shows "Revert to VAB" / "Revert to SPH".
+                var reason = $"Revert to {data}";
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel, ProtoCrewMember.RosterStatus.Available, reason);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel, true, reason);
 
                 //We consider this vessel removed but we let KSP do the remove of the vessel
                 System.RemovedVessels.TryAdd(FlightGlobals.ActiveVessel.id, DateTime.Now);
@@ -144,7 +146,7 @@ namespace LmpClient.Systems.VesselRemoveSys
             }
         }
 
-        private static void RemoveOldVesselAndItsDebris(Vessel vessel, ProtoCrewMember.RosterStatus kerbalStatus)
+        private static void RemoveOldVesselAndItsDebris(Vessel vessel, ProtoCrewMember.RosterStatus kerbalStatus, string reason)
         {
             if (vessel == null) return;
 
@@ -155,7 +157,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                     kerbal.rosterStatus = kerbalStatus;
 
                 System.KillVessel(FlightGlobals.ActiveVessel.id, true, "Revert. Active vessel is a kerbal");
-                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel, true, $"{reason} (active kerbal)");
             }
 
             //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
@@ -172,7 +174,7 @@ namespace LmpClient.Systems.VesselRemoveSys
                         kerbal.rosterStatus = kerbalStatus;
                 }
 
-                System.MessageSender.SendVesselRemove(vesselToRemove);
+                System.MessageSender.SendVesselRemove(vesselToRemove, true, $"{reason} (debris cleanup)");
 
                 //We consider this vessel removed but we let KSP do the remove of the vessel
                 System.RemovedVessels.TryAdd(vesselToRemove.id, DateTime.Now);
