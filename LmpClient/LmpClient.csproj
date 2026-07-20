@@ -211,6 +211,8 @@
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
     <Compile Include="Harmony\ProtoVessel_AddCrew.cs" />
+    <Compile Include="Harmony\ProtoVessel_Save.cs" />
+    <Compile Include="Harmony\Game_Save.cs" />
     <Compile Include="Harmony\Vessel_GoOnRails.cs" />
     <Compile Include="Harmony\Vessel_GoOffRails.cs" />
     <Compile Include="Harmony\PauseMenu_DrawRevertOptions.cs" />
@@ -446,6 +448,8 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
     <Compile Include="VesselUtilities\DiscoveryInfoSanitizer.cs" />
+    <Compile Include="VesselUtilities\ProtoVesselCleaner.cs" />
+    <Compile Include="VesselUtilities\ProtoCrewScrubber.cs" />
     <Compile Include="VesselUtilities\OwnVesselReloader.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />

@@ -86,6 +86,20 @@ namespace LmpClient.VesselUtilities
                 //do NOT call EnsureSafeDiscoveryInfo here: that pass exists to keep
                 //stock KSP's ProtoVessel.Load off its synthesise-then-Infinity-parse
                 //branch, and Load is exactly what we are avoiding on this path.
+                //This fast path deliberately skips vesselProto.Load, which is the only place the
+                //full LoadVessel path runs ScrubInvalidProtoCrew. Without scrubbing here, wire-side
+                //null protoModuleCrew entries (unresolved crew names) would be planted straight into
+                //flightState.protoVessels and then NRE stock ProtoVessel.Save on the next autosave
+                //(e.g. clicking a building in SPACECENTER), aborting the whole save. Uphold the same
+                //crew invariant the full path guarantees.
+                var crewScrub = ProtoCrewScrubber.ScrubNullCrew(newProto);
+                if (crewScrub.Removed > 0)
+                {
+                    LunaLog.LogWarning($"[LMP]: UpdateProtoInPlace scrubbed {crewScrub.Removed} null protoModuleCrew " +
+                                       $"entr{(crewScrub.Removed == 1 ? "y" : "ies")} across {crewScrub.PartsAffected} part(s) on " +
+                                       $"{newProto.vesselID} ({SafeGetVesselName(newProto)}) before inserting into flightState.");
+                }
+
                 var protoVessels = HighLogic.CurrentGame.flightState.protoVessels;
                 var vesselId = existingVessel.id;
 
@@ -464,39 +478,10 @@ namespace LmpClient.VesselUtilities
             if (vesselProto?.protoPartSnapshots == null) return;
             try
             {
-                var totalRemoved = 0;
-                var partsAffected = 0;
-                var nameDesyncs = 0;
-                for (var p = 0; p < vesselProto.protoPartSnapshots.Count; p++)
-                {
-                    var snapshot = vesselProto.protoPartSnapshots[p];
-                    var crew = snapshot?.protoModuleCrew;
-                    if (crew == null || crew.Count == 0) continue;
-
-                    var names = snapshot.protoCrewNames;
-                    var removedHere = 0;
-
-                    // Walk back-to-front so RemoveAt does not invalidate indices for entries
-                    // we haven't visited yet.
-                    for (var i = crew.Count - 1; i >= 0; i--)
-                    {
-                        if (crew[i] != null) continue;
-
-                        crew.RemoveAt(i);
-                        if (names != null)
-                        {
-                            if (i < names.Count) names.RemoveAt(i);
-                            else nameDesyncs++;
-                        }
-                        removedHere++;
-                    }
-
-                    if (removedHere > 0)
-                    {
-                        totalRemoved += removedHere;
-                        partsAffected++;
-                    }
-                }
+                var scrub = ProtoCrewScrubber.ScrubNullCrew(vesselProto);
+                var totalRemoved = scrub.Removed;
+                var partsAffected = scrub.PartsAffected;
+                var nameDesyncs = scrub.NameDesyncs;
 
                 if (totalRemoved > 0)
                 {

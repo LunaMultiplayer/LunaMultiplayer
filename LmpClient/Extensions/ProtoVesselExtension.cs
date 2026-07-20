@@ -141,6 +141,48 @@ namespace LmpClient.Extensions
         }
 
         /// <summary>
+        /// Returns true only when this protovessel's orbit references a celestial body that
+        /// actually exists on this client. A false result means the vessel orbits a body from
+        /// a planet pack we don't have installed (the peer that created it does). Such a vessel
+        /// can neither be loaded nor serialized by stock KSP without throwing, so it must be
+        /// kept out of both the load path (<see cref="Validate"/>) and
+        /// <c>flightState.protoVessels</c> (see ProtoVesselCleaner).
+        /// </summary>
+        public static bool HasResolvableReferenceBody(this ProtoVessel protoVessel)
+        {
+            if (protoVessel?.orbitSnapShot == null) return false;
+            if (FlightGlobals.Bodies == null) return false;
+
+            var index = protoVessel.orbitSnapShot.ReferenceBodyIndex;
+            return index >= 0 && index < FlightGlobals.Bodies.Count;
+        }
+
+        /// <summary>
+        /// Returns false when stock KSP's <c>ProtoVessel.Save</c> would throw on this protovessel.
+        /// That happens when the vessel references something this client doesn't have because a peer
+        /// created it with mods we're missing: an orbit around a celestial body that doesn't exist
+        /// (planet pack), or a part whose <c>partInfo</c> failed to resolve (part mod). Such a proto
+        /// must be kept out of <c>flightState.protoVessels</c> or it aborts the ENTIRE Game.Save.
+        /// This check is deliberately side-effect free (no logging / no mutation) so it is safe to
+        /// call from a save prefix; see ProtoVesselCleaner.
+        /// </summary>
+        public static bool CanBeSavedByStockGame(this ProtoVessel protoVessel)
+        {
+            if (protoVessel == null) return false;
+            if (!protoVessel.HasResolvableReferenceBody()) return false;
+
+            var parts = protoVessel.protoPartSnapshots;
+            if (parts == null) return true;
+
+            for (var i = 0; i < parts.Count; i++)
+            {
+                if (parts[i] == null || parts[i].partInfo == null) return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Checks the protovessel for errors
         /// </summary>
         public static bool Validate(this ProtoVessel protoVessel, bool verboseErrors)
@@ -163,7 +205,7 @@ namespace LmpClient.Extensions
                 return false;
             }
 
-            if (FlightGlobals.Bodies == null || protoVessel.orbitSnapShot.ReferenceBodyIndex < 0 || protoVessel.orbitSnapShot.ReferenceBodyIndex >= FlightGlobals.Bodies.Count)
+            if (!protoVessel.HasResolvableReferenceBody())
             {
                 if (verboseErrors) LunaLog.LogWarning($"[LMP]: Skipping vessel {protoVessel.vesselID} load - Could not find celestial body index {protoVessel.orbitSnapShot.ReferenceBodyIndex}");
                 return false;
