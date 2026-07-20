@@ -296,6 +296,8 @@
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsSystem.cs" />
     <Compile Include="Systems\ShareCareer\ShareCareerSystem.cs" />
+    <Compile Include="Systems\ShareContracts\ContractPartReferenceChecker.cs" />
+    <Compile Include="Systems\ShareContracts\ContractsScenarioSanitizer.cs" />
     <Compile Include="Systems\ShareContracts\LmpUnavailableContract.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsEvents.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsMessageHandler.cs" />
