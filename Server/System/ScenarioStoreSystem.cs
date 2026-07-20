@@ -38,7 +38,11 @@ namespace Server.System
             {
                 foreach (var file in Directory.GetFiles(ScenarioSystem.ScenariosPath).Where(f => Path.GetExtension(f) == ScenarioSystem.ScenarioFileFormat))
                 {
-                    CurrentScenarios.TryAdd(Path.GetFileNameWithoutExtension(file), new ConfigNode(File.ReadAllText(file)));
+                    var raw = File.ReadAllText(file).Trim();
+                    if (raw.StartsWith("{") && raw.EndsWith("}"))
+                        raw = raw.Substring(1, raw.Length - 2);
+
+                    CurrentScenarios.TryAdd(Path.GetFileNameWithoutExtension(file), new ConfigNode(raw) { Name = Path.GetFileNameWithoutExtension(file) });
                 }
 
                 // Repair any ContractSystem scenario produced by older LMP builds so

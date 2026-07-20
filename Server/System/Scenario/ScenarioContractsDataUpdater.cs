@@ -1,7 +1,8 @@
 ﻿using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
+using Server.Log;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
@@ -41,44 +42,51 @@ namespace Server.System.Scenario
         /// </summary>
         public static void WriteContractDataToFile(ShareProgressContractsMsgData contractsMsg)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("ContractSystem", new object()))
+                try
                 {
-                    if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
-
-                    var contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
-                    if (contractsParent == null)
+                    lock (Semaphore.GetOrAdd("ContractSystem", new object()))
                     {
-                        scenario.AddNode(new ConfigNode(ContractsParentNodeName, scenario));
-                        contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
-                        if (contractsParent == null) return;
-                    }
+                        if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
 
-                    var byGuid = IndexExistingContractsByGuid(contractsParent, out var unidentified);
-                    var nonContractChildren = CollectNonContractChildren(contractsParent);
-
-                    foreach (var contractInfo in contractsMsg.Contracts)
-                    {
-                        var incomingNode = new ConfigNode(Encoding.UTF8.GetString(contractInfo.Data, 0, contractInfo.NumBytes));
-                        var stateValue = incomingNode.GetValue("state")?.Value;
-                        incomingNode.Name = IsFinishedContractState(stateValue) ? FinishedContractNodeName : ActiveContractNodeName;
-
-                        var guid = incomingNode.GetValue("guid")?.Value;
-                        if (string.IsNullOrEmpty(guid))
+                        var contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
+                        if (contractsParent == null)
                         {
-                            unidentified.Add(incomingNode);
-                            continue;
+                            scenario.AddNode(new ConfigNode(ContractsParentNodeName, scenario));
+                            contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
+                            if (contractsParent == null) return;
                         }
 
-                        byGuid[guid] = incomingNode;
+                        var byGuid = IndexExistingContractsByGuid(contractsParent, out var unidentified);
+                        var nonContractChildren = CollectNonContractChildren(contractsParent);
+
+                        foreach (var contractInfo in contractsMsg.Contracts)
+                        {
+                            var incomingNode = ParseClientConfigNode(contractInfo.Data, contractInfo.NumBytes, ActiveContractNodeName);
+                            var stateValue = incomingNode.GetValue("state")?.Value;
+                            incomingNode.Name = IsFinishedContractState(stateValue) ? FinishedContractNodeName : ActiveContractNodeName;
+
+                            var guid = incomingNode.GetValue("guid")?.Value;
+                            if (string.IsNullOrEmpty(guid))
+                            {
+                                unidentified.Add(incomingNode);
+                                continue;
+                            }
+
+                            byGuid[guid] = incomingNode;
+                        }
+
+                        var survivors = new List<ConfigNode>(byGuid.Count + unidentified.Count);
+                        survivors.AddRange(byGuid.Values);
+                        survivors.AddRange(unidentified);
+
+                        RebuildContractsParent(contractsParent, nonContractChildren, survivors);
                     }
-
-                    var survivors = new List<ConfigNode>(byGuid.Count + unidentified.Count);
-                    survivors.AddRange(byGuid.Values);
-                    survivors.AddRange(unidentified);
-
-                    RebuildContractsParent(contractsParent, nonContractChildren, survivors);
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Error updating contract scenario data: {e}");
                 }
             });
         }
