@@ -2,6 +2,7 @@
 using HarmonyLib;
 using KSP.UI.Screens;
 using LmpClient.Base;
+using LmpClient.Diagnostics;
 using LmpClient.Events.Base;
 using LmpClient.Localization;
 using LmpClient.ModuleStore;

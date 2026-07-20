@@ -18,7 +18,8 @@ namespace LmpClient.Systems.ShareFunds
                 }
             }
             System.LastKnownFunds = funds;
-
+            LunaLog.Log($"Funds changed to: {funds} reason: {reason}");
+            
             if (System.IgnoreEvents) return;
             System.MessageSender.SendFundsMessage(funds, reason.ToString());
         }
