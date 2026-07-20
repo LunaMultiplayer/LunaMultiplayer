@@ -3,6 +3,8 @@ using LmpClient.Diagnostics;
 using LmpClient.Events;
 using LmpClient.Extensions;
 using LmpClient.Systems.KerbalSys;
+using LmpClient.Systems.Lock;
+using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.TimeSync;
 using LmpClient.Systems.VesselRemoveSys;
 using LmpClient.Utilities;
@@ -21,6 +23,11 @@ namespace LmpClient.Systems.VesselProtoSys
         #region Fields & properties
 
         private static readonly HashSet<Guid> QueuedVesselsToSend = new HashSet<Guid>();
+
+        /// <summary>
+        /// Tracks last-sent maneuver node signatures per vessel to detect dV edits between ticks.
+        /// </summary>
+        private static readonly Dictionary<Guid, string> ManeuverSignatures = new Dictionary<Guid, string>();
 
         public readonly HashSet<Guid> VesselsUnableToLoad = new HashSet<Guid>();
 
@@ -65,6 +72,7 @@ namespace LmpClient.Systems.VesselProtoSys
 
             WarpEvent.onTimeWarpStopped.Add(VesselProtoEvents.WarpStopped);
             GameEvents.onManeuverAdded.Add(VesselProtoEvents.ManeuverNodeAdded);
+            GameEvents.onManeuverRemoved.Add(VesselProtoEvents.ManeuverNodeRemoved);
             
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselDefinition));
@@ -86,11 +94,14 @@ namespace LmpClient.Systems.VesselProtoSys
             PartEvent.onPartCoupled.Remove(VesselProtoEvents.PartCoupled);
 
             WarpEvent.onTimeWarpStopped.Remove(VesselProtoEvents.WarpStopped);
+            GameEvents.onManeuverAdded.Remove(VesselProtoEvents.ManeuverNodeAdded);
+            GameEvents.onManeuverRemoved.Remove(VesselProtoEvents.ManeuverNodeRemoved);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store too
             VesselProtos.Clear();
             VesselsUnableToLoad.Clear();
             QueuedVesselsToSend.Clear();
+            ManeuverSignatures.Clear();
             LastBroadcastDriftPartCount.Clear();
             LocalTopologyTracker.ClearAll();
         }
@@ -111,10 +122,14 @@ namespace LmpClient.Systems.VesselProtoSys
                 if (ShouldBroadcastDriftFor(FlightGlobals.ActiveVessel))
                     MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, reason: "Part count drift (active vessel)");
 
+                CheckAndSendManeuverChanges(FlightGlobals.ActiveVessel);
+
                 foreach (var vessel in VesselCommon.GetSecondaryVessels())
                 {
                     if (ShouldBroadcastDriftFor(vessel))
                         MessageSender.SendVesselMessage(vessel, reason: "Part count drift (secondary vessel)");
+
+                    CheckAndSendManeuverChanges(vessel);
                 }
             }
             catch (Exception e)
@@ -141,6 +156,48 @@ namespace LmpClient.Systems.VesselProtoSys
 
             LastBroadcastDriftPartCount[vessel.id] = liveCount;
             return true;
+        }
+
+        /// <summary>
+        /// Compare current maneuver-node signature with the last-sent signature and
+        /// broadcast when it changes (covers dV edits where KSP raises no event).
+        /// </summary>
+        private void CheckAndSendManeuverChanges(Vessel vessel)
+        {
+            if (vessel == null) return;
+            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
+
+            var signature = GetManeuverSignature(vessel);
+            if (ManeuverSignatures.TryGetValue(vessel.id, out var lastSignature))
+            {
+                if (lastSignature == signature) return;
+
+                ManeuverSignatures[vessel.id] = signature;
+                MessageSender.SendVesselMessage(vessel, reason: "Maneuver node change");
+            }
+            else
+            {
+                // First sighting records a baseline and avoids a gratuitous send.
+                ManeuverSignatures[vessel.id] = signature;
+            }
+        }
+
+        /// <summary>
+        /// Build a stable signature of all maneuver nodes for change detection.
+        /// </summary>
+        private static string GetManeuverSignature(Vessel vessel)
+        {
+            var nodes = vessel?.patchedConicSolver?.maneuverNodes;
+            if (nodes == null || nodes.Count == 0) return string.Empty;
+
+            var parts = new string[nodes.Count];
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                var dv = nodes[i].DeltaV;
+                parts[i] = $"{nodes[i].UT:F1}|{dv.x:F4},{dv.y:F4},{dv.z:F4}";
+            }
+
+            return string.Join(";", parts);
         }
 
         /// <summary>
