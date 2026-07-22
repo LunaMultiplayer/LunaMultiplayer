@@ -18,26 +18,31 @@ namespace LmpClient.Systems.VesselRemoveSys
 
         /// <summary>
         /// Sends a vessel remove to the server. If keepVesselInRemoveList is set to true, the vessel will be removed for good and the server
-        /// will skip future updates related to this vessel
+        /// will skip future updates related to this vessel.
+        /// <paramref name="reason"/> is a human-readable description (e.g. "Revert to VAB", "Terminated") that the server
+        /// records in its craft create/remove audit log.
         /// </summary>
-        public void SendVesselRemove(Vessel vessel, bool keepVesselInRemoveList = true)
+        public void SendVesselRemove(Vessel vessel, bool keepVesselInRemoveList = true, string reason = null)
         {
             if (vessel == null) return;
 
-            SendVesselRemove(vessel.id, keepVesselInRemoveList);
+            SendVesselRemove(vessel.id, keepVesselInRemoveList, reason);
         }
 
         /// <summary>
         /// Sends a vessel remove to the server. If keepVesselInRemoveList is set to true, the vessel will be removed for good and the server
-        /// will skip future updates related to this vessel
+        /// will skip future updates related to this vessel.
+        /// <paramref name="reason"/> is a human-readable description (e.g. "Revert to VAB", "Terminated") that the server
+        /// records in its craft create/remove audit log.
         /// </summary>
-        public void SendVesselRemove(Guid vesselId, bool keepVesselInRemoveList = true)
+        public void SendVesselRemove(Guid vesselId, bool keepVesselInRemoveList = true, string reason = null)
         {
-            LunaLog.Log($"[LMP]: Removing {vesselId} from the server");
+            LunaLog.Log($"[LMP]: Removing {vesselId} from the server ({reason ?? "Unknown reason"})");
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselRemoveMsgData>();
             msgData.GameTime = TimeSyncSystem.UniversalTime;
             msgData.VesselId = vesselId;
             msgData.AddToKillList = keepVesselInRemoveList;
+            msgData.Reason = reason;
 
             SendMessage(msgData);
         }

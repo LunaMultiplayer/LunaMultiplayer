@@ -44,6 +44,11 @@ namespace Server.System.Vessel
         {
             _ = Task.Run(() =>
             {
+                // The insert is scheduled asynchronously, so a VesselRemove for the same vessel may arrive
+                // while this task is queued. Re-check the kill list before touching the store so a delayed
+                // insert cannot resurrect a vessel that has since been removed (e.g. revert-to-editor).
+                if (VesselContext.RemovedVessels.ContainsKey(vesselId)) return;
+
                 var vessel = new Classes.Vessel(vesselDataInConfigNodeFormat);
                 if (GeneralSettings.SettingsStore.ModControl)
                 {
@@ -57,6 +62,10 @@ namespace Server.System.Vessel
                 }
                 lock (Semaphore.GetOrAdd(vesselId, new object()))
                 {
+                    // Re-check under the per-vessel lock to close the race against HandleVesselRemove,
+                    // which now publishes to RemovedVessels before clearing the store entry.
+                    if (VesselContext.RemovedVessels.ContainsKey(vesselId)) return;
+
                     VesselStoreSystem.CurrentVessels.AddOrUpdate(vesselId, vessel, (key, existingVal) => vessel);
                 }
             });

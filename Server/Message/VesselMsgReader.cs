@@ -90,14 +90,22 @@ namespace Server.Message
             if (LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
                 return;
 
-            if (VesselStoreSystem.VesselExists(data.VesselId))
-            {
-                LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
-                VesselStoreSystem.RemoveVessel(data.VesselId);
-            }
-
+            // Publish the kill-list entry BEFORE touching the store so any in-flight proto task
+            // (VesselDataUpdater.RawConfigNodeInsertOrUpdate schedules its store write on Task.Run)
+            // observes the flag and aborts instead of resurrecting the vessel we're about to remove.
             if (data.AddToKillList)
                 VesselContext.RemovedVessels.TryAdd(data.VesselId, 0);
+
+            if (VesselStoreSystem.VesselExists(data.VesselId))
+            {
+                // Resolve the vessel name BEFORE RemoveVessel purges the store entry so the audit log line has something useful.
+                var vesselName = TryGetVesselName(data.VesselId);
+
+                LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
+                CraftCreationAndRemovalLog.LogRemoved(data.VesselId, vesselName, client.PlayerName, data.Reason);
+
+                VesselStoreSystem.RemoveVessel(data.VesselId);
+            }
 
             //Relay the message.
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
@@ -115,13 +123,40 @@ namespace Server.Message
                 return;
             }
 
+            var vesselText = Encoding.UTF8.GetString(msgData.Data, 0, msgData.NumBytes);
+
             if (!VesselStoreSystem.VesselExists(msgData.VesselId))
             {
                 LunaLog.Debug($"Saving vessel {msgData.VesselId} ({ByteSize.FromBytes(msgData.NumBytes).KiloBytes} KB) from {client.PlayerName}.");
+
+                // Audit-log first-time vessel registrations. Use the raw config-node text to pull
+                // the name out cheaply without allocating another Vessel instance here - the
+                // authoritative parse still happens inside VesselDataUpdater below.
+                var vesselName = CraftCreationAndRemovalLog.ExtractVesselName(vesselText);
+                CraftCreationAndRemovalLog.LogCreated(msgData.VesselId, vesselName, client.PlayerName, msgData.Reason);
             }
 
-            VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.VesselId, Encoding.UTF8.GetString(msgData.Data, 0, msgData.NumBytes));
+            VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.VesselId, vesselText);
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
+        }
+
+        /// <summary>
+        /// Looks up a vessel's display name from the in-memory store. Returns <c>null</c> if the
+        /// vessel is not present or the name field is missing/malformed.
+        /// </summary>
+        private static string TryGetVesselName(Guid vesselId)
+        {
+            if (!VesselStoreSystem.CurrentVessels.TryGetValue(vesselId, out var vessel))
+                return null;
+
+            try
+            {
+                return vessel.Fields.GetSingle("name")?.Value;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static void HandleVesselsSync(ClientStructure client, VesselBaseMsgData message)
@@ -165,11 +200,18 @@ namespace Server.Message
 
             //Now remove the weak vessel but DO NOT add to the removed vessels as they might undock!!!
             LunaLog.Debug($"Removing weak coupled vessel {msgData.CoupledVesselId}");
+
+            // Audit-log the implicit removal triggered by a docking/coupling event. Name must be
+            // resolved BEFORE RemoveVessel clears the store entry.
+            var coupledVesselName = TryGetVesselName(msgData.CoupledVesselId);
+            CraftCreationAndRemovalLog.LogRemoved(msgData.CoupledVesselId, coupledVesselName, client.PlayerName, "Coupled/Docked");
+
             VesselStoreSystem.RemoveVessel(msgData.CoupledVesselId);
 
             //Tell all clients to remove the weak vessel
             var removeMsgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
             removeMsgData.VesselId = msgData.CoupledVesselId;
+            removeMsgData.Reason = "Coupled/Docked";
 
             MessageQueuer.SendToAllClients<VesselSrvMsg>(removeMsgData);
         }

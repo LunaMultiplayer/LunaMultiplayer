@@ -6,10 +6,35 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="System\GroupSystemSender.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Tell the .NET runtime to release unused heap segments back to the OS instead of
+      retaining the high-water-mark virtual memory. On Linux container hosts (where the
+      panel reports cgroup RSS, which counts every committed page), Server GC's default
+      "hold pages forever" behavior makes the working set look like a slow leak even
+      when the managed heap itself is healthy and oscillating after each Gen2.
+        - System.GC.RetainVM=false       => hand decommitted segments back to the OS.
+        - System.GC.ConserveMemory=9     => maximum aggressiveness (range 0-9) when
+                                            deciding to shrink the heap after a collection.
+    -->
+    <RuntimeHostConfigurationOption Include="System.GC.RetainVM" Value="false" />
+    <RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Pre-flight launcher that checks for the .NET 6 runtime before handing off to
+         Server.exe. Shipped next to the exe so users can double-click it and get a
+         blocking error message instead of apphost's window-that-closes-instantly. -->
+    <None Update="StartLunaServer.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

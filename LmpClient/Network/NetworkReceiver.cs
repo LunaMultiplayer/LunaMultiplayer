@@ -55,6 +55,8 @@ namespace LmpClient.Network
 {
     public class NetworkReceiver
     {
+        private const string BenignNatPunchUnhandledWarning = "Connection received unhandled library message: NatPunchMessage";
+
         /// <summary>
         /// Main receiving thread. Here we map each received message to the specific system
         /// </summary>
@@ -81,7 +83,11 @@ namespace LmpClient.Network
                                 LunaLog.Log($"[Lidgren VERBOSE] {msg.ReadString()}");
                                 break;
                             case NetIncomingMessageType.WarningMessage:
-                                LunaLog.Log($"[Lidgren WARNING] {msg.ReadString()}");
+                                var warningText = msg.ReadString();
+                                if (!string.Equals(warningText, BenignNatPunchUnhandledWarning, StringComparison.Ordinal))
+                                {
+                                    LunaLog.Log($"[Lidgren WARNING] {warningText}");
+                                }
                                 break;
                             case NetIncomingMessageType.NatIntroductionSuccess:
                                 NetworkServerList.HandleNatIntroductionSuccess(msg);

@@ -28,7 +28,31 @@ namespace LmpClient.Systems.VesselProtoSys
             if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                 return;
 
-            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, BuildFlightReadyReason());
+        }
+
+        /// <summary>
+        /// Produce a reason string for the initial flight-ready send. When possible we surface the
+        /// editor facility (VAB/SPH) so the audit log reads "VAB Launch" / "SPH Launch"; otherwise
+        /// we fall back to a generic phrase that still identifies the event.
+        /// </summary>
+        private static string BuildFlightReadyReason()
+        {
+            try
+            {
+                // EditorDriver.editorFacility is set when entering flight from the editor (launch).
+                // It will be "None" for other paths (scene switches, load from tracking station, etc.).
+                var facility = EditorDriver.editorFacility;
+                if (facility == EditorFacility.VAB) return "VAB Launch";
+                if (facility == EditorFacility.SPH) return "SPH Launch";
+            }
+            catch
+            {
+                // Defensive: EditorDriver is static KSP state and should never throw, but we don't
+                // want a reason-string hiccup to break vessel replication.
+            }
+
+            return "Flight ready";
         }
 
         /// <summary>
@@ -39,7 +63,7 @@ namespace LmpClient.Systems.VesselProtoSys
             if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT && !VesselCommon.IsSpectating)
             {
                 //When quitting flight send the vessel one last time
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, reason: "Leaving flight scene");
             }
         }
 
@@ -55,7 +79,7 @@ namespace LmpClient.Systems.VesselProtoSys
                 if (subject != null)
                 {
                     LunaLog.Log("Detected a experiment transmission. Sending vessel definition to the server");
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, "Science transmitted");
 
                     ShareScienceSubjectSystem.Singleton.MessageSender.SendScienceSubjectMessage(subject);
                 }
@@ -74,7 +98,7 @@ namespace LmpClient.Systems.VesselProtoSys
                 if (subject != null)
                 {
                     LunaLog.Log("Detected a experiment stored. Sending vessel definition to the server");
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, "Science stored");
 
                     ShareScienceSubjectSystem.Singleton.MessageSender.SendScienceSubjectMessage(subject);
                 }
@@ -89,46 +113,59 @@ namespace LmpClient.Systems.VesselProtoSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log("Detected a experiment reset. Sending vessel definition to the server");
-                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, "Experiment reset");
             }
         }
 
         public void PartUndocked(Part part, DockedVesselInfo dockedInfo, Vessel originalVessel)
         {
             if (VesselCommon.IsSpectating) return;
+
+            //Quarantine both vessel ids to avoid applying stale proto updates during local rewrites.
+            LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(originalVessel?.id ?? Guid.Empty);
+
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
-            System.MessageSender.SendVesselMessage(part.vessel);
+            System.MessageSender.SendVesselMessage(part.vessel, reason: "Part undocked (new vessel)");
 
             //As this method can be called several times in a short period (when staging) we delay the sending of the final vessel
-            System.DelayedSendVesselMessage(originalVessel.id, 0.5f);
+            System.DelayedSendVesselMessage(originalVessel.id, 0.5f, reason: "Part undocked");
         }
 
         public void PartDecoupled(Part part, float breakForce, Vessel originalVessel)
         {
             if (VesselCommon.IsSpectating || originalVessel == null) return;
+
+            //Quarantine both vessel ids; local topology changes can arrive in bursts.
+            LocalTopologyTracker.RecordMutation(part?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(originalVessel.id);
+
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName)) return;
 
-            System.MessageSender.SendVesselMessage(part.vessel);
+            System.MessageSender.SendVesselMessage(part.vessel, reason: "Part decoupled (new vessel)");
 
             //As this method can be called several times in a short period (when staging) we delay the sending of the final vessel
-            System.DelayedSendVesselMessage(originalVessel.id, 0.5f);
+            System.DelayedSendVesselMessage(originalVessel.id, 0.5f, reason: "Part decoupled");
         }
 
         public void PartCoupled(Part partFrom, Part partTo, Guid removedVesselId)
         {
             if (VesselCommon.IsSpectating) return;
 
+            //Quarantine both surviving and removed ids to block stale resurrection updates.
+            LocalTopologyTracker.RecordMutation(partFrom?.vessel?.id ?? Guid.Empty);
+            LocalTopologyTracker.RecordMutation(removedVesselId);
+
             //If neither the vessel 1 or vessel2 locks belong to us, ignore the coupling
             if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(partFrom.vessel.id, SettingsSystem.CurrentSettings.PlayerName) &&
                 !LockSystem.LockQuery.UpdateLockBelongsToPlayer(removedVesselId, SettingsSystem.CurrentSettings.PlayerName)) return;
 
-            System.MessageSender.SendVesselMessage(partFrom.vessel);
+            System.MessageSender.SendVesselMessage(partFrom.vessel, reason: "Parts coupled");
         }
 
         /// <summary>
-        /// Fired when a maneuver node is added to a vessel's flight plan.
-        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// Re-sends vessel proto when a maneuver node is added.
         /// </summary>
         public void ManeuverNodeAdded(Vessel vessel, PatchedConicSolver solver)
         {
@@ -140,8 +177,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Fired when a maneuver node is removed from a vessel's flight plan.
-        /// Immediately re-sends the vessel proto so the server and other players receive the updated plan.
+        /// Re-sends vessel proto when a maneuver node is removed.
         /// </summary>
         public void ManeuverNodeRemoved(Vessel vessel, PatchedConicSolver solver)
         {
@@ -153,9 +189,7 @@ namespace LmpClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Appends a log entry to LMP_ManeuverNodes.log at the KSP root.
-        /// Format: one line per current node — vessel, burn UT, time-until, total ΔV, and prograde/normal/radial components.
-        /// ManeuverNode.DeltaV is in the local orbital Frenet frame: z=prograde, x=radial-out, y=normal.
+        /// Appends maneuver-node diagnostics to LMP_ManeuverNodes.log.
         /// </summary>
         private static void WriteManeuverLog(string action, Vessel vessel, PatchedConicSolver solver)
         {

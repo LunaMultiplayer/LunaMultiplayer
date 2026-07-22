@@ -23,7 +23,17 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Interval in ms at which internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be backed up to a file")]
         public int BackupIntervalMs { get; set; } = 30000;
 
-        [XmlComment(Value = "Interval to force a garbage collection and reduce the memory usage. Specify this value in minutes. 0 = deactivated.")]
-        public int GcMinutesInterval { get; set; } = 15;
+        [XmlComment(Value = "Interval to force a garbage collection and reduce the memory usage. Specify this value in minutes. 0 = deactivated. " +
+                            "Combined with the runtime's System.GC.RetainVM=false / ConserveMemory=9 settings, each forced collection returns " +
+                            "decommitted heap segments to the OS, so this also controls how often the working set drops back to its baseline. " +
+                            "5 minutes is a good balance between a flat-looking memory graph on hosting panels and the (microsecond-scale) cost of running a Gen2.")]
+        public int GcMinutesInterval { get; set; } = 5;
+
+        [XmlComment(Value = "Interval at which a memory diagnostics line (managed heap vs working set, GC collection counts, allocation rate) " +
+                            "is written to the server log. Useful for distinguishing real managed leaks from Server-GC working-set retention. " +
+                            "Specify this value in minutes. 0 = deactivated. " +
+                            "Memory diagnostics also require the server to be launched with the --memorydiag command-line flag; " +
+                            "this interval setting only controls the cadence once the flag has enabled the feature.")]
+        public int MemoryDiagnosticsMinutesInterval { get; set; } = 1;
     }
 }
