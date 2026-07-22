@@ -1,7 +1,9 @@
 using System.Runtime.CompilerServices;
 
+/*
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Client.ModCliMsg))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.PlayerStatus))]
+*/
 
 // Forward other common client messages for broader mod compatibility
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Client.AdminCliMsg))]
@@ -12,6 +14,7 @@ using System.Runtime.CompilerServices;
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Client.WarpCliMsg))]
 
 // Forward message data types (often used by mods for custom data or hooking)
+/*
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Data.ModMsgData))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Data.Vessel.VesselBaseMsgData))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Data.Vessel.VesselProtoMsgData))]
@@ -22,11 +25,14 @@ using System.Runtime.CompilerServices;
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Data.Vessel.VesselActionGroupMsgData))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Data.Vessel.VesselResourceMsgData))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Data.Vessel.VesselRemoveMsgData))]
+*/
 
 // Forward message factories
+/*
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.ClientMessageFactory))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.ServerMessageFactory))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.MasterServerMessageFactory))]
+*/
 
 // Forward core message structures
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Base.MessageBase<>))]
@@ -43,9 +49,11 @@ using System.Runtime.CompilerServices;
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.Interface.IMasterServerMessageBase))]
 
 // Forward enums
+/*
 [assembly: TypeForwardedTo(typeof(LmpCommon.Enums.ClientMessageType))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Enums.ServerMessageType))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Enums.MasterServerMessageType))]
+*/
 [assembly: TypeForwardedTo(typeof(LmpCommon.Enums.ClientState))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Enums.LogLevels))]
 
