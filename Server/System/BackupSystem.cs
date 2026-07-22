@@ -77,6 +77,11 @@ namespace Server.System
 
         private static void RemoveBackupsAboveLimit()
         {
+            if (GeneralSettings.SettingsStore.MaxBackups <= 0) {
+                LunaLog.Warning("Tried to remove backups above max backups whilst max backups is 0, backup was created above set limit of 0, to avoid this warning, set a backup limit");
+                return;
+            }
+
             var backups = Directory.EnumerateFiles(ServerContext.BackupDirectory, "backup_*.zip")
                 .Select(f => new
                 {
