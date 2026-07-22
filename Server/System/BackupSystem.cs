@@ -58,7 +58,14 @@ namespace Server.System
                 }
                 catch (TaskCanceledException) { break; }
 
-                RunBackup();
+                try
+                {
+                    RunBackup();
+                }
+                catch (Exception e)
+                {
+                    LunaLog.Error($"Backup failed: {e}");
+                }
             }
         }
 
