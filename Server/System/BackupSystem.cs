@@ -54,7 +54,7 @@ namespace Server.System
             {
                 try
                 {
-                    await Task.Delay(IntervalSettings.SettingsStore.BackupMinutesInterval*60000, token);
+                    await Task.Delay((int)TimeSpan.FromMinutes(IntervalSettings.SettingsStore.BackupMinutesInterval).TotalMilliseconds, token);
                 }
                 catch (TaskCanceledException) { break; }
 
