@@ -109,28 +109,38 @@ namespace Server.System
             }
         }
 
+        private static readonly object BackupLock = new();
+
         public static void RunBackup()
         {
             LunaLog.Debug("Performing backup...");
 
-            if (!Path.Exists(ServerContext.BackupDirectory))
+            if (!Directory.Exists(ServerContext.BackupDirectory))
                 Directory.CreateDirectory(ServerContext.BackupDirectory);
 
-            RemoveBackupsAboveLimit();
-            RunSave();
+            var tempUniversePath = Path.Combine(ServerContext.BackupDirectory, $"temp_backup{Guid.NewGuid():N}");
 
-            var tempUniversePath = Path.Combine(ServerContext.BackupDirectory, "temp_backup");
-            if (Directory.Exists(tempUniversePath))
-                Directory.Delete(tempUniversePath, recursive: true);
+            lock (BackupLock)
+            {
+                RemoveBackupsAboveLimit();
+                RunSave();
 
-            foreach (var dirPath in Directory.EnumerateDirectories(ServerContext.UniverseDirectory, "*", SearchOption.AllDirectories))
-                Directory.CreateDirectory(dirPath.Replace(ServerContext.UniverseDirectory, tempUniversePath));
+                foreach (var dirPath in Directory.EnumerateDirectories(ServerContext.UniverseDirectory, "*", SearchOption.AllDirectories))
+                    Directory.CreateDirectory(dirPath.Replace(ServerContext.UniverseDirectory, tempUniversePath));
 
-            foreach (var filePath in Directory.EnumerateFiles(ServerContext.UniverseDirectory, "*", SearchOption.AllDirectories))
-                File.Copy(filePath, filePath.Replace(ServerContext.UniverseDirectory, tempUniversePath), overwrite: true);
+                foreach (var filePath in Directory.EnumerateFiles(ServerContext.UniverseDirectory, "*", SearchOption.AllDirectories))
+                    File.Copy(filePath, filePath.Replace(ServerContext.UniverseDirectory, tempUniversePath), overwrite: true);
+            }
 
-            ZipFile.CreateFromDirectory(tempUniversePath, Path.Combine(ServerContext.BackupDirectory, $"backup_{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss}.zip"));
-            Directory.Delete(tempUniversePath, recursive: true);
+            try
+            {
+                ZipFile.CreateFromDirectory(tempUniversePath, Path.Combine(ServerContext.BackupDirectory, $"backup_{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss}.zip"));
+            } 
+            finally 
+            {
+                if (Directory.Exists(tempUniversePath))
+                    Directory.Delete(tempUniversePath, recursive: true);
+            }
 
             LunaLog.Debug("Backups done");
         }
