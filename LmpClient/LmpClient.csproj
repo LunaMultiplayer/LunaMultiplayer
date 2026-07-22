@@ -43,8 +43,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> -->
-
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\External\Dependencies\Harmony\000_Harmony\0Harmony.dll</HintPath>
