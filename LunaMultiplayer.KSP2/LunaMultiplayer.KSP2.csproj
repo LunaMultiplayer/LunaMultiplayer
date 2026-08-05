@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>LunaMultiplayer.KSP2</AssemblyName>
+    <RootNamespace>LunaMultiplayer.KSP2</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <!-- 引用程序集不入库；具体路径由 Directory.Build.props（本地配置）提供 hint path -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" />
+    <Reference Include="SpaceWarp2" />
+    <Reference Include="SpaceWarp2.Game" />
+    <Reference Include="ReduxLib" />
+    <Reference Include="BepInEx" />
+    <Reference Include="0Harmony" />
+  </ItemGroup>
+</Project>
