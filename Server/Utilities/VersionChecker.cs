@@ -26,14 +26,17 @@ namespace Server.Utilities
         {
             while (ServerContext.ServerRunning)
             {
-                var multiplier = 1;
+                // Repeat again in an hour if it's non-essential, or in a minute if it is essential.
+                var delayMs = LmpVersioning.IsCompatible(LatestVersion)
+                ? TimeSpan.FromHours(1)
+                : TimeSpan.FromMinutes(1);
+
                 if (LatestVersion > LmpVersioning.CurrentVersion)
                 {
                     LunaLog.Info($"There is an update available for LMP, please download it when you're able to: {LmpVersioning.CurrentVersion} -> {LatestVersion}");
                     if (LmpVersioning.IsCompatible(LatestVersion))
                     {
                         LunaLog.Info($"This update is not required to stay compatible with updated master servers and clients.");
-                        multiplier = 60;
                     }
                     else
                     {
@@ -42,8 +45,7 @@ namespace Server.Utilities
                     }
                 }
 
-                // Repeat again in an hour if it's non-essential, or in a minute if it is essential.
-                await Task.Delay(60 * 1000 * multiplier);
+                await Task.Delay(delayMs);
             }
         }
     }
