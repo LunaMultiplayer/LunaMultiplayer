@@ -12,6 +12,10 @@ rem  they never see why the window closed.
 rem
 rem  Use this .bat file to start the server on Windows. Server.exe still works
 rem  on its own when the runtime is already installed.
+rem
+rem  Linux note: there is no separate linux-specific LMP server package
+rem  required for normal use. Use the regular Server release and install the
+rem  .NET runtime on the Linux host.
 rem ============================================================================
 
 set "SCRIPT_DIR=%~dp0"

@@ -31,7 +31,7 @@ namespace Server
     {
         public static readonly TaskFactory LongRunTaskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
 
-        private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
+        private static readonly TaskCompletionSource<bool> QuitSignal = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         private static readonly WinExitSignal ExitSignal = OperatingSystem.IsWindows() ? new WinExitSignal() : null;
 
@@ -40,9 +40,16 @@ namespace Server
         public static readonly CancellationTokenSource CancellationTokenSrc = new CancellationTokenSource();
 
         private static bool IsRestart = false;
+        private static bool MemoryDiagnosticsEnabled;
 
         public static Task Main(string[] args)
         {
+            // Memory diagnostics are an opt-in operator tool. Gating them on a CLI flag
+            // (rather than just the IntervalSettings entry) keeps the production log clean
+            // by default and means turning diagnostics on for a hosted server is a single
+            // launcher edit, not an XML edit followed by a restart.
+            MemoryDiagnosticsEnabled = HasFlag(args, "--memorydiag");
+
             //Verify the .NET runtime before anything else so we can give users a clear,
             //actionable message instead of failing later with a confusing error.
             DotNetRuntimeChecker.EnsureCorrectRuntimeOrExit();
@@ -61,13 +68,13 @@ namespace Server
             rootCommand.SetAction((parseResult, cancellationToken) =>
             {
                 ServerContext.DataDirectory = parseResult.GetValue(dataDirectoryOption).FullName;
-                return RunServer(cancellationToken, args);
+                return RunServerAsync(cancellationToken, args);
             });
 
             return rootCommand.Parse(args).InvokeAsync(new InvocationConfiguration {ProcessTerminationTimeout = null}, CancellationTokenSrc.Token);
         }
 
-        private static async Task RunServer(CancellationToken cancellationToken, string[] args)
+        private static async Task RunServerAsync(CancellationToken cancellationToken, string[] args)
         {
             // Memory diagnostics are an opt-in operator tool. Gating them on a CLI flag
             // (rather than just the IntervalSettings entry) keeps the production log clean
@@ -159,20 +166,19 @@ namespace Server
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersionAsync, cancellationToken));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsgAsync, cancellationToken));
 
-                if (memoryDiagnosticsEnabled)
+                if (MemoryDiagnosticsEnabled)
                 {
                     LunaLog.Normal("Memory diagnostics enabled (--memorydiag). [MemDiag] lines will be written to the log.");
-                    TaskContainer.Add(LongRunTaskFactory.StartNew(() => MemoryDiagnosticsLogger.LogMemoryDiagnostics(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
+                    TaskContainer.Add(LongRunTaskFactory.StartNew(() => MemoryDiagnosticsLogger.LogMemoryDiagnosticsAsync(CancellationTokenSrc.Token), CancellationTokenSrc.Token).Unwrap());
                 }
-
                 TaskContainer.Add(LongRunTaskFactory.StartNew(() => GcSystem.PerformGarbageCollectionAsync(cancellationToken), cancellationToken));
                 while (ServerContext.ServerStarting)
-                    Thread.Sleep(500);
+                    await Task.Delay(500, cancellationToken);
 
                 LunaLog.Normal("All systems up and running. Поехали!");
                 LmpPluginHandler.FireOnServerStart();
 
-                QuitEvent.WaitOne();
+                await QuitSignal.Task;
 
                 LmpPluginHandler.FireOnServerStop();
 
@@ -249,7 +255,7 @@ namespace Server
 
             ServerContext.Shutdown("Server is shutting down");
 
-            QuitEvent.Set();
+            QuitSignal.TrySetResult(true);
         }
 
         /// <summary>
@@ -267,7 +273,7 @@ namespace Server
 
             IsRestart = true;
 
-            QuitEvent.Set();
+            QuitSignal.TrySetResult(true);
         }
     }
 }

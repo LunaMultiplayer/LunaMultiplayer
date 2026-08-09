@@ -19,6 +19,8 @@ namespace Server.Server
 {
     public class LidgrenServer
     {
+        private const string BenignNatPunchUnhandledWarning = "Connection received unhandled library message: NatPunchMessage";
+
         public static NetServer Server { get; private set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
 
@@ -36,7 +38,7 @@ namespace Server.Server
             // Warn the user if the set address is not one of the unspecified addresses
             if (!listenAddress.Equals(IPAddress.IPv6Any) && !listenAddress.Equals(IPAddress.Any))
                 LunaLog.Warning("ListenAddress is not the unspecified address ([::] or 0.0.0.0). This is very unlikely to be correct and the server may not work.");
-            
+
             // Ensure that the OS supports IPv6 if we're using it
             if (listenAddress.AddressFamily == AddressFamily.InterNetworkV6 && !Socket.OSSupportsIPv6)
             {
@@ -87,12 +89,15 @@ namespace Server.Server
             ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds((double)DebugSettings.SettingsStore?.MinSimulatedLatencyMs).TotalSeconds;
 #endif
 
-            ServerContext.Config.AutoFlushSendQueue = false;
-
             Server = new NetServer(ServerContext.Config);
             Server.Start();
 
             ServerContext.ServerStarting = false;
+        }
+
+        public static void StartReceivingMessages()
+        {
+            _ = StartReceivingMessagesAsync();
         }
 
         public static async Task StartReceivingMessagesAsync()
@@ -143,7 +148,11 @@ namespace Server.Server
                                     ClientMessageReceiver.ReceiveCallback(client, msg);
                                     break;
                                 case NetIncomingMessageType.WarningMessage:
-                                    LunaLog.Warning(msg.ReadString());
+                                    var warningText = msg.ReadString();
+                                    if (!string.Equals(warningText, BenignNatPunchUnhandledWarning, StringComparison.Ordinal))
+                                    {
+                                        LunaLog.Warning(warningText);
+                                    }
                                     break;
                                 case NetIncomingMessageType.DebugMessage:
                                     LunaLog.NetworkDebug(msg.ReadString());
@@ -172,7 +181,7 @@ namespace Server.Server
                                     break;
                                 case NetIncomingMessageType.UnconnectedData:
                                     // Only process message if we are still waiting for STUN responses
-                                    if (await LidgrenMasterServer.ReceiveSTUNResponses.WaitAsync(0))
+                                    if (await LidgrenMasterServer.ReceiveSTUNResponses.WaitAsync(0, shutdownToken))
                                     {
                                         var message = ServerContext.MasterServerMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
                                         if (message.Data is MsSTUNSuccessResponseMsgData data)
@@ -250,6 +259,9 @@ namespace Server.Server
             client.BytesSent += outmsg.LengthBytes;
 
             var sendResult = Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
+
+            //Force send of packets
+            FlushSendQueue();
         }
 
         public static void FlushSendQueue()

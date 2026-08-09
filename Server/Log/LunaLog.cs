@@ -32,37 +32,27 @@ namespace Server.Log
     public class LunaLog : BaseLogger
     {
         private static readonly BaseLogger Singleton = new LunaLog();
-
         public static string LogFolder = Path.Combine(ServerContext.DataDirectory, "logs");
 
         /// <summary>
-        /// Serializes all access to <see cref="_writer"/>, <see cref="_currentPath"/>, and the
-        /// open/close/rotate paths.
+        /// Serializes access to writer lifecycle and writes.
         /// </summary>
         private static readonly object WriteLock = new object();
 
         /// <summary>
-        /// The path the active <see cref="_writer"/> is open against. Tracked separately from
-        /// <see cref="LogFilename"/> so the property setter can detect a real change vs. an
-        /// idempotent reassignment.
+        /// Path currently bound to <see cref="_writer"/>.
         /// </summary>
         private static string _currentPath;
 
         /// <summary>
-        /// Persistent writer for the current log file. <c>null</c> means file logging is
-        /// disabled (initial open failed or the writer was disposed during shutdown). In
-        /// that state we still echo to the console via <see cref="BaseLogger.WriteLog"/>;
-        /// the file is treated as best-effort.
+        /// Persistent writer for the current log file; null means console-only fallback.
         /// </summary>
         private static StreamWriter _writer;
 
         private static string _logFilename = Path.Combine(LogFolder, $"lmpserver_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
 
         /// <summary>
-        /// Path of the currently active log file. Reassigning this triggers a transparent
-        /// rotation: the previous writer is flushed and disposed, and a fresh writer is
-        /// opened against the new path. <see cref="LogThread"/> uses this for the daily
-        /// rollover.
+        /// Active log path. Reassigning rotates the underlying writer.
         /// </summary>
         public static string LogFilename
         {
@@ -79,16 +69,14 @@ namespace Server.Log
             }
             catch (Exception e)
             {
-                // Without a log directory we still let the server run, but the file writer
-                // below will fail to open and we fall back to console-only.
+                // Keep server startup resilient: file logging is best-effort.
                 Console.Error.WriteLine($"LunaLog: failed to ensure log folder '{LogFolder}': {e.Message}");
             }
 
-            // Open the file *after* the folder check so OpenWriter sees a real directory.
-            // If this fails we go console-only; OpenWriter will leave _writer null.
+            // Open after folder check; failure falls back to console-only.
             OpenWriter(_logFilename);
 
-            // Flush+dispose on a clean shutdown so the last few buffered bytes hit disk.
+            // Flush and close on clean shutdown.
             ExitEvent.ServerClosing += CloseLog;
         }
 
@@ -108,18 +96,12 @@ namespace Server.Log
                 try
                 {
                     _writer.WriteLine(line);
-                    // Flush per line so operators can tail -f the log in real time. The cost
-                    // of a single buffered-stream flush is far smaller than the previous
-                    // open/write/close cycle, and matches BaseLogger's existing behaviour of
-                    // making each line immediately visible on the console.
+                    // Flush per line so operators can tail the file live.
                     _writer.Flush();
                 }
                 catch (Exception e)
                 {
-                    // Critically do NOT call LunaLog.Error here: it would re-enter AfterPrint,
-                    // re-take WriteLock recursively (fine, since lock is reentrant), and try
-                    // the same failing write again, generating recursive failures. Surface
-                    // the problem on stderr instead.
+                    // Avoid recursive logging on write failure.
                     Console.Error.WriteLine($"LunaLog: failed to write to {_currentPath}: {e.Message}");
                 }
             }
@@ -179,9 +161,7 @@ namespace Server.Log
         #region Writer lifecycle
 
         /// <summary>
-        /// Atomically swap the active log file. If <paramref name="newPath"/> is the same as
-        /// the currently open path and the writer is healthy, this is a no-op. Otherwise the
-        /// previous writer is flushed/disposed and a new one is opened.
+        /// Atomically rotates to <paramref name="newPath"/> when needed.
         /// </summary>
         private static void SwitchToFile(string newPath)
         {
@@ -200,8 +180,7 @@ namespace Server.Log
         }
 
         /// <summary>
-        /// Open <paramref name="path"/> for appending, creating it if necessary. Caller must
-        /// not be holding <see cref="WriteLock"/>; this overload acquires it.
+        /// Opens <paramref name="path"/> for append, acquiring <see cref="WriteLock"/>.
         /// </summary>
         private static void OpenWriter(string path)
         {
@@ -212,13 +191,8 @@ namespace Server.Log
         }
 
         /// <summary>
-        /// Inner open routine. Caller MUST hold <see cref="WriteLock"/>.
-        ///
-        /// <para><c>FileMode.Append</c> + <c>FileShare.ReadWrite</c> matches the previous
-        /// <c>File.AppendAllText</c> semantics: existing content is preserved (so successive
-        /// rotations within the same calendar second don't truncate), and external tools can
-        /// tail the file or copy it while the server is running. Failures are logged to
-        /// stderr only — calling LunaLog.Error here would recurse.</para>
+        /// Opens writer internals; caller must hold <see cref="WriteLock"/>.
+        /// Uses append/readwrite semantics and stderr-only failure reporting.
         /// </summary>
         private static void OpenWriterLocked(string path)
         {
@@ -237,8 +211,7 @@ namespace Server.Log
         }
 
         /// <summary>
-        /// Flush and dispose the current writer. Caller MUST hold <see cref="WriteLock"/>.
-        /// Safe to call when <see cref="_writer"/> is already null.
+        /// Flushes and disposes the current writer; caller must hold <see cref="WriteLock"/>.
         /// </summary>
         private static void CloseWriterLocked()
         {
@@ -261,8 +234,7 @@ namespace Server.Log
         }
 
         /// <summary>
-        /// Hook invoked from <see cref="ExitEvent.ServerClosing"/>. Ensures buffered log
-        /// lines are flushed before the process exits.
+        /// Shutdown hook that flushes and closes file logging.
         /// </summary>
         private static void CloseLog()
         {

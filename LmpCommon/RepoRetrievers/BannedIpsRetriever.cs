@@ -5,9 +5,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-
-#pragma warning disable SYSLIB0014
 
 namespace LmpCommon.RepoRetrievers
 {
@@ -65,7 +64,7 @@ namespace LmpCommon.RepoRetrievers
         /// Concurrent calls are serialized; calls that arrive while a recent refresh is
         /// still considered fresh are coalesced.
         /// </summary>
-        public static void RefreshBannedIps()
+        private static void RefreshBannedIps()
         {
             lock (RefreshLock)
             {
@@ -75,15 +74,18 @@ namespace LmpCommon.RepoRetrievers
 
                 try
                 {
-                    ServicePointManager.ServerCertificateValidationCallback = GithubCertification.MyRemoteCertificateValidationCallback;
-                    using (var client = new WebClient())
-                    using (var stream = client.OpenRead(RepoConstants.BannedIpListUrl))
+                    var handler = new HttpClientHandler();
+                    handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
+                        GithubCertification.MyRemoteCertificateValidationCallback(null, cert, certChain, policyErrors);
+
+                    using (var client = new HttpClient(handler))
+                    using (var stream = client.GetStreamAsync(RepoConstants.BannedIpListUrl).Result)
                     using (var reader = new StreamReader(stream))
                     {
                         var content = reader.ReadToEnd();
                         var ips = content
                             .Split('\n')
-                            .Select(s => s.Trim()) // Trim whitespace and \r characters in case of Windows line breaks
+                            .Select(s => s.Trim()) // Trim whitespace and \r in case of Windows line breaks
                             .Where(s => !s.StartsWith("#") && !string.IsNullOrWhiteSpace(s))
                             .ToArray();
 

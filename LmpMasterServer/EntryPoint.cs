@@ -61,11 +61,31 @@ namespace LmpMasterServer
                 Lidgren.MasterServer.RunServer = true;
                 Http.Handlers.WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
-                _ = Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync);
+
+                // Fire background tasks with proper exception handling
+                // Use discard _ to explicitly indicate fire-and-forget pattern
+                _ = Task.Run(DedicatedServerRetriever.RefreshDedicatedServersListAsync)
+                    .ContinueWith(t => 
+                    {
+                        if (t.IsFaulted)
+                            LunaLog.Error($"Failed to refresh dedicated servers: {t.Exception?.InnerException?.Message}");
+                    }, TaskScheduler.Default);
+
                 BannedIpsRetriever.Prewarm();
-                _ = Task.Run(() => BannedIpsRetriever.RefreshBannedIps());
-                _ = Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync);
-                _ = Task.Run(Lidgren.MasterServer.StartAsync);
+
+                _ = Task.Run(MasterServerPortMapper.RefreshUpnpPortAsync)
+                    .ContinueWith(t =>
+                    {
+                        if (t.IsFaulted)
+                            LunaLog.Error($"Failed to refresh UPnP port: {t.Exception?.InnerException?.Message}");
+                    }, TaskScheduler.Default);
+
+                _ = Task.Run(Lidgren.MasterServer.StartAsync)
+                    .ContinueWith(t =>
+                    {
+                        if (t.IsFaulted)
+                            LunaLog.Error($"Lidgren server startup failed: {t.Exception?.InnerException?.Message}");
+                    }, TaskScheduler.Default);
             }
         }
 

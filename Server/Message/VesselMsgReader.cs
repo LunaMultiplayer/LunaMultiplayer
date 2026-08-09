@@ -107,9 +107,6 @@ namespace Server.Message
                 VesselStoreSystem.RemoveVessel(data.VesselId);
             }
 
-            if (data.AddToKillList)
-                VesselContext.RemovedVessels.TryAdd(data.VesselId, 0);
-
             //Relay the message.
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
         }
