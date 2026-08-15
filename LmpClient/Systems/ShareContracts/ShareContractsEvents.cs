@@ -504,10 +504,26 @@ namespace LmpClient.Systems.ShareContracts
 
         public void ContractFinished(Contract contract)
         {
-            /*
-            Doesn't need to be synchronized because there is no ContractFinished state.
-            Also the contract will be finished on the contract complete / failed / cancelled / ...
-            */
+            // KSP fires onFinished on EVERY transition into a terminal state, but it
+            // does not expose dedicated onWithdrawn / onDeadlineExpired events. The
+            // sibling handlers (Accepted/Cancelled/Completed/Declined/Failed) already
+            // call SendContractMessage for the transitions that DO have dedicated
+            // events, so we only need to act here for the terminal states with no
+            // dedicated event of their own. Without this, an Offered contract whose
+            // offer-expiry passes (Withdrawn) silently disappears on the local client
+            // and the server keeps storing it as state = Offered, so reconnecting
+            // players see a phantom Available contract that vanishes from their UI
+            // the moment their UT crosses the stale expiry. Same story for
+            // DeadlineExpired on Active contracts (the contract's post-acceptance
+            // deadline elapses without onFailed firing).
+            if (System.IgnoreEvents) return;
+
+            if (contract.ContractState != Contract.State.Withdrawn &&
+                contract.ContractState != Contract.State.DeadlineExpired)
+                return;
+
+            System.MessageSender.SendContractMessage(contract);
+            LunaLog.Log($"Contract finished ({contract.ContractState}): {contract.ContractGuid}");
         }
 
         public void ContractOffered(Contract contract)

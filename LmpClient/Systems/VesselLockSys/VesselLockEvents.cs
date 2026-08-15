@@ -57,11 +57,12 @@ namespace LmpClient.Systems.VesselLockSys
 
             if (data == GameScenes.FLIGHT || data == GameScenes.TRACKSTATION)
             {
-                //If we are going to flight scene or tracking station try to get as many unloaded update locks as possible
                 foreach (var vessel in FlightGlobals.Vessels)
                 {
                     if (!LockSystem.LockQuery.UnloadedUpdateLockExists(vessel.id))
+                    {
                         LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id);
+                    }
                 }
             }
             else

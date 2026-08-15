@@ -3,9 +3,8 @@ using LmpClient.Localization;
 using LmpClient.Network;
 using LmpCommon;
 using LmpCommon.Enums;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 namespace LmpClient.Windows.ServerList
@@ -14,7 +13,27 @@ namespace LmpClient.Windows.ServerList
     {
         #region Fields
 
-        private static readonly Dictionary<string, PropertyInfo> OrderByPropertyDictionary = new Dictionary<string, PropertyInfo>();
+        /// <summary>
+        /// Strongly-typed comparers keyed by the same column identifiers used by the grid header.
+        /// This avoids the reflection + boxing that a per-frame property lookup would incur.
+        /// </summary>
+        private static readonly Dictionary<string, Comparison<ServerInfo>> OrderByComparers = new Dictionary<string, Comparison<ServerInfo>>
+        {
+            ["Password"] = (a, b) => a.Password.CompareTo(b.Password),
+            ["Country"] = (a, b) => string.Compare(a.Country, b.Country, StringComparison.OrdinalIgnoreCase),
+            ["Dedicated"] = (a, b) => a.DedicatedServer.CompareTo(b.DedicatedServer),
+            ["Ping"] = (a, b) => a.Ping.CompareTo(b.Ping),
+            ["Ping6"] = (a, b) => a.Ping6.CompareTo(b.Ping6),
+            ["PlayerCount"] = (a, b) => a.PlayerCount.CompareTo(b.PlayerCount),
+            ["MaxPlayers"] = (a, b) => a.MaxPlayers.CompareTo(b.MaxPlayers),
+            ["GameMode"] = (a, b) => a.GameMode.CompareTo(b.GameMode),
+            ["WarpMode"] = (a, b) => a.WarpMode.CompareTo(b.WarpMode),
+            ["TerrainQuality"] = (a, b) => a.TerrainQuality.CompareTo(b.TerrainQuality),
+            ["Cheats"] = (a, b) => a.Cheats.CompareTo(b.Cheats),
+            ["ServerName"] = (a, b) => string.Compare(a.ServerName, b.ServerName, StringComparison.OrdinalIgnoreCase),
+            ["WebsiteText"] = (a, b) => string.Compare(a.WebsiteText, b.WebsiteText, StringComparison.OrdinalIgnoreCase),
+            ["Description"] = (a, b) => string.Compare(a.Description, b.Description, StringComparison.OrdinalIgnoreCase),
+        };
 
         protected float WindowHeight = Screen.height * 0.95f;
         protected float WindowWidth = Screen.width * 0.95f;
@@ -43,6 +62,9 @@ namespace LmpClient.Windows.ServerList
         private static string _orderBy = "PlayerCount";
         private static bool _ascending;
 
+        private static int _lastServersVersion = int.MinValue;
+        private static bool _forceRebuild;
+
         private static GUIStyle _headerServerLine;
         private static GUIStyle _evenServerLine;
         private static GUIStyle _oddServerLine;
@@ -50,18 +72,6 @@ namespace LmpClient.Windows.ServerList
         private static GUIStyle _kspLabelStyle;
 
         protected override bool Resizable => true;
-
-        #endregion
-
-        #region Constructor
-
-        public ServerListWindow()
-        {
-            foreach (var property in typeof(ServerInfo).GetProperties())
-            {
-                OrderByPropertyDictionary.Add(property.Name, property);
-            }
-        }
 
         #endregion
 
@@ -136,12 +146,48 @@ namespace LmpClient.Windows.ServerList
         public override void Update()
         {
             base.Update();
-            if (Display)
+            if (!Display)
+                return;
+
+            //Only rebuild the displayed list when the underlying data or the sort/filter selection
+            //actually changed. Otherwise we'd re-sort and re-filter the whole list every single frame.
+            var version = NetworkServerList.ServersVersion;
+            if (!_forceRebuild && version == _lastServersVersion)
+                return;
+
+            _lastServersVersion = version;
+            _forceRebuild = false;
+            RebuildDisplayedServers();
+        }
+
+        private static void RebuildDisplayedServers()
+        {
+            DisplayedServers.Clear();
+
+            foreach (var server in NetworkServerList.Servers.Values)
             {
-                DisplayedServers.Clear();
-                DisplayedServers.AddRange(_ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)) :
-                    NetworkServerList.Servers.Values.OrderByDescending(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)).Where(ServerFilter.MatchesFilters));
+                if (ServerFilter.MatchesFilters(server))
+                    DisplayedServers.Add(server);
             }
+
+            if (OrderByComparers.TryGetValue(_orderBy, out var comparison))
+            {
+                DisplayedServers.Sort(comparison);
+                if (!_ascending)
+                    DisplayedServers.Reverse();
+            }
+        }
+
+        /// <summary>
+        /// Forces the displayed server list to be rebuilt on the next update. Call this whenever the
+        /// sort column, sort direction or an active filter changes.
+        /// </summary>
+        public static void MarkDirty() => _forceRebuild = true;
+
+        private static void SetOrderBy(string orderBy)
+        {
+            _orderBy = orderBy;
+            _forceRebuild = true;
         }
 
         private static GUIStyle GetCorrectLabelStyle(ServerInfo server)

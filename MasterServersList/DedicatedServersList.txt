@@ -10,6 +10,12 @@ ksp-na.styxnet.xyz:2140
 abritin.space:8800
 abritin.space:9100
 
+#NozawaGumi Server
+ksp.nozawatec.com:8800
+
+#Next Spaceflight Server
+ksp-na.styxnetworks.co.uk:2183
+
 # WTK Server
 # https://ksp.waydethekiwi.com/ << Setup/Join Guide and Server details
 play.waydethekiwi.com:47786

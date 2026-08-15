@@ -19,6 +19,10 @@ namespace Server.System
 
                 LunaLog.Debug($"{client.PlayerName} created the new subspace '{WarpContext.NextSubspaceId}'");
 
+                // Snapshot the server's latest subspace time before adding ours so we can attribute any
+                // forward advancement of the server clock to the player who created this subspace.
+                var previousLatestSubspaceTime = WarpContext.LatestSubspace.Time;
+
                 //Create Subspace
                 WarpContext.Subspaces.TryAdd(WarpContext.NextSubspaceId, new Subspace(WarpContext.NextSubspaceId, message.ServerTimeDifference, client.PlayerName));
 
@@ -30,6 +34,12 @@ namespace Server.System
 
                 MessageQueuer.SendToAllClients<WarpSrvMsg>(msgData);
                 WarpContext.NextSubspaceId++;
+
+                // The server's latest time only advances when this new subspace is more future than every
+                // existing one; that is the moment when the operator-visible "server warps forward to match
+                // a player" event has occurred. Charge the delta to the creator's allotment.
+                var deltaSeconds = message.ServerTimeDifference - previousLatestSubspaceTime;
+                WarpAllotmentTracker.RecordWarp(client.UniqueIdentifier, client.PlayerName, deltaSeconds);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using LmpClient.Harmony;
 namespace LmpClient.Base
 {
     public static class HarmonyPatcher
@@ -9,7 +10,19 @@ namespace LmpClient.Base
         public static void Awake()
         {
             HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+            PatchManualTargets();
             PatchOptionalMods();
+        }
+
+        /// <summary>
+        /// Patches that cannot be expressed cleanly as <c>[HarmonyPatch]</c> attributes - typically because the
+        /// target is a non-public method that may not exist by the same name across KSP builds, or whose
+        /// parameter names may not survive in the shipped assembly. Manual registration lets us silently skip
+        /// missing targets instead of crashing LMP startup the way <c>PatchAll</c> would.
+        /// </summary>
+        private static void PatchManualTargets()
+        {
+            DefaultDateTimeFormatterClamp.Install(HarmonyInstance);
         }
 
         /// <summary>

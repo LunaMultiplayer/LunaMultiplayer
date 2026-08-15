@@ -1,5 +1,6 @@
 ﻿using LmpCommon;
 using LmpCommon.Enums;
+using Server.Events;
 using Server.Context;
 using Server.Settings.Structures;
 using Server.System;
@@ -8,19 +9,60 @@ using System.IO;
 
 namespace Server.Log
 {
+    /// <summary>
+    /// Writes console log lines to the active <c>lmpserver_*.log</c> file under <see cref="LogFolder"/>.
+    /// A single persistent writer is used for performance and synchronized through <see cref="WriteLock"/>.
+    /// </summary>
     public class LunaLog : BaseLogger
     {
         private static readonly BaseLogger Singleton = new LunaLog();
+        public static string LogFolder = Path.Combine(ServerContext.DataDirectory, "logs");
+
+        /// <summary>
+        /// Serializes access to writer lifecycle and writes.
+        /// </summary>
+        private static readonly object WriteLock = new object();
+
+        /// <summary>
+        /// Path currently bound to <see cref="_writer"/>.
+        /// </summary>
+        private static string _currentPath;
+
+        /// <summary>
+        /// Persistent writer for the current log file; null means console-only fallback.
+        /// </summary>
+        private static StreamWriter _writer;
+
+        private static string _logFilename = Path.Combine(LogFolder, $"lmpserver_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
+
+        /// <summary>
+        /// Active log path. Reassigning rotates the underlying writer.
+        /// </summary>
+        public static string LogFilename
+        {
+            get => _logFilename;
+            set => SwitchToFile(value);
+        }
 
         static LunaLog()
         {
-            if (!FileHandler.FolderExists(LogFolder))
-                FileHandler.FolderCreate(LogFolder);
+            try
+            {
+                if (!FileHandler.FolderExists(LogFolder))
+                    FileHandler.FolderCreate(LogFolder);
+            }
+            catch (Exception e)
+            {
+                // Keep server startup resilient: file logging is best-effort.
+                Console.Error.WriteLine($"LunaLog: failed to ensure log folder '{LogFolder}': {e.Message}");
+            }
+
+            // Open after folder check; failure falls back to console-only.
+            OpenWriter(_logFilename);
+
+            // Flush and close on clean shutdown.
+            ExitEvent.ServerClosing += CloseLog;
         }
-
-        public static string LogFolder = Path.Combine(ServerContext.DataDirectory, "logs");
-
-        public static string LogFilename = Path.Combine(LogFolder, $"lmpserver_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
 
         #region Overrides
 
@@ -30,7 +72,23 @@ namespace Server.Log
         protected override void AfterPrint(string line)
         {
             base.AfterPrint(line);
-            FileHandler.AppendToFile(LogFilename, line + Environment.NewLine);
+
+            lock (WriteLock)
+            {
+                if (_writer == null) return;
+
+                try
+                {
+                    _writer.WriteLine(line);
+                    // Flush per line so operators can tail the file live.
+                    _writer.Flush();
+                }
+                catch (Exception e)
+                {
+                    // Avoid recursive logging on write failure.
+                    Console.Error.WriteLine($"LunaLog: failed to write to {_currentPath}: {e.Message}");
+                }
+            }
         }
 
         #endregion
@@ -80,6 +138,94 @@ namespace Server.Log
         public new static void ChatMessage(string message)
         {
             Singleton.ChatMessage(message);
+        }
+
+        #endregion
+
+        #region Writer lifecycle
+
+        /// <summary>
+        /// Atomically rotates to <paramref name="newPath"/> when needed.
+        /// </summary>
+        private static void SwitchToFile(string newPath)
+        {
+            lock (WriteLock)
+            {
+                if (string.Equals(_currentPath, newPath, StringComparison.Ordinal) && _writer != null)
+                {
+                    _logFilename = newPath;
+                    return;
+                }
+
+                CloseWriterLocked();
+                _logFilename = newPath;
+                OpenWriterLocked(newPath);
+            }
+        }
+
+        /// <summary>
+        /// Opens <paramref name="path"/> for append, acquiring <see cref="WriteLock"/>.
+        /// </summary>
+        private static void OpenWriter(string path)
+        {
+            lock (WriteLock)
+            {
+                OpenWriterLocked(path);
+            }
+        }
+
+        /// <summary>
+        /// Opens writer internals; caller must hold <see cref="WriteLock"/>.
+        /// Uses append/readwrite semantics and stderr-only failure reporting.
+        /// </summary>
+        private static void OpenWriterLocked(string path)
+        {
+            try
+            {
+                var stream = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                _writer = new StreamWriter(stream) { NewLine = Environment.NewLine };
+                _currentPath = path;
+            }
+            catch (Exception e)
+            {
+                _writer = null;
+                _currentPath = null;
+                Console.Error.WriteLine($"LunaLog: failed to open log file '{path}': {e.Message}. File logging disabled.");
+            }
+        }
+
+        /// <summary>
+        /// Flushes and disposes the current writer; caller must hold <see cref="WriteLock"/>.
+        /// </summary>
+        private static void CloseWriterLocked()
+        {
+            if (_writer == null) return;
+
+            try
+            {
+                _writer.Flush();
+                _writer.Dispose();
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"LunaLog: failed to close log file '{_currentPath}': {e.Message}");
+            }
+            finally
+            {
+                _writer = null;
+                _currentPath = null;
+            }
+        }
+
+        /// <summary>
+        /// Shutdown hook that flushes and closes file logging.
+        /// </summary>
+        private static void CloseLog()
+        {
+            lock (WriteLock)
+            {
+                CloseWriterLocked();
+            }
         }
 
         #endregion

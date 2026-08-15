@@ -51,6 +51,7 @@ namespace LmpClient.Windows.ServerList
             if (GUILayout.Button(_ascending ? "▲" : "▼"))
             {
                 _ascending = !_ascending;
+                _forceRebuild = true;
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[0] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -58,7 +59,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
             if (GUILayout.Button(KeyIcon))
             {
-                _orderBy = "Password";
+                SetOrderBy("Password");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[1] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -66,7 +67,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
             if (GUILayout.Button(GlobeIcon))
             {
-                _orderBy = "Country";
+                SetOrderBy("Country");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[2] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -74,7 +75,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Dedicated))
             {
-                _orderBy = "Dedicated";
+                SetOrderBy("Dedicated");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[3] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -82,7 +83,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(65));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping))
             {
-                _orderBy = "Ping";
+                SetOrderBy("Ping");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[4] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -90,7 +91,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(65));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping6))
             {
-                _orderBy = "Ping6";
+                SetOrderBy("Ping6");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -98,7 +99,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players))
             {
-                _orderBy = "PlayerCount";
+                SetOrderBy("PlayerCount");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -106,7 +107,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.MaxPlayers))
             {
-                _orderBy = "MaxPlayers";
+                SetOrderBy("MaxPlayers");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -114,7 +115,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Mode))
             {
-                _orderBy = "GameMode";
+                SetOrderBy("GameMode");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -122,7 +123,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(75));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.WarpMode))
             {
-                _orderBy = "WarpMode";
+                SetOrderBy("WarpMode");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -130,7 +131,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Terrain))
             {
-                _orderBy = "TerrainQuality";
+                SetOrderBy("TerrainQuality");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -138,7 +139,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Cheats))
             {
-                _orderBy = "Cheats";
+                SetOrderBy("Cheats");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[11] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -146,7 +147,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(220));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name))
             {
-                _orderBy = "ServerName";
+                SetOrderBy("ServerName");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[12] = GUILayoutUtility.GetLastRect().width > 220 ? GUILayoutUtility.GetLastRect().width : 220;
             GUILayout.EndHorizontal();
@@ -154,7 +155,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(150));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Website))
             {
-                _orderBy = "WebsiteText";
+                SetOrderBy("WebsiteText");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[13] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -162,7 +163,7 @@ namespace LmpClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(600));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description))
             {
-                _orderBy = "Description";
+                SetOrderBy("Description");
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[14] = GUILayoutUtility.GetLastRect().width > 600 ? GUILayoutUtility.GetLastRect().width : 600;
             GUILayout.EndHorizontal();

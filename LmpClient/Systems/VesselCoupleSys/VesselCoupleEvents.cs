@@ -54,7 +54,7 @@ namespace LmpClient.Systems.VesselCoupleSys
                 JumpIfVesselOwnerIsInFuture(partFrom.vessel.id);
             }
 
-            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(removedVesselId, false);
+            VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(removedVesselId, false, $"Coupled/Docked ({trigger})");
             VesselRemoveSystem.Singleton.DelayedKillVessel(removedVesselId, false, "Killing coupled vessel during a detected coupling", 500);
             LockSystem.Singleton.ReleaseAllVesselLocks(null, removedVesselId);
         }

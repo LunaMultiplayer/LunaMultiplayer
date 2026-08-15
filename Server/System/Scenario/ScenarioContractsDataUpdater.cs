@@ -1,30 +1,41 @@
-using LmpCommon.Message.Data.ShareProgress;
+﻿using LmpCommon.Message.Data.ShareProgress;
 using LunaConfigNode.CfgNode;
 using Server.Log;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.System.Scenario
 {
     public partial class ScenarioDataUpdater
     {
-        // States that mean a contract is done and should live in CONTRACTS_FINISHED, not CONTRACTS.
-        // KSP serialises Contract.State enum values by name (e.g. "Completed", not "3").
-        private static readonly IReadOnlyCollection<string> FinishedContractStates = new HashSet<string>
-        {
-            "Completed", "Failed", "Cancelled", "DeadlineExpired", "Withdrawn"
-        };
+        /// <summary>
+        /// KSP stores active and finished contracts together under a single CONTRACTS parent.
+        /// </summary>
+        private const string ContractsParentNodeName = "CONTRACTS";
 
         /// <summary>
-        /// We received a contract message so update the scenario file accordingly.
-        /// Finished contracts are moved from CONTRACTS to CONTRACTS_FINISHED so that
-        /// they no longer occupy an offered-contract slot on the server.
+        /// Child node name KSP expects for active contracts.
+        /// </summary>
+        private const string ActiveContractNodeName = "CONTRACT";
+
+        /// <summary>
+        /// Child node name KSP expects for archived/finished contracts.
+        /// Storing finished contracts as CONTRACT here causes them to load as Active
+        /// and never appear in the Mission Control "Archived" tab.
+        /// </summary>
+        private const string FinishedContractNodeName = "CONTRACT_FINISHED";
+
+        /// <summary>
+        /// Applies incoming contract updates by state-normalizing each node and upserting by guid.
+        /// The CONTRACTS parent is then rebuilt (clear + add) to avoid LunaConfigNode 1.8.1
+        /// RemoveNode list-sync issues that can leave stale duplicate entries on disk.
         /// </summary>
         public static void WriteContractDataToFile(ShareProgressContractsMsgData contractsMsg)
         {
-            _ = Task.Run(() =>
+            ObserveBackgroundTask(Task.Run(() =>
             {
                 try
                 {
@@ -32,61 +43,105 @@ namespace Server.System.Scenario
                     {
                         if (!ScenarioStoreSystem.CurrentScenarios.TryGetValue("ContractSystem", out var scenario)) return;
 
-                        var contractsNode = scenario.GetNode("CONTRACTS")?.Value;
-                        if (contractsNode == null) return;
-
-                        // Get CONTRACTS_FINISHED, creating it if the scenario pre-dates the node.
-                        var finishedNodeEntry = scenario.GetNode("CONTRACTS_FINISHED");
-                        ConfigNode finishedNode;
-                        if (finishedNodeEntry == null)
+                        var contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
+                        if (contractsParent == null)
                         {
-                            finishedNode = new ConfigNode("") { Name = "CONTRACTS_FINISHED" };
-                            scenario.AddNode(finishedNode);
-                        }
-                        else
-                        {
-                            finishedNode = finishedNodeEntry.Value;
+                            scenario.AddNode(new ConfigNode(ContractsParentNodeName, scenario));
+                            contractsParent = scenario.GetNode(ContractsParentNodeName)?.Value;
+                            if (contractsParent == null) return;
                         }
 
-                        var existingActive   = contractsNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
-                        var existingFinished = finishedNode.GetNodes("CONTRACT").Select(c => c.Value).ToArray();
+                        var byGuid = IndexExistingContractsByGuid(contractsParent, out var unidentified);
+                        var nonContractChildren = CollectNonContractChildren(contractsParent);
 
-                        foreach (var contract in contractsMsg.Contracts.Select(v => ParseClientConfigNode(v.Data, v.NumBytes, "CONTRACT")))
+                        foreach (var contractInfo in contractsMsg.Contracts)
                         {
-                            var guid  = contract.GetValue("guid")?.Value;
-                            var state = contract.GetValue("state")?.Value ?? string.Empty;
+                            var incomingNode = ParseClientConfigNode(contractInfo.Data, contractInfo.NumBytes, ActiveContractNodeName);
+                            var stateValue = incomingNode.GetValue("state")?.Value;
+                            incomingNode.Name = IsFinishedContractState(stateValue) ? FinishedContractNodeName : ActiveContractNodeName;
 
-                            var inActive   = existingActive.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
-                            var inFinished = existingFinished.FirstOrDefault(n => n.GetValue("guid")?.Value == guid);
-
-                            if (FinishedContractStates.Contains(state))
+                            var guid = incomingNode.GetValue("guid")?.Value;
+                            if (string.IsNullOrEmpty(guid))
                             {
-                                // Remove from active list so it no longer blocks an offered-contract slot.
-                                if (inActive != null)
-                                    contractsNode.RemoveNode(inActive);
+                                unidentified.Add(incomingNode);
+                                continue;
+                            }
 
-                                // Upsert into CONTRACTS_FINISHED.
-                                if (inFinished != null)
-                                    finishedNode.ReplaceNode(inFinished, contract);
-                                else
-                                    finishedNode.AddNode(contract);
-                            }
-                            else
-                            {
-                                // Not finished — update in place within CONTRACTS.
-                                if (inActive != null)
-                                    contractsNode.ReplaceNode(inActive, contract);
-                                else
-                                    contractsNode.AddNode(contract);
-                            }
+                            byGuid[guid] = incomingNode;
                         }
+
+                        var survivors = new List<ConfigNode>(byGuid.Count + unidentified.Count);
+                        survivors.AddRange(byGuid.Values);
+                        survivors.AddRange(unidentified);
+
+                        RebuildContractsParent(contractsParent, nonContractChildren, survivors);
                     }
                 }
                 catch (Exception e)
                 {
                     LunaLog.Error($"Error updating contract scenario data: {e}");
                 }
-            });
+            }));
+        }
+
+        private static void ObserveBackgroundTask(Task task)
+        {
+            if (task == null) return;
+
+            var ignored = task.ContinueWith(
+                t => LunaLog.Error($"Background contract update task failed: {t.Exception}"),
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted,
+                TaskScheduler.Default);
+        }
+
+        /// <summary>
+        /// Builds a guid-keyed view of the contract children currently under the parent.
+        /// Entries without a guid are returned via <paramref name="unidentified"/> so they
+        /// can be preserved verbatim during the rebuild.
+        /// </summary>
+        private static Dictionary<string, ConfigNode> IndexExistingContractsByGuid(ConfigNode contractsParent, out List<ConfigNode> unidentified)
+        {
+            var index = new Dictionary<string, ConfigNode>();
+            unidentified = new List<ConfigNode>();
+
+            foreach (var child in contractsParent.GetAllNodes())
+            {
+                if (child.Name != ActiveContractNodeName && child.Name != FinishedContractNodeName)
+                    continue;
+
+                var guid = child.GetValue("guid")?.Value;
+                if (string.IsNullOrEmpty(guid))
+                {
+                    unidentified.Add(child);
+                    continue;
+                }
+
+                index[guid] = child;
+            }
+
+            return index;
+        }
+
+        /// <summary>
+        /// Returns true for contract states that KSP persists as CONTRACT_FINISHED.
+        /// Mirrors KSP's Contract.State enum members that drive ContractsFinished bucketing.
+        /// </summary>
+        internal static bool IsFinishedContractState(string state)
+        {
+            if (string.IsNullOrEmpty(state)) return false;
+
+            switch (state)
+            {
+                case "Completed":
+                case "Cancelled":
+                case "DeadlineExpired":
+                case "Failed":
+                case "Withdrawn":
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }
