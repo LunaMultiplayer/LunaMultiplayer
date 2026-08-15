@@ -26,21 +26,33 @@ namespace Server.Utilities
         {
             while (ServerContext.ServerRunning)
             {
+                // LatestVersion is invalid, skip the warning message and wait a few minutes first
+                if (LatestVersion == null)
+                {
+                    await Task.Delay(TimeSpan.FromMinutes(5));
+                    continue;
+                }
+
+                // Repeat again in an hour if it's non-essential, or in a minute if it is essential.
+                var delay = LmpVersioning.IsCompatible(LatestVersion)
+                    ? TimeSpan.FromHours(1)
+                    : TimeSpan.FromMinutes(1);
+
                 if (LatestVersion > LmpVersioning.CurrentVersion)
                 {
-                    LunaLog.Warning($"There is a new version of LMP! Please download it! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");
+                    LunaLog.Info($"There is an update available for LMP, please download it when you're able to: {LmpVersioning.CurrentVersion} -> {LatestVersion}");
                     if (LmpVersioning.IsCompatible(LatestVersion))
                     {
-                        LunaLog.Debug("Your version is compatible with the latest version so you will still be listed in the master servers.");
+                        LunaLog.Info("This update is not required to stay compatible with updated master servers and clients.");
                     }
                     else
                     {
-                        LunaLog.Warning("Your version is NOT compatible with the latest version. You won't be listed in the master servers!");
+                        LunaLog.Warning("This update is required in order to be shown on the server list and to connect with clients running the new version.\n"
+                        + "You should update the server ASAP.");
                     }
                 }
 
-                //Sleep for 30 seconds...
-                await Task.Delay(30 * 1000);
+                await Task.Delay(delay);
             }
         }
     }
