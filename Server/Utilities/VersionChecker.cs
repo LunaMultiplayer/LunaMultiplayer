@@ -26,17 +26,24 @@ namespace Server.Utilities
         {
             while (ServerContext.ServerRunning)
             {
+                // LatestVersion is invalid, skip the warning message and wait a few minutes first
+                if (LatestVersion == null)
+                {
+                    await Task.Delay(TimeSpan.FromMinutes(5));
+                    continue;
+                }
+
                 // Repeat again in an hour if it's non-essential, or in a minute if it is essential.
-                var delayMs = LmpVersioning.IsCompatible(LatestVersion)
-                ? TimeSpan.FromHours(1)
-                : TimeSpan.FromMinutes(1);
+                var delay = LmpVersioning.IsCompatible(LatestVersion)
+                    ? TimeSpan.FromHours(1)
+                    : TimeSpan.FromMinutes(1);
 
                 if (LatestVersion > LmpVersioning.CurrentVersion)
                 {
                     LunaLog.Info($"There is an update available for LMP, please download it when you're able to: {LmpVersioning.CurrentVersion} -> {LatestVersion}");
                     if (LmpVersioning.IsCompatible(LatestVersion))
                     {
-                        LunaLog.Info($"This update is not required to stay compatible with updated master servers and clients.");
+                        LunaLog.Info("This update is not required to stay compatible with updated master servers and clients.");
                     }
                     else
                     {
@@ -45,7 +52,7 @@ namespace Server.Utilities
                     }
                 }
 
-                await Task.Delay(delayMs);
+                await Task.Delay(delay);
             }
         }
     }
