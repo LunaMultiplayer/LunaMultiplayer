@@ -458,6 +458,9 @@
     <Compile Include="VesselUtilities\OwnVesselReloader.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselUtilities\TransientDeployedStateDetector.cs" />
+    <Compile Include="VesselUtilities\PersistentIdEvictionPolicy.cs" />
+    <Compile Include="VesselUtilities\VesselLoadTransaction.cs" />
+    <Compile Include="VesselUtilities\StalePersistentIdEvictor.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\Admin\AdminDrawer.cs" />
     <Compile Include="Windows\Admin\AdminWindow.cs" />

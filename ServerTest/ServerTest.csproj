@@ -21,6 +21,8 @@
   <ItemGroup>
     <!-- Pure (Unity/KSP-free) client code linked into the test assembly -->
     <Compile Include="..\LmpClient\VesselUtilities\TransientDeployedStateDetector.cs" Link="VesselUtilities\TransientDeployedStateDetector.cs" />
+    <Compile Include="..\LmpClient\VesselUtilities\PersistentIdEvictionPolicy.cs" Link="VesselUtilities\PersistentIdEvictionPolicy.cs" />
+    <Compile Include="..\LmpClient\VesselUtilities\VesselLoadTransaction.cs" Link="VesselUtilities\VesselLoadTransaction.cs" />
   </ItemGroup>
 
   <ItemGroup>

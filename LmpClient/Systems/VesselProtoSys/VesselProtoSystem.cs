@@ -106,6 +106,7 @@ namespace LmpClient.Systems.VesselProtoSys
             LocalTopologyTracker.ClearAll();
             //The sender survives reconnection — drop a deferral pending from the previous connection.
             MessageSender.ClearTransientDeferrals();
+            StalePersistentIdEvictor.ClearAll();
         }
 
         #endregion
@@ -269,6 +270,8 @@ namespace LmpClient.Systems.VesselProtoSys
                     var vesselId = vesselProto.VesselId;
                     keyVal.Value.Recycle(vesselProto);
 
+                    try
+                    {
                     var verboseErrors = !VesselsUnableToLoad.Contains(vesselId);
                     if (protoVessel == null)
                     {
@@ -282,6 +285,7 @@ namespace LmpClient.Systems.VesselProtoSys
                             SafePartCount(protoVessel),
                             reason: "ProtoVessel.Validate returned false");
                         VesselsUnableToLoad.Add(vesselId);
+                        StalePersistentIdEvictor.RollbackEvictions(vesselId, protoVessel);
                         continue;
                     }
                     if (protoVessel.HasInvalidParts(verboseErrors))
@@ -290,6 +294,7 @@ namespace LmpClient.Systems.VesselProtoSys
                             SafePartCount(protoVessel),
                             reason: "ProtoVessel.HasInvalidParts returned true (one or more part definitions absent from local install)");
                         VesselsUnableToLoad.Add(vesselId);
+                        StalePersistentIdEvictor.RollbackEvictions(vesselId, protoVessel);
                         continue;
                     }
 
@@ -343,9 +348,16 @@ namespace LmpClient.Systems.VesselProtoSys
                             //still gets the UNCHANGED event above because "incoming wire
                             //update for an already-matched vessel" is a useful signal
                             //when reading the trace.
+                            StalePersistentIdEvictor.RollbackEvictions(vesselId, protoVessel);
                             break;
                         case VesselLoadOutcome.Failed:
+                            StalePersistentIdEvictor.RollbackEvictions(vesselId, protoVessel);
                             break;
+                    }
+                    }
+                    finally
+                    {
+                        StalePersistentIdEvictor.RollbackEvictions(vesselId, protoVessel);
                     }
                 }
             }
