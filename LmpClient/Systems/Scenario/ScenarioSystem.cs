@@ -830,6 +830,7 @@ namespace LmpClient.Systems.Scenario
                     return;
                 }
 
+                DeployedScienceRelinker.RelinkAfterDeferredOnLoad(deployedScience);
             }
             catch (Exception e)
             {
