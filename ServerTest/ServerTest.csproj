@@ -19,6 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Pure (Unity/KSP-free) client code linked into the test assembly -->
+    <Compile Include="..\LmpClient\VesselUtilities\TransientDeployedStateDetector.cs" Link="VesselUtilities\TransientDeployedStateDetector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="XmlExampleFiles\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

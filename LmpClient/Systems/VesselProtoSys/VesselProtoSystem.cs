@@ -104,6 +104,8 @@ namespace LmpClient.Systems.VesselProtoSys
             ManeuverSignatures.Clear();
             LastBroadcastDriftPartCount.Clear();
             LocalTopologyTracker.ClearAll();
+            //The sender survives reconnection — drop a deferral pending from the previous connection.
+            MessageSender.ClearTransientDeferrals();
         }
 
         #endregion
