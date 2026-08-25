@@ -1,7 +1,9 @@
 ﻿using LmpClient.Base;
 using LmpClient.Extensions;
+using LmpClient.Events;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareContracts;
+using LmpClient.Systems.VesselProtoSys;
 using LmpClient.Utilities;
 using LmpCommon;
 using System;
@@ -11,6 +13,7 @@ using System.IO;
 using System.Text;
 using Expansions;
 using UniLinq;
+using UnityEngine;
 
 namespace LmpClient.Systems.Scenario
 {
@@ -43,6 +46,20 @@ namespace LmpClient.Systems.Scenario
 
         private static List<string> ScenarioName { get; } = new List<string>();
         private static List<byte[]> ScenarioData { get; } = new List<byte[]>();
+
+        private const int DeferredApplyIntervalMs = 5000;
+        private const int MaxDeferredApplyAttempts = 60;
+
+        private readonly VesselSyncCompletionTracker _vesselSyncTracker = new VesselSyncCompletionTracker(5);
+        private ConfigNode _deferredDeployedScienceNode;
+        private bool _deferredDeployedScienceApplied;
+        private int _deferredApplyAttempts;
+        private bool _vesselLoadedThisTick;
+
+        //True once the server delivered a DeployedScience entry this connection; lets a server with
+        //no DeployedScience.txt treat the client-created module as authoritative and sendable.
+        private bool _receivedDeployedScienceScenarioEntry;
+
         #endregion
 
         #region Base overrides
@@ -54,13 +71,27 @@ namespace LmpClient.Systems.Scenario
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            DeployedScienceSyncGate.DeployedScienceReady = false;
+            _receivedDeployedScienceScenarioEntry = false;
             //Run it every 30 seconds
             SetupRoutine(new RoutineDefinition(30000, RoutineExecution.Update, SendScenarioModules));
+            //Apply the deferred DeployedScience data once the initial vessel sync completes
+            SetupRoutine(new RoutineDefinition(DeferredApplyIntervalMs, RoutineExecution.Update, ApplyDeferredDeployedScience));
+            VesselLoadEvent.onLmpVesselLoaded.Add(OnLmpVesselLoaded);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            VesselLoadEvent.onLmpVesselLoaded.Remove(OnLmpVesselLoaded);
+            _vesselSyncTracker.Reset();
+            _deferredDeployedScienceNode = null;
+            _deferredDeployedScienceApplied = false;
+            _deferredApplyAttempts = 0;
+            _vesselLoadedThisTick = false;
+            _receivedDeployedScienceScenarioEntry = false;
+            DeployedScienceSyncGate.DeployedScienceReady = false;
+
             CheckData.Clear();
             ScenarioQueue = new ConcurrentQueue<ScenarioEntry>();
             AllScenarioTypesInAssemblies.Clear();
@@ -167,6 +198,13 @@ namespace LmpClient.Systems.Scenario
                 if (!IsScenarioModuleAllowed(scenarioType))
                     continue;
 
+                //Never send a pruned/partial DeployedScience state — only after its authoritative
+                //node was applied (a premature send would poison the server copy).
+                if (!DeployedScienceSyncGate.ShouldSend(scenarioType))
+                {
+                    continue;
+                }
+
                 var configNode = new ConfigNode();
                 scenarioModule.Save(configNode);
 
@@ -222,6 +260,37 @@ namespace LmpClient.Systems.Scenario
                     LunaLog.LogError(
                         $"[LMP]: Skipping scenario '{scenarioEntry.ScenarioModule}' with null ConfigNode. See NullScenario.log in your KSP install folder.");
                     WriteNullScenarioDebugLog(scenarioEntry);
+                    continue;
+                }
+
+                //Deferred until the vessel sync completes: stock OnLoad prunes clusters whose
+                //parts are not in FlightGlobals yet, so an early apply would be poisoned.
+                if (string.Equals(scenarioEntry.ScenarioModule, DeployedScienceSyncGate.ScenarioModuleName, StringComparison.Ordinal))
+                {
+                    if (!IsScenarioModuleAllowed(scenarioEntry.ScenarioModule))
+                    {
+                        LunaLog.Log($"[LMP]: Skipping {scenarioEntry.ScenarioModule} scenario data (not allowed in this game)");
+                        continue;
+                    }
+
+                    //The server delivered a node: the fresh-server (client-created module)
+                    //branch must not fire, and a late entry clears Ready and re-defers.
+                    _receivedDeployedScienceScenarioEntry = true;
+
+                    DeployedScienceSyncGate.DeployedScienceReady = false;
+
+                    _deferredDeployedScienceNode = scenarioEntry.ScenarioNode.CreateCopy();
+                    _deferredDeployedScienceApplied = false;
+                    _deferredApplyAttempts = 0;
+
+                    if (_vesselSyncTracker.IsComplete)
+                    {
+                        ApplyDeployedScienceNode();
+                    }
+                    else
+                    {
+                        LunaLog.Log($"[LMP]: Deferring {scenarioEntry.ScenarioModule} scenario data until the initial vessel sync completes");
+                    }
                     continue;
                 }
 
@@ -690,6 +759,170 @@ namespace LmpClient.Systems.Scenario
         #endregion
 
         #region Private methods
+
+        private void OnLmpVesselLoaded(Vessel vessel)
+        {
+            _vesselLoadedThisTick = true;
+        }
+
+        private void ApplyDeferredDeployedScience()
+        {
+            if (!Enabled) return;
+
+            try
+            {
+                var protoSystem = VesselProtoSystem.Singleton;
+                var anyProtoPending = protoSystem.VesselProtos.Values.Any(q => !q.IsEmpty);
+                _vesselSyncTracker.Update(Time.realtimeSinceStartup, protoSystem.ProtoSystemReady, anyProtoPending, _vesselLoadedThisTick);
+                _vesselLoadedThisTick = false;
+
+                if (DeployedScienceSyncGate.ShouldMarkFreshModuleAuthoritative(
+                        _receivedDeployedScienceScenarioEntry, _vesselSyncTracker.IsComplete, DeployedScienceSyncGate.DeployedScienceReady))
+                {
+                    DeployedScienceSyncGate.DeployedScienceReady = true;
+                    LunaLog.Log("[LMP]: No DeployedScience scenario data received from the server - the locally created module is authoritative and sendable");
+                }
+
+                if (!_vesselSyncTracker.IsComplete || _deferredDeployedScienceNode == null || _deferredDeployedScienceApplied)
+                    return;
+
+                ApplyDeployedScienceNode();
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"Error while trying to apply the deferred DeployedScience scenario data. Details: {e}");
+            }
+        }
+
+        private void ApplyDeployedScienceNode()
+        {
+            var deployedScience = Expansions.Serenity.DeployedScience.Runtime.DeployedScience.Instance;
+            if (deployedScience == null)
+                return;
+
+            var dataNode = _deferredDeployedScienceNode.GetNode("SCENARIO")?.CreateCopy() ?? _deferredDeployedScienceNode.CreateCopy();
+
+            try
+            {
+                foreach (var oldCluster in deployedScience.DeployedScienceClusters.Values)
+                    if (oldCluster != null) UnityEngine.Object.Destroy(oldCluster.gameObject);
+
+                deployedScience.DeployedScienceClusters.Clear();
+
+                deployedScience.OnLoad(dataNode);
+
+                var declaredMembership = BuildDeclaredMembership(dataNode);
+                var appliedMembership = BuildAppliedMembership(deployedScience);
+                var declaredClusters = declaredMembership.Count;
+                var appliedClusters = appliedMembership.Count;
+
+                if (!DeployedScienceSyncGate.IsMembershipApplied(declaredMembership, appliedMembership))
+                {
+                    _deferredApplyAttempts++;
+                    if (_deferredApplyAttempts < MaxDeferredApplyAttempts)
+                        return;
+
+                    _deferredDeployedScienceNode = null;
+                    _deferredDeployedScienceApplied = true;
+                    DeployedScienceSyncGate.DeployedScienceReady = false;
+
+                    LunaLog.LogError($"[LMP]: Giving up applying the DeployedScience scenario data after {MaxDeferredApplyAttempts} attempts ({appliedClusters}/{declaredClusters} clusters applied). The scenario remains unsent so the pruned state cannot poison the server.");
+                    return;
+                }
+
+            }
+            catch (Exception e)
+            {
+                _deferredApplyAttempts++;
+                if (_deferredApplyAttempts < MaxDeferredApplyAttempts)
+                {
+                    LunaLog.LogWarning($"[LMP]: DeployedScience apply failed (attempt {_deferredApplyAttempts}/{MaxDeferredApplyAttempts}), retrying: {e.Message}");
+                    return;
+                }
+
+                _deferredDeployedScienceNode = null;
+                _deferredDeployedScienceApplied = true;
+                DeployedScienceSyncGate.DeployedScienceReady = false;
+                LunaLog.LogError($"[LMP]: Giving up applying DeployedScience after {MaxDeferredApplyAttempts} attempts. Last error: {e}");
+                return;
+            }
+
+            _deferredDeployedScienceApplied = true;
+            _deferredDeployedScienceNode = null;
+            DeployedScienceSyncGate.DeployedScienceReady = true;
+
+            LunaLog.Log($"[LMP]: Applied the DeployedScience scenario data after the initial vessel sync completed");
+        }
+
+        private static Dictionary<uint, DeployedScienceSyncGate.ClusterMembership> BuildDeclaredMembership(ConfigNode dataNode)
+        {
+            var declared = new Dictionary<uint, DeployedScienceSyncGate.ClusterMembership>();
+            var clustersNode = dataNode?.GetNode("SCIENCECLUSTERS");
+            if (clustersNode == null) return declared;
+
+            foreach (var clusterNode in clustersNode.GetNodes("SCIENCECLUSTER"))
+            {
+                if (clusterNode == null) continue;
+                var cidText = clusterNode.GetValue("ControlModulePartId");
+                if (!uint.TryParse(cidText, out var controlId) || controlId == 0) continue;
+
+                var membership = new DeployedScienceSyncGate.ClusterMembership();
+
+                var partsNode = clusterNode.GetNode("MANNEDSCIENCEPARTS");
+                if (partsNode != null)
+                {
+                    foreach (var partNode in partsNode.GetNodes("MANNEDSCIENCEPART"))
+                    {
+                        if (partNode == null) continue;
+                        var pidText = partNode.GetValue("PartId");
+                        if (uint.TryParse(pidText, out var partId) && partId != 0)
+                            membership.PartIds.Add(partId);
+
+                        var experimentNode = partNode.GetNode("EXPERIMENT");
+                        var experimentId = experimentNode?.GetValue("ExperimentId");
+                        if (!string.IsNullOrEmpty(experimentId))
+                            membership.ExperimentIds.Add(experimentId);
+                    }
+                }
+
+                declared[controlId] = membership;
+            }
+
+            return declared;
+        }
+
+        private static Dictionary<uint, DeployedScienceSyncGate.ClusterMembership> BuildAppliedMembership(
+            Expansions.Serenity.DeployedScience.Runtime.DeployedScience deployedScience)
+        {
+            var applied = new Dictionary<uint, DeployedScienceSyncGate.ClusterMembership>();
+            if (deployedScience?.DeployedScienceClusters == null) return applied;
+
+            foreach (var cluster in deployedScience.DeployedScienceClusters.Values)
+            {
+                if (cluster == null) continue;
+
+                var membership = new DeployedScienceSyncGate.ClusterMembership();
+
+                var parts = cluster.DeployedScienceParts;
+                if (parts != null)
+                {
+                    for (var i = 0; i < parts.Count; i++)
+                    {
+                        var part = parts[i];
+                        if (part == null) continue;
+                        membership.PartIds.Add(part.PartId);
+
+                        var experiment = part.Experiment;
+                        if (experiment != null && !string.IsNullOrEmpty(experiment.ExperimentId))
+                            membership.ExperimentIds.Add(experiment.ExperimentId);
+                    }
+                }
+
+                applied[cluster.ControlModulePartId] = membership;
+            }
+
+            return applied;
+        }
 
         private static void WriteNullScenarioDebugLog(ScenarioEntry entry)
         {
