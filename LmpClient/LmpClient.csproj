@@ -556,6 +556,8 @@
     <Compile Include="Systems\Scenario\ScenarioStructures.cs" />
     <Compile Include="Systems\Scenario\DeployedScienceSyncGate.cs" />
     <Compile Include="Systems\Scenario\DeployedScienceRelinker.cs" />
+    <Compile Include="Systems\Scenario\DeployedScienceLiveRegistrationPolicy.cs" />
+    <Compile Include="Systems\Scenario\DeployedScienceLiveRegistration.cs" />
     <Compile Include="Systems\SettingsSys\SettingsReadSaveHandler.cs" />
     <Compile Include="Systems\SettingsSys\SettingsStructures.cs" />
     <Compile Include="Systems\ModApi\ModApiSystem.cs" />

@@ -77,6 +77,8 @@ namespace LmpClient.Systems.Scenario
             SetupRoutine(new RoutineDefinition(30000, RoutineExecution.Update, SendScenarioModules));
             //Apply the deferred DeployedScience data once the initial vessel sync completes
             SetupRoutine(new RoutineDefinition(DeferredApplyIntervalMs, RoutineExecution.Update, ApplyDeferredDeployedScience));
+            //Live deployed-science registration sweep
+            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, DeployedScienceLiveRegistration.EvaluatePendingRegistrations));
             VesselLoadEvent.onLmpVesselLoaded.Add(OnLmpVesselLoaded);
         }
 

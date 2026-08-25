@@ -25,6 +25,7 @@
     <Compile Include="..\LmpClient\VesselUtilities\VesselLoadTransaction.cs" Link="VesselUtilities\VesselLoadTransaction.cs" />
     <Compile Include="..\LmpClient\VesselUtilities\SolarPanelActualOutputPolicy.cs" Link="VesselUtilities\SolarPanelActualOutputPolicy.cs" />
     <Compile Include="..\LmpClient\Systems\Scenario\DeployedScienceSyncGate.cs" Link="Systems\Scenario\DeployedScienceSyncGate.cs" />
+    <Compile Include="..\LmpClient\Systems\Scenario\DeployedScienceLiveRegistrationPolicy.cs" Link="Systems\Scenario\DeployedScienceLiveRegistrationPolicy.cs" />
   </ItemGroup>
 
   <ItemGroup>
