@@ -34,11 +34,28 @@ namespace LmpClient.Systems.ShareTechnology
             System.StartIgnoringEvents();
             var node = AssetBase.RnDTechTree.GetTreeTechs().ToList().Find(n => n.techID == tech.Id);
 
+            //Check (before we respawn the tree below) whether the R&D screen currently has this exact
+            //node's detail panel open. If it does, its Research button will need to be refreshed afterwards.
+            var panelWasShowingThisNode = RDController.Instance && RDController.Instance.node_selected != null
+                && RDController.Instance.node_selected.tech != null
+                && RDController.Instance.node_selected.tech.techID == tech.Id;
+
             //Unlock the technology
             ResearchAndDevelopment.Instance.UnlockProtoTechNode(node);
 
             //Refresh the tech tree
             ResearchAndDevelopment.RefreshTechTreeUI();
+
+            //RefreshTechTreeUI() respawns the tree nodes but does NOT refresh an already open node panel.
+            //If another player had this node open, its Research button stayed active and let them buy the
+            //node again, spending the science a second time (see issue #667). We can't just call UpdatePanel()
+            //because the respawn orphans node_selected (its cached RDTech.state is never re-synced), so instead
+            //we close the stale panel. The node correctly shows as researched once it is reopened.
+            if (panelWasShowingThisNode && RDController.Instance)
+            {
+                RDController.Instance.node_selected = null;
+                RDController.Instance.ShowNothingPanel();
+            }
 
             //Refresh the part list in case we are in the VAB/SPH
             if (EditorPartList.Instance) EditorPartList.Instance.Refresh();
