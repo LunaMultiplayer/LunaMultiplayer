@@ -1,4 +1,5 @@
 ﻿using ByteSizeLib;
+using ImageMagick;
 using LmpCommon.Message.Data.Screenshot;
 using LmpCommon.Message.Server;
 using LmpCommon.Time;
@@ -10,12 +11,9 @@ using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Graphics = System.Drawing.Graphics;
 
 namespace Server.System
 {
@@ -115,15 +113,15 @@ namespace Server.System
                         if (data.AlreadyOwnedPhotoIds.Contains(dateTaken))
                             continue;
 
-                        var bitmap = new Bitmap(file);
+                        var image = new MagickImage(file);
                         var contents = File.ReadAllBytes(file);
                         screenshots.Add(new ScreenshotInfo
                         {
                             Data = contents,
                             DateTaken = dateTaken,
                             NumBytes = contents.Length,
-                            Height = (ushort)bitmap.Height,
-                            Width = (ushort)bitmap.Width,
+                            Height = (ushort)image.Height,
+                            Width = (ushort)image.Width,
                             FolderName = data.FolderName,
                         });
                     }
@@ -149,14 +147,14 @@ namespace Server.System
                 var file = Path.Combine(ScreenshotPath, data.FolderName, $"{data.DateTaken}.png");
                 if (File.Exists(file))
                 {
-                    var bitmap = new Bitmap(file);
+                    var image = new MagickImage(file);
 
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotDataMsgData>();
                     msgData.Screenshot.DateTaken = data.DateTaken;
                     msgData.Screenshot.Data = File.ReadAllBytes(file);
                     msgData.Screenshot.NumBytes = msgData.Screenshot.Data.Length;
-                    msgData.Screenshot.Height = (ushort)bitmap.Height;
-                    msgData.Screenshot.Width = (ushort)bitmap.Width;
+                    msgData.Screenshot.Height = (ushort)image.Height;
+                    msgData.Screenshot.Width = (ushort)image.Width;
                     msgData.Screenshot.FolderName = data.FolderName;
 
                     LunaLog.Debug($"Sending screenshot ({ByteSize.FromBytes(msgData.Screenshot.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}): {data.DateTaken} to: {client.PlayerName}.");
@@ -219,12 +217,10 @@ namespace Server.System
         private static void CreateMiniature(string path)
         {
             var fileName = Path.GetFileName(path);
-            using (var image = Image.FromFile(path))
-            using (var newImage = ScaleImage(image, 120, 120))
-            {
-                // ReSharper disable once AssignNullToNotNullAttribute
-                newImage.Save(Path.Combine(Path.GetDirectoryName(path), $"{SmallFilePrefix}{fileName}"), ImageFormat.Png);
-            }
+            using var image = new MagickImage(path);
+            using var newImage = ScaleImage(image, 120, 120);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            newImage.Write(Path.Combine(Path.GetDirectoryName(path), $"{SmallFilePrefix}{fileName}"), MagickFormat.Png);
         }
 
         /// <summary>
@@ -232,28 +228,24 @@ namespace Server.System
         /// </summary>
         private static byte[] ScaleImage(byte[] data, int numBytes, int maxWidth, int maxHeight)
         {
-            using (var stream = new MemoryStream(data, 0, numBytes))
-            using (var image = Image.FromStream(stream))
+            using var stream = new MemoryStream(data, 0, numBytes);
+            using var image = new MagickImage(stream);
+            if (image.Width <= maxWidth && image.Height <= maxHeight)
             {
-                if (image.Width <= maxWidth && image.Height <= maxHeight)
-                {
-                    Array.Resize(ref data, numBytes);
-                    return data;
-                }
-
-                using (var newImage = ScaleImage(image, maxWidth, maxHeight))
-                using (var outputStream = new MemoryStream())
-                {
-                    newImage.Save(outputStream, image.RawFormat);
-                    return outputStream.ToArray();
-                }
+                Array.Resize(ref data, numBytes);
+                return data;
             }
+
+            image.Resize((uint)maxWidth, (uint)maxHeight);
+            using var outputStream = new MemoryStream();
+            image.Write(outputStream, MagickFormat.Raw);
+            return outputStream.ToArray();
         }
 
         /// <summary>
         /// Scales a given image
         /// </summary>
-        private static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        private static MagickImage ScaleImage(MagickImage image, int maxWidth, int maxHeight)
         {
             if (image.Width <= maxWidth && image.Height <= maxHeight)
                 return image;
@@ -265,12 +257,9 @@ namespace Server.System
             var newWidth = (int)(image.Width * ratio);
             var newHeight = (int)(image.Height * ratio);
 
-            var newImage = new Bitmap(newWidth, newHeight);
+            image.Resize((uint)newWidth, (uint)newHeight);
 
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-
-            return newImage;
+            return image;
         }
 
         #endregion
