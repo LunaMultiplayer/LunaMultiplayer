@@ -457,6 +457,11 @@
     <Compile Include="VesselUtilities\DiscoveryInfoSanitizer.cs" />
     <Compile Include="VesselUtilities\OwnVesselReloader.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
+    <Compile Include="VesselUtilities\TransientDeployedStateDetector.cs" />
+    <Compile Include="VesselUtilities\PersistentIdEvictionPolicy.cs" />
+    <Compile Include="VesselUtilities\VesselLoadTransaction.cs" />
+    <Compile Include="VesselUtilities\StalePersistentIdEvictor.cs" />
+    <Compile Include="VesselUtilities\SolarPanelActualOutputPolicy.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\Admin\AdminDrawer.cs" />
     <Compile Include="Windows\Admin\AdminWindow.cs" />
@@ -510,6 +515,7 @@
     <Compile Include="VesselUtilities\DockingPortUtil.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />
+    <Compile Include="Systems\VesselProtoSys\TransientVesselSendHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoSystem.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveEvents.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageHandler.cs" />
@@ -548,6 +554,10 @@
     <Compile Include="Systems\ModApi\ModApiMessageHandler.cs" />
     <Compile Include="Systems\Mod\ModFileHandler.cs" />
     <Compile Include="Systems\Scenario\ScenarioStructures.cs" />
+    <Compile Include="Systems\Scenario\DeployedScienceSyncGate.cs" />
+    <Compile Include="Systems\Scenario\DeployedScienceRelinker.cs" />
+    <Compile Include="Systems\Scenario\DeployedScienceLiveRegistrationPolicy.cs" />
+    <Compile Include="Systems\Scenario\DeployedScienceLiveRegistration.cs" />
     <Compile Include="Systems\SettingsSys\SettingsReadSaveHandler.cs" />
     <Compile Include="Systems\SettingsSys\SettingsStructures.cs" />
     <Compile Include="Systems\ModApi\ModApiSystem.cs" />

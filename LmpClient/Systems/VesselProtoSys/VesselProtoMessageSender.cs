@@ -22,6 +22,18 @@ namespace LmpClient.Systems.VesselProtoSys
 
         private static readonly object VesselArraySyncLock = new object();
 
+        private readonly TransientVesselSendHandler _transientSendHandler;
+
+        public VesselProtoMessageSender()
+        {
+            _transientSendHandler = new TransientVesselSendHandler(SendVesselMessage);
+        }
+
+        public void ClearTransientDeferrals()
+        {
+            _transientSendHandler.Clear();
+        }
+
         public void SendMessage(IMessageData msg)
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
@@ -62,9 +74,19 @@ namespace LmpClient.Systems.VesselProtoSys
         private void SendVesselMessage(ProtoVessel protoVessel, bool forceReload, string reason)
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
+
+            //Defer sends of mid-deploy ground vessels — a transient snapshot stored as canonical would corrupt them.
+            var deferResult = _transientSendHandler.DeferIfTransient(protoVessel, forceReload, reason);
+            if (deferResult.Deferred)
+                return;
+
+            //Use the effective values: a consumed pending entry merged ForceReload/Reason into the result.
+            var effectiveForceReload = deferResult.EffectiveForceReload;
+            var effectiveReason = deferResult.EffectiveReason;
+
             //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
             //TODO: Check if this works fine with the new unity version as it used to crash....
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, forceReload, reason));
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, effectiveForceReload, effectiveReason));
             //PrepareAndSendProtoVessel(protoVessel);
         }
 

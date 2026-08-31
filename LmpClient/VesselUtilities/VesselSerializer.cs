@@ -68,11 +68,21 @@ namespace LmpClient.VesselUtilities
                 //offending values itself.
                 DiscoveryInfoSanitizer.SanitizeVesselNode(inputNode, protoVesselId, "wire-input");
 
+                //Evict stale owners BEFORE the stock constructor deserialises the snapshots:
+                //it renames colliding persistentIds, and the VesselLoader pass is too late here.
+                var wireIdentities = StalePersistentIdEvictor.PreflightWireIdentityAndEvict(inputNode, protoVesselId);
+
                 //Cannot reuse the Protovessel to save memory garbage as it does not have any clear method :(
-                return new ProtoVessel(inputNode, HighLogic.CurrentGame);
+                var constructed = new ProtoVessel(inputNode, HighLogic.CurrentGame);
+
+                StalePersistentIdEvictor.LogWireConstructionResult(constructed, wireIdentities, protoVesselId);
+                return constructed;
             }
             catch (Exception e)
             {
+                //Constructor threw after the preflight evicted entries (possibly after a partial
+                //constructor registered some) — roll back so the previous copy stays registered.
+                StalePersistentIdEvictor.RollbackEvictions(protoVesselId);
                 LunaLog.LogError($"[LMP]: Damaged vessel {protoVesselId}, exception: {e}");
                 return null;
             }
