@@ -432,8 +432,8 @@ namespace LmpClient
             //Set the game mode
             HighLogic.CurrentGame.Mode = ConvertGameMode(SettingsSystem.ServerSettings.GameMode);
 
-            //Set difficulty
-            HighLogic.CurrentGame.Parameters = SettingsSystem.ServerSettings.ServerParameters;
+            //Set game parameters without overwriting extra ones
+            SetParams(HighLogic.CurrentGame);
             SetAdvancedParams(HighLogic.CurrentGame);
             SetCommNetParams(HighLogic.CurrentGame);
 
@@ -455,6 +455,16 @@ namespace LmpClient
             GamePersistence.SaveGame(HighLogic.CurrentGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
             HighLogic.CurrentGame.Start();
             LunaLog.Log("[LMP]: Started!");
+        }
+
+        public void SetParams(Game currentGame)
+        {
+            currentGame.Parameters.Flight = SettingsSystem.ServerSettings.ServerParameters.Flight;
+            currentGame.Parameters.Editor = SettingsSystem.ServerSettings.ServerParameters.Editor;
+            currentGame.Parameters.TrackingStation = SettingsSystem.ServerSettings.ServerParameters.TrackingStation;
+            currentGame.Parameters.SpaceCenter = SettingsSystem.ServerSettings.ServerParameters.SpaceCenter;
+            currentGame.Parameters.Difficulty = SettingsSystem.ServerSettings.ServerParameters.Difficulty;
+            currentGame.Parameters.Career = SettingsSystem.ServerSettings.ServerParameters.Career;
         }
 
         public void SetAdvancedParams(Game currentGame)
