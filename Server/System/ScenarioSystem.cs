@@ -83,6 +83,10 @@ namespace Server.System
                     };
                 }).ToArray();
 
+                var totalBytes = scenarioDataArray.Sum(s => s.NumBytes);
+                var modules = string.Join(", ", scenarioDataArray.Select(s => $"{s.Module}={s.NumBytes}"));
+                LunaLog.Debug($"Sending {client.PlayerName} {scenarioDataArray.Length} scenario modules ({totalBytes} bytes): {modules}");
+
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScenarioDataMsgData>();
                 msgData.ScenariosData = scenarioDataArray;
                 msgData.ScenarioCount = scenarioDataArray.Length;
