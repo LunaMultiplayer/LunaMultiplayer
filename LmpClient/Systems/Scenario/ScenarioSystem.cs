@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Diagnostics;
 using LmpClient.Extensions;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Systems.ShareContracts;
@@ -859,8 +860,6 @@ namespace LmpClient.Systems.Scenario
             if (!IsDlcScenarioInstalled(scenarioName))
                 return false;
 
-            //TryGetValue instead of ContainsKey + indexer: the dictionary is cleared when the system is
-            //disabled, so a lookup that is split in two can find the key and then fail to read it
             if (!AllScenarioTypesInAssemblies.TryGetValue(scenarioName, out var scenarioType) || scenarioType == null)
             {
                 //Normal whenever the server carries scenarios from mods this client does not have (the receive
@@ -872,7 +871,6 @@ namespace LmpClient.Systems.Scenario
                 return false;
             }
 
-            //Read once so the three mode comparisons below cannot see a game that disappears midway
             var currentGame = HighLogic.CurrentGame;
             if (currentGame == null)
             {

@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Diagnostics;
 using LmpClient.Extensions;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Scenario;

@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Diagnostics;
 using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Network;

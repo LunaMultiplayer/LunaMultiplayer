@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace LmpClient.Systems.Scenario
+namespace LmpClient.Diagnostics
 {
     /// <summary>
     /// Writes diagnostics for the scenario synchronization pipeline.

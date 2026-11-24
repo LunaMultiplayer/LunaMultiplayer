@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Diagnostics;
 using LmpClient.Network;
 using LmpCommon.Message.Client;
 using LmpCommon.Message.Data.Scenario;

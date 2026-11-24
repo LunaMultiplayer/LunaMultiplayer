@@ -47,7 +47,7 @@ namespace LmpClient.Systems.SettingsSys
 
         /// <summary>
         /// Debug switch for the scenario-sync trace at <c>{KspPath}/ScenarioSyncDebug.log</c> (see
-        /// <see cref="LmpClient.Systems.Scenario.ScenarioSyncDiagnostics"/>). Off by default because
+        /// <see cref="LmpClient.Diagnostics.ScenarioSyncDiagnostics"/>). Off by default because
         /// it dumps the full scenario/assembly inventory on every connect. Turn it on in settings.xml
         /// when investigating a "Syncing scenarios" hang or scenarios that stop syncing.
         /// </summary>
