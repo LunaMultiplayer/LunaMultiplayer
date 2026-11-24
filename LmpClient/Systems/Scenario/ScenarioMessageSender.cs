@@ -18,6 +18,7 @@ namespace LmpClient.Systems.Scenario
 
         public void SendScenariosRequest()
         {
+            ScenarioSyncDiagnostics.RequestSent();
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<ScenarioCliMsg, ScenarioRequestMsgData>()));
         }
 

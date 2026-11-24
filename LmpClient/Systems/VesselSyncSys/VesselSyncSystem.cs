@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpCommon.Enums;
 using UnityEngine;
 
 namespace LmpClient.Systems.VesselSyncSys
@@ -10,7 +11,7 @@ namespace LmpClient.Systems.VesselSyncSys
     {
         #region Fields & properties
 
-        public bool UpdateSystemReady => Enabled && Time.timeSinceLevelLoad > 1f;
+        public bool UpdateSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && MainSystem.NetworkState >= ClientState.Starting;
 
         #endregion
 

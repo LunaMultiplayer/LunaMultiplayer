@@ -28,14 +28,7 @@ namespace LmpClient.Systems.Scenario
             get
             {
                 if (!_allScenarioTypesInAssemblies.Any())
-                {
-                    var scenarioTypes = AssemblyLoader.loadedAssemblies
-                        .SelectMany(a => a.assembly.GetLoadableTypes())
-                        .Where(s => s.IsSubclassOf(typeof(ScenarioModule)) && !_allScenarioTypesInAssemblies.ContainsKey(s.Name));
-
-                    foreach (var scenarioType in scenarioTypes)
-                        _allScenarioTypesInAssemblies.TryAdd(scenarioType.Name, scenarioType);
-                }
+                    DiscoverScenarioTypes();
 
                 return _allScenarioTypesInAssemblies;
             }
@@ -54,6 +47,12 @@ namespace LmpClient.Systems.Scenario
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
+            //Snapshot the scenario inventory of this install now so a later failure can be compared
+            //against what this client was actually able to resolve when it joined the server
+            //Passed lazily so the assembly scan still only happens on first use when diagnostics are off
+            ScenarioSyncDiagnostics.SessionStarted(() => AllScenarioTypesInAssemblies);
+
             //Run it every 30 seconds
             SetupRoutine(new RoutineDefinition(30000, RoutineExecution.Update, SendScenarioModules));
         }
@@ -61,6 +60,7 @@ namespace LmpClient.Systems.Scenario
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            ScenarioSyncDiagnostics.SessionEnded();
             CheckData.Clear();
             ScenarioQueue = new ConcurrentQueue<ScenarioEntry>();
             AllScenarioTypesInAssemblies.Clear();
@@ -97,13 +97,35 @@ namespace LmpClient.Systems.Scenario
             {
                 try
                 {
-                    var modules = ScenarioRunner.GetLoadedModules().Where(s=> s != null);
-                    ParseModulesToConfigNodes(modules);
+                    //Whether a scenario may be sent depends on the game mode, so there is nothing this
+                    //routine can do until the game exists. This system is enabled as soon as the players
+                    //are synced and the main menu already has scenario modules loaded, so on a server
+                    //whose remaining sync steps take longer than the send interval this fires while
+                    //MainSystem has not created the game yet
+                    if (HighLogic.CurrentGame == null)
+                    {
+                        //Expected on slow servers, so only worth reporting when diagnostics are on
+                        if (ScenarioSyncDiagnostics.Enabled)
+                            ScenarioSyncDiagnostics.Anomaly("send-without-game",
+                                "The scenario send routine ran while HighLogic.CurrentGame is null, so nothing was sent this cycle.");
+                        return;
+                    }
+
+                    var loadedModules = ScenarioRunner.GetLoadedModules();
+                    if (loadedModules == null)
+                    {
+                        ScenarioSyncDiagnostics.Anomaly("loaded-modules-null",
+                            "ScenarioRunner.GetLoadedModules() returned null so no scenario can be sent this cycle.");
+                        return;
+                    }
+
+                    ParseModulesToConfigNodes(loadedModules.Where(s => s != null));
                     TaskFactory.StartNew(SendModulesConfigNodes);
                 }
                 catch (Exception e)
                 {
                     LunaLog.LogError($"Error while trying to send the scenario modules!. Details {e}");
+                    ScenarioSyncDiagnostics.Failure("SendScenarioModules", e);
                 }
             }
         }
@@ -147,6 +169,8 @@ namespace LmpClient.Systems.Scenario
             catch (Exception e)
             {
                 LunaLog.LogError($"[LMP]: Error sending immediate scenario for '{moduleName}': {e}");
+                ScenarioSyncDiagnostics.Failure($"SendScenarioModuleImmediate/{moduleName}", e,
+                    sb => sb.AppendLine($"  Failing scenario module: {moduleName}"));
             }
         }
 
@@ -159,18 +183,30 @@ namespace LmpClient.Systems.Scenario
             ScenariosConfigNodes.Clear();
             foreach (var scenarioModule in modules)
             {
-                var scenarioType = scenarioModule.GetType().Name;
+                //Resolved before the work below so a failure can always name the module it happened on
+                var scenarioType = "(type not resolved)";
+                try
+                {
+                    scenarioType = scenarioModule.GetType().Name;
 
-                if (IgnoredScenarios.IgnoreSend.Contains(scenarioType))
-                    continue;
+                    if (IgnoredScenarios.IgnoreSend.Contains(scenarioType))
+                        continue;
 
-                if (!IsScenarioModuleAllowed(scenarioType))
-                    continue;
+                    if (!IsScenarioModuleAllowed(scenarioType))
+                        continue;
 
-                var configNode = new ConfigNode();
-                scenarioModule.Save(configNode);
+                    var configNode = new ConfigNode();
+                    scenarioModule.Save(configNode);
 
-                ScenariosConfigNodes.Add(new Tuple<string, ConfigNode>(scenarioType, configNode));
+                    ScenariosConfigNodes.Add(new Tuple<string, ConfigNode>(scenarioType, configNode));
+                }
+                catch (Exception e)
+                {
+                    //One faulty module must not stop every other scenario of this cycle from syncing
+                    LunaLog.LogError($"[LMP]: Skipping scenario '{scenarioType}' because it could not be prepared for sending. {e}");
+                    ScenarioSyncDiagnostics.Failure($"ParseModulesToConfigNodes/{scenarioType}", e,
+                        sb => sb.AppendLine($"  Failing scenario module: {scenarioType}"));
+                }
             }
         }
 
@@ -184,26 +220,40 @@ namespace LmpClient.Systems.Scenario
 
             foreach (var scenarioConfigNode in ScenariosConfigNodes)
             {
-                var scenarioBytes = scenarioConfigNode.Item2.Serialize();
-                var scenarioHash = Common.CalculateSha256Hash(scenarioBytes);
-
-                if (scenarioBytes.Length == 0)
+                try
                 {
-                    LunaLog.Log($"[LMP]: Error writing scenario data for {scenarioConfigNode.Item1}");
-                    continue;
+                    var scenarioBytes = scenarioConfigNode.Item2.Serialize();
+                    var scenarioHash = Common.CalculateSha256Hash(scenarioBytes);
+
+                    if (scenarioBytes.Length == 0)
+                    {
+                        LunaLog.Log($"[LMP]: Error writing scenario data for {scenarioConfigNode.Item1}");
+                        continue;
+                    }
+
+                    //Data is the same since last time - Skip it.
+                    if (CheckData.ContainsKey(scenarioConfigNode.Item1) && CheckData[scenarioConfigNode.Item1] == scenarioHash) continue;
+
+                    CheckData[scenarioConfigNode.Item1] = scenarioHash;
+
+                    ScenarioName.Add(scenarioConfigNode.Item1);
+                    ScenarioData.Add(scenarioBytes);
                 }
-
-                //Data is the same since last time - Skip it.
-                if (CheckData.ContainsKey(scenarioConfigNode.Item1) && CheckData[scenarioConfigNode.Item1] == scenarioHash) continue;
-
-                CheckData[scenarioConfigNode.Item1] = scenarioHash;
-
-                ScenarioName.Add(scenarioConfigNode.Item1);
-                ScenarioData.Add(scenarioBytes);
+                catch (Exception e)
+                {
+                    //As in the parsing loop, one faulty scenario must not block the whole batch
+                    LunaLog.LogError($"[LMP]: Skipping scenario '{scenarioConfigNode.Item1}' because it could not be serialized. {e}");
+                    ScenarioSyncDiagnostics.Failure($"SendModulesConfigNodes/{scenarioConfigNode.Item1}", e,
+                        sb => sb.AppendLine($"  Failing scenario module: {scenarioConfigNode.Item1}"));
+                }
             }
 
             if (ScenarioName.Any())
+            {
+                if (ScenarioSyncDiagnostics.Enabled)
+                    LunaLog.Log($"[LMP]: Sending {ScenarioName.Count} changed scenario(s) to the server: {string.Join(", ", ScenarioName.ToArray())}");
                 MessageSender.SendScenarioModuleData(ScenarioName, ScenarioData);
+            }
         }
 
         public void LoadScenarioDataIntoGame()
@@ -691,6 +741,39 @@ namespace LmpClient.Systems.Scenario
 
         #region Private methods
 
+        /// <summary>
+        /// Collects every <see cref="ScenarioModule"/> subclass of every loaded assembly. Each assembly is
+        /// walked on its own so a single mod that cannot be reflected over does not leave the whole
+        /// inventory empty, which would silently stop every scenario from being synced.
+        /// </summary>
+        private static void DiscoverScenarioTypes()
+        {
+            foreach (var loadedAssembly in AssemblyLoader.loadedAssemblies)
+            {
+                if (loadedAssembly?.assembly == null)
+                {
+                    ScenarioSyncDiagnostics.Anomaly("loaded-assembly-without-assembly",
+                        $"AssemblyLoader.loadedAssemblies contains the entry '{loadedAssembly?.dllName ?? "(null entry)"}' with no assembly attached.");
+                    continue;
+                }
+
+                try
+                {
+                    foreach (var type in loadedAssembly.assembly.GetLoadableTypes())
+                    {
+                        if (type == null || !type.IsSubclassOf(typeof(ScenarioModule))) continue;
+
+                        _allScenarioTypesInAssemblies.TryAdd(type.Name, type);
+                    }
+                }
+                catch (Exception e)
+                {
+                    ScenarioSyncDiagnostics.Failure($"DiscoverScenarioTypes/{loadedAssembly.name}", e,
+                        sb => sb.AppendLine($"  Assembly: {loadedAssembly.name} ({loadedAssembly.path})"));
+                }
+            }
+        }
+
         private static void WriteNullScenarioDebugLog(ScenarioEntry entry)
         {
             try
@@ -750,51 +833,113 @@ namespace LmpClient.Systems.Scenario
 
         private static bool IsDlcScenarioInstalled(string scenarioName)
         {
-            if (scenarioName == "DeployedScience" && !ExpansionsLoader.IsExpansionInstalled("Serenity"))
-                return false;
+            if (scenarioName != "DeployedScience") return true;
 
-            return true;
+            try
+            {
+                return ExpansionsLoader.IsExpansionInstalled("Serenity");
+            }
+            catch (Exception e)
+            {
+                //ExpansionsLoader keeps its expansion list in a static that is only populated once the
+                //expansions have finished loading, so this can throw if we ask too early
+                ScenarioSyncDiagnostics.Failure($"IsDlcScenarioInstalled/{scenarioName}", e);
+                return false;
+            }
         }
 
         private static bool IsScenarioModuleAllowed(string scenarioName)
         {
-            if (string.IsNullOrEmpty(scenarioName)) return false;
-
-            if (scenarioName == "DeployedScience" && !ExpansionsLoader.IsExpansionInstalled("Serenity"))
+            if (string.IsNullOrEmpty(scenarioName))
+            {
+                ScenarioSyncDiagnostics.Anomaly("scenario-name-empty", "A scenario module without a name reached IsScenarioModuleAllowed.");
                 return false;
+            }
 
             if (!IsDlcScenarioInstalled(scenarioName))
                 return false;
 
-            if (!AllScenarioTypesInAssemblies.ContainsKey(scenarioName)) return false; //Module missing
-
-            var scenarioType = AllScenarioTypesInAssemblies[scenarioName];
-
-            var scenarioAttributes = (KSPScenario[])scenarioType.GetCustomAttributes(typeof(KSPScenario), true);
-            if (scenarioAttributes.Length > 0)
+            //TryGetValue instead of ContainsKey + indexer: the dictionary is cleared when the system is
+            //disabled, so a lookup that is split in two can find the key and then fail to read it
+            if (!AllScenarioTypesInAssemblies.TryGetValue(scenarioName, out var scenarioType) || scenarioType == null)
             {
-                var attribute = scenarioAttributes[0];
+                //Normal whenever the server carries scenarios from mods this client does not have (the receive
+                //path already logs "Skipping ... scenario data"), so only report it when diagnostics are on
+                if (ScenarioSyncDiagnostics.Enabled)
+                    ScenarioSyncDiagnostics.Anomaly($"unresolved-scenario-{scenarioName}",
+                        $"Scenario '{scenarioName}' has no matching ScenarioModule type among the {AllScenarioTypesInAssemblies.Count} " +
+                        "types LMP found in the loaded assemblies (is the mod that provides it installed on this client?), so it will not be synced.");
+                return false;
+            }
+
+            //Read once so the three mode comparisons below cannot see a game that disappears midway
+            var currentGame = HighLogic.CurrentGame;
+            if (currentGame == null)
+            {
+                ScenarioSyncDiagnostics.Anomaly("no-current-game",
+                    $"Cannot evaluate scenario '{scenarioName}' because HighLogic.CurrentGame is null. " +
+                    "The scenario is skipped until the game has been created.");
+                return false;
+            }
+
+            KSPScenario[] scenarioAttributes;
+            try
+            {
+                scenarioAttributes = (KSPScenario[])scenarioType.GetCustomAttributes(typeof(KSPScenario), true);
+            }
+            catch (Exception e)
+            {
+                //Reading attributes off a type that came from a partially loaded assembly can throw
+                ScenarioSyncDiagnostics.Failure($"GetCustomAttributes/{scenarioName}", e,
+                    sb => sb.AppendLine($"  Scenario type: {scenarioType.FullName} (assembly: {scenarioType.Assembly?.GetName()?.Name ?? "unknown"})"));
+                return false;
+            }
+
+            if (scenarioAttributes == null || scenarioAttributes.Length == 0)
+            {
+                //Scenario is not marked with KSPScenario - let's load it anyway.
+                return true;
+            }
+
+            var attribute = scenarioAttributes[0];
+            if (attribute == null)
+            {
+                ScenarioSyncDiagnostics.Anomaly($"null-kspscenario-attribute-{scenarioName}",
+                    $"Scenario '{scenarioName}' ({scenarioType.FullName}) reported a KSPScenario attribute that is null. Treating it as unmarked.");
+                return true;
+            }
+
+            try
+            {
                 var protoAllowed = false;
-                if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+                if (currentGame.Mode == Game.Modes.CAREER)
                 {
                     protoAllowed = attribute.HasCreateOption(ScenarioCreationOptions.AddToExistingCareerGames);
                     protoAllowed |= attribute.HasCreateOption(ScenarioCreationOptions.AddToNewCareerGames);
                 }
-                if (HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX)
+                if (currentGame.Mode == Game.Modes.SCIENCE_SANDBOX)
                 {
                     protoAllowed |= attribute.HasCreateOption(ScenarioCreationOptions.AddToExistingScienceSandboxGames);
                     protoAllowed |= attribute.HasCreateOption(ScenarioCreationOptions.AddToNewScienceSandboxGames);
                 }
-                if (HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
+                if (currentGame.Mode == Game.Modes.SANDBOX)
                 {
                     protoAllowed |= attribute.HasCreateOption(ScenarioCreationOptions.AddToExistingSandboxGames);
                     protoAllowed |= attribute.HasCreateOption(ScenarioCreationOptions.AddToNewSandboxGames);
                 }
                 return protoAllowed;
             }
-
-            //Scenario is not marked with KSPScenario - let's load it anyway.
-            return true;
+            catch (Exception e)
+            {
+                ScenarioSyncDiagnostics.Failure($"KSPScenarioCreateOptions/{scenarioName}", e,
+                    sb =>
+                    {
+                        sb.AppendLine($"  Scenario type: {scenarioType.FullName} (assembly: {scenarioType.Assembly?.GetName()?.Name ?? "unknown"})");
+                        sb.AppendLine($"  Attribute type: {attribute.GetType().FullName}");
+                        sb.AppendLine($"  Attribute target scenes: {(attribute.TargetScenes == null ? "NULL" : attribute.TargetScenes.Length.ToString())}");
+                    });
+                return false;
+            }
         }
 
         #endregion
