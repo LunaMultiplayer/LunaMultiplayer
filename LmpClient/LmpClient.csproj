@@ -562,6 +562,7 @@
     <Compile Include="Systems\PlayerColorSys\PlayerColorSystem.cs" />
     <Compile Include="Systems\Status\StatusSystem.cs" />
     <Compile Include="Systems\Scenario\ScenarioSystem.cs" />
+    <Compile Include="Systems\Scenario\ScenarioSyncDiagnostics.cs" />
     <Compile Include="Systems\SettingsSys\SettingsSystem.cs" />
     <Compile Include="Systems\TimeSync\TimeSyncSystem.cs" />
     <Compile Include="Systems\Toolbar\ToolbarSystem.cs" />
