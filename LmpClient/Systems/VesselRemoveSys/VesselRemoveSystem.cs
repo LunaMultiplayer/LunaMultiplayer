@@ -104,7 +104,23 @@ namespace LmpClient.Systems.VesselRemoveSys
                 RemovedVessels.TryAdd(vesselId, LunaNetworkTime.UtcNow);
             }
 
-            KillVessel(FlightGlobals.FindVessel(vesselId), reason);
+            var liveVessel = FlightGlobals.FindVessel(vesselId);
+
+            //Orphan case: the Vessel overload below early-outs when the live vessel is gone, and a
+            //leftover proto keeps every persistentId registered, so stock renames on reconnect.
+            if (liveVessel == null || liveVessel.state == Vessel.State.DEAD)
+            {
+                try
+                {
+                    HighLogic.CurrentGame?.flightState?.protoVessels.RemoveAll(v => v != null && v.vesselID == vesselId);
+                }
+                catch (Exception e)
+                {
+                    LunaLog.LogWarning($"[LMP]: Failed to remove proto of vessel {vesselId} from flightState: {e.Message}");
+                }
+            }
+
+            KillVessel(liveVessel, reason);
         }
 
         /// <summary>

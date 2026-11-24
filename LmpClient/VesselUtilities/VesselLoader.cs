@@ -43,14 +43,22 @@ namespace LmpClient.VesselUtilities
         /// </summary>
         public static VesselLoadOutcome LoadVessel(ProtoVessel vesselProto, bool forceReload)
         {
+            //One transaction per load attempt; commit only after the final success return,
+            //every failure routes through rollback/cleanup.
+            var transaction = new VesselLoadTransaction();
             try
             {
                 LogProtoVesselSummary(vesselProto, forceReload);
-                if (!vesselProto.Validate(true)) return VesselLoadOutcome.Failed;
-                return LoadVesselIntoGame(vesselProto, forceReload);
+                if (!vesselProto.Validate(true))
+                {
+                    ApplyTransactionResolution(transaction.Resolve(VesselLoadTransaction.Trigger.ValidationFailed), vesselProto);
+                    return VesselLoadOutcome.Failed;
+                }
+                return LoadVesselIntoGame(vesselProto, forceReload, transaction);
             }
             catch (Exception e)
             {
+                //Rollback first, before teardown, so owner-presence checks see the pre-teardown world.
                 LunaLog.LogError($"[LMP]: Error loading vessel: {e}");
                 SaveFailedProtoVesselToDisk(vesselProto, e);
                 CleanUpFailedVesselLoad(vesselProto);
@@ -109,6 +117,10 @@ namespace LmpClient.VesselUtilities
 
                 existingVessel.protoVessel = newProto;
                 newProto.vesselRef = existingVessel;
+
+                //Proto swap: unloaded registrations stay (new proto is authoritative), loaded ones go back.
+                var transaction = new VesselLoadTransaction();
+                ApplyTransactionResolution(transaction.Resolve(VesselLoadTransaction.Trigger.ProtoSwapResolved), existingVessel.id, newProto);
                 return true;
             }
             catch (Exception e)
@@ -275,6 +287,11 @@ namespace LmpClient.VesselUtilities
             var vesselId = vesselProto.vesselID;
             var vesselName = SafeGetVesselName(vesselProto);
 
+            //Roll the transaction back BEFORE teardown: the restore checks must observe the
+            //pre-teardown world or legitimate owners look gone.
+            try { StalePersistentIdEvictor.RollbackEvictions(vesselId, vesselProto); }
+            catch (Exception e) { LunaLog.LogWarning($"[LMP]: RollbackEvictions failed during cleanup for {vesselId}: {e.Message}"); }
+
             //Try every avenue we have to locate the partial Vessel — vesselProto.vesselRef
             //is set by stock ProtoVessel.Load early, but on certain failure paths it ends up
             //null while the GameObject still exists in the scene (and is later findable via
@@ -349,6 +366,30 @@ namespace LmpClient.VesselUtilities
                 }
             }
             catch (Exception e) { LunaLog.LogWarning($"[LMP]: flightState.protoVessels cleanup failed for {vesselId}: {e.Message}"); }
+        }
+
+        private static void ApplyTransactionResolution(VesselLoadTransaction.Resolution resolution, Guid vesselId, ProtoVessel incomingCopy)
+        {
+            switch (resolution)
+            {
+                case VesselLoadTransaction.Resolution.RollbackOnly:
+                    StalePersistentIdEvictor.RollbackEvictions(vesselId, incomingCopy);
+                    break;
+                case VesselLoadTransaction.Resolution.RollbackAndCleanUp:
+                    CleanUpFailedVesselLoad(incomingCopy);
+                    break;
+                case VesselLoadTransaction.Resolution.Commit:
+                    StalePersistentIdEvictor.CommitEvictions(vesselId);
+                    break;
+                case VesselLoadTransaction.Resolution.SwapResolve:
+                    StalePersistentIdEvictor.ResolveSwapEvictions(vesselId);
+                    break;
+            }
+        }
+
+        private static void ApplyTransactionResolution(VesselLoadTransaction.Resolution resolution, ProtoVessel vesselProto)
+        {
+            ApplyTransactionResolution(resolution, vesselProto.vesselID, vesselProto);
         }
 
         /// <summary>
@@ -700,7 +741,7 @@ namespace LmpClient.VesselUtilities
         /// caller can distinguish a real destructive reload from an unchanged early-out
         /// (the latter previously masqueraded as a successful reload in logs / events).
         /// </summary>
-        private static VesselLoadOutcome LoadVesselIntoGame(ProtoVessel vesselProto, bool forceReload)
+        private static VesselLoadOutcome LoadVesselIntoGame(ProtoVessel vesselProto, bool forceReload, VesselLoadTransaction transaction)
         {
             if (HighLogic.CurrentGame?.flightState == null)
                 return VesselLoadOutcome.Failed;
@@ -736,6 +777,8 @@ namespace LmpClient.VesselUtilities
                     //lets the caller skip the misleading "Vessel reloaded" log line and
                     //the VesselReloadEvent fire that previously ran on every wire-drift
                     //broadcast even when nothing actually changed.
+                    //Incoming copy discarded — registry rollback only, no teardown.
+                    ApplyTransactionResolution(transaction.Resolve(VesselLoadTransaction.Trigger.UnchangedEarlyOut), vesselProto);
                     return VesselLoadOutcome.UnchangedEarlyOut;
                 }
 
@@ -781,12 +824,21 @@ namespace LmpClient.VesselUtilities
             // vessel a tracking lifetime). Detailed rationale lives on EnsureSafeDiscoveryInfo.
             DiscoveryInfoSanitizer.EnsureSafeDiscoveryInfo(vesselProto);
 
+            //Defensive second eviction pass right before stock consults the registries inside ProtoVessel.Load.
+            StalePersistentIdEvictor.EvictStalePersistentIds(vesselProto);
+
             vesselProto.Load(HighLogic.CurrentGame.flightState);
             if (vesselProto.vesselRef == null)
             {
                 LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} failed to create a vessel!");
+                //A partial GameObject may exist even though vesselRef is null — full teardown, rollback first.
+                ApplyTransactionResolution(transaction.Resolve(VesselLoadTransaction.Trigger.LoadRefNull), vesselProto);
                 return VesselLoadOutcome.Failed;
             }
+
+            //The transaction stays open until every post-Load step below succeeds, so a later
+            //failure can still roll the registry back.
+            transaction.Resolve(VesselLoadTransaction.Trigger.LoadSucceeded);
 
             // Strip null entries from each ProtoPartSnapshot.protoModuleCrew that stock KSP just
             // appended when wire-side crew names failed to resolve through CrewRoster. Has to run
@@ -819,6 +871,8 @@ namespace LmpClient.VesselUtilities
             if (double.IsNaN(vesselProto.vesselRef.orbitDriver.pos.x))
             {
                 LunaLog.Log($"[LMP]: Protovessel {vesselProto.vesselID} has an invalid orbit");
+                //Vessel is live — full teardown, rollback first.
+                ApplyTransactionResolution(transaction.Resolve(VesselLoadTransaction.Trigger.PostLoadFailure), vesselProto);
                 return VesselLoadOutcome.Failed;
             }
 
@@ -843,6 +897,9 @@ namespace LmpClient.VesselUtilities
                     KerbalPortraitGallery.Instance.StartReset(FlightGlobals.ActiveVessel);
                 }
             }
+
+            //Every post-Load step succeeded — the incoming copy is the live vessel, so commit.
+            ApplyTransactionResolution(transaction.Resolve(VesselLoadTransaction.Trigger.FinalSuccess), vesselProto);
 
             //Only the destructive-reload branch and the brand-new-vessel branch reach
             //here; the structure-matches early-out returned UnchangedEarlyOut above.
