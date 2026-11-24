@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: TypeForwardedTo(typeof(LmpCommon.PlayerStatus))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.Common))]
 [assembly: TypeForwardedTo(typeof(LmpCommon.LmpVersioning))]
+[assembly: TypeForwardedTo(typeof(LmpCommon.IgnoredScenarios))]
 
 // Message factories
 [assembly: TypeForwardedTo(typeof(LmpCommon.Message.ClientMessageFactory))]
