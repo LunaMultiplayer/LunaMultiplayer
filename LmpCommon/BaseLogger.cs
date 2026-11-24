@@ -8,6 +8,11 @@ namespace LmpCommon
         protected virtual LogLevels LogLevel => LogLevels.Debug;
         protected virtual bool UseUtcTime => false;
 
+        protected virtual void BeforePrint(string line)
+        {
+            //Implement your own before logging code
+        }
+
         protected virtual void AfterPrint(string line)
         {
             //Implement your own after logging code
@@ -20,6 +25,7 @@ namespace LmpCommon
             if (level <= LogLevel)
             {
                 var output = UseUtcTime ? $"[{DateTime.UtcNow:HH:mm:ss}][{type}]: {message}" : $"[{DateTime.Now:HH:mm:ss}][{type}]: {message}";
+                BeforePrint(output);
                 Console.WriteLine(output);
                 AfterPrint(output);
             }

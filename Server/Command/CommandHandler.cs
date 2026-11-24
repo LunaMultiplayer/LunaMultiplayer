@@ -41,31 +41,60 @@ namespace Server.Command
         /// <summary>
         /// We receive the console inputs with a pipe
         /// </summary>
+        /// 
+        private static string InputCommand = "";
+
+        public static void NewLineifInput() {
+            if (InputCommand != "") {
+                Console.Write('\n');
+            }
+        }
+
+        public static void RedrawInput()
+        {
+            Console.ResetColor();
+            Console.Write(InputCommand);
+        }
+
         public static async Task ThreadMainAsync()
         {
             try
             {
                 while (ServerContext.ServerRunning)
                 {
-                    var input = Console.ReadLine();
-                    if (input == null)
+                    var input = Console.ReadKey();
+
+                    while (input.Key != ConsoleKey.Enter) {
+                        if (input.Key == ConsoleKey.Backspace)  {
+                            if (InputCommand.Length > 0) {
+                                InputCommand = InputCommand.Remove(InputCommand.Length - 1);
+                                Console.Write("\b \b"); // goes back one step, prints empty space, goes back to empty space, illusion of removing the letter
+                            }
+                        } else {
+                            InputCommand += input.KeyChar;
+                        }
+
+                        input = Console.ReadKey();
+                    }
+
+                    if (InputCommand == null)
                     {
                         LunaLog.Normal("End of stdin, stopping command listener");
                         break;
                     }
-                    if (!string.IsNullOrEmpty(input))
+                    if (!string.IsNullOrEmpty(InputCommand))
                     {
-                        LunaLog.Normal($"Command input: {input}");
-                        if (!string.IsNullOrEmpty(input))
+                        var InputCommandCopy = new string(InputCommand); // Copy the command and reset it to avoid CommandHandlers logs to reprint the InputCommand
+                        InputCommand = "";
+
+                        LunaLog.Normal($"Command input: {InputCommandCopy}");
+                        if (InputCommandCopy.StartsWith("/"))
                         {
-                            if (input.StartsWith("/"))
-                            {
-                                HandleServerInput(input.Substring(1));
-                            }
-                            else
-                            {
-                                Commands["say"].Func(input);
-                            }
+                            HandleServerInput(InputCommandCopy.Substring(1));
+                        }
+                        else
+                        {
+                            Commands["say"].Func(InputCommandCopy);
                         }
                     }
 

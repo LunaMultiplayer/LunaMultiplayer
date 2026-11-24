@@ -6,6 +6,7 @@ using Server.Settings.Structures;
 using Server.System;
 using System;
 using System.IO;
+using Server.Command;
 
 namespace Server.Log
 {
@@ -69,9 +70,19 @@ namespace Server.Log
         protected override LogLevels LogLevel => LogSettings.SettingsStore.LogLevel;
         protected override bool UseUtcTime => true;
 
+        protected override void BeforePrint(string line)
+        {
+            base.BeforePrint(line);
+
+            CommandHandler.NewLineifInput();
+        }
+
+
         protected override void AfterPrint(string line)
         {
             base.AfterPrint(line);
+
+            CommandHandler.RedrawInput();
 
             lock (WriteLock)
             {
