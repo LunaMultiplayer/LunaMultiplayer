@@ -2,6 +2,7 @@
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using Server.Client;
+using Server.Log;
 using Server.Message.Base;
 using Server.System;
 
@@ -15,6 +16,7 @@ namespace Server.Message
             switch (messageData?.ScenarioMessageType)
             {
                 case ScenarioMessageType.Request:
+                    LunaLog.Debug($"Scenario request from {client.PlayerName}");
                     ScenarioSystem.SendScenarioModules(client);
                     break;
                 case ScenarioMessageType.Data:

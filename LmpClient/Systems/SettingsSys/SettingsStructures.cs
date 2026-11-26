@@ -45,6 +45,14 @@ namespace LmpClient.Systems.SettingsSys
         /// </summary>
         public bool VesselSyncDiagnosticsEnabled { get; set; } = true;
 
+        /// <summary>
+        /// Debug switch for the scenario-sync trace at <c>{KspPath}/ScenarioSyncDebug.log</c> (see
+        /// <see cref="LmpClient.Diagnostics.ScenarioSyncDiagnostics"/>). Off by default because
+        /// it dumps the full scenario/assembly inventory on every connect. Turn it on in settings.xml
+        /// when investigating a "Syncing scenarios" hang or scenarios that stop syncing.
+        /// </summary>
+        public bool ScenarioSyncDiagnosticsEnabled { get; set; } = false;
+
         /*
          * You can use this debug switches for testing purposes.
          * For example do one part or the code or another in case the debugX is on/off

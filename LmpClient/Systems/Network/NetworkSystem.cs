@@ -1,4 +1,5 @@
 ﻿using LmpClient.Base;
+using LmpClient.Diagnostics;
 using LmpClient.Events;
 using LmpClient.Localization;
 using LmpClient.Network;
@@ -185,7 +186,10 @@ namespace LmpClient.Systems.Network
                 case ClientState.SyncingScenarios:
                     MainSystem.Singleton.Status = "Syncing scenarios";
                     if (ConnectionIsStuck(10000))
+                    {
+                        ScenarioSyncDiagnostics.WaitingForReply();
                         MainSystem.NetworkState = ClientState.PlayersSynced;
+                    }
                     break;
                 case ClientState.ScenariosSynced:
                     MainSystem.Singleton.Status = "Scenarios synced";

@@ -8,6 +8,7 @@ using Server.Properties;
 using Server.Server;
 using Server.Settings.Structures;
 using Server.System.Scenario;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -68,23 +69,34 @@ namespace Server.System
 
         public static void SendScenarioModules(ClientStructure client)
         {
-            var scenarioDataArray = ScenarioStoreSystem.CurrentScenarios.Keys.Select(s =>
+            try
             {
-                var scenarioConfigNode = ScenarioStoreSystem.GetScenarioInConfigNodeFormat(s);
-                var serializedData = Encoding.UTF8.GetBytes(scenarioConfigNode);
-                return new ScenarioInfo
+                var scenarioDataArray = ScenarioStoreSystem.CurrentScenarios.Keys.Select(s =>
                 {
-                    Data = serializedData,
-                    NumBytes = serializedData.Length,
-                    Module = Path.GetFileNameWithoutExtension(s)
-                };
-            }).ToArray();
+                    var scenarioConfigNode = ScenarioStoreSystem.GetScenarioInConfigNodeFormat(s);
+                    var serializedData = Encoding.UTF8.GetBytes(scenarioConfigNode ?? string.Empty);
+                    return new ScenarioInfo
+                    {
+                        Data = serializedData,
+                        NumBytes = serializedData.Length,
+                        Module = Path.GetFileNameWithoutExtension(s)
+                    };
+                }).ToArray();
 
-            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScenarioDataMsgData>();
-            msgData.ScenariosData = scenarioDataArray;
-            msgData.ScenarioCount = scenarioDataArray.Length;
+                var totalBytes = scenarioDataArray.Sum(s => s.NumBytes);
+                var modules = string.Join(", ", scenarioDataArray.Select(s => $"{s.Module}={s.NumBytes}"));
+                LunaLog.Debug($"Sending {client.PlayerName} {scenarioDataArray.Length} scenario modules ({totalBytes} bytes): {modules}");
 
-            MessageQueuer.SendToClient<ScenarioSrvMsg>(client, msgData);
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScenarioDataMsgData>();
+                msgData.ScenariosData = scenarioDataArray;
+                msgData.ScenarioCount = scenarioDataArray.Length;
+
+                MessageQueuer.SendToClient<ScenarioSrvMsg>(client, msgData);
+            }
+            catch (Exception e)
+            {
+                LunaLog.Error($"Failed to send scenario modules to {client.PlayerName}: {e}");
+            }
         }
 
 

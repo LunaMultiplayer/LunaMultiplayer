@@ -1,5 +1,6 @@
 ﻿using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpClient.Diagnostics;
 using LmpClient.Extensions;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.Scenario;
@@ -7,6 +8,7 @@ using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace LmpClient.Systems.Scenario
 {
@@ -35,6 +37,19 @@ namespace LmpClient.Systems.Scenario
         private static void QueueAllReceivedScenarios(ScenarioBaseMsgData msgData)
         {
             var data = (ScenarioDataMsgData)msgData;
+            if (ScenarioSyncDiagnostics.Enabled)
+            {
+                var totalBytes = 0;
+                for (var i = 0; i < data.ScenarioCount; i++)
+                    totalBytes += data.ScenariosData[i]?.NumBytes ?? 0;
+
+                var modules = string.Join(", ", Enumerable.Range(0, data.ScenarioCount)
+                    .Select(i => data.ScenariosData[i] == null
+                        ? "(null)"
+                        : $"{data.ScenariosData[i].Module}={data.ScenariosData[i].NumBytes}"));
+                ScenarioSyncDiagnostics.ReplyReceived(data.ScenarioCount, totalBytes, modules);
+            }
+
             for (var i = 0; i < data.ScenarioCount; i++)
             {
                 QueueScenarioBytes(data.ScenariosData[i].Module, data.ScenariosData[i].Data, data.ScenariosData[i].NumBytes);
