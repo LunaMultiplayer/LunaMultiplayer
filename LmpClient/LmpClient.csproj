@@ -315,6 +315,7 @@
     <Compile Include="Systems\CraftLibrary\CraftLibraryMessageSender.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryStructures.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibrarySystem.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftQuarantine.cs" />
     <Compile Include="Systems\KscScene\KscSceneEvents.cs" />
     <Compile Include="Systems\KscScene\KscSceneSystem.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotStructures.cs" />

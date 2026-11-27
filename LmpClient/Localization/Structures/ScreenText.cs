@@ -4,6 +4,7 @@
     {
         public string CraftUploaded { get; set; } = "Craft uploaded!";
         public string CraftSaved { get; set; } = "Craft saved!";
+        public string CraftRejected { get; set; } = "Craft '$1' was rejected because it is not a valid craft file.";
         public string ModFileGenerated { get; set; } = "LMPModControl.xml file generated in your KSP folder";
         public string Disconected { get; set; } = "You have been disconnected!";
         public string Spectating { get; set; } = "This vessel is being controlled by";

@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpCommon.CraftLibrary;
 using LmpCommon.Message.Data.CraftLibrary;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
@@ -59,6 +60,13 @@ namespace LmpClient.Systems.CraftLibrary
             {
                 for (var i = 0; i < listMsg.PlayerCraftsCount; i++)
                 {
+                    //Entries the server could never serve safely would only be dead or misleading rows in the library
+                    if (!CraftPathValidator.IsSafe(listMsg.PlayerCrafts[i]))
+                    {
+                        LunaLog.LogWarning($"[LMP]: Ignoring craft {CraftNameDisplay.Sanitize(listMsg.PlayerCrafts[i]?.CraftName)} in the craft list. It has an invalid name or type.");
+                        continue;
+                    }
+
                     var craftInfo = new CraftBasicEntry
                     {
                         CraftName = listMsg.PlayerCrafts[i].CraftName,
@@ -90,6 +98,14 @@ namespace LmpClient.Systems.CraftLibrary
 
         private static void SaveNewCraft(CraftLibraryDataMsgData craftMsg)
         {
+            //Refuse before caching or writing so a bad copy never reaches KSP's editor or escapes the craft folder
+            if (!CraftPathValidator.IsSafe(craftMsg.Craft) || !CraftFileValidator.HasParts(craftMsg.Craft.Data, craftMsg.Craft.NumBytes))
+            {
+                LunaLog.LogError($"[LMP]: Rejected craft {CraftNameDisplay.Sanitize(craftMsg.Craft.CraftName)} from the server. It is not a valid craft file.");
+                System.RejectedCraftsNotification.Enqueue(craftMsg.Craft.CraftName);
+                return;
+            }
+
             var craft = new CraftEntry
             {
                 CraftName = craftMsg.Craft.CraftName,

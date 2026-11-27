@@ -9,6 +9,7 @@ using LmpClient.ModuleStore;
 using LmpClient.ModuleStore.Patching;
 using LmpClient.Network;
 using LmpClient.Systems;
+using LmpClient.Systems.CraftLibrary;
 using LmpClient.Systems.Flag;
 using LmpClient.Systems.KerbalSys;
 using LmpClient.Systems.Mod;
@@ -564,6 +565,8 @@ namespace LmpClient
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiplayerSavesDirectory, CommonUtil.CombinePaths("Ships", "VAB")));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiplayerSavesDirectory, CommonUtil.CombinePaths("Ships", "SPH")));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiplayerSavesDirectory, "Subassemblies"));
+
+            CraftQuarantine.QuarantinePartlessCrafts(lunaMultiplayerSavesDirectory);
 
             var lunaMultiplayerFlagsDirectory = CommonUtil.CombinePaths(KspPath, "GameData", "LunaMultiplayer", "Flags");
             CreateIfNeeded(lunaMultiplayerFlagsDirectory);

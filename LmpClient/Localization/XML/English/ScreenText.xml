@@ -3,6 +3,7 @@
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CraftUploaded>Craft uploaded!</CraftUploaded>
   <CraftSaved>Craft saved!</CraftSaved>
+  <CraftRejected>Craft '$1' was rejected because it is not a valid craft file.</CraftRejected>
   <ModFileGenerated>LMPModControl.xml file generated in your KSP folder</ModFileGenerated>
   <Disconected>You have been disconnected!</Disconected>
   <Spectating>This vessel is being controlled by</Spectating>
