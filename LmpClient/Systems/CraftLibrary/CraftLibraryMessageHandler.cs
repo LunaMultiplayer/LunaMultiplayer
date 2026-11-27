@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using LmpClient.Base;
 using LmpClient.Base.Interface;
+using LmpCommon.CraftLibrary;
 using LmpCommon.Message.Data.CraftLibrary;
 using LmpCommon.Message.Interface;
 using LmpCommon.Message.Types;
@@ -90,6 +91,13 @@ namespace LmpClient.Systems.CraftLibrary
 
         private static void SaveNewCraft(CraftLibraryDataMsgData craftMsg)
         {
+            //Refuse before caching or writing so a bad copy never reaches KSP's editor
+            if (!CraftFileValidator.HasParts(craftMsg.Craft.Data, craftMsg.Craft.NumBytes))
+            {
+                LunaLog.LogError($"[LMP]: Rejected craft {craftMsg.Craft.CraftName} from the server. It contains no parts.");
+                return;
+            }
+
             var craft = new CraftEntry
             {
                 CraftName = craftMsg.Craft.CraftName,

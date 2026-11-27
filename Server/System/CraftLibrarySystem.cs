@@ -1,4 +1,5 @@
 ﻿using ByteSizeLib;
+using LmpCommon.CraftLibrary;
 using LmpCommon.Enums;
 using LmpCommon.Message.Data.CraftLibrary;
 using LmpCommon.Message.Server;
@@ -53,6 +54,13 @@ namespace Server.System
         {
             _ = Task.Run(() =>
             {
+                //Check before the overwrite path so a bad upload can't delete a good copy
+                if (!CraftFileValidator.HasParts(data.Craft.Data, data.Craft.NumBytes))
+                {
+                    LunaLog.Warning($"Rejected craft {data.Craft.CraftName} from: {client.PlayerName}. It contains no parts.");
+                    return;
+                }
+
                 var playerFolderType = Path.Combine(CraftPath, client.PlayerName, data.Craft.CraftType.ToString());
                 if (!Directory.Exists(playerFolderType))
                 {
