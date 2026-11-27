@@ -47,7 +47,7 @@ namespace Server.System
                 {
                     FileHandler.FileDelete(file);
 
-                    LunaLog.Debug($"Deleting craft {data.CraftToDelete.CraftName} as requested by {client.PlayerName}.");
+                    LunaLog.Debug($"Deleting craft {CraftNameDisplay.Sanitize(data.CraftToDelete.CraftName)} as requested by {client.PlayerName}.");
                     MessageQueuer.SendToAllClients<CraftLibrarySrvMsg>(data);
                 }
             });
@@ -70,7 +70,7 @@ namespace Server.System
                 //Check before the overwrite path so a bad upload can't delete a good copy
                 if (!CraftFileValidator.HasParts(data.Craft.Data, data.Craft.NumBytes))
                 {
-                    LunaLog.Warning($"Rejected craft {data.Craft.CraftName} from: {client.PlayerName}. It contains no parts.");
+                    LunaLog.Warning($"Rejected craft {CraftNameDisplay.Sanitize(data.Craft.CraftName)} from: {client.PlayerName}. It contains no parts.");
                     return;
                 }
 
@@ -90,7 +90,7 @@ namespace Server.System
                     var alreadyExisted = FileHandler.FileExists(fullPath);
                     if (alreadyExisted)
                     {
-                        LunaLog.Normal($"Overwriting craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}) from: {client.PlayerName}.");
+                        LunaLog.Normal($"Overwriting craft {CraftNameDisplay.Sanitize(data.Craft.CraftName)} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}) from: {client.PlayerName}.");
 
                         //Tell all players to drop their cached copy before we replace the file on disk
                         var deleteMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryDeleteRequestMsgData>();
@@ -103,7 +103,7 @@ namespace Server.System
                     }
                     else
                     {
-                        LunaLog.Normal($"Saving craft {data.Craft.CraftName} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes} KB) from: {client.PlayerName}.");
+                        LunaLog.Normal($"Saving craft {CraftNameDisplay.Sanitize(data.Craft.CraftName)} ({ByteSize.FromBytes(data.Craft.NumBytes).KiloBytes} KB) from: {client.PlayerName}.");
                     }
 
                     //Always persist the latest bytes, regardless of whether this is a new craft or an overwrite
@@ -173,7 +173,7 @@ namespace Server.System
                             //A craft that can't be requested again would only be a dead entry in the library
                             if (!CraftPathValidator.IsSafeCraftName(craftName))
                             {
-                                LunaLog.Debug($"Not listing craft with an unusable name: {file}");
+                                LunaLog.Debug($"Not listing craft with an unusable name: {CraftNameDisplay.Sanitize(Path.GetFileName(file))}");
                                 continue;
                             }
 
@@ -228,7 +228,7 @@ namespace Server.System
                         msgData.Craft.FolderName = data.CraftRequested.FolderName;
                         msgData.Craft.CraftName = data.CraftRequested.CraftName;
 
-                        LunaLog.Debug($"Sending craft ({ByteSize.FromBytes(msgData.Craft.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}): {data.CraftRequested.CraftName} to: {client.PlayerName}.");
+                        LunaLog.Debug($"Sending craft ({ByteSize.FromBytes(msgData.Craft.NumBytes).KiloBytes}{ByteSize.KiloByteSymbol}): {CraftNameDisplay.Sanitize(data.CraftRequested.CraftName)} to: {client.PlayerName}.");
                         MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
                     }
                 }

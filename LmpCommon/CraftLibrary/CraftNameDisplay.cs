@@ -40,7 +40,16 @@ namespace LmpCommon.CraftLibrary
             if (character == '<' || character == '>' || char.IsControl(character)) return false;
 
             // Format characters include the invisible ones that reorder or hide text, such as right-to-left overrides
-            return CharUnicodeInfo.GetUnicodeCategory(character) != UnicodeCategory.Format;
+            // Line and paragraph separators are not control characters but still break a line
+            switch (CharUnicodeInfo.GetUnicodeCategory(character))
+            {
+                case UnicodeCategory.Format:
+                case UnicodeCategory.LineSeparator:
+                case UnicodeCategory.ParagraphSeparator:
+                    return false;
+                default:
+                    return true;
+            }
         }
     }
 }

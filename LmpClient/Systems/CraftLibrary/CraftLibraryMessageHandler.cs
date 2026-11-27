@@ -60,6 +60,13 @@ namespace LmpClient.Systems.CraftLibrary
             {
                 for (var i = 0; i < listMsg.PlayerCraftsCount; i++)
                 {
+                    //Entries the server could never serve safely would only be dead or misleading rows in the library
+                    if (!CraftPathValidator.IsSafe(listMsg.PlayerCrafts[i]))
+                    {
+                        LunaLog.LogWarning($"[LMP]: Ignoring craft {CraftNameDisplay.Sanitize(listMsg.PlayerCrafts[i]?.CraftName)} in the craft list. It has an invalid name or type.");
+                        continue;
+                    }
+
                     var craftInfo = new CraftBasicEntry
                     {
                         CraftName = listMsg.PlayerCrafts[i].CraftName,

@@ -39,6 +39,14 @@ namespace LmpCommonTest
         }
 
         [TestMethod]
+        public void LineAndParagraphSeparatorsAreRemoved()
+        {
+            Assert.AreEqual("ab", CraftNameDisplay.Sanitize("a\u2028b"));
+            Assert.AreEqual("ab", CraftNameDisplay.Sanitize("a\u2029b"));
+            Assert.AreEqual("a b", CraftNameDisplay.Sanitize("a b"));
+        }
+
+        [TestMethod]
         public void NullEmptyAndFullyStrippedNamesGetAPlaceholder()
         {
             Assert.AreEqual("?", CraftNameDisplay.Sanitize(null));
