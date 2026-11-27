@@ -17,7 +17,19 @@ namespace LmpCommon.CraftLibrary
         {
             if (data == null || numBytes <= 0 || numBytes > data.Length) return false;
 
-            using (var reader = new StringReader(Encoding.UTF8.GetString(data, 0, numBytes)))
+            using (var stream = new MemoryStream(data, 0, numBytes, false))
+                return HasParts(stream);
+        }
+
+        /// <summary>
+        /// Returns true if any line in the stream is a PART block header, reading only as far as that line.
+        /// The caller keeps ownership of the stream and must close it.
+        /// </summary>
+        public static bool HasParts(Stream stream)
+        {
+            if (stream == null) return false;
+
+            using (var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, true))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
