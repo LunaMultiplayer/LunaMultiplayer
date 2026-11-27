@@ -15,21 +15,23 @@ namespace LmpCommonTest
         [DataRow("Mun Land + Return")]
         [DataRow("Relay 1_12Gm")]
         [DataRow("Ünïcode ship")]
-        [DataRow("Player-1_a")]
         [DataRow("Console")]
         [DataRow("COM10")]
         [DataRow("v1.2 rocket")]
-        public void ValidNamesAreAccepted(string name)
+        [DataRow("Going to Duna...")]
+        [DataRow("Mun Lander.")]
+        [DataRow("Ship ")]
+        [DataRow(".")]
+        [DataRow("..")]
+        public void ValidCraftNamesAreAccepted(string name)
         {
-            Assert.IsTrue(CraftPathValidator.IsSafeName(name));
+            Assert.IsTrue(CraftPathValidator.IsSafeCraftName(name));
         }
 
         [DataTestMethod]
         [DataRow(null)]
         [DataRow("")]
         [DataRow("   ")]
-        [DataRow(".")]
-        [DataRow("..")]
         [DataRow("../other")]
         [DataRow("..\\other")]
         [DataRow("a/b")]
@@ -41,8 +43,6 @@ namespace LmpCommonTest
         [DataRow("quote\"d")]
         [DataRow("<tag>")]
         [DataRow("pipe|name")]
-        [DataRow("trailing.")]
-        [DataRow("trailing ")]
         [DataRow("line\nbreak")]
         [DataRow("nul\0char")]
         [DataRow("CON")]
@@ -51,16 +51,56 @@ namespace LmpCommonTest
         [DataRow("aux.craft")]
         [DataRow("com1")]
         [DataRow("LPT9")]
-        public void UnsafeNamesAreRejected(string name)
+        public void UnsafeCraftNamesAreRejected(string name)
         {
-            Assert.IsFalse(CraftPathValidator.IsSafeName(name));
+            Assert.IsFalse(CraftPathValidator.IsSafeCraftName(name));
         }
 
         [TestMethod]
-        public void NameLengthIsBounded()
+        public void CraftNameLengthIsBounded()
         {
-            Assert.IsTrue(CraftPathValidator.IsSafeName(new string('a', 128)));
-            Assert.IsFalse(CraftPathValidator.IsSafeName(new string('a', 129)));
+            Assert.IsTrue(CraftPathValidator.IsSafeCraftName(new string('a', 200)));
+            Assert.IsFalse(CraftPathValidator.IsSafeCraftName(new string('a', 201)));
+        }
+
+        [DataTestMethod]
+        [DataRow("Drew")]
+        [DataRow("Player-1_a")]
+        [DataRow("Some Folder")]
+        [DataRow("v1.2")]
+        [DataRow("Console")]
+        public void ValidFolderNamesAreAccepted(string name)
+        {
+            Assert.IsTrue(CraftPathValidator.IsSafeFolderName(name));
+        }
+
+        [DataTestMethod]
+        [DataRow(null)]
+        [DataRow("")]
+        [DataRow("   ")]
+        [DataRow(".")]
+        [DataRow("..")]
+        [DataRow("trailing.")]
+        [DataRow("trailing ")]
+        [DataRow("../other")]
+        [DataRow("a/b")]
+        [DataRow("a\\b")]
+        [DataRow("C:")]
+        [DataRow("name:stream")]
+        [DataRow("what?")]
+        [DataRow("line\nbreak")]
+        [DataRow("CON")]
+        [DataRow("nul")]
+        public void UnsafeFolderNamesAreRejected(string name)
+        {
+            Assert.IsFalse(CraftPathValidator.IsSafeFolderName(name));
+        }
+
+        [TestMethod]
+        public void FolderNameLengthIsBounded()
+        {
+            Assert.IsTrue(CraftPathValidator.IsSafeFolderName(new string('a', 128)));
+            Assert.IsFalse(CraftPathValidator.IsSafeFolderName(new string('a', 129)));
         }
 
         [TestMethod]
@@ -83,6 +123,7 @@ namespace LmpCommonTest
         public void CraftInfoNeedsFolderNameAndTypeToAllBeSafe()
         {
             Assert.IsTrue(CraftPathValidator.IsSafe(new CraftInfo { FolderName = "Drew", CraftName = "Ship", CraftType = CraftType.Vab }));
+            Assert.IsTrue(CraftPathValidator.IsSafe(new CraftInfo { FolderName = "Drew", CraftName = "Going to Duna...", CraftType = CraftType.Vab }));
             Assert.IsFalse(CraftPathValidator.IsSafe(new CraftInfo { FolderName = "..", CraftName = "Ship", CraftType = CraftType.Vab }));
             Assert.IsFalse(CraftPathValidator.IsSafe(new CraftInfo { FolderName = "Drew", CraftName = "..\\Ship", CraftType = CraftType.Vab }));
             Assert.IsFalse(CraftPathValidator.IsSafe(new CraftInfo { FolderName = "Drew", CraftName = "Ship", CraftType = (CraftType)9 }));
@@ -93,7 +134,9 @@ namespace LmpCommonTest
         public void CraftBasicInfoNeedsFolderNameAndTypeToAllBeSafe()
         {
             Assert.IsTrue(CraftPathValidator.IsSafe(new CraftBasicInfo { FolderName = "Drew", CraftName = "Ship", CraftType = CraftType.Sph }));
+            Assert.IsTrue(CraftPathValidator.IsSafe(new CraftBasicInfo { FolderName = "Drew", CraftName = "Mun Lander.", CraftType = CraftType.Sph }));
             Assert.IsFalse(CraftPathValidator.IsSafe(new CraftBasicInfo { FolderName = "a/b", CraftName = "Ship", CraftType = CraftType.Sph }));
+            Assert.IsFalse(CraftPathValidator.IsSafe(new CraftBasicInfo { FolderName = "Drew.", CraftName = "Ship", CraftType = CraftType.Sph }));
             Assert.IsFalse(CraftPathValidator.IsSafe(new CraftBasicInfo { FolderName = "Drew", CraftName = "", CraftType = CraftType.Sph }));
             Assert.IsFalse(CraftPathValidator.IsSafe(new CraftBasicInfo { FolderName = "Drew", CraftName = "Ship", CraftType = (CraftType)3 }));
             Assert.IsFalse(CraftPathValidator.IsSafe((CraftBasicInfo)null));

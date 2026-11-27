@@ -66,7 +66,8 @@ namespace LmpClient.Systems.CraftLibrary
 
         private static void PostCraftRejected(string craftName)
         {
-            var msg = LocalizationContainer.ScreenText.CraftRejected.Replace("$1", craftName);
+            //The name can come from the server, and screen messages render rich text
+            var msg = LocalizationContainer.ScreenText.CraftRejected.Replace("$1", CraftNameDisplay.Sanitize(craftName));
             LunaScreenMsg.PostScreenMessage(msg, 10f, ScreenMessageStyle.UPPER_CENTER);
         }
 
@@ -165,9 +166,9 @@ namespace LmpClient.Systems.CraftLibrary
         public void SendCraft(CraftEntry craft)
         {
             //The server would drop it silently, so tell the player now and don't spend the request interval on it
-            if (!CraftPathValidator.IsSafeName(craft.CraftName) || !CraftFileValidator.HasParts(craft.CraftData, craft.CraftNumBytes))
+            if (!CraftPathValidator.IsSafeCraftName(craft.CraftName) || !CraftFileValidator.HasParts(craft.CraftData, craft.CraftNumBytes))
             {
-                LunaLog.LogWarning($"[LMP]: Not uploading craft {craft.CraftName}. It is not a valid craft file.");
+                LunaLog.LogWarning($"[LMP]: Not uploading craft {CraftNameDisplay.Sanitize(craft.CraftName)}. It is not a valid craft file.");
                 PostCraftRejected(craft.CraftName);
                 return;
             }

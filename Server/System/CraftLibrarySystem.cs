@@ -96,7 +96,8 @@ namespace Server.System
                         var deleteMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryDeleteRequestMsgData>();
                         deleteMsg.CraftToDelete.CraftType = data.Craft.CraftType;
                         deleteMsg.CraftToDelete.CraftName = data.Craft.CraftName;
-                        deleteMsg.CraftToDelete.FolderName = data.Craft.FolderName;
+                        //The file lives in the sender's folder, so that is the cached copy to drop, whatever the client claimed
+                        deleteMsg.CraftToDelete.FolderName = client.PlayerName;
 
                         MessageQueuer.SendToAllClients<CraftLibrarySrvMsg>(deleteMsg);
                     }
@@ -148,7 +149,7 @@ namespace Server.System
         /// </summary>
         public static void SendCraftList(ClientStructure client, CraftLibraryListRequestMsgData data)
         {
-            if (!CraftPathValidator.IsSafeName(data.FolderName))
+            if (!CraftPathValidator.IsSafeFolderName(data.FolderName))
             {
                 LunaLog.Warning($"Rejected craft list request from: {client.PlayerName}. The folder name is invalid.");
                 return;
@@ -168,6 +169,14 @@ namespace Server.System
                         foreach (var file in Directory.GetFiles(craftTypeFolder, "*.craft"))
                         {
                             var craftName = Path.GetFileNameWithoutExtension(file);
+
+                            //A craft that can't be requested again would only be a dead entry in the library
+                            if (!CraftPathValidator.IsSafeCraftName(craftName))
+                            {
+                                LunaLog.Debug($"Not listing craft with an unusable name: {file}");
+                                continue;
+                            }
+
                             crafts.Add(new CraftBasicInfo
                             {
                                 CraftName = craftName,

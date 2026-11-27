@@ -57,16 +57,33 @@ namespace LmpCommon.CraftLibrary
             var target = file + QuarantineExtension;
             try
             {
-                if (File.Exists(target))
-                    File.Replace(file, target, null);
-                else
-                    File.Move(file, target);
-
+                MoveToQuarantine(file, target);
                 report.AddMoved(file, target);
             }
             catch (Exception ex)
             {
                 report.AddFailure(file, $"Could not quarantine craft: {ex.Message}");
+            }
+        }
+
+        private static void MoveToQuarantine(string file, string target)
+        {
+            if (!File.Exists(target))
+            {
+                File.Move(file, target);
+                return;
+            }
+
+            try
+            {
+                File.Replace(file, target, null);
+            }
+            catch (Exception)
+            {
+                // Not every runtime (KSP's Mono included) is guaranteed to support a one-step replace,
+                // and an old quarantined copy is worth less than getting the partless file out of the editor's way
+                File.Delete(target);
+                File.Move(file, target);
             }
         }
     }

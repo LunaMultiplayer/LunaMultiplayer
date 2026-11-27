@@ -5,13 +5,16 @@ using System;
 namespace LmpCommon.CraftLibrary
 {
     /// <summary>
-    /// Checks that craft and folder names received from the network are plain file names before they become paths.
+    /// Checks that craft and folder names received from the network are plain names before they become paths.
     /// Rules are the same on every OS, because the server and its clients can run different ones.
-    /// Rejects separators, traversal, invalid characters, Windows device names, and unknown craft types.
+    /// Folder names are stricter than craft names, because a craft name always gets ".craft" appended.
     /// </summary>
     public static class CraftPathValidator
     {
-        private const int MaxNameLength = 128;
+        private const int MaxFolderNameLength = 128;
+
+        // Leaves room for ".craft.invalid" inside the 255 character file name limit
+        private const int MaxCraftNameLength = 200;
 
         private const string InvalidCharacters = "\"<>|:*?\\/";
 
@@ -23,21 +26,23 @@ namespace LmpCommon.CraftLibrary
         };
 
         /// <summary>
-        /// Returns true if the name can safely be used as one folder or file name.
+        /// Returns true if the name can safely be used as a folder name.
+        /// Also rejects "." and "..", and trailing dots or spaces that Windows silently drops.
         /// </summary>
-        public static bool IsSafeName(string name)
+        public static bool IsSafeFolderName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name) || name.Length > MaxNameLength) return false;
+            if (!IsPlainName(name, MaxFolderNameLength)) return false;
 
-            // Windows drops trailing dots and spaces, which would let "name." alias "name" and ".." escape the folder
-            if (name.EndsWith(".") || name.EndsWith(" ")) return false;
+            return !name.EndsWith(".") && !name.EndsWith(" ");
+        }
 
-            foreach (var character in name)
-            {
-                if (character < ' ' || InvalidCharacters.IndexOf(character) >= 0) return false;
-            }
-
-            return !IsReservedDeviceName(name);
+        /// <summary>
+        /// Returns true if the name can safely be used as a craft file name once ".craft" is appended.
+        /// Trailing dots and spaces are fine here, so names like "Going to Duna..." keep working.
+        /// </summary>
+        public static bool IsSafeCraftName(string name)
+        {
+            return IsPlainName(name, MaxCraftNameLength);
         }
 
         /// <summary>
@@ -61,7 +66,7 @@ namespace LmpCommon.CraftLibrary
         /// </summary>
         public static bool IsSafe(CraftInfo craft)
         {
-            return craft != null && IsSafeName(craft.FolderName) && IsSafeName(craft.CraftName) && IsKnownType(craft.CraftType);
+            return craft != null && IsSafeFolderName(craft.FolderName) && IsSafeCraftName(craft.CraftName) && IsKnownType(craft.CraftType);
         }
 
         /// <summary>
@@ -69,7 +74,19 @@ namespace LmpCommon.CraftLibrary
         /// </summary>
         public static bool IsSafe(CraftBasicInfo craft)
         {
-            return craft != null && IsSafeName(craft.FolderName) && IsSafeName(craft.CraftName) && IsKnownType(craft.CraftType);
+            return craft != null && IsSafeFolderName(craft.FolderName) && IsSafeCraftName(craft.CraftName) && IsKnownType(craft.CraftType);
+        }
+
+        private static bool IsPlainName(string name, int maxLength)
+        {
+            if (string.IsNullOrWhiteSpace(name) || name.Length > maxLength) return false;
+
+            foreach (var character in name)
+            {
+                if (character < ' ' || InvalidCharacters.IndexOf(character) >= 0) return false;
+            }
+
+            return !IsReservedDeviceName(name);
         }
 
         // Windows treats "CON", "CON.txt" and "CON.craft" as the same device, so only the part before the first dot counts
