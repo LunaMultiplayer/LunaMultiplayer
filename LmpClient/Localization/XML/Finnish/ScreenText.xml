@@ -3,6 +3,7 @@
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CraftUploaded>Rakennelma lähetetty!</CraftUploaded>
   <CraftSaved>Rakennelma tallennettu!</CraftSaved>
+  <CraftRejected>Craft '$1' was rejected because it is not a valid craft file.</CraftRejected>
   <ModFileGenerated>LMPModControl.xml-tiedosto luotu sinun KSP-kansioosi!</ModFileGenerated>
   <Disconected>Yhteytesi on katkaistu!</Disconected>
   <Spectating>Tätä alusta ohjaa</Spectating>

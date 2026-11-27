@@ -3,6 +3,7 @@
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CraftUploaded>Vozidlo nahráno!</CraftUploaded>
   <CraftSaved>Vozidlo uloženo!</CraftSaved>
+  <CraftRejected>Craft '$1' was rejected because it is not a valid craft file.</CraftRejected>
   <ModFileGenerated>LMPModControl.xml bylo vygenerováno do vaší složky.</ModFileGenerated>
   <Disconected>Byli jste odpojeni!</Disconected>
   <Spectating>Vozidlo je řízeno jiným hráčem.</Spectating>

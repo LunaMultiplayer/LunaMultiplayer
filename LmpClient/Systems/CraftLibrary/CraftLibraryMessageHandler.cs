@@ -91,10 +91,11 @@ namespace LmpClient.Systems.CraftLibrary
 
         private static void SaveNewCraft(CraftLibraryDataMsgData craftMsg)
         {
-            //Refuse before caching or writing so a bad copy never reaches KSP's editor
-            if (!CraftFileValidator.HasParts(craftMsg.Craft.Data, craftMsg.Craft.NumBytes))
+            //Refuse before caching or writing so a bad copy never reaches KSP's editor or escapes the craft folder
+            if (!CraftPathValidator.IsSafe(craftMsg.Craft) || !CraftFileValidator.HasParts(craftMsg.Craft.Data, craftMsg.Craft.NumBytes))
             {
-                LunaLog.LogError($"[LMP]: Rejected craft {craftMsg.Craft.CraftName} from the server. It contains no parts.");
+                LunaLog.LogError($"[LMP]: Rejected craft {craftMsg.Craft.CraftName} from the server. It is not a valid craft file.");
+                System.RejectedCraftsNotification.Enqueue(craftMsg.Craft.CraftName);
                 return;
             }
 

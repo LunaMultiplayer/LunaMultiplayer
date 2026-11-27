@@ -45,6 +45,7 @@ namespace Server.Context
 
             if (!FileHandler.FolderExists(CraftLibrarySystem.CraftPath))
                 FileHandler.FolderCreate(CraftLibrarySystem.CraftPath);
+            CraftLibrarySystem.QuarantinePartlessCrafts();
             if (!FileHandler.FolderExists(FlagSystem.FlagPath))
                 FileHandler.FolderCreate(FlagSystem.FlagPath);
             if (!FileHandler.FolderExists(GroupSystem.GroupsPath))

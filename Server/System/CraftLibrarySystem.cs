@@ -32,6 +32,12 @@ namespace Server.System
             if (client.PlayerName != data.CraftToDelete.FolderName)
                 return;
 
+            if (!CraftPathValidator.IsSafe(data.CraftToDelete))
+            {
+                LunaLog.Warning($"Rejected craft delete request from: {client.PlayerName}. The craft name or type is invalid.");
+                return;
+            }
+
             _ = Task.Run(() =>
             {
                 var file = Path.Combine(CraftPath, data.CraftToDelete.FolderName, data.CraftToDelete.CraftType.ToString(),
@@ -54,6 +60,13 @@ namespace Server.System
         {
             _ = Task.Run(() =>
             {
+                //Names become file paths below, so they must be plain names
+                if (!CraftPathValidator.IsSafe(data.Craft))
+                {
+                    LunaLog.Warning($"Rejected craft upload from: {client.PlayerName}. The craft name, folder or type is invalid.");
+                    return;
+                }
+
                 //Check before the overwrite path so a bad upload can't delete a good copy
                 if (!CraftFileValidator.HasParts(data.Craft.Data, data.Craft.NumBytes))
                 {
@@ -135,6 +148,12 @@ namespace Server.System
         /// </summary>
         public static void SendCraftList(ClientStructure client, CraftLibraryListRequestMsgData data)
         {
+            if (!CraftPathValidator.IsSafeName(data.FolderName))
+            {
+                LunaLog.Warning($"Rejected craft list request from: {client.PlayerName}. The folder name is invalid.");
+                return;
+            }
+
             _ = Task.Run(() =>
             {
                 var crafts = new List<CraftBasicInfo>();
@@ -145,7 +164,8 @@ namespace Server.System
                     var craftTypeFolder = Path.Combine(playerFolder, craftType);
                     if (Directory.Exists(craftTypeFolder))
                     {
-                        foreach (var file in Directory.GetFiles(craftTypeFolder))
+                        //Only .craft files are crafts; quarantined .craft.invalid files must not be listed
+                        foreach (var file in Directory.GetFiles(craftTypeFolder, "*.craft"))
                         {
                             var craftName = Path.GetFileNameWithoutExtension(file);
                             crafts.Add(new CraftBasicInfo
@@ -175,6 +195,12 @@ namespace Server.System
         /// </summary>
         public static void SendCraft(ClientStructure client, CraftLibraryDownloadRequestMsgData data)
         {
+            if (!CraftPathValidator.IsSafe(data.CraftRequested))
+            {
+                LunaLog.Warning($"Rejected craft download request from: {client.PlayerName}. The craft name, folder or type is invalid.");
+                return;
+            }
+
             _ = Task.Run(() =>
             {
                 var lastTime = LastRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
@@ -202,6 +228,21 @@ namespace Server.System
                     LunaLog.Warning($"{client.PlayerName} is requesting crafts too fast!");
                 }
             });
+        }
+
+        /// <summary>
+        /// Renames stored crafts with no parts to .craft.invalid so they are never listed or served.
+        /// Cleans up files saved before uploads were validated; runs once at startup.
+        /// </summary>
+        public static void QuarantinePartlessCrafts()
+        {
+            var report = CraftFolderQuarantine.QuarantinePartlessCrafts(CraftPath, SearchOption.AllDirectories);
+
+            foreach (var moved in report.Moved)
+                LunaLog.Warning($"Moved craft with no parts out of the library: {moved.Original} -> {moved.Quarantined}");
+
+            foreach (var failure in report.Failures)
+                LunaLog.Error($"{failure.Message} ({failure.Path})");
         }
 
         #endregion
@@ -240,9 +281,10 @@ namespace Server.System
         /// </summary>
         private static void RemovePlayerOldestCrafts(string playerFolderType)
         {
-            while (new DirectoryInfo(playerFolderType).GetFiles().Length > CraftSettings.SettingsStore.MaxCraftsPerUser)
+            //Only .craft files count; a quarantined .craft.invalid file must not push out a good craft
+            while (new DirectoryInfo(playerFolderType).GetFiles("*.craft").Length > CraftSettings.SettingsStore.MaxCraftsPerUser)
             {
-                var oldestCraft = new DirectoryInfo(playerFolderType).GetFiles().OrderBy(f => f.LastWriteTime).FirstOrDefault();
+                var oldestCraft = new DirectoryInfo(playerFolderType).GetFiles("*.craft").OrderBy(f => f.LastWriteTime).FirstOrDefault();
                 if (oldestCraft != null)
                 {
                     LunaLog.Debug($"Deleting old craft {oldestCraft.FullName}");

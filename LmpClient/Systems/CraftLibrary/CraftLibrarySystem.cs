@@ -2,6 +2,7 @@ using LmpClient.Base;
 using LmpClient.Localization;
 using LmpClient.Systems.SettingsSys;
 using LmpClient.Utilities;
+using LmpCommon.CraftLibrary;
 using LmpCommon.Enums;
 using LmpCommon.Time;
 using System;
@@ -30,6 +31,7 @@ namespace LmpClient.Systems.CraftLibrary
         public List<CraftEntry> OwnCrafts { get; private set; } = new List<CraftEntry>();
 
         public ConcurrentQueue<string> DownloadedCraftsNotification { get; } = new ConcurrentQueue<string>();
+        public ConcurrentQueue<string> RejectedCraftsNotification { get; } = new ConcurrentQueue<string>();
         public List<string> FoldersWithNewContent { get; } = new List<string>();
         public bool NewContent => FoldersWithNewContent.Any();
 
@@ -47,12 +49,25 @@ namespace LmpClient.Systems.CraftLibrary
             RefreshOwnCrafts();
             MessageSender.SendRequestFoldersMsg();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, NotifyDownloadedCrafts));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, NotifyRejectedCrafts));
         }
 
         private void NotifyDownloadedCrafts()
         {
             while (DownloadedCraftsNotification.TryDequeue(out var message))
                 LunaScreenMsg.PostScreenMessage($"({message}) {LocalizationContainer.ScreenText.CraftSaved}", 5f, ScreenMessageStyle.UPPER_CENTER);
+        }
+
+        private void NotifyRejectedCrafts()
+        {
+            while (RejectedCraftsNotification.TryDequeue(out var craftName))
+                PostCraftRejected(craftName);
+        }
+
+        private static void PostCraftRejected(string craftName)
+        {
+            var msg = LocalizationContainer.ScreenText.CraftRejected.Replace("$1", craftName);
+            LunaScreenMsg.PostScreenMessage(msg, 10f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         protected override void OnDisabled()
@@ -149,6 +164,14 @@ namespace LmpClient.Systems.CraftLibrary
         /// </summary>
         public void SendCraft(CraftEntry craft)
         {
+            //The server would drop it silently, so tell the player now and don't spend the request interval on it
+            if (!CraftPathValidator.IsSafeName(craft.CraftName) || !CraftFileValidator.HasParts(craft.CraftData, craft.CraftNumBytes))
+            {
+                LunaLog.LogWarning($"[LMP]: Not uploading craft {craft.CraftName}. It is not a valid craft file.");
+                PostCraftRejected(craft.CraftName);
+                return;
+            }
+
             if (TimeUtil.IsInInterval(ref _lastRequest, SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
             {
                 MessageSender.SendCraftMsg(craft);
